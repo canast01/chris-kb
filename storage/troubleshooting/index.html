@@ -6804,10 +6804,10 @@ Storage troubleshooting — APD/PDL conditions, multipath failures, replication 
 <h2 id="linux-host-io-diagnostics">Linux Host I/O Diagnostics<a class="headerlink" href="#linux-host-io-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check for multipath failures</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;scsi\|sd[a-z]\|mpath\|failed&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">'scsi\|sd[a-z]\|mpath\|failed'</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># I/O error log</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>journalctl<span class="w"> </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;error\|i/o error\|EXT4\|XFS&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>journalctl<span class="w"> </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">'error\|i/o error\|EXT4\|XFS'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Check disk queue depth and wait</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
@@ -6817,11 +6817,11 @@ Storage troubleshooting — APD/PDL conditions, multipath failures, replication 
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>lsblk<span class="p">;</span><span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/dev/mapper/
 </code></pre></div>
 <p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mpatha (36001405a1b2c3d4e5f6g7h8i9j0k1l2m) dm-0 NETAPP,LUN C-Mode
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>size=2.0T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>size=2.0T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>|-+- policy='service-time 0' prio=50 status=active
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| |- 2:0:0:0 sda 8:0  active ready running
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `- 3:0:0:0 sdb 8:16 active ready running
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>`-+- policy='service-time 0' prio=10 status=enabled
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  |- 4:0:0:0 sdc 8:32 active ready running
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  `- 5:0:0:0 sdd 8:48 active ready running
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>[  142.556234] sd 2:0:0:0: [sda] Assuming drive cache: write through
@@ -6855,7 +6855,7 @@ Storage troubleshooting — APD/PDL conditions, multipath failures, replication 
 <h2 id="vmware-apd-recovery">VMware APD Recovery<a class="headerlink" href="#vmware-apd-recovery" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Rescan datastores after fabric restoration</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;State:|Device:|Adapter:&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'State:|Device:|Adapter:'</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># If APD persists after fabric is restored:</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># 1. Put host in maintenance mode</span>

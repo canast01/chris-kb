@@ -9237,13 +9237,13 @@ Install and Upgrade reference covering vSphere Replication Appliance Deployment,
 <li><strong>vSphere Replication Appliance</strong> — upgrade both VRAs (upgrade protected site VRA first)</li>
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Take a snapshot of SRM Server VM before upgrade</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;srm-protected&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Pre-Upgrade-SRM-8.x&quot;</span> <span class="n">-Memory</span> <span class="nv">$false</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">"srm-protected"</span> <span class="n">-Name</span> <span class="s2">"Pre-Upgrade-SRM-8.x"</span> <span class="n">-Memory</span> <span class="nv">$false</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Run new SRM installer (in-place upgrade)</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">VMware-srm</span><span class="p">-&lt;</span><span class="nb">new-version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Verify service after upgrade:</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-Service</span> <span class="s2">"VMware vCenter Site Recovery Manager"</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Check site pairing health:</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># vCenter → Site Recovery → Summary → both sites Connected</span>
@@ -9253,11 +9253,11 @@ Install and Upgrade reference covering vSphere Replication Appliance Deployment,
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Connect to SRM via PowerCLI</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nb">Connect-SrmServer</span> <span class="n">-SrmServerAddress</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$plans</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">ListPlans</span><span class="p">()</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Recovery Plans found: </span><span class="p">$(</span><span class="nv">$plans</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Write-Host</span> <span class="s2">"Recovery Plans found: </span><span class="p">$(</span><span class="nv">$plans</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2">"</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Run a pre-check on each Recovery Plan</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$plan</span> <span class="k">in</span> <span class="nv">$plans</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="nv">$plan</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="s2">&quot;PRECHECK_ONLY&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="nv">$plan</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="s2">"PRECHECK_ONLY"</span><span class="p">)</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="version-compatibility">Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h2>

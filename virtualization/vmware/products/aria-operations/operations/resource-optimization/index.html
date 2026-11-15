@@ -9419,13 +9419,13 @@
 <h1 id="performance-resource-optimisation">Performance — Resource Optimisation<a class="headerlink" href="#performance-resource-optimisation" title="Permanent link">&para;</a></h1>
 <p><em>Applies to: VMware Aria 8.x</em></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List processes consuming &gt; 1% CPU</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $3&gt;1 {print $1, $3&quot;%&quot;, $4&quot;%&quot;, $11}&#39;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'NR&gt;1 &amp;&amp; $3&gt;1 {print $1, $3"%", $4"%", $11}'</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Average CPU per server (last 30 days via sar)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sar<span class="w"> </span>-u<span class="w"> </span>-f<span class="w"> </span>/var/log/sa/sa<span class="k">$(</span>date<span class="w"> </span>+%d<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/Average/ {print $3}&#39;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sar<span class="w"> </span>-u<span class="w"> </span>-f<span class="w"> </span>/var/log/sa/sa<span class="k">$(</span>date<span class="w"> </span>+%d<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'/Average/ {print $3}'</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Memory available</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>free<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/Mem/ {print &quot;Available:&quot;, $7}&#39;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>free<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'/Mem/ {print "Available:", $7}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root 45.2% 12.8% /usr/lib/vmware-vsan/bin/vsanmgmtd
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmware 38.7% 8.3% /usr/lib/vmware-vix-disklib/bin/vmtoolsd
@@ -9457,12 +9457,12 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Unattached managed disks</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?diskState==`Unattached`].{Name:name,RG:resourceGroup,Size:diskSizeGb,SKU:sku.name}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'[?diskState==`Unattached`].{Name:name,RG:resourceGroup,Size:diskSizeGb,SKU:sku.name}'</span><span class="w"> </span>-o<span class="w"> </span>table
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Azure Advisor cost recommendations</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--category<span class="w"> </span>Cost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Impact:impact,Resource:resourceMetadata.resourceId,Recommendation:shortDescription.solution}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'[*].{Impact:impact,Resource:resourceMetadata.resourceId,Recommendation:shortDescription.solution}'</span><span class="w"> </span>-o<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name                                    RG              Size    SKU
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>--------------------------------------  --------------  ------  ----------------

@@ -7976,7 +7976,7 @@ Brings a new physical server, VM, or cloud instance into full production managem
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>security/cis-baseline.yml<span class="w"> </span>--limit<span class="w"> </span>&lt;hostname&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># SELinux enforcing</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/^SELINUX=.*/SELINUX=enforcing/&#39;</span><span class="w"> </span>/etc/selinux/config
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/^SELINUX=.*/SELINUX=enforcing/'</span><span class="w"> </span>/etc/selinux/config
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>setenforce<span class="w"> </span><span class="m">1</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Disable unnecessary services</span>
@@ -7997,7 +7997,7 @@ Brings a new physical server, VM, or cloud instance into full production managem
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Host firewall</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>firewall-cmd<span class="w"> </span>--set-default-zone<span class="o">=</span>drop
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>ssh
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;10.0.0.0/8&quot; service name=&quot;ssh&quot; accept&#39;</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">'rule family="ipv4" source address="10.0.0.0/8" service name="ssh" accept'</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>firewall-cmd<span class="w"> </span>--reload
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PLAY [Apply CIS baseline] ******************************************************
@@ -8080,12 +8080,12 @@ Brings a new physical server, VM, or cloud instance into full production managem
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
 <a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
 <a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># Log forwarding to central syslog</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;*.* @syslog.example.com:514&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/rsyslog.conf
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"*.* @syslog.example.com:514"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/rsyslog.conf
 <a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 <a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
 <a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># Verify host visible in monitoring</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=up{instance=&#39;&lt;hostname&gt;:9100&#39;}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; r=json.load(sys.stdin)[&#39;data&#39;][&#39;result&#39;]; print(&#39;UP&#39; if r and r[0][&#39;value&#39;][1]==&#39;1&#39; else &#39;NOT VISIBLE&#39;)&quot;</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">"http://prometheus:9090/api/v1/query?query=up{instance='&lt;hostname&gt;:9100'}"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; r=json.load(sys.stdin)['data']['result']; print('UP' if r and r[0]['value'][1]=='1' else 'NOT VISIBLE')"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># node_exporter user created
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a># Download and extraction complete
@@ -8096,7 +8096,7 @@ Brings a new physical server, VM, or cloud instance into full production managem
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>node_exporter.service enabled and started successfully.
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a># HELP node_cpu_seconds_total Seconds the cpus spent in each mode.
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a># TYPE node_cpu_seconds_total counter
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;user&quot;} 1247.89
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>node_cpu_seconds_total{cpu="0",mode="user"} 1247.89
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a># Syslog forwarding rule appended to rsyslog.conf
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a># Rsyslog service restarted
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Redirecting to /bin/systemctl restart rsyslog.service
@@ -8129,13 +8129,13 @@ Brings a new physical server, VM, or cloud instance into full production managem
 </div>
 <h2 id="4-backup-configuration">4. Backup Configuration<a class="headerlink" href="#4-backup-configuration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Veeam — add to backup job</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;Production Linux VMs&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">"Production Linux VMs"</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">"&lt;hostname&gt;"</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Add-VBRViJobObject</span> <span class="n">-Job</span> <span class="nv">$job</span> <span class="n">-Entities</span> <span class="nv">$vm</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Run first backup and verify</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Start-VBRJob</span> <span class="n">-Job</span> <span class="nv">$job</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-VBRSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">JobName</span> <span class="o">-eq</span> <span class="s2">&quot;Production Linux VMs&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-VBRSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">JobName</span> <span class="o">-eq</span> <span class="s2">"Production Linux VMs"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
 </code></pre></div>
 <h2 id="5-ansible-inventory-registration">5. Ansible Inventory Registration<a class="headerlink" href="#5-ansible-inventory-registration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Add to inventory</span>
@@ -8160,11 +8160,11 @@ Brings a new physical server, VM, or cloud instance into full production managem
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>(no output — command completes silently)
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(no output — command completes silently)
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>web-app-prod-01.example.com | SUCCESS =&gt; {
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    &quot;ansible_facts&quot;: {
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        &quot;discovered_interpreter_python&quot;: &quot;/usr/bin/python3&quot;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    "ansible_facts": {
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        "discovered_interpreter_python": "/usr/bin/python3"
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    },
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    &quot;changed&quot;: false,
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    &quot;ping&quot;: &quot;pong&quot;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    "changed": false,
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    "ping": "pong"
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>}
 </code></pre></div>
 <div class="admonition warning">

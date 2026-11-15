@@ -7831,8 +7831,8 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 <h2 id="quick-diagnosis">Quick Diagnosis<a class="headerlink" href="#quick-diagnosis" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check vCenter certificate expiry (run from VCSA shell)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span><span class="w"> </span>store<span class="w"> </span><span class="k">in</span><span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>VMCA_ROOT<span class="w"> </span>data-encipherment<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$store</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span><span class="nv">$store</span><span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== </span><span class="nv">$store</span><span class="s2"> ==="</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span><span class="nv">$store</span><span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Subject:|Not After"</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">done</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check current Machine SSL cert expiry via OpenSSL</span>
@@ -7923,7 +7923,7 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 <h2 id="login-failure-after-certificate-renewal">Login Failure After Certificate Renewal<a class="headerlink" href="#login-failure-after-certificate-renewal" title="Permanent link">&para;</a></h2>
 <p>Renewing the Machine SSL cert can break SSO if the STS (Security Token Service) certificate is also expired or not updated.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check STS signing certificate expiry</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>TRUSTED_ROOTS<span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Not After&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>TRUSTED_ROOTS<span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Not After"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restart all vCenter services after cert changes</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>service-control<span class="w"> </span>--start<span class="w"> </span>--all
@@ -8043,28 +8043,28 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 <h2 id="nsx-certificate-thumbprint-mismatch">NSX Certificate Thumbprint Mismatch<a class="headerlink" href="#nsx-certificate-thumbprint-mismatch" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check compute manager status via NSX API</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>GET<span class="w"> </span>/api/v1/fabric/compute-managers
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Look for connection_status — should be &quot;UP&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Look for connection_status — should be "UP"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;results&quot;: [
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "results": [
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    {
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      &quot;id&quot;: &quot;compute-manager-1&quot;,
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      &quot;display_name&quot;: &quot;vCenter-Prod-01&quot;,
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      &quot;server&quot;: &quot;vcenter.prod.local&quot;,
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>      &quot;connection_status&quot;: &quot;UP&quot;,
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>      &quot;origin_type&quot;: &quot;vCenter&quot;,
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>      &quot;version&quot;: &quot;7.0.3&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      "id": "compute-manager-1",
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      "display_name": "vCenter-Prod-01",
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      "server": "vcenter.prod.local",
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>      "connection_status": "UP",
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>      "origin_type": "vCenter",
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>      "version": "7.0.3"
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    },
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    {
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      &quot;id&quot;: &quot;compute-manager-2&quot;,
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      &quot;display_name&quot;: &quot;vCenter-DR-01&quot;,
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>      &quot;server&quot;: &quot;vcenter.dr.local&quot;,
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>      &quot;connection_status&quot;: &quot;DOWN&quot;,
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>      &quot;origin_type&quot;: &quot;vCenter&quot;,
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>      &quot;version&quot;: &quot;7.0.3&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      "id": "compute-manager-2",
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      "display_name": "vCenter-DR-01",
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>      "server": "vcenter.dr.local",
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>      "connection_status": "DOWN",
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>      "origin_type": "vCenter",
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>      "version": "7.0.3"
 <a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>    }
 <a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  ],
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  &quot;result_count&quot;: 2
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  "result_count": 2
 <a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>}
 </code></pre></div>
 <div class="admonition warning">

@@ -9337,7 +9337,7 @@ vSAN hardening covers the security baseline configuration applied to the ESXi ho
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Disable SSH banner suppression (show legal notice)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Config/Etc/motd<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;Authorized access only. Activity monitored.&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Config/Etc/motd<span class="w"> </span>-s<span class="w"> </span><span class="s2">"Authorized access only. Activity monitored."</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Operation completed successfully.
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Operation completed successfully.
@@ -9368,10 +9368,10 @@ vSAN hardening covers the security baseline configuration applied to the ESXi ho
 </div>
 <h3 id="esxi-firewall">ESXi Firewall<a class="headerlink" href="#esxi-firewall" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all enabled firewall rules</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;true\s&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"true\s"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify vSAN-required ports are open</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;vSAN|CMMDS|FaultTolerance&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"vSAN|CMMDS|FaultTolerance"</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Close rules not required in your environment</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ntpClient<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
@@ -9424,7 +9424,7 @@ vSAN hardening covers the security baseline configuration applied to the ESXi ho
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Set password complexity requirements (DCUI → Security Profile → Password Policy)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Or via advanced settings</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/PasswordQualityControl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-s<span class="w"> </span><span class="s2">&quot;min=disabled,disabled,disabled,disabled,15 similar=deny retry=3 max=64&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-s<span class="w"> </span><span class="s2">"min=disabled,disabled,disabled,disabled,15 similar=deny retry=3 max=64"</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Set account lockout after 5 failed attempts</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
@@ -9695,7 +9695,7 @@ vCenter → Configure → Advanced Settings → search for <code>config.tls</cod
 <h3 id="enable-data-in-transit-encryption">Enable Data-in-Transit Encryption<a class="headerlink" href="#enable-data-in-transit-encryption" title="Permanent link">&para;</a></h3>
 <p>Encrypt all vSAN host-to-host data traffic to prevent packet capture on the vSAN network:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">$config</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">$config</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-Configuration</span> <span class="nv">$config</span> <span class="n">-DataInTransitEncryptionEnabled</span> <span class="nv">$true</span>
 </code></pre></div>
 <h3 id="enable-data-at-rest-encryption">Enable Data-at-Rest Encryption<a class="headerlink" href="#enable-data-at-rest-encryption" title="Permanent link">&para;</a></h3>
@@ -9703,7 +9703,7 @@ vCenter → Configure → Advanced Settings → search for <code>config.tls</cod
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="p">`</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="n">-Configuration</span> <span class="nv">$config</span> <span class="p">`</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">-EncryptionEnabled</span> <span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">-KmsCluster</span> <span class="p">(</span><span class="nb">Get-KeyManagementServer</span> <span class="s2">&quot;prod-kms&quot;</span><span class="p">)</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">-KmsCluster</span> <span class="p">(</span><span class="nb">Get-KeyManagementServer</span> <span class="s2">"prod-kms"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="disable-vsan-iscsi-target-service-if-not-used">Disable vSAN iSCSI Target Service (if Not Used)<a class="headerlink" href="#disable-vsan-iscsi-target-service-if-not-used" title="Permanent link">&para;</a></h3>
 <p>vSAN iSCSI target service allows non-vSphere hosts to access vSAN as an iSCSI block store. If not in use, disable it to reduce attack surface.</p>
@@ -9718,7 +9718,7 @@ vCenter → Configure → Advanced Settings → search for <code>config.tls</cod
 <h3 id="check-vsan-disk-format-version">Check vSAN Disk Format Version<a class="headerlink" href="#check-vsan-disk-format-version" title="Permanent link">&para;</a></h3>
 <p>Keep vSAN disk format at the current version for each vSAN release. Older disk format versions lack security and performance improvements.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Check disk format version</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="p">|</span>
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="nb">Select </span><span class="n">DiskFormatVersion</span>
 </code></pre></div>
 <p>Upgrade disk format after cluster upgrades:
@@ -9827,11 +9827,11 @@ vSphere Client → Cluster → Configure → vSAN → Advanced Options → Disk 
 <h2 id="host-profile-enforcement">Host Profile Enforcement<a class="headerlink" href="#host-profile-enforcement" title="Permanent link">&para;</a></h2>
 <p>Use vCenter Host Profiles to enforce hardening settings cluster-wide and detect drift automatically.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Create a host profile from a hardened reference host</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nv">$referenceHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01-hardened.example.com&quot;</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nv">$profile</span> <span class="p">=</span> <span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-Hardening-Baseline&quot;</span> <span class="n">-ReferenceHost</span> <span class="nv">$referenceHost</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nv">$referenceHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">"esxi-01-hardened.example.com"</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nv">$profile</span> <span class="p">=</span> <span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">"vSAN-Hardening-Baseline"</span> <span class="n">-ReferenceHost</span> <span class="nv">$referenceHost</span>
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
 <a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="c"># Attach the profile to the cluster</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span>
 <a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$host</span> <span class="k">in</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="nv">$cluster</span><span class="p">))</span> <span class="p">{</span>
 <a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="nb">Set-VMHostProfile</span> <span class="n">-Entity</span> <span class="nv">$host</span> <span class="n">-Profile</span> <span class="nv">$profile</span>
 <a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="p">}</span>
@@ -9843,7 +9843,7 @@ vSphere Client → Cluster → Configure → vSAN → Advanced Options → Disk 
 </code></pre></div>
 <p><strong>Remediate non-compliant hosts:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c"># Apply profile to non-compliant host (requires maintenance mode)</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nv">$host</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.com&quot;</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nv">$host</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">"esxi-02.example.com"</span>
 <a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="nb">Invoke-VMHostProfile</span> <span class="n">-VMHost</span> <span class="nv">$host</span> <span class="n">-Profile</span> <span class="nv">$profile</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p>Host profiles are the recommended mechanism for maintaining configuration consistency on vSAN clusters. Any manual change to a host will show as non-compliant in the next profile check.</p>

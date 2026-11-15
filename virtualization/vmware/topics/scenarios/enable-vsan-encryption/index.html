@@ -9474,11 +9474,11 @@ ensure the cluster has at least 30% free space before enabling.
 <h2 id="4-pre-encryption-checks">4. Pre-Encryption Checks<a class="headerlink" href="#4-pre-encryption-checks" title="Permanent link">&para;</a></h2>
 <p>Confirm all five requirements are met before enabling encryption — the rebuild cannot be paused once started.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check vSAN cluster health — all tests must be green</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">"VsanVcClusterHealthSystem-vsan-cluster-health-system"</span> <span class="p">|</span> <span class="p">`</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">OverallHealth</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Check current vSAN capacity — need at least 30% free before starting</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">CapacityGB</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Get-Datastore</span> <span class="s2">"vsanDatastore"</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">CapacityGB</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check resync queue — must be 0 before enabling encryption</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
@@ -9620,7 +9620,7 @@ ensure the cluster has at least 30% free space before enabling.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>encryption<span class="w"> </span>get
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span> <span class="p">|</span> <span class="p">`</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">"VsanVcClusterHealthSystem-vsan-cluster-health-system"</span> <span class="p">|</span> <span class="p">`</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">OverallHealth</span>
 </code></pre></div>
 <p>Expected: vCenter → <strong>Cluster</strong> → <strong>Configure</strong> → <strong>vSAN</strong> → <strong>Services</strong> → <strong>Data-At-Rest Encryption</strong> shows <strong>Enabled</strong> with key provider status <strong>Active</strong>, and all Skyline Health tests return green.</p>

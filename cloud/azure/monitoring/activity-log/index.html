@@ -8387,15 +8387,15 @@ The Azure Activity Log is a platform log that records subscription-level events 
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>[
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  {
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    &quot;eventTimestamp&quot;: &quot;2026-05-15T09:18:45.123456Z&quot;,
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    &quot;resourceGroup&quot;: &quot;myRG&quot;,
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    &quot;operationName&quot;: {
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      &quot;value&quot;: &quot;Microsoft.Compute/virtualMachines/write&quot;,
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      &quot;localizedValue&quot;: &quot;Create or Update Virtual Machine&quot;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    "eventTimestamp": "2026-05-15T09:18:45.123456Z",
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    "resourceGroup": "myRG",
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    "operationName": {
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      "value": "Microsoft.Compute/virtualMachines/write",
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      "localizedValue": "Create or Update Virtual Machine"
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    },
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    &quot;status&quot;: &quot;Succeeded&quot;,
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    &quot;caller&quot;: &quot;user@example.com&quot;,
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    &quot;resourceId&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    "status": "Succeeded",
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    "caller": "user@example.com",
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    "resourceId": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM"
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  }
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>]
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
@@ -8433,66 +8433,66 @@ The Azure Activity Log is a platform log that records subscription-level events 
 <p>Export the activity log to a Log Analytics workspace for long-term KQL querying and integration with alert rules.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a diagnostic setting targeting a LA workspace</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;activity-to-law&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"activity-to-law"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--resource<span class="w"> </span>/subscriptions/&lt;sub-id&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--workspace<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">&#39;[{&quot;category&quot;:&quot;Administrative&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;Security&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;ServiceHealth&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;Alert&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;Policy&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;ResourceHealth&quot;,&quot;enabled&quot;:true}]&#39;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">'[{"category":"Administrative","enabled":true},{"category":"Security","enabled":true},{"category":"ServiceHealth","enabled":true},{"category":"Alert","enabled":true},{"category":"Policy","enabled":true},{"category":"ResourceHealth","enabled":true}]'</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify the setting</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;activity-to-law&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"activity-to-law"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--resource<span class="w"> </span>/subscriptions/&lt;sub-id&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/providers/microsoft.insights/diagnosticsettings/activity-to-law&quot;,
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;identity&quot;: null,
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;kind&quot;: null,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;location&quot;: null,
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;name&quot;: &quot;activity-to-law&quot;,
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;resourceGroup&quot;: null,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;tags&quot;: null,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  &quot;type&quot;: &quot;Microsoft.Insights/diagnosticSettings&quot;,
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;properties&quot;: {
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    &quot;workspaceId&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace&quot;,
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    &quot;logs&quot;: [
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/providers/microsoft.insights/diagnosticsettings/activity-to-law",
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  "identity": null,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  "kind": null,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  "location": null,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  "name": "activity-to-law",
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  "resourceGroup": null,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  "tags": null,
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  "type": "Microsoft.Insights/diagnosticSettings",
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  "properties": {
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    "workspaceId": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace",
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    "logs": [
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      {
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        &quot;category&quot;: &quot;Administrative&quot;,
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        &quot;categoryGroup&quot;: null,
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        &quot;enabled&quot;: true,
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        &quot;retentionPolicy&quot;: {
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>          &quot;days&quot;: 0,
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>          &quot;enabled&quot;: false
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        "category": "Administrative",
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        "categoryGroup": null,
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        "enabled": true,
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        "retentionPolicy": {
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>          "days": 0,
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>          "enabled": false
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        }
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      },
 <a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      {
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        &quot;category&quot;: &quot;Security&quot;,
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        &quot;enabled&quot;: true,
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        &quot;retentionPolicy&quot;: {
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>          &quot;days&quot;: 0,
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>          &quot;enabled&quot;: false
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        "category": "Security",
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        "enabled": true,
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        "retentionPolicy": {
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>          "days": 0,
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>          "enabled": false
 <a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        }
 <a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>      },
 <a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>      {
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        &quot;category&quot;: &quot;ServiceHealth&quot;,
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>        &quot;enabled&quot;: true,
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>        &quot;retentionPolicy&quot;: {
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>          &quot;days&quot;: 0,
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>          &quot;enabled&quot;: false
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        "category": "ServiceHealth",
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>        "enabled": true,
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>        "retentionPolicy": {
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>          "days": 0,
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>          "enabled": false
 <a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>        }
 <a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>      },
 <a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>      {
-<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>        &quot;category&quot;: &quot;Policy&quot;,
-<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>        &quot;enabled&quot;: true,
-<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>        &quot;retentionPolicy&quot;: {
-<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>          &quot;days&quot;: 0,
-<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>          &quot;enabled&quot;: false
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>        "category": "Policy",
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>        "enabled": true,
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>        "retentionPolicy": {
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>          "days": 0,
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>          "enabled": false
 <a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>        }
 <a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>      }
 <a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>    ],
-<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>    &quot;metrics&quot;: [],
-<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>    &quot;eventHubAuthorizationRuleId&quot;: null,
-<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>    &quot;eventHubName&quot;: null,
-<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>    &quot;storageAccountId&quot;: null
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>    "metrics": [],
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>    "eventHubAuthorizationRuleId": null,
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>    "eventHubName": null,
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>    "storageAccountId": null
 <a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>  }
 <a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>}
 </code></pre></div>
@@ -8524,7 +8524,7 @@ The Azure Activity Log is a platform log that records subscription-level events 
 <p>Once exported, query with KQL using the <code>AzureActivity</code> table:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">AzureActivity</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">7</span><span class="n">d</span><span class="p">)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">OperationNameValue</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="s">&quot;delete&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">OperationNameValue</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="s">"delete"</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Caller</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceGroup</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">count_</span><span class="w"> </span><span class="n">desc</span>
 </code></pre></div>
@@ -8563,36 +8563,36 @@ The Azure Activity Log is a platform log that records subscription-level events 
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Export to a storage account with 365-day retention policy</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;activity-to-storage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"activity-to-storage"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--resource<span class="w"> </span>/subscriptions/&lt;sub-id&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--storage-account<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">&#39;[{&quot;category&quot;:&quot;Administrative&quot;,&quot;enabled&quot;:true,&quot;retentionPolicy&quot;:{&quot;enabled&quot;:true,&quot;days&quot;:365}}]&#39;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">'[{"category":"Administrative","enabled":true,"retentionPolicy":{"enabled":true,"days":365}}]'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/providers/microsoft.insights/diagnosticsettings/activity-to-storage&quot;,
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  &quot;identity&quot;: null,
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  &quot;kind&quot;: null,
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  &quot;location&quot;: null,
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  &quot;name&quot;: &quot;activity-to-storage&quot;,
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  &quot;properties&quot;: {
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    &quot;logs&quot;: [
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/microsoft.insights/diagnosticsettings/activity-to-storage",
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  "identity": null,
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  "kind": null,
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  "location": null,
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  "name": "activity-to-storage",
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  "properties": {
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    "logs": [
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>      {
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        &quot;category&quot;: &quot;Administrative&quot;,
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        &quot;enabled&quot;: true,
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>        &quot;retentionPolicy&quot;: {
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>          &quot;days&quot;: 365,
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>          &quot;enabled&quot;: true
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        "category": "Administrative",
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        "enabled": true,
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>        "retentionPolicy": {
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>          "days": 365,
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>          "enabled": true
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        }
 <a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>      }
 <a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    ],
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    &quot;metrics&quot;: [],
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    &quot;serviceBusRuleId&quot;: null,
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    &quot;storageAccountId&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount&quot;,
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    &quot;workspaceId&quot;: null
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    "metrics": [],
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    "serviceBusRuleId": null,
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    "storageAccountId": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount",
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    "workspaceId": null
 <a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>  },
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>  &quot;resourceGroup&quot;: null,
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>  &quot;tags&quot;: null,
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>  &quot;type&quot;: &quot;Microsoft.Insights/diagnosticSettings&quot;
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>  "resourceGroup": null,
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>  "tags": null,
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>  "type": "Microsoft.Insights/diagnosticSettings"
 <a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -8624,67 +8624,67 @@ The Azure Activity Log is a platform log that records subscription-level events 
 <p>Activity log alerts fire when a specific event matches defined conditions. Common uses include detecting VM deletions, role assignment changes, or policy state changes.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create an action group</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>action-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;ops-action-group&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"ops-action-group"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--short-name<span class="w"> </span><span class="s2">&quot;OpsAG&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--short-name<span class="w"> </span><span class="s2">"OpsAG"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--action<span class="w"> </span>email<span class="w"> </span>ops-email<span class="w"> </span>ops@example.com
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Alert on VM deletion</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>alert<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;alert-vm-delete&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"alert-vm-delete"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--condition<span class="w"> </span><span class="nv">category</span><span class="o">=</span>Administrative<span class="w"> </span><span class="nv">operationName</span><span class="o">=</span>Microsoft.Compute/virtualMachines/delete<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>--action-group<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-action-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Fires when a VM is deleted&quot;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">"Fires when a VM is deleted"</span>
 <a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
 <a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Alert on RBAC role assignment write</span>
 <a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>alert<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;alert-rbac-change&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"alert-rbac-change"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span>--condition<span class="w"> </span><span class="nv">category</span><span class="o">=</span>Administrative<span class="w"> </span><span class="nv">operationName</span><span class="o">=</span>Microsoft.Authorization/roleAssignments/write<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">  </span>--action-group<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-action-group
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-action-group&quot;,
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  &quot;location&quot;: &quot;global&quot;,
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  &quot;name&quot;: &quot;ops-action-group&quot;,
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  &quot;resourceGroup&quot;: &quot;myRG&quot;,
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  &quot;shortName&quot;: &quot;OpsAG&quot;,
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  &quot;tags&quot;: {},
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  &quot;type&quot;: &quot;Microsoft.Insights/actionGroups&quot;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-action-group",
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  "location": "global",
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  "name": "ops-action-group",
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  "resourceGroup": "myRG",
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  "shortName": "OpsAG",
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  "tags": {},
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  "type": "Microsoft.Insights/actionGroups"
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>}
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>{
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  &quot;actions&quot;: {
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    &quot;actionGroups&quot;: [],
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    &quot;emailReceivers&quot;: [
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  "actions": {
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    "actionGroups": [],
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    "emailReceivers": [
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>      {
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        &quot;emailAddress&quot;: &quot;ops@example.com&quot;,
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        &quot;name&quot;: &quot;ops-email&quot;,
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        &quot;status&quot;: &quot;Enabled&quot;
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        "emailAddress": "ops@example.com",
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        "name": "ops-email",
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        "status": "Enabled"
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>      }
 <a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    ],
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    &quot;itsm&quot;: [],
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    &quot;webhooks&quot;: []
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    "itsm": [],
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    "webhooks": []
 <a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>  },
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>  &quot;condition&quot;: &quot;category=Administrative operationName=Microsoft.Compute/virtualMachines/delete&quot;,
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>  &quot;description&quot;: &quot;Fires when a VM is deleted&quot;,
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>  &quot;enabled&quot;: true,
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/microsoft.insights/activityLogAlerts/alert-vm-delete&quot;,
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>  &quot;name&quot;: &quot;alert-vm-delete&quot;,
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>  &quot;resourceGroup&quot;: &quot;myRG&quot;
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>  "condition": "category=Administrative operationName=Microsoft.Compute/virtualMachines/delete",
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>  "description": "Fires when a VM is deleted",
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>  "enabled": true,
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/microsoft.insights/activityLogAlerts/alert-vm-delete",
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>  "name": "alert-vm-delete",
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>  "resourceGroup": "myRG"
 <a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>}
 <a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>{
-<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>  &quot;actions&quot;: {
-<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>    &quot;actionGroups&quot;: [],
-<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>    &quot;emailReceivers&quot;: [],
-<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>    &quot;itsm&quot;: [],
-<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>    &quot;webhooks&quot;: []
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>  "actions": {
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>    "actionGroups": [],
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>    "emailReceivers": [],
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>    "itsm": [],
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>    "webhooks": []
 <a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>  },
-<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>  &quot;condition&quot;: &quot;category=Administrative operationName=Microsoft.Authorization/roleAssignments/write&quot;,
-<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>  &quot;enabled&quot;: true,
-<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/microsoft.insights/activityLogAlerts/alert-rbac-change&quot;,
-<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>  &quot;name&quot;: &quot;alert-rbac-change&quot;,
-<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>  &quot;resourceGroup&quot;: &quot;myRG&quot;
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>  "condition": "category=Administrative operationName=Microsoft.Authorization/roleAssignments/write",
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>  "enabled": true,
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/microsoft.insights/activityLogAlerts/alert-rbac-change",
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>  "name": "alert-rbac-change",
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>  "resourceGroup": "myRG"
 <a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -8760,7 +8760,7 @@ The Azure Activity Log is a platform log that records subscription-level events 
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>--caller<span class="w"> </span>&lt;service-principal-object-id&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="m">2026</span>-04-01T00:00:00Z<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[].operationName.value&#39;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.[].operationName.value'</span>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Find failed deployments in the last 7 days</span>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>

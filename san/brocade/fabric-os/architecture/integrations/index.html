@@ -7491,8 +7491,8 @@ FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav man
 <h2 id="dell-powermax-integration">Dell PowerMax Integration<a class="headerlink" href="#dell-powermax-integration" title="Permanent link">&para;</a></h2>
 <p>PowerMax FA (Front-End Adapter) ports are registered as aliases in each Brocade fabric.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create aliases for PowerMax FA ports (get WWPNs from Unisphere)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;powermax01_fa0e&quot;</span>,<span class="w"> </span><span class="s2">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;powermax01_fa0f&quot;</span>,<span class="w"> </span><span class="s2">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>alicreate<span class="w"> </span><span class="s2">"powermax01_fa0e"</span>,<span class="w"> </span><span class="s2">"5x:xx:xx:xx:xx:xx:xx:xx"</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>alicreate<span class="w"> </span><span class="s2">"powermax01_fa0f"</span>,<span class="w"> </span><span class="s2">"5x:xx:xx:xx:xx:xx:xx:xx"</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># For SRDF replication: Director ports are zoned in the replication zone/fabric</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Ensure SRDF director ports use VSAN/zone separation from production host zones</span>
@@ -7528,12 +7528,12 @@ FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav man
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># network interface show -fields wwpn</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create alias for ONTAP SAN LIF</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;2x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>alicreate<span class="w"> </span><span class="s2">"netapp01_lif0a"</span>,<span class="w"> </span><span class="s2">"2x:xx:xx:xx:xx:xx:xx:xx"</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Zone host HBA to ONTAP LIF</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;netapp01_lif0a&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cfgadd<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>cfgenable<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>zonecreate<span class="w"> </span><span class="s2">"esxi-host01_hba0-netapp01_lif0a"</span>,<span class="w"> </span><span class="s2">"esxi-host01_hba0;netapp01_lif0a"</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cfgadd<span class="w"> </span><span class="s2">"prod-cfg"</span>,<span class="w"> </span><span class="s2">"esxi-host01_hba0-netapp01_lif0a"</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>cfgenable<span class="w"> </span><span class="s2">"prod-cfg"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Alias:                    netapp01_lif0a
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Alias WWPN:               2x:xx:xx:xx:xx:xx:xx:xx
@@ -7577,12 +7577,12 @@ FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav man
 <h2 id="pure-storage-flasharray-integration">Pure Storage FlashArray Integration<a class="headerlink" href="#pure-storage-flasharray-integration" title="Permanent link">&para;</a></h2>
 <p>Pure target port WWPNs are registered as aliases and zoned per host initiator.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get Pure target port WWPNs from Pure UI: Settings → SAN</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct0.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct1.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alicreate<span class="w"> </span><span class="s2">"pure-fa01_ct0.eth4"</span>,<span class="w"> </span><span class="s2">"52:4a:xx:xx:xx:xx:xx:xx"</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>alicreate<span class="w"> </span><span class="s2">"pure-fa01_ct1.eth4"</span>,<span class="w"> </span><span class="s2">"52:4a:xx:xx:xx:xx:xx:xx"</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Zone: each host HBA to one Pure target port per controller</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-pure-fa01_ct0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;pure-fa01_ct0.eth4&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1-pure-fa01_ct1&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1;pure-fa01_ct1.eth4&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>zonecreate<span class="w"> </span><span class="s2">"esxi-host01_hba0-pure-fa01_ct0"</span>,<span class="w"> </span><span class="s2">"esxi-host01_hba0;pure-fa01_ct0.eth4"</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>zonecreate<span class="w"> </span><span class="s2">"esxi-host01_hba1-pure-fa01_ct1"</span>,<span class="w"> </span><span class="s2">"esxi-host01_hba1;pure-fa01_ct1.eth4"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Alias created successfully: pure-fa01_ct0.eth4
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Alias created successfully: pure-fa01_ct1.eth4
@@ -7631,7 +7631,7 @@ FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav man
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Enter authentication passphrase: ••••••••••
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Enter privacy protocol (DES/3DES/AES) [AES]: AES
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Enter privacy passphrase: ••••••••••
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>SNMP v3 user &#39;admin_snmp&#39; configured successfully.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>SNMP v3 user 'admin_snmp' configured successfully.
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>MIB capability set to: SNMPv3
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Syslog Configuration:
@@ -7681,10 +7681,10 @@ FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav man
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  usmUserPrivProtocol: usmAesCfb128Protocol
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>System Description:
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  sysDescr.0 = STRING: &quot;Brocade FibreChannel Switch
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  sysDescr.0 = STRING: "Brocade FibreChannel Switch
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Fabric OS v9.1.0
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  Serial Number: SN2K400A1B2C3D4E
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  Build: 9.1.0.0.0&quot;
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  Build: 9.1.0.0.0"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

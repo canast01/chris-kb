@@ -9099,14 +9099,14 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Problem states: Paused, Error, Initializing, Image Access</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Detailed state for a specific CG</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get<span class="w"> </span>cg<span class="w"> </span>detailed_state<span class="w"> </span><span class="s2">&quot;&lt;cg-name&gt;&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get<span class="w"> </span>cg<span class="w"> </span>detailed_state<span class="w"> </span><span class="s2">"&lt;cg-name&gt;"</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Shows: R/W state per copy, journal utilization %, current lag, last bookmark time</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># If the CG is in Error state — look for the error string in output</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Common errors:</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#   &quot;Journal utilization &gt; 80%&quot; = writes filling journal faster than draining to DR</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">#   &quot;Splitter connectivity lost&quot; = hypervisor/array splitter not delivering I/O to RPA</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1">#   &quot;Link communication error&quot; = network path between sites is degraded</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#   "Journal utilization &gt; 80%" = writes filling journal faster than draining to DR</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">#   "Splitter connectivity lost" = hypervisor/array splitter not delivering I/O to RPA</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1">#   "Link communication error" = network path between sites is degraded</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>get cg list
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CG Name                    Protection State    RPO        Lag
@@ -9116,7 +9116,7 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>backup-archive-cg          Error               00:30:00   00:45:15
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>legacy-vm-pool             Initializing        01:00:00   N/A
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>get cg detailed_state &quot;prod-db-01&quot;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>get cg detailed_state "prod-db-01"
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>CG Name: prod-db-01
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Protection State: Active
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>R/W State (Production Copy): Write Enabled
@@ -9159,7 +9159,7 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 <hr />
 <h2 id="step-3-check-journal-utilization-and-lag">Step 3 — Check journal utilization and lag<a class="headerlink" href="#step-3-check-journal-utilization-and-lag" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Journal statistics for a specific CG</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>journal<span class="w"> </span>stats<span class="w"> </span><span class="s2">&quot;&lt;cg-name&gt;&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>journal<span class="w"> </span>stats<span class="w"> </span><span class="s2">"&lt;cg-name&gt;"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Key fields to review:</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#   Production journal utilization: should be &lt; 20%</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#   Remote journal utilization:     should be &lt; 20%</span>
@@ -9290,7 +9290,7 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Splitter health from the RPA CLI</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>get<span class="w"> </span>splitter<span class="w"> </span>status
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Lists each splitter by name, type (vRPA / array), and connectivity state</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Expected: all splitters show &quot;Connected&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Expected: all splitters show "Connected"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Splitter Name          Type    Status      Last Heartbeat
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>================================================================================
@@ -9375,9 +9375,9 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Method 2: Web UI</span>
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Navigate to RecoverPoint Management UI → Administration → Support → Collect Support Bundle</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Click &quot;Collect&quot; → download the ZIP when complete</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Click "Collect" → download the ZIP when complete</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@192.168.1.45&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@192.168.1.45's password: 
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>RecoverPoint CLI v5.4.2.1 (Build 12847)
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>rpa-mgmt-01&gt; support collect bundle
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Collecting support bundle...
@@ -9450,7 +9450,7 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 <hr />
 <h2 id="quick-all-in-one-diagnostic-snapshot">Quick all-in-one diagnostic snapshot<a class="headerlink" href="#quick-all-in-one-diagnostic-snapshot" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Run from your workstation — saves output for SR attachment</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-mgmt-ip&gt;<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-mgmt-ip&gt;<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="s2">  get system status;</span>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="s2">  get alerts;</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="s2">  get cg list;</span>
@@ -9458,7 +9458,7 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="s2">  get network status;</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="s2">  get splitter status;</span>
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="s2">  get all journal stats</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/rp-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/rp-diag-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>System Status:
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  System Name: rpa-prod-01.dc1.local

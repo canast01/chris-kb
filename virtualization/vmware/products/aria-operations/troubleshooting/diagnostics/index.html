@@ -9153,7 +9153,7 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Problem: /storage/db &gt; 85% = risk of analytics failure</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Check NTP sync (time drift causes cluster join failures and alert timing issues)</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"System time"</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>timedatectl<span class="w"> </span>status
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@vrops-master:~$ cluster-mgmt-cli status
@@ -9185,7 +9185,7 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>/dev/sdc1       200G   52G  148G  26% /var/log
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>tmpfs           16G  2.1G   14G  13% /dev/shm
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>admin@vrops-master:~$ chronyc tracking | grep &quot;System time&quot;
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>admin@vrops-master:~$ chronyc tracking | grep "System time"
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>System time   : 0.000000234 seconds fast of NTP time
 <a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
 <a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>admin@vrops-master:~$ timedatectl status
@@ -9221,64 +9221,64 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <h2 id="step-2-query-rest-api-health">Step 2 — Query REST API health<a class="headerlink" href="#step-2-query-rest-api-health" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get API auth token (admin credentials)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrops-master-ip&gt;/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;LOCAL&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin).get(&#39;token&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">"https://&lt;vrops-master-ip&gt;/suite-api/api/auth/token/acquire"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"username":"admin","password":"&lt;password&gt;","authSource":"LOCAL"}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import json,sys; print(json.load(sys.stdin).get('token',''))"</span><span class="k">)</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$TOKEN</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Expected: token string; empty = auth failed</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Cluster health check (per-service component status)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrops-master-ip&gt;/suite-api/api/health&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="s2">"https://&lt;vrops-master-ip&gt;/suite-api/api/health"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Expected: all components online</span>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Resource count (drop indicates collection stopped)</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrops-master-ip&gt;/suite-api/api/resources?pageSize=1&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(&#39;Total resources:&#39;, json.load(sys.stdin).get(&#39;total&#39;,&#39;unknown&#39;))&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="s2">"https://&lt;vrops-master-ip&gt;/suite-api/api/resources?pageSize=1"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import json,sys; print('Total resources:', json.load(sys.stdin).get('total','unknown'))"</span>
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Active alerts (high count = analytics engine may be generating floods)</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrops-master-ip&gt;/suite-api/api/alerts?pageSize=10&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(&#39;Active alerts:&#39;, json.load(sys.stdin).get(&#39;total&#39;,&#39;unknown&#39;))&quot;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="s2">"https://&lt;vrops-master-ip&gt;/suite-api/api/alerts?pageSize=10"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import json,sys; print('Active alerts:', json.load(sys.stdin).get('total','unknown'))"</span>
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
 <a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Adapter instances and their collection status</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrops-master-ip&gt;/suite-api/api/adapterinstances&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="s2">"https://&lt;vrops-master-ip&gt;/suite-api/api/adapterinstances"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="s2">for ai in json.load(sys.stdin).get(&#39;adapterInstancesInfoDto&#39;, []):</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="s2">    print(ai.get(&#39;id&#39;,&#39;&#39;), &#39;|&#39;, ai.get(&#39;name&#39;,&#39;&#39;), &#39;|&#39;, ai.get(&#39;collectorStatus&#39;,&#39;&#39;))</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="s2">for ai in json.load(sys.stdin).get('adapterInstancesInfoDto', []):</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="s2">    print(ai.get('id',''), '|', ai.get('name',''), '|', ai.get('collectorStatus',''))</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="s2">"</span>
 <a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="c1"># Problem: collectorStatus = Data Receiving/No Data = adapter collecting or not</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwODk5MjM0NX0.dGVzdHRva2VuMTIzNDU2Nzg5MA==
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>{
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;adapterCount&quot;: 12,
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;collectorCount&quot;: 3,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;nodeStatus&quot;: [
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  "adapterCount": 12,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  "collectorCount": 3,
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  "nodeStatus": [
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    {
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;nodeId&quot;: &quot;vrops-master-01.lab.local&quot;,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      &quot;status&quot;: &quot;ONLINE&quot;,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;cpuUsage&quot;: 62.4,
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      &quot;memoryUsage&quot;: 78.2
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      "nodeId": "vrops-master-01.lab.local",
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      "status": "ONLINE",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      "cpuUsage": 62.4,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      "memoryUsage": 78.2
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    },
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    {
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;nodeId&quot;: &quot;vrops-replica-01.lab.local&quot;,
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;status&quot;: &quot;ONLINE&quot;,
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;cpuUsage&quot;: 51.8,
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;memoryUsage&quot;: 65.1
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      "nodeId": "vrops-replica-01.lab.local",
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      "status": "ONLINE",
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      "cpuUsage": 51.8,
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      "memoryUsage": 65.1
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    },
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    {
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>      &quot;nodeId&quot;: &quot;vrops-replica-02.lab.local&quot;,
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      &quot;status&quot;: &quot;ONLINE&quot;,
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      &quot;cpuUsage&quot;: 48.3,
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      &quot;memoryUsage&quot;: 71.9
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>      "nodeId": "vrops-replica-02.lab.local",
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      "status": "ONLINE",
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      "cpuUsage": 48.3,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      "memoryUsage": 71.9
 <a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    }
 <a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  ],
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  &quot;overallHealth&quot;: &quot;HEALTHY&quot;
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  "overallHealth": "HEALTHY"
 <a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>}
 <a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Total resources: 4287
 <a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Active alerts: 247
@@ -9316,29 +9316,29 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <hr />
 <h2 id="step-3-inspect-log-files">Step 3 — Inspect log files<a class="headerlink" href="#step-3-inspect-log-files" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Analytics engine errors (OOM, processing failures, alert engine)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ERROR\|Exception\|OutOfMemory\|FATAL&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"ERROR\|Exception\|OutOfMemory\|FATAL"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>/var/log/vmware/vcops/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Adapter collection errors (adapter auth, TLS, timeout)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ERROR\|Exception\|fail\|timeout&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"ERROR\|Exception\|fail\|timeout"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>/var/log/vmware/vcops/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Filter for a specific adapter by name (e.g., vCenter adapter)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;VMware vCenter&quot;</span><span class="w"> </span>/var/log/vmware/vcops/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"VMware vCenter"</span><span class="w"> </span>/var/log/vmware/vcops/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Follow analytics log in real time during a failing operation</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcops/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|exception&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcops/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|warn\|exception"</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Check for heap OOM errors specifically (common on undersized vROps nodes)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>grep<span class="w"> </span><span class="s2">&quot;OutOfMemoryError&quot;</span><span class="w"> </span>/var/log/vmware/vcops/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>grep<span class="w"> </span><span class="s2">"OutOfMemoryError"</span><span class="w"> </span>/var/log/vmware/vcops/analytics.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># If present: check heap allocation in VAMI → Administration → JVM Memory</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>2024-01-15 14:32:18.456 ERROR [Analytics-Worker-12] com.vmware.vcops.analytics.engine - OutOfMemoryError: Java heap space
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2024-01-15 14:32:19.123 FATAL [Main] com.vmware.vcops.core.AnalyticsEngine - Failed to process metric batch for adapter &#39;vCenter-prod&#39;: Connection timeout after 30000ms
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2024-01-15 14:32:19.123 FATAL [Main] com.vmware.vcops.core.AnalyticsEngine - Failed to process metric batch for adapter 'vCenter-prod': Connection timeout after 30000ms
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2024-01-15 14:32:21.789 ERROR [Collector-5] com.vmware.vcops.adapter.vcenter - Authentication failed for vCenter instance vc-01.corp.local: Invalid credentials
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2024-01-15 14:32:25.445 Exception in thread &quot;Analytics-Processor-8&quot; java.lang.NullPointerException at com.vmware.vcops.analytics.MetricAggregator.process(MetricAggregator.java:247)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>2024-01-15 14:32:28.912 ERROR [TLS-Handler-3] com.vmware.vcops.adapter.ssl - Certificate validation failed for adapter &#39;NSX-Manager&#39;: PKIX path building failed
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2024-01-15 14:32:31.567 WARN [Collector-2] com.vmware.vcops.adapter.base - Adapter &#39;vSAN-Cluster&#39; collection cycle exceeded SLA: 45000ms &gt; 30000ms threshold
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2024-01-15 14:32:25.445 Exception in thread "Analytics-Processor-8" java.lang.NullPointerException at com.vmware.vcops.analytics.MetricAggregator.process(MetricAggregator.java:247)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>2024-01-15 14:32:28.912 ERROR [TLS-Handler-3] com.vmware.vcops.adapter.ssl - Certificate validation failed for adapter 'NSX-Manager': PKIX path building failed
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2024-01-15 14:32:31.567 WARN [Collector-2] com.vmware.vcops.adapter.base - Adapter 'vSAN-Cluster' collection cycle exceeded SLA: 45000ms &gt; 30000ms threshold
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>2024-01-15 14:33:02.234 ERROR [Analytics-Worker-1] com.vmware.vcops.analytics.engine - Processing failure: Insufficient memory for aggregation job
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>...
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>VMware vCenter Adapter [vCenter-prod] - Collection Status: FAILED
@@ -9385,12 +9385,12 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># This runs a live connectivity test from the vROps collector to the source</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Via collector.log — find the last collection attempt for vCenter adapter</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>grep<span class="w"> </span><span class="s2">&quot;vCenter&quot;</span><span class="w"> </span>/var/log/vmware/vcops/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Start collection\|End collection\|error&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>grep<span class="w"> </span><span class="s2">"vCenter"</span><span class="w"> </span>/var/log/vmware/vcops/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"Start collection\|End collection\|error"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
 <a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Check if collection is happening every 5 minutes (expected interval)</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>grep<span class="w"> </span><span class="s2">&quot;Start collection&quot;</span><span class="w"> </span>/var/log/vmware/vcops/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>tail<span class="w"> </span>-10<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $2}&#39;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>grep<span class="w"> </span><span class="s2">"Start collection"</span><span class="w"> </span>/var/log/vmware/vcops/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>tail<span class="w"> </span>-10<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1, $2}'</span>
 <a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Expected: entries every 5 minutes per adapter instance</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>2024-01-15 14:32:15,847 [INFO] vCenter Adapter: Start collection for instance vCenter-Prod
@@ -9446,8 +9446,8 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Verify all nodes have NTP in sync (time drift &gt; 5 minutes breaks cluster communication)</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>&lt;master-ip&gt;<span class="w"> </span>&lt;replica-ip&gt;<span class="w"> </span>&lt;data-node-ip&gt;<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$node</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="nv">$node</span><span class="w"> </span><span class="s2">&quot;chronyc tracking | grep &#39;System time&#39;&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== </span><span class="nv">$node</span><span class="s2"> ==="</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="nv">$node</span><span class="w"> </span><span class="s2">"chronyc tracking | grep 'System time'"</span>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">done</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Check VAMI for disk allocation per node</span>
@@ -9506,8 +9506,8 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/data<span class="w">             </span><span class="c1"># vROps data files</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Large log files that can be safely removed (keep last 7 days)</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>find<span class="w"> </span>/var/log/vmware/vcops/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log.*&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>find<span class="w"> </span>/var/log/vmware/vcops/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log.*&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>find<span class="w"> </span>/var/log/vmware/vcops/<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.log.*"</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>find<span class="w"> </span>/var/log/vmware/vcops/<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.log.*"</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Check analytics DB size</span>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/
@@ -9519,7 +9519,7 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Recommended: heap size = 70% of node RAM for dedicated nodes</span>
 <a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
 <a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Check for core dump files</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>find<span class="w"> </span>/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;core.*&quot;</span><span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>find<span class="w"> </span>/<span class="w"> </span>-name<span class="w"> </span><span class="s2">"core.*"</span><span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Filesystem      Size  Used Avail Use% Mounted on
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/storage/db     500G  387G  113G  77% /storage/db
@@ -9581,7 +9581,7 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># - Resource type and count that is missing or wrong</span>
 <a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1"># - Time window when data stopped appearing</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@192.168.1.45&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@192.168.1.45's password: 
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Generating support bundle...
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Bundle generation started at 2024-01-15 14:32:18 UTC
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Collecting cluster logs... [████████████████████] 100%
@@ -9590,7 +9590,7 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Collecting node states... [████████████████████] 100%
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Support bundle created successfully: /tmp/vcops-support-20240115-143218.zip
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Bundle size: 847 MB
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>admin@192.168.1.45&#39;s password: 
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>admin@192.168.1.45's password: 
 <a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>vcops-support-20240115-143218.zip                    100%  847MB   2.3MB/s   06:12
 </code></pre></div>
 <div class="admonition warning">

@@ -8160,7 +8160,7 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <h3 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h3>
 <p>A CPU reservation is expressed in MHz (or GHz). When you set a reservation of 2000 MHz on a VM, vCenter will only power on that VM on a host where 2000 MHz of unreserved capacity is available. The reservation is held even when the VM is idle.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># PowerCLI — set CPU reservation</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Get-VM<span class="w"> </span><span class="s2">&quot;DB-PROD01&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Get-VM<span class="w"> </span><span class="s2">"DB-PROD01"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>Set-VMResourceConfiguration<span class="w"> </span>-CpuReservationMhz<span class="w"> </span><span class="m">2000</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># View current allocations</span>
@@ -8238,14 +8238,14 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </tbody>
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># esxtop — view CPU ready per VM</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Launch esxtop → press &#39;c&#39; for CPU view</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Launch esxtop → press 'c' for CPU view</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Column: %RDY per vCPU, %CSTP (co-stop for SMP VMs)</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>esxtop
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># vSphere CLI — CPU readiness for all VMs on a host</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Use performance manager via PowerCLI for historical RDY data:</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;APP-01&quot;</span><span class="o">)</span><span class="w"> </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">"APP-01"</span><span class="o">)</span><span class="w"> </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-2<span class="o">)</span><span class="w"> </span>-IntervalMins<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>World ID   GID Name                                   CPU Affinity
@@ -8341,18 +8341,18 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <li>The <code>.vswp</code> file size equals the VM's configured memory minus its memory reservation (reason to set reservations on critical VMs)</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># esxtop — memory view</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Press &#39;m&#39; in esxtop</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Press 'm' in esxtop</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># MCTLSZ = balloon size, SWCUR = current swap usage</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>esxtop
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># PowerCLI — check balloon and swap stats</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;DB-PROD01&quot;</span><span class="o">)</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">"DB-PROD01"</span><span class="o">)</span><span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-Stat<span class="w"> </span>mem.vmmemctl.average,<span class="w"> </span>mem.swapped.average<span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span>-IntervalMins<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Loaded runtime libraries.
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Initializing esxtop, please wait...
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ESXTOP&gt; (Press &#39;m&#39; for memory view)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ESXTOP&gt; (Press 'm' for memory view)
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>   MCTLSZ    BALLONED  SWCUR   SWMAX   MEMCTL   MEMMAPS
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>   512       256       0       2048    384      1024
@@ -8445,8 +8445,8 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <p>Disable expandable reservations when you need strict capacity isolation between business units or tenants sharing a cluster.</p>
 </blockquote>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — create a resource pool</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">New-ResourcePool</span> <span class="n">-Name</span> <span class="s2">&quot;GOLD&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">New-ResourcePool</span> <span class="n">-Name</span> <span class="s2">"GOLD"</span> <span class="p">`</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"PROD-CLUSTER"</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  <span class="n">-CpuSharesLevel</span> <span class="n">High</span> <span class="p">`</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  <span class="n">-CpuReservationMhz</span> <span class="n">40000</span> <span class="p">`</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  <span class="n">-MemSharesLevel</span> <span class="n">High</span> <span class="p">`</span>
@@ -8454,7 +8454,7 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  <span class="n">-MemExpandableReservation</span> <span class="nv">$false</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># Move a VM into a resource pool</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;DB-PROD01&quot;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-ResourcePool</span> <span class="s2">&quot;GOLD&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">"DB-PROD01"</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-ResourcePool</span> <span class="s2">"GOLD"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="the-resource-pool-death-star-anti-pattern">The "Resource Pool Death Star" Anti-Pattern<a class="headerlink" href="#the-resource-pool-death-star-anti-pattern" title="Permanent link">&para;</a></h3>
 <p>Nesting resource pools more than two levels deep creates unpredictable scheduling behaviour and makes capacity planning nearly impossible. Flat or two-level hierarchies (cluster → pool → VMs) are the operational standard.</p>
@@ -8479,7 +8479,7 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Returns: total, NUMA node count, size per node</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># vNUMA — check VM&#39;s virtual NUMA config</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># vNUMA — check VM's virtual NUMA config</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># vSphere Client: VM → Edit Settings → VM Options → Advanced → vNUMA topology</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Or check via VMX parameter:</span>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>grep<span class="w"> </span>-i<span class="w"> </span>numa<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx
@@ -8548,7 +8548,7 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </tbody>
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># esxtop NUMA view</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Press &#39;m&#39; → then &#39;f&#39; to add NUMA fields</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Press 'm' → then 'f' to add NUMA fields</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># N%L = % local NUMA memory accesses (higher is better, &gt; 90% target)</span>
 </code></pre></div>
 <hr />
@@ -8561,12 +8561,12 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <li><strong>DRS automation levels</strong> control whether migrations are recommendations or automatic</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># PowerCLI — check DRS recommendations</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-DrsRecommendation</span> <span class="n">-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-DrsRecommendation</span> <span class="n">-Cluster</span> <span class="s2">"PROD-CLUSTER"</span> <span class="p">|</span> <span class="p">`</span>
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  <span class="nb">Select-Object</span> <span class="n">VirtualMachine</span><span class="p">,</span> <span class="n">Reason</span><span class="p">,</span> <span class="n">Priority</span> <span class="p">|</span> <span class="p">`</span>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c"># Force DRS to recalculate and apply recommendations</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nb">Invoke-DrsRecommendation</span> <span class="n">-Cluster</span> <span class="s2">&quot;PROD-CLUSTER&quot;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nb">Invoke-DrsRecommendation</span> <span class="n">-Cluster</span> <span class="s2">"PROD-CLUSTER"</span>
 </code></pre></div>
 <h3 id="drs-threshold-migration-aggressiveness">DRS Threshold (Migration Aggressiveness)<a class="headerlink" href="#drs-threshold-migration-aggressiveness" title="Permanent link">&para;</a></h3>
 <table>
@@ -8642,13 +8642,13 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <hr />
 <h2 id="operational-checklist-resource-management-health">Operational Checklist — Resource Management Health<a class="headerlink" href="#operational-checklist-resource-management-health" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Identify VMs with CPU Ready &gt; 5%</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># esxtop → &#39;c&#39; view → sort by %RDY (press &#39;F&#39; → select RDY)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># esxtop → 'c' view → sort by %RDY (press 'F' → select RDY)</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># 2. Find VMs hitting CPU limits (Ready is low but performance is poor)</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Look for %MLMTD &gt; 0 in esxtop CPU view (% time limited by CPU limit)</span>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># 3. Check for host memory pressure</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># esxtop → &#39;m&#39; view → look for MCTLSZ &gt; 0 (balloon) or SWCUR &gt; 0 (swap)</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># esxtop → 'm' view → look for MCTLSZ &gt; 0 (balloon) or SWCUR &gt; 0 (swap)</span>
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># 4. Review resource pool entitlements vs demand</span>
 <a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>Get-ResourcePool<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
@@ -8656,7 +8656,7 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 <a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span>Sort-Object<span class="w"> </span>CpuReservationMhz<span class="w"> </span>-Descending
 <a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
 <a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># 5. Check NUMA efficiency</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># esxtop &#39;m&#39; view → N%L column; values &lt; 80% warrant investigation</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># esxtop 'm' view → N%L column; values &lt; 80% warrant investigation</span>
 <a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
 <a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># 6. Find VMs with no memory reservation on critical workloads</span>
 <a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMResourceConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>

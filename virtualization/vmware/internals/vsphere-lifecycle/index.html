@@ -8252,7 +8252,7 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </tbody>
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PowerCLI — check cluster image compliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">"Production-Cluster"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Get-LcmRecommendation<span class="w"> </span>-Cluster<span class="w"> </span><span class="nv">$cluster</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Invoke remediation for all non-compliant hosts</span>
@@ -8308,24 +8308,24 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># VCSA REST API — trigger pre-upgrade check</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://vcenter.corp.local/api/vcenter/lcm/update/pending<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-token&gt;&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"vmware-api-session-id: &lt;session-token&gt;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;value&quot;: {
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    &quot;pending_updates&quot;: [
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  "value": {
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    "pending_updates": [
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>      {
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        &quot;version&quot;: &quot;8.0.2.00000&quot;,
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        &quot;release_date&quot;: &quot;2024-01-15&quot;,
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        &quot;severity&quot;: &quot;critical&quot;,
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        &quot;description&quot;: &quot;Security and stability updates&quot;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        "version": "8.0.2.00000",
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        "release_date": "2024-01-15",
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        "severity": "critical",
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        "description": "Security and stability updates"
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      }
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    ],
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    &quot;pre_upgrade_checks&quot;: {
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      &quot;status&quot;: &quot;RUNNING&quot;,
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>      &quot;progress_percent&quot;: 45,
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>      &quot;checks_passed&quot;: 8,
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      &quot;checks_failed&quot;: 0,
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      &quot;estimated_time_remaining_seconds&quot;: 120
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    "pre_upgrade_checks": {
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      "status": "RUNNING",
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>      "progress_percent": 45,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>      "checks_passed": 8,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>      "checks_failed": 0,
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      "estimated_time_remaining_seconds": 120
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    }
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  }
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>}
@@ -8408,7 +8408,7 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check Quick Boot eligibility from ESXi CLI</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/bin/checkQuickBoot.sh
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or from vCenter — check host&#39;s Quick Boot support status in</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or from vCenter — check host's Quick Boot support status in</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Lifecycle Manager → Hosts → select host → view Quick Boot column</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Quick Boot Eligibility Check Results
@@ -8569,12 +8569,12 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </tbody>
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># PowerCLI — create host profile from reference host</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">$refHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi01.corp.local&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>New-VMHostProfile<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Corp-Standard-Profile&quot;</span><span class="w"> </span>-ReferenceHost<span class="w"> </span><span class="nv">$refHost</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">$refHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">"esxi01.corp.local"</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>New-VMHostProfile<span class="w"> </span>-Name<span class="w"> </span><span class="s2">"Corp-Standard-Profile"</span><span class="w"> </span>-ReferenceHost<span class="w"> </span><span class="nv">$refHost</span>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Apply profile to a host</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">$profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHostProfile<span class="w"> </span><span class="s2">&quot;Corp-Standard-Profile&quot;</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">$targetHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi02.corp.local&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">$profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHostProfile<span class="w"> </span><span class="s2">"Corp-Standard-Profile"</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">$targetHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">"esxi02.corp.local"</span>
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Apply-VMHostProfile<span class="w"> </span>-Entity<span class="w"> </span><span class="nv">$targetHost</span><span class="w"> </span>-Profile<span class="w"> </span><span class="nv">$profile</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Test compliance without applying</span>
@@ -8665,12 +8665,12 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </table>
 <h3 id="deploying-vms-from-content-library">Deploying VMs from Content Library<a class="headerlink" href="#deploying-vms-from-content-library" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># PowerCLI — deploy VM from Content Library template</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">$template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-ContentLibraryItem<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Ubuntu-22.04-Template&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$datastore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Datastore<span class="w"> </span><span class="s2">&quot;vSAN-Datastore&quot;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">$template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-ContentLibraryItem<span class="w"> </span>-Name<span class="w"> </span><span class="s2">"Ubuntu-22.04-Template"</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$datastore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Datastore<span class="w"> </span><span class="s2">"vSAN-Datastore"</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">"Production-Cluster"</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>New-VM<span class="w"> </span>-ContentLibraryItem<span class="w"> </span><span class="nv">$template</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;web-server-01&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">"web-server-01"</span><span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span>-Datastore<span class="w"> </span><span class="nv">$datastore</span><span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span>-ResourcePool<span class="w"> </span><span class="nv">$cluster</span><span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span>-Confirm:<span class="nv">$false</span>

@@ -7862,14 +7862,14 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>uptime<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Java heap utilization for the DCNM server process</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nv">DCNM_PID</span><span class="o">=</span><span class="k">$(</span>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;[d]cnm-server&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DCNM_PID</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_PID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>1s<span class="w"> </span><span class="m">10</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nv">DCNM_PID</span><span class="o">=</span><span class="k">$(</span>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"[d]cnm-server"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $2}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$DCNM_PID</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">DCNM_PID</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>1s<span class="w"> </span><span class="m">10</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-services-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="k">fi</span>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
 <a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># DCNM application log tail (most recent errors)</span>
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>tail<span class="w"> </span>-500<span class="w"> </span>/var/log/dcnm/dcnm.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-log-tail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>journalctl<span class="w"> </span>-u<span class="w"> </span>dcnm<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;4 hours ago&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-log-tail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>journalctl<span class="w"> </span>-u<span class="w"> </span>dcnm<span class="w"> </span>--since<span class="w"> </span><span class="s2">"4 hours ago"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-log-tail-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>S.No  Service Name                    Admin State    Oper State
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>1     dcnm-server                     UP             UP
@@ -7928,17 +7928,17 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 </div>
 <h3 id="4-capture-database-diagnostics">4. Capture database diagnostics<a class="headerlink" href="#4-capture-database-diagnostics" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Connect to DCNM PostgreSQL and capture key table sizes</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>sane<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>sane<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s2">SELECT relname, pg_size_pretty(pg_relation_size(relid)) AS size</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s2">FROM pg_catalog.pg_statio_user_tables</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s2">ORDER BY pg_relation_size(relid) DESC</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">LIMIT 20;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">LIMIT 20;"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Total database sizes</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s2">SELECT datname, pg_size_pretty(pg_database_size(datname))</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">FROM pg_database</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">ORDER BY pg_database_size(datname) DESC;&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">ORDER BY pg_database_size(datname) DESC;"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>relname                     |    size
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>-------------------------------------------------+----------
@@ -7996,10 +7996,10 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Transfer the tech-support file</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>scp<span class="w"> </span>admin@&lt;mds-switch-ip&gt;:/tmp/mds-tech-*.txt<span class="w"> </span>./
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>The authenticity of host &#39;192.168.100.45&#39; can&#39;t be established.
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>The authenticity of host '192.168.100.45' can't be established.
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ECDSA key fingerprint is SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0=.
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Are you sure you want to continue connecting (yes/no)? yes
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Warning: Permanently added &#39;192.168.100.45&#39; (ECDSA) to /etc/ssh/known_hosts.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Warning: Permanently added '192.168.100.45' (ECDSA) to /etc/ssh/known_hosts.
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Password: 
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>mds-switch-01# show tech-support &gt; /tmp/mds-tech-mds-switch-01-20240115.txt
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>mds-switch-01# exit
@@ -8044,8 +8044,8 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Changes in 24h before the issue:
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  - 11:30: DCNM upgraded from 11.5.2 to 11.5.4.0 (upgrade completed successfully per UI)
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  - 12:00: DCNM appeared healthy post-upgrade
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  - 14:00: All managed switches moved to &quot;Unreachable&quot; state in DCNM; fabric discovery stopped
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  - 14:05: appmgr status: sne-service is in &quot;Stopped&quot; state; attempting restart fails
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  - 14:00: All managed switches moved to "Unreachable" state in DCNM; fabric discovery stopped
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  - 14:05: appmgr status: sne-service is in "Stopped" state; attempting restart fails
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  - 14:10: Disk utilization on /var/lib/pgsql: 95% — database may have run out of space
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>Steps already taken:
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>  - Did NOT restart the entire DCNM VM
@@ -8168,7 +8168,7 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>df<span class="w"> </span>-h
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># DCNM service log tail (last 100 lines)</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/dcnm/dcnm.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>dcnm<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;30 min ago&quot;</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/dcnm/dcnm.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>dcnm<span class="w"> </span>--since<span class="w"> </span><span class="s2">"30 min ago"</span>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Database running check</span>
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>appmgr<span class="w"> </span>database-status
@@ -8187,7 +8187,7 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>/dev/sda3       200G  145G   48G  74% /opt/dcnm
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>tmpfs            16G     0   16G   0% /dev/shm
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>[dcnm@dcnm-prod-01 ~]$ tail -100 /var/log/dcnm/dcnm.log 2&gt;/dev/null || journalctl -u dcnm --since &quot;30 min ago&quot;
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>[dcnm@dcnm-prod-01 ~]$ tail -100 /var/log/dcnm/dcnm.log 2&gt;/dev/null || journalctl -u dcnm --since "30 min ago"
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>2024-01-15 14:32:18 [INFO] DCNM backend initialized successfully
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>2024-01-15 14:32:45 [INFO] Database connection pool established: 25 connections
 <a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>2024-01-15 14:33:02 [INFO] Scheduler started: 12 jobs queued

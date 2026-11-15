@@ -9494,10 +9494,10 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify syslog is reaching vRLI from the source device</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># On the source device (Linux example):</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>logger<span class="w"> </span>-n<span class="w"> </span>&lt;vrli-ip&gt;<span class="w"> </span>-P<span class="w"> </span><span class="m">514</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;Test message from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>logger<span class="w"> </span>-n<span class="w"> </span>&lt;vrli-ip&gt;<span class="w"> </span>-P<span class="w"> </span><span class="m">514</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"Test message from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">"</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># In vRLI Explore, search:</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># text contains &quot;Test message&quot; AND hostname = &lt;source-hostname&gt;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># text contains "Test message" AND hostname = &lt;source-hostname&gt;</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
 </code></pre></div>
@@ -9560,7 +9560,7 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># /storage should be below 80% — vRLI starts dropping logs when full</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>root@vrli-prod-01.datacenter.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>root@vrli-prod-01.datacenter.local's password: 
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Filesystem      Size  Used Avail Use% Mounted on
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/dev/sda3       500G  385G  115G  77%  /storage
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>root@vrli-prod-01.datacenter.local:~#
@@ -9640,35 +9640,35 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a webhook channel via API</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/notification/channels<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;type&quot;: &quot;WEBHOOK&quot;,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    &quot;name&quot;: &quot;teams-alerts&quot;,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">    &quot;webhookUrl&quot;: &quot;https://example.webhook.office.com/webhookb2/...&quot;,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">    &quot;contentType&quot;: &quot;application/json&quot;,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">    &quot;body&quot;: &quot;{\&quot;text\&quot;: \&quot;Alert: ${alertName} - ${hitCount} events\&quot;}&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    "type": "WEBHOOK",</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    "name": "teams-alerts",</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">    "webhookUrl": "https://example.webhook.office.com/webhookb2/...",</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">    "contentType": "application/json",</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">    "body": "{\"text\": \"Alert: ${alertName} - ${hitCount} events\"}"</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">  }'</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Test the webhook channel</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/notification/channels/&lt;channel-id&gt;/test&quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="s2">"https://&lt;vrli-fqdn&gt;/api/v1/notification/channels/&lt;channel-id&gt;/test"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;id&quot;: &quot;channel-webhook-8f4a2c1b&quot;,
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;type&quot;: &quot;WEBHOOK&quot;,
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;name&quot;: &quot;teams-alerts&quot;,
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;webhookUrl&quot;: &quot;https://example.webhook.office.com/webhookb2/...&quot;,
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  &quot;contentType&quot;: &quot;application/json&quot;,
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  &quot;body&quot;: &quot;{\&quot;text\&quot;: \&quot;Alert: ${alertName} - ${hitCount} events\&quot;}&quot;,
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  &quot;enabled&quot;: true,
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  &quot;createdTime&quot;: 1704067200000,
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  &quot;modifiedTime&quot;: 1704067200000
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  "id": "channel-webhook-8f4a2c1b",
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  "type": "WEBHOOK",
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  "name": "teams-alerts",
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  "webhookUrl": "https://example.webhook.office.com/webhookb2/...",
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  "contentType": "application/json",
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  "body": "{\"text\": \"Alert: ${alertName} - ${hitCount} events\"}",
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  "enabled": true,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  "createdTime": 1704067200000,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  "modifiedTime": 1704067200000
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>}
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>{
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  &quot;success&quot;: true,
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  &quot;message&quot;: &quot;Test notification sent successfully to webhook endpoint&quot;,
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  &quot;statusCode&quot;: 200,
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  &quot;responseTime&quot;: &quot;245ms&quot;
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  "success": true,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  "message": "Test notification sent successfully to webhook endpoint",
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  "statusCode": 200,
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  "responseTime": "245ms"
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9725,26 +9725,26 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure vROps integration from vRLI</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/operations-server-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">    &quot;serverHost&quot;: &quot;&lt;vrops-fqdn&gt;&quot;,</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">    &quot;serverPort&quot;: 443,</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s1">    &quot;username&quot;: &quot;admin&quot;,</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s1">    &quot;password&quot;: &quot;&lt;password&gt;&quot;,</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s1">    &quot;enabled&quot;: true</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">    "serverHost": "&lt;vrops-fqdn&gt;",</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">    "serverPort": 443,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s1">    "username": "admin",</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s1">    "password": "&lt;password&gt;",</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s1">    "enabled": true</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s1">  }'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;id&quot;: &quot;ops-config-12847&quot;,
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;serverHost&quot;: &quot;vrops-prod.corp.local&quot;,
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;serverPort&quot;: 443,
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;username&quot;: &quot;admin&quot;,
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;enabled&quot;: true,
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  &quot;certificateValidation&quot;: true,
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;lastModified&quot;: &quot;2024-01-15T14:32:18.447Z&quot;,
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;lastModifiedBy&quot;: &quot;admin&quot;,
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;connectionStatus&quot;: &quot;CONNECTED&quot;,
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;testConnectionResult&quot;: &quot;SUCCESS&quot;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  "id": "ops-config-12847",
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  "serverHost": "vrops-prod.corp.local",
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  "serverPort": 443,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  "username": "admin",
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  "enabled": true,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  "certificateValidation": true,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  "lastModified": "2024-01-15T14:32:18.447Z",
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  "lastModifiedBy": "admin",
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  "connectionStatus": "CONNECTED",
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  "testConnectionResult": "SUCCESS"
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9788,10 +9788,10 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 <li>Verify: vRLI → <strong>Dashboards</strong> → <strong>Content Packs</strong> → <strong>VMware NSX-T</strong> → check "Last Received" timestamp on key widgets (Firewall Events, DFW Drops); events should appear within 60 seconds of syslog config save</li>
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Confirm NSX is reaching vRLI — run on vRLI master</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;nsx\|tnc\|edge&quot;</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"nsx\|tnc\|edge"</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Quick EPS check from NSX source in vRLI Explore:</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># hostname contains &quot;nsx&quot; AND _source = syslog</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># hostname contains "nsx" AND _source = syslog</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>2024-01-15T09:42:33.521Z [INFO] NSX-Manager-01.lab.local [192.168.1.45] connected - TLS handshake successful
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>2024-01-15T09:42:34.102Z [INFO] NSX-Edge-Cluster-01 ingestion rate: 2847 EPS from syslog parser
@@ -9842,7 +9842,7 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;siem-host&gt;<span class="w"> </span>&lt;siem-port&gt;
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Monitor forwarding errors</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;forward\|destination\|connect&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"forward\|destination\|connect"</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Connection to siem-prod-01.corp.local 514 port [tcp/syslog] succeeded!
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>2024-01-15T09:42:33.421Z [INFO] Forwarding to destination siem-prod-01.corp.local:514 - 1247 events queued
@@ -9888,7 +9888,7 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 <li>Click <strong>Extract Field</strong> next to the value → the field extraction dialog opens</li>
 <li>Enter a <strong>Field Name</strong> (lowercase, no spaces; e.g., <code>vm_name</code>)</li>
 <li>Write a regex with a named capture group matching the value:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>   vm\s+&#39;(?P&lt;vm_name&gt;[^&#39;]+)&#39;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>   vm\s+'(?P&lt;vm_name&gt;[^']+)'
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>   ```
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>6. Click **Test** — verify the capture group matches across the sample events shown
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>7. Click **Save** → the field is registered globally and applies to all new incoming events
@@ -9896,7 +9896,7 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Use the extracted field in queries:
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>```text
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>vm_name = prod-web-01
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>vm_name contains &quot;db-&quot;
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>vm_name contains "db-"
 </code></pre></div>
 The field appears in the filter suggestion dropdown after the first event containing it is indexed.</li>
 </ol>
@@ -9941,7 +9941,7 @@ The field appears in the filter suggestion dropdown after the first event contai
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vrli-vip&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Connection to 192.168.1.50 514 port [tcp/syslog] succeeded!
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>&quot;8.10.2.1&quot;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>"8.10.2.1"
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>inet 192.168.1.50/32 scope global secondary eth0
 </code></pre></div>
 <div class="admonition warning">
@@ -9989,34 +9989,34 @@ The field appears in the filter suggestion dropdown after the first event contai
 7. LCM upgrades master first, then workers sequentially; total time: 30–60 minutes for a 3-node cluster</p>
 <p><strong>Post-upgrade verification:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Confirm version on master</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/version<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.version
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Check all cluster nodes rejoined</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v2/cluster/nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state, version: .version}&#39;</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.nodes[] | {host: .hostname, state: .state, version: .version}'</span>
 </code></pre></div></p>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>&quot;8.10.2&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>"8.10.2"
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>{
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  &quot;host&quot;: &quot;vrli-master-01.corp.local&quot;,
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  &quot;version&quot;: &quot;8.10.2&quot;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  "host": "vrli-master-01.corp.local",
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  "state": "ACTIVE",
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  "version": "8.10.2"
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>}
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>{
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  &quot;host&quot;: &quot;vrli-worker-01.corp.local&quot;,
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  &quot;version&quot;: &quot;8.10.2&quot;
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  "host": "vrli-worker-01.corp.local",
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  "state": "ACTIVE",
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  "version": "8.10.2"
 <a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>}
 <a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>{
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  &quot;host&quot;: &quot;vrli-worker-02.corp.local&quot;,
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>  &quot;version&quot;: &quot;8.10.2&quot;
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  "host": "vrli-worker-02.corp.local",
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  "state": "ACTIVE",
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>  "version": "8.10.2"
 <a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>}
 <a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>{
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>  &quot;host&quot;: &quot;vrli-worker-03.corp.local&quot;,
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>  &quot;version&quot;: &quot;8.10.2&quot;
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>  "host": "vrli-worker-03.corp.local",
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>  "state": "ACTIVE",
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>  "version": "8.10.2"
 <a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -10083,9 +10083,9 @@ The field appears in the filter suggestion dropdown after the first event contai
 5. Verify: check alert definitions, forwarding rules, and user accounts are present
 6. Reconnect log sources (sources must be reconfigured to point to the new appliance FQDN/IP; log data is not restored)</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Automate backup via API (run weekly from a management host)</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/configuration/backup&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>-o<span class="w"> </span><span class="s2">&quot;vrli-backup-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.json&quot;</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="s2">"https://&lt;vrli-fqdn&gt;/api/v1/configuration/backup"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>-o<span class="w"> </span><span class="s2">"vrli-backup-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.json"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>                                 Dload  Upload   Total   Spent    Left  Speed
@@ -10119,39 +10119,39 @@ The field appears in the filter suggestion dropdown after the first event contai
 <hr />
 <h2 id="common-search-queries">Common Search Queries<a class="headerlink" href="#common-search-queries" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Host disconnect events</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;hostd&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;disconnected&quot;</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"hostd"</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"disconnected"</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># vMotion failures</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;vmotion&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpxd&quot;</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"vmotion"</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"failed"</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"vpxd"</span>
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
 <a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># HA events</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;HA failover&quot;</span><span class="w"> </span>OR<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;HA heartbeat&quot;</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"HA failover"</span><span class="w"> </span>OR<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"HA heartbeat"</span>
 <a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
 <a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># vSAN component errors</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;LSOM&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">loglevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ERROR
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"LSOM"</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">loglevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ERROR
 <a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
 <a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># NSX DFW drops</span>
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;DENY&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;nsx&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;DROP&quot;</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"DENY"</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"nsx"</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"DROP"</span>
 <a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
 <a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="c1"># Failed logins (SSH brute force detection)</span>
-<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span>AND<span class="w"> </span>hostname<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;prod-&quot;</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">"Failed password"</span><span class="w"> </span>AND<span class="w"> </span>hostname<span class="w"> </span>contains<span class="w"> </span><span class="s2">"prod-"</span>
 </code></pre></div>
 <p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Query 1: Host disconnect events
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>  hostd-5a2c1e9f [2024-01-15 14:32:18.445Z] Host &#39;esx-prod-04.dc1.local&#39; disconnected from vCenter
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>  hostd-5a2c1e9f [2024-01-15 14:32:18.445Z] Host 'esx-prod-04.dc1.local' disconnected from vCenter
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>  hostd-7b3d4f2a [2024-01-15 14:33:02.112Z] Network timeout: disconnected from management network
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  hostd-9c8e5b1d [2024-01-15 14:35:41.667Z] Host &#39;esx-prod-07.dc1.local&#39; disconnected - agent restart required
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  hostd-9c8e5b1d [2024-01-15 14:35:41.667Z] Host 'esx-prod-07.dc1.local' disconnected - agent restart required
 <a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>Query 2: vMotion failures
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>  vpxd-2f6a8c3e [2024-01-15 15:12:47.334Z] vMotion failed for VM &#39;web-app-12&#39;: insufficient resources on target host
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>  vpxd-2f6a8c3e [2024-01-15 15:12:47.334Z] vMotion failed for VM 'web-app-12': insufficient resources on target host
 <a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>  vpxd-4d1b9f7c [2024-01-15 15:14:19.891Z] vMotion failed: network connectivity loss during migration
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>  vpxd-6e2a3h5k [2024-01-15 15:16:05.556Z] vMotion failed for &#39;db-prod-03&#39;: CPU incompatibility detected
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>  vpxd-6e2a3h5k [2024-01-15 15:16:05.556Z] vMotion failed for 'db-prod-03': CPU incompatibility detected
 <a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
 <a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>Query 3: HA events
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>  vmkernel-8f4c2a9d [2024-01-15 16:01:22.445Z] HA failover initiated for cluster &#39;prod-cluster-1&#39;
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>  vmkernel-8f4c2a9d [2024-01-15 16:01:22.445Z] HA failover initiated for cluster 'prod-cluster-1'
 <a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>  vmkernel-3a7e1b6f [2024-01-15 16:02:15.778Z] HA heartbeat lost from host esx-prod-02 (3/5 heartbeats missing)
 <a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
 <a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>Query 4: vSAN component errors
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>  lsom-5c9d2e4a [2024-01-15 16:45:33.221Z] ERROR: LSOM disk group &#39;dg-001&#39; health degraded
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>  lsom-5c9d2e4a [2024-01-15 16:45:33.221Z] ERROR: LSOM disk group 'dg-001' health degraded
 <a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>  lsom-7f3a1c8b [2024-01-15 16:47:09.554Z] ERROR: LSOM component witness unavailable on host esx-prod-06
 <a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>
 <a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>Query 5: NSX DFW drops
@@ -10183,13 +10183,13 @@ Time-range tips: always set a time range — start with last 1 hour for active i
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;aria-logs-ip&gt;<span class="w"> </span><span class="m">6514</span>
 <a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
 <a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1"># Test the API ingestion port</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://&lt;aria-logs-ip&gt;:9543/api/v2/events&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;events&quot;:[]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"https://&lt;aria-logs-ip&gt;:9543/api/v2/events"</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"events":[]}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span>
 <a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="c1"># Should return 200 or 400 (not a connection refused)</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Connection to 192.168.45.120 514 [tcp] succeeded!
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Connection to 192.168.45.120 6514 [tcp] succeeded!
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>{&quot;status&quot;:&quot;success&quot;,&quot;message&quot;:&quot;Events processed&quot;,&quot;count&quot;:0,&quot;timestamp&quot;:&quot;2024-01-15T14:32:18Z&quot;}
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>{"status":"success","message":"Events processed","count":0,"timestamp":"2024-01-15T14:32:18Z"}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10223,7 +10223,7 @@ Time-range tips: always set a time range — start with last 1 hour for active i
 <p><img alt="Step 3 — Check Syslog Daemon Configuration on the Source" src="../../../../../../assets/aria-operations-for-logs-proc-step-3-check-syslog-daemon-configuration-on-th.svg" /></p>
 <p><strong>For Linux hosts (rsyslog):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Confirm rsyslog is forwarding to Aria Logs</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;aria\|vrealize\|&lt;aria-logs-ip&gt;&quot;</span><span class="w"> </span>/etc/rsyslog.conf<span class="w"> </span>/etc/rsyslog.d/
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">"aria\|vrealize\|&lt;aria-logs-ip&gt;"</span><span class="w"> </span>/etc/rsyslog.conf<span class="w"> </span>/etc/rsyslog.d/
 <a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
 <a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Restart rsyslog and check for errors</span>
 <a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
@@ -10358,7 +10358,7 @@ Time-range tips: always set a time range — start with last 1 hour for active i
 <p>Before decommissioning the host, disable syslog forwarding to Aria Logs to avoid generating "source unreachable" errors:</p>
 <p><strong>Linux (rsyslog):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Remove or comment out the Aria Logs forwarding rule</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/aria-logs\|vrealize/s/^/#/&#39;</span><span class="w"> </span>/etc/rsyslog.conf
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'/aria-logs\|vrealize/s/^/#/'</span><span class="w"> </span>/etc/rsyslog.conf
 <a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>(no output — command completes silently)
@@ -10390,7 +10390,7 @@ Time-range tips: always set a time range — start with last 1 hour for active i
 </div>
 <p><strong>ESXi:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Remove syslog target</span>
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">""</span>
 <a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>(no output — command completes silently)

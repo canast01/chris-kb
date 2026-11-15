@@ -9587,14 +9587,14 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify the cloud account is reachable from the vRA appliance</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter-prod.example.local/rest/com/vmware/cis/session
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>https://vcenter-prod.example.local/rest/com/vmware/cis/session
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Expected: 401 (Unauthorised — server is reachable)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Any other output (000, curl error) indicates network or DNS issue</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@vra-prod-01.example.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@vra-prod-01.example.local's password: 
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Welcome to VMware vRealize Automation 8.10.2
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Last login: Wed Jan 15 14:32:18 UTC 2025 from 192.168.1.45
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>root@vra-prod-01:~# curl -sk -o /dev/null -w &quot;%{http_code}&quot; https://vcenter-prod.example.local/rest/com/vmware/cis/session
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>root@vra-prod-01:~# curl -sk -o /dev/null -w "%{http_code}" https://vcenter-prod.example.local/rest/com/vmware/cis/session
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>401
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>root@vra-prod-01:~#
 </code></pre></div>
@@ -9644,7 +9644,7 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <li>Monitor the data collection status — it transitions from <strong>Running</strong> to <strong>Completed</strong>.</li>
 <li>If data collection fails, check the iaas-gateway logs:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|vcenter\|cloud&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|vcenter\|cloud"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>2024-01-15T09:42:31.223Z INFO [iaas-gateway-5d7c9f2k1] vCenter connection established to vcenter.prod.local
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15T09:42:35.891Z WARN [iaas-gateway-5d7c9f2k1] Cloud account sync delayed: 2.3s latency detected
@@ -9825,15 +9825,15 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">webhook_url</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;slackWebhook&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">deployment_name</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;deploymentName&quot;</span><span class="p">]</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">owner</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">webhook_url</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"slackWebhook"</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">deployment_name</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">"deploymentName"</span><span class="p">]</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">owner</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">"owner"</span><span class="p">]</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;:white_check_mark: Deployment *</span><span class="si">{</span><span class="n">deployment_name</span><span class="si">}</span><span class="s2">* succeeded for </span><span class="si">{</span><span class="n">owner</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">":white_check_mark: Deployment *</span><span class="si">{</span><span class="n">deployment_name</span><span class="si">}</span><span class="s2">* succeeded for </span><span class="si">{</span><span class="n">owner</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="p">}</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">webhook_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">}</span>
 </code></pre></div>
 <ol>
 <li>Add any required dependencies under <strong>Dependencies</strong> (pip packages for Python, npm packages for Node.js).</li>
@@ -9859,9 +9859,9 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <li>In the test input panel, provide a JSON payload that mimics the properties the subscription would pass. Example:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;deploymentName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test-deploy-01&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jsmith@example.local&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;slackWebhook&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://hooks.slack.com/services/TEST/TEST/TEST&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">"deploymentName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test-deploy-01"</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">"owner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jsmith@example.local"</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">"slackWebhook"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://hooks.slack.com/services/TEST/TEST/TEST"</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
 </code></pre></div>
 <ol>
@@ -9880,38 +9880,38 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <p>A deployment stuck in <code>CREATE_FAILED</code>, <code>DELETE_FAILED</code>, or <code>UPDATE_FAILED</code> cannot be removed through the normal UI delete flow. Use the API to force-delete it.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Obtain a bearer token</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login?access_token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.access_token&#39;</span><span class="k">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/csp/gateway/am/api/login?access_token"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"username":"admin","password":"&lt;password&gt;","domain":"System Domain"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.access_token'</span><span class="k">)</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># List failed deployments</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?status=CREATE_FAILED&amp;size=50&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, name: .name, owner: .ownedBy, status: .status}&#39;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/deployment/api/deployments?status=CREATE_FAILED&amp;size=50"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.content[] | {id: .id, name: .name, owner: .ownedBy, status: .status}'</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Force-delete a specific deployment</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nv">DEPLOYMENT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;id&gt;&quot;</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments/</span><span class="nv">$DEPLOYMENT_ID</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nv">DEPLOYMENT_ID</span><span class="o">=</span><span class="s2">"&lt;id&gt;"</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/deployment/api/deployments/</span><span class="nv">$DEPLOYMENT_ID</span><span class="s2">"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;id&quot;: &quot;dep-8f4c2a91-b3e2-4d7f-9c1a-5e6d7f8a9b0c&quot;,
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;name&quot;: &quot;wordpress-prod-01&quot;,
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;owner&quot;: &quot;admin@system-domain&quot;,
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;status&quot;: &quot;CREATE_FAILED&quot;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  "id": "dep-8f4c2a91-b3e2-4d7f-9c1a-5e6d7f8a9b0c",
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  "name": "wordpress-prod-01",
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  "owner": "admin@system-domain",
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  "status": "CREATE_FAILED"
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>}
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>{
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;id&quot;: &quot;dep-3c7e1f5a-9d2b-4a6c-8e3f-2b1a7c9d5e4f&quot;,
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;name&quot;: &quot;database-cluster-02&quot;,
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;owner&quot;: &quot;devops@system-domain&quot;,
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;status&quot;: &quot;CREATE_FAILED&quot;
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  "id": "dep-3c7e1f5a-9d2b-4a6c-8e3f-2b1a7c9d5e4f",
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  "name": "database-cluster-02",
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  "owner": "devops@system-domain",
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  "status": "CREATE_FAILED"
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>}
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>{
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;id&quot;: &quot;dep-6b9a2c4d-1e5f-47a8-b2c3-9f8e7d6c5a4b&quot;,
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;name&quot;: &quot;api-gateway-staging&quot;,
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  &quot;owner&quot;: &quot;platform-team@system-domain&quot;,
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  &quot;status&quot;: &quot;CREATE_FAILED&quot;
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  "id": "dep-6b9a2c4d-1e5f-47a8-b2c3-9f8e7d6c5a4b",
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  "name": "api-gateway-staging",
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  "owner": "platform-team@system-domain",
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  "status": "CREATE_FAILED"
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>}
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>(no output — command completes silently)
 </code></pre></div>
@@ -9946,33 +9946,33 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <p>An orphaned deployment has a vRA record but no matching resource in the cloud account. This occurs when a VM is deleted directly in vCenter or AWS without going through vRA.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all deployments via API and cross-reference with vCenter</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?size=200&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, name: .name, status: .status, owner: .ownedBy}&#39;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/deployment/api/deployments?size=200"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.content[] | {id: .id, name: .name, status: .status, owner: .ownedBy}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;id&quot;: &quot;deployment-a4f2c891-7e3a-4d21-b8f9-2c1a5e9d3f47&quot;,
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;name&quot;: &quot;prod-k8s-cluster-01&quot;,
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;status&quot;: &quot;CREATE_SUCCESSFUL&quot;,
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  &quot;owner&quot;: &quot;svc-automation@example.local&quot;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "id": "deployment-a4f2c891-7e3a-4d21-b8f9-2c1a5e9d3f47",
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  "name": "prod-k8s-cluster-01",
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  "status": "CREATE_SUCCESSFUL",
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  "owner": "svc-automation@example.local"
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>}
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>{
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  &quot;id&quot;: &quot;deployment-b6e8d124-9c2f-4a53-a1d3-7f2b8e4c6a92&quot;,
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  &quot;name&quot;: &quot;dev-database-mysql-03&quot;,
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  &quot;status&quot;: &quot;CREATE_SUCCESSFUL&quot;,
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  &quot;owner&quot;: &quot;devops-team@example.local&quot;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  "id": "deployment-b6e8d124-9c2f-4a53-a1d3-7f2b8e4c6a92",
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  "name": "dev-database-mysql-03",
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  "status": "CREATE_SUCCESSFUL",
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  "owner": "devops-team@example.local"
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>}
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>{
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  &quot;id&quot;: &quot;deployment-c3a9e567-2b1f-4e78-9a2c-1d5f3b8e7c41&quot;,
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  &quot;name&quot;: &quot;staging-app-server-02&quot;,
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  &quot;status&quot;: &quot;UPDATE_IN_PROGRESS&quot;,
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;owner&quot;: &quot;platform-eng@example.local&quot;
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  "id": "deployment-c3a9e567-2b1f-4e78-9a2c-1d5f3b8e7c41",
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  "name": "staging-app-server-02",
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  "status": "UPDATE_IN_PROGRESS",
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  "owner": "platform-eng@example.local"
 <a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>}
 <a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>{
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  &quot;id&quot;: &quot;deployment-d7f1a234-5c8e-4b92-8d6f-4a2e9c1b5f73&quot;,
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  &quot;name&quot;: &quot;legacy-windows-farm&quot;,
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  &quot;status&quot;: &quot;CREATE_FAILED&quot;,
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  &quot;owner&quot;: &quot;infrastructure@example.local&quot;
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>  "id": "deployment-d7f1a234-5c8e-4b92-8d6f-4a2e9c1b5f73",
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>  "name": "legacy-windows-farm",
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>  "status": "CREATE_FAILED",
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>  "owner": "infrastructure@example.local"
 <a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -10063,16 +10063,16 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Update the Postgres password in vracli config</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vracli<span class="w"> </span>pg<span class="w"> </span>password<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--password<span class="w"> </span><span class="s1">&#39;&lt;new-password&gt;&#39;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vracli<span class="w"> </span>pg<span class="w"> </span>password<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--password<span class="w"> </span><span class="s1">'&lt;new-password&gt;'</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Restart the vRA services to pick up the new credentials</span>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>vracli<span class="w"> </span>rcs<span class="w"> </span>restart
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>root@vra-prod-01.example.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>root@vra-prod-01.example.local's password: 
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Welcome to vRealize Automation 8.10.2
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>vra-prod-01:~ #
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Setting PostgreSQL password...
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Password updated successfully for user &#39;postgres&#39;
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Password updated successfully for user 'postgres'
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Configuration synchronized across cluster nodes.
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>vra-prod-01:~ #
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Restarting vRA services...
@@ -10111,7 +10111,7 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 </table>
 </div>
 <p>After the restart, verify the vRA UI is accessible and that data collection runs complete without database connection errors. Check the Postgres-related logs if services fail to come up:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>vra-nginx<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|5[0-9][0-9]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>vra-nginx<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|5[0-9][0-9]"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>2024-01-15T09:42:31.245Z [ERROR] Connection timeout to identity provider: request_id=a7f2c9e1-4b2d-11ee-b0d9
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>2024-01-15T09:42:45.123Z [WARN] 502 Bad Gateway - upstream service unavailable
@@ -10220,10 +10220,10 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>root@aria-automation-01:~# tail -f /var/log/vmware/vra/deployment-service.log | grep ERROR
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>2024-01-15 14:23:47.892 ERROR [deployment-service] Failed to authenticate with vCenter: Connection timeout after 30000ms
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>2024-01-15 14:25:12.445 ERROR [deployment-service] Blueprint &#39;web-tier-v2&#39; deployment failed: Insufficient compute resources in cluster &#39;prod-dc1&#39;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>2024-01-15 14:25:12.445 ERROR [deployment-service] Blueprint 'web-tier-v2' deployment failed: Insufficient compute resources in cluster 'prod-dc1'
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>2024-01-15 14:27:33.661 ERROR [deployment-service] AMQP connection lost to message broker at 192.168.1.45:5672
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>2024-01-15 14:29:01.234 ERROR [deployment-service] Invalid cloud account credentials for AWS-prod: AccessDenied
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>2024-01-15 14:31:44.556 ERROR [deployment-service] Deployment request &#39;req-8f4a2c9d&#39; exceeded maximum retry attempts (5)
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>2024-01-15 14:31:44.556 ERROR [deployment-service] Deployment request 'req-8f4a2c9d' exceeded maximum retry attempts (5)
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>2024-01-15 14:33:19.778 ERROR [deployment-service] Certificate validation failed for endpoint https://vcenter.corp.local:443
 </code></pre></div>
 <div class="admonition warning">

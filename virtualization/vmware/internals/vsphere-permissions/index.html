@@ -8305,7 +8305,7 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <h2 id="custom-roles">Custom Roles<a class="headerlink" href="#custom-roles" title="Permanent link">&para;</a></h2>
 <p>Custom roles let you build precisely scoped permission sets from vSphere's ~350 individual privileges.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># PowerCLI — create a custom role</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;AppTeam-VM-Operator&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">"AppTeam-VM-Operator"</span> <span class="p">`</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="p">`</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">-Id</span> <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOn</span><span class="p">,</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOff</span><span class="p">,</span>
@@ -8316,9 +8316,9 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>         <span class="n">Global</span><span class="p">.</span><span class="n">CancelTask</span><span class="p">)</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># Assign the role to a group on a folder</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">$folder</span>   <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="s2">&quot;Production-Apps&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nv">$role</span>     <span class="p">=</span> <span class="nb">Get-VIRole</span> <span class="s2">&quot;AppTeam-VM-Operator&quot;</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">&quot;CORP\appteam-ops&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">$folder</span>   <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="s2">"Production-Apps"</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nv">$role</span>     <span class="p">=</span> <span class="nb">Get-VIRole</span> <span class="s2">"AppTeam-VM-Operator"</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">"CORP\appteam-ops"</span>
 <a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$folder</span> <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="p">`</span>
 <a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  <span class="n">-Role</span> <span class="nv">$role</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
@@ -8381,14 +8381,14 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      <span class="n">Privilege</span> <span class="p">=</span> <span class="nv">$_</span>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="p">}</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  <span class="p">}</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;/tmp/vsphere-roles-audit.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">"/tmp/vsphere-roles-audit.csv"</span> <span class="n">-NoTypeInformation</span>
 </code></pre></div>
 <hr />
 <h2 id="permission-propagation-and-inheritance-rules">Permission Propagation and Inheritance Rules<a class="headerlink" href="#permission-propagation-and-inheritance-rules" title="Permanent link">&para;</a></h2>
 <h3 id="how-propagation-works">How Propagation Works<a class="headerlink" href="#how-propagation-works" title="Permanent link">&para;</a></h3>
 <p>When you create a permission with <strong>Propagate to children: Yes</strong>, all current and future child objects inherit it. Permissions are not stored on child objects — they are evaluated at access time by walking up the hierarchy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Permission evaluation for user accessing VM &quot;APP-01&quot;:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  1. Check VM &quot;APP-01&quot; — direct permission? → use it
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Permission evaluation for user accessing VM "APP-01":
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  1. Check VM "APP-01" — direct permission? → use it
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  2. No direct? → check parent folder
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  3. No folder permission? → check cluster
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  4. No cluster? → check datacenter
@@ -8401,9 +8401,9 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <li>Set <code>No Access</code> role on the object where you want to block — this is the only way to deny</li>
 <li>Or: do not propagate the parent permission; grant explicit permissions only on specific child objects</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Scenario: AD group &quot;AllEngineers&quot; has Read Only on the Datacenter.
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Problem:  Sensitive VM &quot;PAYROLL-01&quot; must not be visible to AllEngineers.
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Solution: Assign the &quot;No Access&quot; role to AllEngineers directly on &quot;PAYROLL-01&quot;.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Scenario: AD group "AllEngineers" has Read Only on the Datacenter.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Problem:  Sensitive VM "PAYROLL-01" must not be visible to AllEngineers.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Solution: Assign the "No Access" role to AllEngineers directly on "PAYROLL-01".
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>          This overrides the inherited Read Only from the Datacenter.
 </code></pre></div>
 <h3 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h3>
@@ -8436,7 +8436,7 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <hr />
 <h2 id="global-permissions">Global Permissions<a class="headerlink" href="#global-permissions" title="Permanent link">&para;</a></h2>
 <p>Global permissions (set at the <strong>root</strong> of the vSphere inventory) apply across multiple vCenter instances linked via Enhanced Linked Mode. They are evaluated before vCenter-level permissions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Normal permission: applies to one vCenter&#39;s objects
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Normal permission: applies to one vCenter's objects
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Global permission: applies to all vCenter objects across the linked domain
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Use cases for global permissions:
@@ -8552,9 +8552,9 @@ vSphere access control is built on a layered permission model: SSO handles authe
 </tbody>
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># PowerCLI — create a read-only monitoring service account permission</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">$vcUser</span>   <span class="p">=</span> <span class="s2">&quot;CORP\svc-vsphere-monitor&quot;</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nv">$role</span>     <span class="p">=</span> <span class="nb">Get-VIRole</span> <span class="s2">&quot;ReadOnly&quot;</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nv">$vcRoot</span>   <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="n">-Type</span> <span class="n">Datacenter</span> <span class="n">-Name</span> <span class="s2">&quot;/&quot;</span>  <span class="c"># root</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">$vcUser</span>   <span class="p">=</span> <span class="s2">"CORP\svc-vsphere-monitor"</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nv">$role</span>     <span class="p">=</span> <span class="nb">Get-VIRole</span> <span class="s2">"ReadOnly"</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nv">$vcRoot</span>   <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="n">-Type</span> <span class="n">Datacenter</span> <span class="n">-Name</span> <span class="s2">"/"</span>  <span class="c"># root</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  <span class="n">-Principal</span> <span class="nv">$vcUser</span> <span class="n">-Role</span> <span class="nv">$role</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
@@ -8589,7 +8589,7 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <h3 id="pattern-3-restricting-vm-configuration-changes">Pattern 3 — Restricting VM Configuration Changes<a class="headerlink" href="#pattern-3-restricting-vm-configuration-changes" title="Permanent link">&para;</a></h3>
 <p>Grant power operations without allowing configuration changes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># Custom role: allow power ops + console, deny all config changes</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nv">$powerOnly</span> <span class="p">=</span> <span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;Power-Only&quot;</span> <span class="p">`</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nv">$powerOnly</span> <span class="p">=</span> <span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">"Power-Only"</span> <span class="p">`</span>
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="p">`</span>
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOn</span><span class="p">,</span>
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOff</span><span class="p">,</span>

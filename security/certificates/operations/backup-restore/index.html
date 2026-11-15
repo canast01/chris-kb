@@ -7621,7 +7621,7 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 <p>This creates a <code>.p12</code> file in the target directory. Protect it with a strong password when prompted.</p>
 <p>Alternatively, export non-interactively (for automation):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Export CA key using certutil with a password file</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$pwd</span> <span class="p">=</span> <span class="s2">&quot;VaultStoredPassphrase&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$pwd</span> <span class="p">=</span> <span class="s2">"VaultStoredPassphrase"</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">certutil</span> <span class="n">-p</span> <span class="nv">$pwd</span> <span class="n">-backupKey</span> <span class="n">C</span><span class="p">:\</span><span class="n">CABackup</span><span class="p">\</span>
 </code></pre></div>
 <h3 id="back-up-the-ca-database">Back Up the CA Database<a class="headerlink" href="#back-up-the-ca-database" title="Permanent link">&para;</a></h3>
@@ -7636,32 +7636,32 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 - <code>&lt;CAName&gt;*.log</code> — Transaction logs</p>
 <h3 id="back-up-the-ca-registry-configuration">Back Up the CA Registry Configuration<a class="headerlink" href="#back-up-the-ca-registry-configuration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>REM Export the CA registry hive
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>reg export &quot;HKLM\SYSTEM\CurrentControlSet\Services\CertSvc&quot; C:\CABackup\CertSvc.reg /y
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>reg export "HKLM\SYSTEM\CurrentControlSet\Services\CertSvc" C:\CABackup\CertSvc.reg /y
 </code></pre></div>
 <h3 id="full-adcs-backup-script">Full ADCS Backup Script<a class="headerlink" href="#full-adcs-backup-script" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">$BackupRoot</span> <span class="p">=</span> <span class="s2">&quot;\\backup-srv\CA-Backups\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">$BackupRoot</span> <span class="p">=</span> <span class="s2">"\\backup-srv\CA-Backups\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">'yyyy-MM-dd'</span><span class="p">)</span><span class="s2">"</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="nv">$BackupRoot</span> <span class="n">-Force</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Key backup</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">certutil</span> <span class="n">-backupKey</span> <span class="s2">&quot;$BackupRoot\Key\&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">certutil</span> <span class="n">-backupKey</span> <span class="s2">"$BackupRoot\Key\"</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Database backup</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">certutil</span> <span class="n">-backupDB</span> <span class="s2">&quot;$BackupRoot\DB\&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">certutil</span> <span class="n">-backupDB</span> <span class="s2">"$BackupRoot\DB\"</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Registry backup</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">reg</span> <span class="n">export</span> <span class="s2">&quot;HKLM\SYSTEM\CurrentControlSet\Services\CertSvc&quot;</span> <span class="s2">&quot;$BackupRoot\CertSvc.reg&quot;</span> <span class="p">/</span><span class="n">y</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">reg</span> <span class="n">export</span> <span class="s2">"HKLM\SYSTEM\CurrentControlSet\Services\CertSvc"</span> <span class="s2">"$BackupRoot\CertSvc.reg"</span> <span class="p">/</span><span class="n">y</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Copy CA certificate and CRL</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;C:\Windows\System32\CertSrv\CertEnroll\*&quot;</span> <span class="s2">&quot;$BackupRoot\CertEnroll\&quot;</span> <span class="n">-Recurse</span> <span class="n">-Force</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Copy-Item</span> <span class="s2">"C:\Windows\System32\CertSrv\CertEnroll\*"</span> <span class="s2">"$BackupRoot\CertEnroll\"</span> <span class="n">-Recurse</span> <span class="n">-Force</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nb">Write-Host</span> <span class="s2">&quot;CA backup completed to $BackupRoot&quot;</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nb">Write-Host</span> <span class="s2">"CA backup completed to $BackupRoot"</span>
 </code></pre></div>
 <hr />
 <h2 id="pkcs12-pfx-export">PKCS#12 (PFX) Export<a class="headerlink" href="#pkcs12-pfx-export" title="Permanent link">&para;</a></h2>
 <p>PKCS#12 bundles a certificate, its private key, and the chain into a single portable file. Use this format for CA migration, archival, and handing off certificates between systems.</p>
 <h3 id="windows-export-with-certutil">Windows — Export with certutil<a class="headerlink" href="#windows-export-with-certutil" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>REM Export a certificate by thumbprint from the local machine store
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>certutil -exportpfx -p &quot;StrongPassphrase&quot; My &lt;Thumbprint&gt; C:\export\cert.pfx
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>certutil -exportpfx -p "StrongPassphrase" My &lt;Thumbprint&gt; C:\export\cert.pfx
 </code></pre></div>
 <h3 id="openssl-create-a-pkcs12-bundle">OpenSSL — Create a PKCS#12 Bundle<a class="headerlink" href="#openssl-create-a-pkcs12-bundle" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Combine certificate, private key, and CA chain into a PFX</span>
@@ -7671,7 +7671,7 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-certfile<span class="w"> </span>ca-chain.pem<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-out<span class="w"> </span>server.pfx<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-passout<span class="w"> </span>pass:StrongPassphrase<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-name<span class="w"> </span><span class="s2">&quot;server.corp.example.com&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-name<span class="w"> </span><span class="s2">"server.corp.example.com"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(no output — command completes silently)
 </code></pre></div>
@@ -7865,7 +7865,7 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 <a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>certutil -verify -urlfetch C:\CABackup\CertEnroll\&lt;CAName&gt;.crt
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
 <a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>REM Confirm database is intact
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>certutil -view -restrict &quot;Disposition=20&quot; -out CertificateTemplate,CommonName | more
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>certutil -view -restrict "Disposition=20" -out CertificateTemplate,CommonName | more
 </code></pre></div>
 <ol>
 <li>Re-publish the CRL and Delta CRL:</li>
@@ -7891,7 +7891,7 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 <a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="c1"># Verify integrity</span>
 <a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
 <a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
-<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Subject:|Not After"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Stopping nginx.service...
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Stopping nginx.service...

@@ -7338,7 +7338,7 @@
 
 
 <h1 id="confluence-access-control">Confluence — Access Control<a class="headerlink" href="#confluence-access-control" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Removing Default &quot;All Logged-In Users&quot; Access
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Removing Default "All Logged-In Users" Access
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Many spaces default to allowing all logged-in users to view and edit. Restrict this for sensitive spaces:
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -7360,7 +7360,7 @@
 <hr />
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">## Audit space permissions via REST API</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/space/INFRA/permission&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">"https://confluence.example.local/rest/api/space/INFRA/permission"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">When to use page restrictions</span><span class="p">:</span>
@@ -7374,13 +7374,13 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">## Check if any spaces allow anonymous access via REST API</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/space?limit=50&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;key&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">"https://confluence.example.local/rest/api/space?limit=50"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"key"</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">## Then for each space key, check for anonymous permissions:</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/space/SPACKEY/permission&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;anonymous&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="s2">"https://confluence.example.local/rest/api/space/SPACKEY/permission"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">"anonymous"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">AD Group Design for Confluence</span><span class="p">:</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">GG-Confluence-Users          → Maps to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confluence-users (can log in)</span>
@@ -7395,10 +7395,10 @@
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">## Or via API</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/user-directory/1/sync&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="s2">"https://confluence.example.local/rest/api/user-directory/1/sync"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span>
 </code></pre></div></p>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{&quot;status&quot;:&quot;SYNC_IN_PROGRESS&quot;,&quot;directory_id&quot;:1,&quot;sync_started_at&quot;:&quot;2024-01-15T09:42:33.521Z&quot;,&quot;estimated_completion&quot;:&quot;2024-01-15T09:47:33.521Z&quot;,&quot;users_processed&quot;:0,&quot;groups_processed&quot;:0}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{"status":"SYNC_IN_PROGRESS","directory_id":1,"sync_started_at":"2024-01-15T09:42:33.521Z","estimated_completion":"2024-01-15T09:47:33.521Z","users_processed":0,"groups_processed":0}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7427,23 +7427,23 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">## List System Administrators</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/group/confluence-administrators/member?limit=200&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;username&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">"https://confluence.example.local/rest/api/group/confluence-administrators/member?limit=200"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"username"</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1">## List users with Create Space permission</span>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/group/confluence-space-creators/member?limit=200&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;username&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="s2">"https://confluence.example.local/rest/api/group/confluence-space-creators/member?limit=200"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"username"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&quot;username&quot;: &quot;admin&quot;,
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>&quot;username&quot;: &quot;jsmith&quot;,
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>&quot;username&quot;: &quot;kchen&quot;,
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>&quot;username&quot;: &quot;mrodriguez&quot;,
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>&quot;username&quot;: &quot;admin&quot;,
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>&quot;username&quot;: &quot;jsmith&quot;,
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>&quot;username&quot;: &quot;kchen&quot;,
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>&quot;username&quot;: &quot;agarcia&quot;,
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>&quot;username&quot;: &quot;bwilson&quot;,
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>"username": "admin",
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>"username": "jsmith",
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>"username": "kchen",
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>"username": "mrodriguez",
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>"username": "admin",
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>"username": "jsmith",
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>"username": "kchen",
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>"username": "agarcia",
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>"username": "bwilson",
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7475,46 +7475,46 @@
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">## Via REST API — filter for permission-related audit events</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/audit?limit=100&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B2<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;permission&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="s2">"https://confluence.example.local/rest/api/audit?limit=100"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B2<span class="w"> </span>-A5<span class="w"> </span><span class="s2">"permission"</span>
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1">## Application log — space access errors (403 events)</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;403\|permission denied\|access denied&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"403\|permission denied\|access denied"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>{
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  &quot;results&quot;: [
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  "results": [
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    {
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>      &quot;timestamp&quot;: 1699564821000,
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>      &quot;summary&quot;: &quot;User permission changed&quot;,
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>      &quot;category&quot;: &quot;Permissions&quot;,
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>      &quot;affectedObject&quot;: {
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>        &quot;name&quot;: &quot;Engineering Docs&quot;,
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>        &quot;objectType&quot;: &quot;Space&quot;
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>      "timestamp": 1699564821000,
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>      "summary": "User permission changed",
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>      "category": "Permissions",
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>      "affectedObject": {
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>        "name": "Engineering Docs",
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>        "objectType": "Space"
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>      },
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>      &quot;changedValues&quot;: {
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        &quot;permission&quot;: &quot;View&quot;,
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>        &quot;user&quot;: &quot;jsmith@example.com&quot;,
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>        &quot;granted&quot;: true
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>      "changedValues": {
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        "permission": "View",
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>        "user": "jsmith@example.com",
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>        "granted": true
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>      }
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    },
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    {
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>      &quot;timestamp&quot;: 1699551403000,
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>      &quot;summary&quot;: &quot;Space created&quot;,
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>      &quot;category&quot;: &quot;Permissions&quot;,
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>      &quot;author&quot;: &quot;admin&quot;,
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>      &quot;affectedObject&quot;: {
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>        &quot;name&quot;: &quot;Q4-Planning&quot;,
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>        &quot;objectType&quot;: &quot;Space&quot;
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>      "timestamp": 1699551403000,
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>      "summary": "Space created",
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>      "category": "Permissions",
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>      "author": "admin",
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>      "affectedObject": {
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>        "name": "Q4-Planning",
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>        "objectType": "Space"
 <a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>      }
 <a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>    }
 <a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>  ],
-<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>  &quot;limit&quot;: 100,
-<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>  &quot;start&quot;: 0
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>  "limit": 100,
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>  "start": 0
 <a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>}
-<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>2024-11-10 14:32:15,423 ERROR [http-nio-8090-exec-12] [confluence.security.PermissionManager] 403 Permission denied: User &#39;dchen&#39; lacks VIEW permission on space &#39;RESTRICTED&#39;
-<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>2024-11-10 14:28:42,891 WARN [http-nio-8090-exec-8] [confluence.auth.AccessDenied] Access denied for user &#39;guest&#39; attempting to edit page &#39;Security-Policy&#39;
-<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>2024-11-10 14:15:09,556 ERROR [http-nio-8090-exec-3] [confluence.security.SpacePermission] 403 Permission denied: Anonymous access blocked for space &#39;INTERNAL&#39;
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>2024-11-10 14:32:15,423 ERROR [http-nio-8090-exec-12] [confluence.security.PermissionManager] 403 Permission denied: User 'dchen' lacks VIEW permission on space 'RESTRICTED'
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>2024-11-10 14:28:42,891 WARN [http-nio-8090-exec-8] [confluence.auth.AccessDenied] Access denied for user 'guest' attempting to edit page 'Security-Policy'
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>2024-11-10 14:15:09,556 ERROR [http-nio-8090-exec-3] [confluence.security.SpacePermission] 403 Permission denied: Anonymous access blocked for space 'INTERNAL'
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

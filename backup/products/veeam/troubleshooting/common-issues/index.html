@@ -7596,7 +7596,7 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 <p><strong>Symptom:</strong> Job fails with "not enough free disk space on the repository" or "Veeam backup files have been detected outside of the quota."</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check repository free space</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">FriendlyPath</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeMB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedFreeSpace</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">)}}</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">"FreeMB"</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedFreeSpace</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">)}}</span>
 </code></pre></div>
 <p><strong>Immediate remediation:</strong></p>
 <ol>
@@ -7604,7 +7604,7 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 <li>Identify large backup chains that can be reduced:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Find largest backup chains</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">JobName</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetStorageFiles</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">Stats</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">.</span><span class="n">DataSize</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">JobName</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">"SizeGB"</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetStorageFiles</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">Stats</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">.</span><span class="n">DataSize</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
 </code></pre></div>
 <ol>
 <li>Reduce retention policy on some jobs to free space sooner.</li>
@@ -7627,15 +7627,15 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 <h2 id="vbr-service-crash-instability">VBR Service Crash / Instability<a class="headerlink" href="#vbr-service-crash-instability" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Jobs fail to start, Veeam console cannot connect, or the VBR service restarts repeatedly.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Check Windows Event Log on the VBR server
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get-EventLog -LogName Application -Source &quot;Veeam*&quot; -Newest 50 | Select TimeGenerated, Message | Format-List
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get-EventLog -LogName Application -Source "Veeam*" -Newest 50 | Select TimeGenerated, Message | Format-List
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a># Check Veeam service log
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Get-Content &quot;C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log&quot; -Tail 100
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Get-Content "C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log" -Tail 100
 </code></pre></div>
 <p><strong>Restart the VBR service:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Restart the Veeam Backup Service (all running jobs will be interrupted and resume from checkpoint)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>net stop &quot;Veeam Backup Service&quot;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>net start &quot;Veeam Backup Service&quot;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>net stop "Veeam Backup Service"
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>net start "Veeam Backup Service"
 </code></pre></div>
 <hr />
 <h2 id="backup-copy-job-never-completes">Backup Copy Job Never Completes<a class="headerlink" href="#backup-copy-job-never-completes" title="Permanent link">&para;</a></h2>

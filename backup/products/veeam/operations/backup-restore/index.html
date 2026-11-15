@@ -7830,8 +7830,8 @@ Veeam Backup & Replication provides comprehensive recovery options ranging from 
 <h2 id="full-vm-restore">Full VM Restore<a class="headerlink" href="#full-vm-restore" title="Permanent link">&para;</a></h2>
 <p>Full VM Restore copies the backup to a production datastore. Use for planned recoveries or when instant recovery is not required.</p>
 <p><img alt="Veeam — Backup &amp; Restore — Diagram" src="../../../../../assets/backup-veeam-operations-backup-restore-diagram.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">$vm</span>     <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01&quot;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$backup</span> <span class="p">=</span> <span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01 - Backup&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">$vm</span>     <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">"PRODVM01"</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$backup</span> <span class="p">=</span> <span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">"PRODVM01 - Backup"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$rp</span>     <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$backup</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$options</span> <span class="p">=</span> <span class="nb">New-VBRViRecoveryOptions</span> <span class="n">-PowerVM</span> <span class="nv">$true</span>
@@ -7846,7 +7846,7 @@ Veeam Backup & Replication provides comprehensive recovery options ranging from 
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  right-click file → Restore to original location / Keep / Overwrite
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Mount backup for browse/copy</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$rp</span>     <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="p">(</span><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;FILESERVER01&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$rp</span>     <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="p">(</span><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">"FILESERVER01"</span><span class="p">)</span> <span class="p">|</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>          <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Start-VBRWindowsFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span>
@@ -7865,12 +7865,12 @@ Veeam Backup & Replication provides comprehensive recovery options ranging from 
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Restore to original location / Restore to another server
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># SQL restore via PowerShell</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="p">(</span><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;SQLSERVER01&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="p">(</span><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">"SQLSERVER01"</span><span class="p">)</span> <span class="p">|</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>      <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Start-VBRSQLDatabaseRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="p">`</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="n">-TargetSQLServer</span> <span class="s2">&quot;SQLSERVER01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  <span class="n">-DatabaseName</span> <span class="s2">&quot;ProductionDB&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="n">-TargetSQLServer</span> <span class="s2">"SQLSERVER01"</span> <span class="p">`</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  <span class="n">-DatabaseName</span> <span class="s2">"ProductionDB"</span> <span class="p">`</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  <span class="n">-ToOriginalLocation</span>
 </code></pre></div>
 <h3 id="active-directory-object-recovery">Active Directory Object Recovery<a class="headerlink" href="#active-directory-object-recovery" title="Permanent link">&para;</a></h3>

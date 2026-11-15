@@ -7325,9 +7325,9 @@ Monitoring GPU workloads requires tracking utilisation, memory, temperature, pow
 <h2 id="prometheus-grafana-stack">Prometheus + Grafana Stack<a class="headerlink" href="#prometheus-grafana-stack" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># prometheus.yml scrape config for dcgm-exporter</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">scrape_configs</span><span class="p">:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;dcgm&#39;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">'dcgm'</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;gpu-node-1:9400&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;gpu-node-2:9400&#39;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'gpu-node-1:9400'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'gpu-node-2:9400'</span><span class="p p-Indicator">]</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
 </code></pre></div>
 <p>Key DCGM Prometheus metrics:</p>
@@ -7350,7 +7350,7 @@ Monitoring GPU workloads requires tracking utilisation, memory, temperature, pow
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span>labels:
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">          </span>severity:<span class="w"> </span>warning
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">        </span>annotations:
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">          </span>summary:<span class="w"> </span><span class="s2">&quot;GPU temperature above 85°C on {{ </span><span class="nv">$labels</span><span class="s2">.instance }}&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">          </span>summary:<span class="w"> </span><span class="s2">"GPU temperature above 85°C on {{ </span><span class="nv">$labels</span><span class="s2">.instance }}"</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUMemoryNearFull
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_FB_USED<span class="w"> </span>/<span class="w"> </span>DCGM_FI_DEV_FB_FREE<span class="w"> </span>&gt;<span class="w"> </span><span class="m">0</span>.95

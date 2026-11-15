@@ -8265,13 +8265,13 @@
 <h1 id="inventory-support-contracts">Inventory — Support Contracts<a class="headerlink" href="#inventory-support-contracts" title="Permanent link">&para;</a></h1>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Query contract CSV for near-expiry items</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Columns: Vendor,Product,ContractNumber,ExpiryDate,RenewalOwner,SLATier</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 {</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s1">  cmd = &quot;date -d \&quot;&quot; $4 &quot;\&quot; +%s&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>awk<span class="w"> </span>-F<span class="s1">','</span><span class="w"> </span><span class="s1">'NR&gt;1 {</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s1">  cmd = "date -d \"" $4 "\" +%s"</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s1">  cmd | getline expiry; close(cmd)</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s1">  days = int((expiry - systime()) / 86400)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s1">  if (days &lt; 90 &amp;&amp; days &gt;= 0) printf &quot;EXPIRING: %s | %s | %d days | Owner: %s\n&quot;, $1, $2, days, $5</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s1">  if (days &lt; 0) printf &quot;EXPIRED: %s | %s | %d days ago | Owner: %s\n&quot;, $1, $2, -days, $5</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s1">}&#39;</span><span class="w"> </span>support-contracts.csv
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s1">  if (days &lt; 90 &amp;&amp; days &gt;= 0) printf "EXPIRING: %s | %s | %d days | Owner: %s\n", $1, $2, days, $5</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s1">  if (days &lt; 0) printf "EXPIRED: %s | %s | %d days ago | Owner: %s\n", $1, $2, -days, $5</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s1">}'</span><span class="w"> </span>support-contracts.csv
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>120 days out → Identify contracts expiring &lt; 90 days; review scope (add/remove CIs)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>90 days out  → Request renewal quote from vendor; route to procurement

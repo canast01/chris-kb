@@ -9128,13 +9128,13 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 - All FC zones between the host and VPLEX front-end ports have been disrupted (fabric issue)</p>
 <p><strong>Diagnostic steps:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check director health on the cluster serving this host</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/*/hardware/&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /engines/*/directors/*/hardware/"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check that the storage view exists and contains the expected volumes and ports</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/"</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Confirm the host initiator is registered</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/initiator-ports/&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-1/exports/initiator-ports/"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/engines/VPLEX-01/directors/director-1/hardware/
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Name                          Status      Temperature  Power
@@ -9182,25 +9182,25 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 </div>
 <p>On the host:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux: check that FC HBAs can see any VPLEX ports</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;port_state\|port_name&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"port_state\|port_name"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># EMC PowerPath: check path states</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># VMware ESXi: rescan and check adapter status</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;state\|transport&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"state\|transport"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Class = &quot;fc_host&quot;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Device = &quot;host0&quot;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    port_state = &quot;Online&quot;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    port_name = &quot;50:00:09:73:00:1a:2b:4c&quot;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Device = &quot;host1&quot;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    port_state = &quot;Online&quot;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    port_name = &quot;50:00:09:73:00:1a:2b:4d&quot;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Device = &quot;host2&quot;
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    port_state = &quot;Offline&quot;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    port_name = &quot;50:00:09:73:00:1a:2b:4e&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Class = "fc_host"
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Device = "host0"
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    port_state = "Online"
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    port_name = "50:00:09:73:00:1a:2b:4c"
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Device = "host1"
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    port_state = "Online"
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    port_name = "50:00:09:73:00:1a:2b:4d"
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Device = "host2"
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    port_state = "Offline"
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    port_name = "50:00:09:73:00:1a:2b:4e"
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Pseudo name=vplex_lun01
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a> CLARiiON ID=APM00123456789 [vplex-array-01]
@@ -9257,12 +9257,12 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 <p><strong>Likely cause:</strong> ICL interruption between Metro clusters during a write — one leg did not receive the write, setting the dirty bit on the distributed device.</p>
 <p><strong>Diagnostic steps:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm which device is out-of-sync and which leg is affected</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/*/health-indications/&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /distributed-storage/distributed-devices/*/health-indications/"</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /distributed-storage/distributed-devices/&lt;device_name&gt;/"</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check ICL status</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/communication/inter-cluster-links/&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-1/communication/inter-cluster-links/"</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-2/communication/inter-cluster-links/"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>health-indications/
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  device-1/
@@ -9320,8 +9320,8 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 <li>Restore the ICL if it is still interrupted.</li>
 <li>Once the ICL is healthy, VPLEX begins automatic resync. Monitor:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health-state\|rebuild-progress&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /distributed-storage/distributed-devices/&lt;device_name&gt;/"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"health-state\|rebuild-progress"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>health-state                                    OK
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>rebuild-progress                                100%
@@ -9350,8 +9350,8 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 <ol>
 <li>If resync does not start automatically within 10 minutes of ICL recovery, initiate manually:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;device rebuild \</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="s2">  --device /distributed-storage/distributed-devices/&lt;device_name&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"device rebuild \</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="s2">  --device /distributed-storage/distributed-devices/&lt;device_name&gt;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Rebuild initiated for device: EMC-VPLEX-device-prod-01
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Device: /distributed-storage/distributed-devices/EMC-VPLEX-device-prod-01
@@ -9394,14 +9394,14 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 <p><strong>Likely cause:</strong> The ICL failed while the Witness was also unreachable, or the Witness was not configured. VPLEX suspends I/O on consistency groups to prevent split-brain data divergence.</p>
 <p><strong>Diagnostic steps:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm CG suspension</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/consistency-groups/&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /distributed-storage/consistency-groups/"</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check Witness status from both clusters</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-1/cluster-witness/"</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-2/cluster-witness/"</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Check ICL status</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-1/communication/inter-cluster-links/"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Name                           Health    Operational-Status
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>cg-prod-db-01                  OK        suspended
@@ -9452,8 +9452,8 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 <li>Once both ICL and Witness are healthy, VPLEX typically resumes I/O automatically.</li>
 <li>If manual resume is required after verifying the active cluster with Dell Support:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;device resume \</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="s2">  --device /distributed-storage/distributed-devices/&lt;device_name&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"device resume \</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="s2">  --device /distributed-storage/distributed-devices/&lt;device_name&gt;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Device resume initiated for device: /distributed-storage/distributed-devices/device-001
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Resume status: IN_PROGRESS
@@ -9496,10 +9496,10 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 - SAN zone disrupted between host HBA and VPLEX front-end port</p>
 <p><strong>Diagnostic steps:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Confirm storage view still has the host initiator and the target volume</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/&quot;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/"</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Confirm the initiator is registered</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;/&quot;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;/"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/clusters/cluster-1/exports/storage-views/sv-prod-db-01/
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  initiators:
@@ -9549,19 +9549,19 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 </code></pre></div>
 <p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># multipath -ll output (Linux):
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>mpatha (360014056b1d45e8fa6e4f7a9c8d2b1f) dm-0 DELL,VRAID
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>size=2.0T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>|-+- policy='service-time 0' prio=50 status=active
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>| |- 2:0:0:0 sda 8:0   active ready running
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>| `- 3:0:0:0 sdb 8:16  active ready running
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>`-+- policy='service-time 0' prio=10 status=enabled
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  |- 4:0:0:0 sdc 8:32  active ready running
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  `- 5:0:0:0 sdd 8:48  active ready running
 <a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
 <a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>mpathb (360014056b1d45e8fa6e4f7a9c8d2b2g) dm-1 DELL,VRAID
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>size=1.5T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>size=1.5T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>|-+- policy='service-time 0' prio=50 status=active
 <a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>| `- 6:0:0:0 sde 8:64  active ready running
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>`-+- policy='service-time 0' prio=10 status=enabled
 <a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  `- 7:0:0:0 sdf 8:80  failed faulty offline
 <a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>
 <a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a># esxcli storage nmp path list output (ESXi):
@@ -9588,10 +9588,10 @@ Check SAN fabric zoning for the host HBA → VPLEX FE port zone.</p>
 <p><strong>Likely cause:</strong> Hardware fault on the director — failed component (fan, PSU, cache module, FC port, or the director board itself).</p>
 <p><strong>Diagnostic steps:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Identify the specific failed component</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/&quot;</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /engines/engine-1-1/directors/director-1-1-A/hardware/"</span>
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Check all ports on the faulted director for port-level faults</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/&quot;</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Name                                    Attributes
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>----                                    ----------
@@ -9647,8 +9647,8 @@ Check SAN fabric zoning for the host HBA → VPLEX FE port zone.</p>
 - Witness IP address changed without updating VPLEX configuration</p>
 <p><strong>Diagnostic steps:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check Witness status from both clusters</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-1/cluster-witness/"</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /clusters/cluster-2/cluster-witness/"</span>
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
 <a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># Ping the Witness VM from the VMS management interface</span>
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;witness_VM_IP&gt;
@@ -9714,14 +9714,14 @@ Check SAN fabric zoning for the host HBA → VPLEX FE port zone.</p>
 <h3 id="health-check-full-reports-warnings"><code>health-check --full</code> Reports Warnings<a class="headerlink" href="#health-check-full-reports-warnings" title="Permanent link">&para;</a></h3>
 <p><strong>Approach:</strong> Review each warning individually. <code>health-check --full</code> output groups warnings by component type.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Capture full health check output to a file for review</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;health-check --full&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/vplex_healthcheck_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"health-check --full"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/vplex_healthcheck_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
 <a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
 <a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Common warning patterns and their meaning:</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># &quot;health-state: minor-failure&quot; on a director component — check the specific component</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># &quot;rebuild-allowed: false&quot; on a distributed device — a rebuild is blocked; find and fix the blocking condition</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># &quot;operational-status: degraded&quot; on a CG — one or more member volumes are not in-sync</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># "health-state: minor-failure" on a director component — check the specific component</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># "rebuild-allowed: false" on a distributed device — a rebuild is blocked; find and fix the blocking condition</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># "operational-status: degraded" on a CG — one or more member volumes are not in-sync</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>vplexcli -q -e &quot;health-check --full&quot; &gt; /tmp/vplex_healthcheck_20240115_1423.txt
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>vplexcli -q -e "health-check --full" &gt; /tmp/vplex_healthcheck_20240115_1423.txt
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Health check initiated on cluster: vplexcluster-01
 <a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Scanning 12 storage arrays...
 <a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>Scanning 4 director nodes...
@@ -9757,13 +9757,13 @@ Check SAN fabric zoning for the host HBA → VPLEX FE port zone.</p>
 </div>
 <p>For each flagged component, drill into the component path for detail:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># If a specific engine/director is flagged:</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/&lt;engine_name&gt;/directors/&lt;director_name&gt;/hardware/&quot;</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /engines/&lt;engine_name&gt;/directors/&lt;director_name&gt;/hardware/"</span>
 <a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
 <a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># If a specific distributed device is flagged:</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /distributed-storage/distributed-devices/&lt;device_name&gt;/"</span>
 <a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
 <a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># If a specific CG is flagged:</span>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/consistency-groups/&lt;cg_name&gt;/&quot;</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">"ll /distributed-storage/consistency-groups/&lt;cg_name&gt;/"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>engine-1/directors/director-1/hardware/
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>  Type: directory

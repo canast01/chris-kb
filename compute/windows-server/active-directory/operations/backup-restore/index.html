@@ -8292,7 +8292,7 @@ Protecting Active Directory requires regular System State backups of every Domai
 <h3 id="scheduled-system-state-backup-powershell">Scheduled System State Backup (PowerShell)<a class="headerlink" href="#scheduled-system-state-backup-powershell" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Schedule daily System State backup at 02:00 to a local volume (D:)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$Policy</span> <span class="p">=</span> <span class="nb">New-WBPolicy</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$Target</span> <span class="p">=</span> <span class="nb">New-WBBackupTarget</span> <span class="n">-VolumePath</span> <span class="s2">&quot;D:&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$Target</span> <span class="p">=</span> <span class="nb">New-WBBackupTarget</span> <span class="n">-VolumePath</span> <span class="s2">"D:"</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Add-WBBackupTarget</span> <span class="n">-Policy</span> <span class="nv">$Policy</span> <span class="n">-Target</span> <span class="nv">$Target</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Add-WBSystemState</span> <span class="n">-Policy</span> <span class="nv">$Policy</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Set-WBSchedule</span> <span class="n">-Policy</span> <span class="nv">$Policy</span> <span class="n">-Schedule</span> <span class="n">02</span><span class="p">:</span><span class="n">00</span>
@@ -8362,7 +8362,7 @@ Protecting Active Directory requires regular System State backups of every Domai
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ntdsutil
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  activate instance ntds
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  authoritative restore
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  restore subtree &quot;OU=Users,DC=corp,DC=example,DC=com&quot;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  restore subtree "OU=Users,DC=corp,DC=example,DC=com"
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  quit
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  quit
 </code></pre></div>
@@ -8370,7 +8370,7 @@ Protecting Active Directory requires regular System State backups of every Domai
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ntdsutil
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  activate instance ntds
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  authoritative restore
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  restore object &quot;CN=John Smith,OU=Users,DC=corp,DC=example,DC=com&quot;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  restore object "CN=John Smith,OU=Users,DC=corp,DC=example,DC=com"
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  quit
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  quit
 </code></pre></div>
@@ -8387,37 +8387,37 @@ Protecting Active Directory requires regular System State backups of every Domai
 <p>The AD Recycle Bin (available since Windows Server 2008 R2 Forest Functional Level) retains deleted objects with all their attributes intact for the duration of <code>msDS-deletedObjectLifetime</code> (defaults to tombstone lifetime).</p>
 <h3 id="enable-the-recycle-bin-one-time-irreversible">Enable the Recycle Bin (one-time, irreversible)<a class="headerlink" href="#enable-the-recycle-bin-one-time-irreversible" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Enable-ADOptionalFeature</span> <span class="p">`</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="n">-Identity</span> <span class="s1">&#39;Recycle Bin Feature&#39;</span> <span class="p">`</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="n">-Identity</span> <span class="s1">'Recycle Bin Feature'</span> <span class="p">`</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="n">-Scope</span> <span class="n">ForestOrConfigurationSet</span> <span class="p">`</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="n">-Target</span> <span class="p">(</span><span class="nb">Get-ADForest</span><span class="p">).</span><span class="n">Name</span> <span class="p">`</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="recover-deleted-objects">Recover Deleted Objects<a class="headerlink" href="#recover-deleted-objects" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Find deleted objects by name</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">"John Smith"</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Restore a single object</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">"John Smith"</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  <span class="nb">Restore-ADObject</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Restore an entire deleted OU and its contents</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Marketing&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">"Marketing"</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  <span class="nb">Restore-ADObject</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># Restore to an alternate parent OU</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">Restore-ADObject</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">ObjectGUID</span><span class="p">&gt;</span> <span class="n">-TargetPath</span> <span class="s2">&quot;OU=Users,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">Restore-ADObject</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">ObjectGUID</span><span class="p">&gt;</span> <span class="n">-TargetPath</span> <span class="s2">"OU=Users,DC=corp,DC=example,DC=com"</span>
 </code></pre></div>
 <hr />
 <h2 id="tombstone-lifetime">Tombstone Lifetime<a class="headerlink" href="#tombstone-lifetime" title="Permanent link">&para;</a></h2>
 <p>The tombstone lifetime controls how long deleted objects remain in the AD database. After expiry, objects are permanently purged.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Check current tombstone lifetime (days)</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">(</span><span class="nb">Get-ADObject</span> <span class="p">`</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="n">-Identity</span> <span class="s2">&quot;CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="n">-Identity</span> <span class="s2">"CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=corp,DC=example,DC=com"</span> <span class="p">`</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  <span class="n">-Properties</span> <span class="n">tombstoneLifetime</span><span class="p">).</span><span class="n">tombstoneLifetime</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># Increase to 365 days (recommended for enterprises with offline DCs)</span>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nb">Set-ADObject</span> <span class="p">`</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="n">-Identity</span> <span class="s2">&quot;CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="n">-Identity</span> <span class="s2">"CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=corp,DC=example,DC=com"</span> <span class="p">`</span>
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  <span class="o">-Replace</span> <span class="p">@{</span><span class="n">tombstoneLifetime</span><span class="p">=</span><span class="n">365</span><span class="p">}</span>
 </code></pre></div>
 <table>
@@ -8472,7 +8472,7 @@ Protecting Active Directory requires regular System State backups of every Domai
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-Service</span> <span class="n">ADWS</span><span class="p">,</span> <span class="n">NTDS</span><span class="p">,</span> <span class="n">Netlogon</span><span class="p">,</span> <span class="n">KDC</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Check event logs for AD errors</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Warning</span> <span class="n">-Newest</span> <span class="n">20</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">"Directory Service"</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Warning</span> <span class="n">-Newest</span> <span class="n">20</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c"># Verify SYSVOL is shared</span>
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">net</span> <span class="n">share</span> <span class="p">|</span> <span class="n">findstr</span> <span class="n">SYSVOL</span>

@@ -7949,7 +7949,7 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Close-SmbSession</span> <span class="n">-SessionId</span> <span class="n">17179869218</span> <span class="n">-Force</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c">## Close all sessions from a specific client</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ClientComputerName</span> <span class="o">-eq</span> <span class="s2">&quot;192.168.1.55&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ClientComputerName</span> <span class="o">-eq</span> <span class="s2">"192.168.1.55"</span> <span class="p">}</span> <span class="p">|</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="nb">Close-SmbSession</span> <span class="n">-Force</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">## List all active sessions (legacy)</span>
@@ -7992,10 +7992,10 @@
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-AutoDisconnectTimeout</span> <span class="n">15</span> <span class="n">-Force</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c">## View maximum connections (0 = unlimited for domain editions)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ConcurrentUserLimit</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-SmbShare</span> <span class="n">-Name</span> <span class="s2">"Finance"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ConcurrentUserLimit</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c">## Set per-share connection limit</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-ConcurrentUserLimit</span> <span class="n">100</span> <span class="n">-Force</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">"Finance"</span> <span class="n">-ConcurrentUserLimit</span> <span class="n">100</span> <span class="n">-Force</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c">## List all open files across all shares</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-SmbOpenFile</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">FileId</span><span class="p">,</span> <span class="n">SessionId</span><span class="p">,</span> <span class="n">ShareRelativePath</span><span class="p">,</span> <span class="n">ClientComputerName</span>
@@ -8004,7 +8004,7 @@
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Close-SmbOpenFile</span> <span class="n">-FileId</span> <span class="n">4503599627432131</span> <span class="n">-Force</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c">## Find open files by share path</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-SmbOpenFile</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ShareRelativePath</span> <span class="o">-like</span> <span class="s2">&quot;*Finance*&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-SmbOpenFile</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ShareRelativePath</span> <span class="o">-like</span> <span class="s2">"*Finance*"</span> <span class="p">}</span>
 </code></pre></div></p>
 
 

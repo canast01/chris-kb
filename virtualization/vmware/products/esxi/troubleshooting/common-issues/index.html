@@ -9463,21 +9463,21 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <p>APD (All Paths Down) occurs when all storage paths to a LUN become unavailable. VMs using that LUN pause with I/O timeout errors.</p>
 <h3 id="diagnosis">Diagnosis<a class="headerlink" href="#diagnosis" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check for dead paths</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"State: dead"</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"State: dead"</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check for APD state</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|all path\|PDL&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"APD\|all path\|PDL"</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>State: dead
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>State: dead
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>State: dead
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>2
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-10-15T08:23:45.123Z cpu2:2048)WARNING: ScsiDeviceIO: 4624: Cmd(0x5d000001dba8d8c0) 0x2a to dev &quot;naa.60060e8012345678901234567890abcd&quot; failed H:0x0 D:0x2 P:0x0 Valid sense data: 0x5 0x24 0x0.
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2024-10-15T08:24:12.456Z cpu5:2101)WARNING: NMP: nmp_ThrottleLogForDevice:3456 - Cmd 0x2a (0x564d000012345678) to dev &quot;naa.60060e8012345678901234567890abcd&quot; on path vmhba2:C0:T2:L0 failed. H:0x0 D:0x2 P:0x0
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2024-10-15T08:23:45.123Z cpu2:2048)WARNING: ScsiDeviceIO: 4624: Cmd(0x5d000001dba8d8c0) 0x2a to dev "naa.60060e8012345678901234567890abcd" failed H:0x0 D:0x2 P:0x0 Valid sense data: 0x5 0x24 0x0.
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2024-10-15T08:24:12.456Z cpu5:2101)WARNING: NMP: nmp_ThrottleLogForDevice:3456 - Cmd 0x2a (0x564d000012345678) to dev "naa.60060e8012345678901234567890abcd" on path vmhba2:C0:T2:L0 failed. H:0x0 D:0x2 P:0x0
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>2024-10-15T08:25:03.789Z cpu1:1876)WARNING: ScsiDeviceIO: 4624: APD condition detected on device naa.60060e8012345678901234567890abcd
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>2024-10-15T08:26:45.234Z cpu3:2045)WARNING: NMP: nmp_PathFailureCount:2156 - Reached PDL condition on device naa.60060e8012345678901234567890abcd
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2024-10-15T08:27:18.567Z cpu4:1998)WARNING: ScsiDeviceIO: 4624: Cmd(0x5d000001dba8d8c0) 0x2a to dev &quot;naa.60060e8012345678901234567890abcd&quot; failed H:0x0 D:0x2 P:0x0
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2024-10-15T08:27:18.567Z cpu4:1998)WARNING: ScsiDeviceIO: 4624: Cmd(0x5d000001dba8d8c0) 0x2a to dev "naa.60060e8012345678901234567890abcd" failed H:0x0 D:0x2 P:0x0
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>2024-10-15T08:28:22.891Z cpu2:2067)WARNING: NMP: nmp_ThrottleLogForDevice:3456 - All paths down for device naa.60060e8012345678901234567890abcd
 </code></pre></div>
 <div class="admonition warning">
@@ -9531,7 +9531,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Verify paths are active again</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;State: active&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"State: active"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>HBA Name  Driver     Queue Full  Cmds Failed  Resets
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vmhba0    lpfc       0           0            0
@@ -9585,11 +9585,11 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <p>CPU Ready (<code>%RDY</code> in esxtop) indicates VM vCPUs waiting for a physical CPU to become available. Values above 10% per vCPU cause perceptible VM performance degradation.</p>
 <h3 id="diagnosis-with-esxtop">Diagnosis with esxtop<a class="headerlink" href="#diagnosis-with-esxtop" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>esxtop
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Press &#39;c&#39; for CPU view</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Press 'c' for CPU view</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Key columns: %RDY (ready), %CSTP (co-stop), %WAIT (waiting), %USED (actual CPU usage)</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ESXTOP - Virtual Machine CPU Usage Monitor
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Press &#39;c&#39; to switch to CPU view, &#39;v&#39; for VM view, &#39;m&#39; for memory view
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Press 'c' to switch to CPU view, 'v' for VM view, 'm' for memory view
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>GID  NAME                                   NWCPU %USED  %RDY %CSTP %WAIT %OVRLP %SYS
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  1  vcenter-prod-01                            4  45.2  12.1   0.0   8.3   0.0  2.1
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  2  esx-mgmt-cluster-01                        2  28.7   5.4   0.0   3.2   0.0  1.8
@@ -9681,7 +9681,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 </tbody>
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Find VMs with CPU ready &gt; 10% via PowerCLI</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-Instance</span> <span class="s2">&quot;&quot;</span> <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-Instance</span> <span class="s2">""</span> <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="p">|</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Value</span> <span class="p">|</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Value</span> <span class="o">-gt</span> <span class="n">1000</span> <span class="p">}</span> <span class="p">|</span>    <span class="c"># 1000ms per 20s = ~5% ready</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span>
@@ -9691,12 +9691,12 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <p>Memory balloon (<code>MCTLSZ</code> in esxtop) and swap (<code>SWR/s</code>, <code>SWW/s</code>) indicate memory overcommitment on the host.</p>
 <h3 id="diagnosis_1">Diagnosis<a class="headerlink" href="#diagnosis_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>esxtop
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Press &#39;m&#39; for Memory view</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Press 'm' for Memory view</span>
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Key columns: MCTLSZ (balloon driver active), SWR/s, SWW/s (swap activity)</span>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># SWCUR (current swap used by VM), SWTGT (swap target)</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ESXTOP - Virtual Machine Monitor Performance Monitor
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Press &#39;q&#39; to quit, &#39;h&#39; for help
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Press 'q' to quit, 'h' for help
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>GID NAME NWLD %LCPU %CSTP %MEMP SWR/s SWW/s MCTLSZ SWCUR SWTGT
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  1 vmware-hostd 1 0.12 0.00 8.2 0.0 0.0 0 0 0
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  2 vmotion 1 0.08 0.00 2.1 0.0 0.0 0 0 0
@@ -9799,7 +9799,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/vmfs/volumes/&lt;scratch-datastore&gt;/vmkdump/
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Identify the most recent vmkernel dump</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>find<span class="w"> </span>/vmfs/volumes/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.dumpFile&quot;</span><span class="w"> </span>-newer<span class="w"> </span>/etc<span class="w"> </span>-ls<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>find<span class="w"> </span>/vmfs/volumes/<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.dumpFile"</span><span class="w"> </span>-newer<span class="w"> </span>/etc<span class="w"> </span>-ls<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>total 0
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>drwxr-xr-x    3 root     root          4.0K Nov 15 10:23 .
@@ -9955,7 +9955,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># List VMFS filesystems and mount state</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^Name&quot;</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^Name"</span>
 <a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
 <a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Mount a VMFS volume that appears unmounted</span>
 <a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>mount<span class="w"> </span>-v<span class="w"> </span>&lt;volume-uuid&gt;
@@ -10000,10 +10000,10 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.removeall<span class="w"> </span>&lt;vmid&gt;
 <a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
 <a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># If snapshots cannot be removed via API, check for orphaned delta files</span>
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm-folder&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-0000*.vmdk&quot;</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm-folder&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*-delta.vmdk"</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*-0000*.vmdk"</span>
 <a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
 <a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1"># Consolidate via PowerCLI</span>
-<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>Get-VM<span class="w"> </span><span class="s2">&quot;&lt;vm-name&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Invoke-VMConsolidation
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>Get-VM<span class="w"> </span><span class="s2">"&lt;vm-name&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Invoke-VMConsolidation
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Snapshot Tree:
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a> Snapshot Name        : Current State
@@ -10020,7 +10020,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>/vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-000002-delta.vmdk
 <a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>/vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-000003-delta.vmdk
 <a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>
-<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>Get-VM &quot;vm-prod-01&quot; | Invoke-VMConsolidation
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>Get-VM "vm-prod-01" | Invoke-VMConsolidation
 <a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>Name                 State   Snapshots
 <a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>----                 -----   ---------
 <a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>vm-prod-01           Running 0
@@ -10060,7 +10060,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
 <a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Current NTP peer status (ntpq)</span>
 <a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>ntpq<span class="w"> </span>-p
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># Look for &#39;*&#39; (synced peer) or &#39;+&#39; (candidate)</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># Look for '*' (synced peer) or '+' (candidate)</span>
 <a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># offset column: drift in milliseconds — should be &lt; 500ms</span>
 <a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
 <a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1"># Host clock</span>
@@ -10159,7 +10159,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <li>Or remove and re-add the host: <strong>Right-click host → Remove</strong> → <strong>Add Host</strong> (preserves VMs if in the same datacenter)</li>
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c"># PowerCLI — force reconnect all disconnected hosts</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-eq</span> <span class="s2">&quot;Disconnected&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-eq</span> <span class="s2">"Disconnected"</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
 <a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>    <span class="nb">Connect-VMHost</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 <a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="p">}</span>
 </code></pre></div>

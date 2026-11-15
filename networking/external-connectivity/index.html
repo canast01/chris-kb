@@ -6636,7 +6636,7 @@ Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connecti
 <h2 id="health-check-commands">Health Check Commands<a class="headerlink" href="#health-check-commands" title="Permanent link">&para;</a></h2>
 <h3 id="outbound-internet-reachability">Outbound internet reachability<a class="headerlink" href="#outbound-internet-reachability" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># HTTP/HTTPS reachability and response code</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}  %{time_total}s\n&quot;</span><span class="w"> </span>https://api.example.com/health
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}  %{time_total}s\n"</span><span class="w"> </span>https://api.example.com/health
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># TLS certificate expiry check (days remaining)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>api.example.com:443<span class="w"> </span>-servername<span class="w"> </span>api.example.com<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
@@ -6789,33 +6789,33 @@ Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connecti
 </div>
 <h3 id="cloud-direct-connect-expressroute">Cloud Direct Connect / ExpressRoute<a class="headerlink" href="#cloud-direct-connect-expressroute" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># AWS: verify BGP session state on a virtual interface</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;virtualInterfaces[*].[virtualInterfaceId,bgpPeers[*].bgpStatus]&#39;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span>--query<span class="w"> </span><span class="s1">'virtualInterfaces[*].[virtualInterfaceId,bgpPeers[*].bgpStatus]'</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Azure: verify ExpressRoute circuit peering state</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>az<span class="w"> </span>network<span class="w"> </span>express-route<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;circuit-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;serviceProviderProvisioningState&#39;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>az<span class="w"> </span>network<span class="w"> </span>express-route<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;circuit-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">'serviceProviderProvisioningState'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>[
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    [
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        &quot;vif-0a1b2c3d4e5f6g7h8&quot;,
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        "vif-0a1b2c3d4e5f6g7h8",
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        [
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>            &quot;Available&quot;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>            "Available"
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        ]
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    ],
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    [
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        &quot;vif-9i8j7k6l5m4n3o2p1q&quot;,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        "vif-9i8j7k6l5m4n3o2p1q",
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        [
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>            &quot;Available&quot;,
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>            &quot;Available&quot;
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>            "Available",
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>            "Available"
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        ]
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    ],
 <a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    [
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>        &quot;vif-2r3s4t5u6v7w8x9y0z&quot;,
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>        "vif-2r3s4t5u6v7w8x9y0z",
 <a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>        [
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>            &quot;Down&quot;
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>            "Down"
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>        ]
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    ]
 <a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>]
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>&quot;Provisioned&quot;
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>"Provisioned"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

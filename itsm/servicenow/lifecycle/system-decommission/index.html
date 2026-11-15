@@ -8012,35 +8012,35 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Edit prometheus/targets/linux_hosts.yml — delete host entry</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify no active alerts for this host</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(a) for a in json.load(sys.stdin)[&#39;data&#39;][&#39;alerts&#39;] if &#39;&lt;hostname&gt;&#39; in str(a)]&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">"http://prometheus:9090/api/v1/alerts"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; [print(a) for a in json.load(sys.stdin)['data']['alerts'] if '&lt;hostname&gt;' in str(a)]"</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Zabbix — disable host via API</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://zabbix.example.com/api_jsonrpc.php<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;host.update&quot;,&quot;params&quot;:{&quot;hostid&quot;:&quot;&lt;id&gt;&quot;,&quot;status&quot;:1},&quot;auth&quot;:&quot;&lt;token&gt;&quot;,&quot;id&quot;:1}&#39;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"host.update","params":{"hostid":"&lt;id&gt;","status":1},"auth":"&lt;token&gt;","id":1}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  {
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    &quot;labels&quot;: {
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      &quot;alertname&quot;: &quot;HighCPUUsage&quot;,
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>      &quot;instance&quot;: &quot;web-prod-04:9100&quot;,
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      &quot;severity&quot;: &quot;warning&quot;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    "labels": {
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      "alertname": "HighCPUUsage",
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>      "instance": "web-prod-04:9100",
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      "severity": "warning"
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    },
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    &quot;state&quot;: &quot;firing&quot;,
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    &quot;value&quot;: &quot;1&quot;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    "state": "firing",
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    "value": "1"
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  },
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  {
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    &quot;labels&quot;: {
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      &quot;alertname&quot;: &quot;DiskSpaceWarning&quot;,
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      &quot;instance&quot;: &quot;web-prod-04:9100&quot;,
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>      &quot;severity&quot;: &quot;critical&quot;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    "labels": {
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      "alertname": "DiskSpaceWarning",
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      "instance": "web-prod-04:9100",
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>      "severity": "critical"
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    },
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    &quot;state&quot;: &quot;firing&quot;,
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    &quot;value&quot;: &quot;1&quot;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    "state": "firing",
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    "value": "1"
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  }
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>]
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:{&quot;hostids&quot;:[&quot;10084&quot;]},&quot;id&quot;:1}
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>{"jsonrpc":"2.0","result":{"hostids":["10084"]},"id":1}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8065,8 +8065,8 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </div>
 <h2 id="5-remove-from-backup">5. Remove from Backup<a class="headerlink" href="#5-remove-from-backup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Veeam — remove from backup job</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$job</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRJob<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRJobObject<span class="w"> </span>-Job<span class="w"> </span><span class="nv">$job</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>Name<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;&lt;hostname&gt;&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$job</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRJob<span class="w"> </span>-Name<span class="w"> </span><span class="s2">"Production VMs"</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRJobObject<span class="w"> </span>-Job<span class="w"> </span><span class="nv">$job</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>Name<span class="w"> </span>-eq<span class="w"> </span><span class="s2">"&lt;hostname&gt;"</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Remove-VBRJobObject<span class="w"> </span>-Job<span class="w"> </span><span class="nv">$job</span><span class="w"> </span>-Objects<span class="w"> </span><span class="nv">$vm</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Delete backup data (only after retention period confirmed)</span>
@@ -8075,13 +8075,13 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Commvault — retire client</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># CommCell Console: Client Computers → &lt;hostname&gt; → Retire Client</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Get-VBRJob -Name &quot;Production VMs&quot; | Select-Object Name, ID, JobType
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Get-VBRJob -Name "Production VMs" | Select-Object Name, ID, JobType
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Name              ID                                   JobType
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>----              --                                   -------
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Production VMs    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx Backup
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Get-VBRJobObject -Job $job | Where-Object Name -eq &quot;web-prod-01&quot;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Get-VBRJobObject -Job $job | Where-Object Name -eq "web-prod-01"
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Name          ObjectType VirtualMachine
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>----          ---------- --------------
@@ -8113,7 +8113,7 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </div>
 <h2 id="6-revoke-access-and-credentials">6. Revoke Access and Credentials<a class="headerlink" href="#6-revoke-access-and-credentials" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Remove SSH authorized keys</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>root@&lt;hostname&gt;<span class="w"> </span><span class="s2">&quot;rm -f /home/ansible/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>root@&lt;hostname&gt;<span class="w"> </span><span class="s2">"rm -f /home/ansible/.ssh/authorized_keys"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># CyberArk — remove managed account</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># CyberArk UI: Accounts → search &lt;hostname&gt; → Delete</span>
@@ -8122,7 +8122,7 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Venafi TLS Protect: Certificates → &lt;hostname&gt; → Revoke and Delete</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Active Directory — disable computer account (disable first, delete after 30 days)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Disable-ADComputer<span class="w"> </span>-Identity<span class="w"> </span><span class="s2">&quot;&lt;HOSTNAME&gt;&quot;</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Disable-ADComputer<span class="w"> </span>-Identity<span class="w"> </span><span class="s2">"&lt;HOSTNAME&gt;"</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Remove DNS records</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>nsupdate<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
@@ -8148,7 +8148,7 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Server:     dns.example.com
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Address:    192.168.1.53#53
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>** server can&#39;t find web-prod-01.example.com: NXDOMAIN
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>** server can't find web-prod-01.example.com: NXDOMAIN
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8177,15 +8177,15 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </div>
 <h2 id="7-shutdown-and-delete">7. Shutdown and Delete<a class="headerlink" href="#7-shutdown-and-delete" title="Permanent link">&para;</a></h2>
 <h3 id="virtual-machine">Virtual Machine<a class="headerlink" href="#virtual-machine" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">!!!</span> <span class="n">danger</span> <span class="s2">&quot;Permanently deletes VM and all disk files — no recovery&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">!!!</span> <span class="n">danger</span> <span class="s2">"Permanently deletes VM and all disk files — no recovery"</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="p">`</span><span class="nb">Remove-VM</span> <span class="n">-DeletePermanently</span><span class="p">`</span> <span class="n">deletes</span> <span class="n">the</span> <span class="n">VM</span> <span class="n">configuration</span> <span class="n">and</span> <span class="n">all</span> <span class="n">VMDKs</span> <span class="n">from</span> <span class="n">the</span> <span class="n">datastore</span> <span class="n">immediately</span><span class="p">.</span> <span class="n">Ensure</span> <span class="n">the</span> <span class="n">decommission</span> <span class="n">checklist</span> <span class="n">is</span> <span class="n">complete</span><span class="p">:</span> <span class="n">data</span> <span class="n">backed</span> <span class="n">up</span><span class="p">,</span> <span class="n">application</span> <span class="n">decommissioned</span><span class="p">,</span> <span class="n">CMDB</span> <span class="n">updated</span><span class="p">,</span> <span class="n">and</span> <span class="n">approval</span> <span class="n">obtained</span> <span class="k">in</span> <span class="n">ServiceNow</span> <span class="n">before</span> <span class="n">running</span><span class="p">.</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># VMware — power off and delete</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Remove-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span> <span class="n">-DeletePermanently</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="s2">"&lt;hostname&gt;"</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Remove-VM</span> <span class="n">-VM</span> <span class="s2">"&lt;hostname&gt;"</span> <span class="n">-DeletePermanently</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Verify datastore space reclaimed</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Get-Datastore</span> <span class="n">-Name</span> <span class="s2">&quot;Datastore-01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Get-Datastore</span> <span class="n">-Name</span> <span class="s2">"Datastore-01"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
 </code></pre></div>
 <h3 id="physical-server">Physical Server<a class="headerlink" href="#physical-server" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>shutdown<span class="w"> </span>-h<span class="w"> </span>now
@@ -8210,11 +8210,11 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>gcloud<span class="w"> </span>compute<span class="w"> </span>instances<span class="w"> </span>delete<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--zone<span class="o">=</span>europe-west1-b
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># AWS
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>An error occurred (InvalidInstanceID.NotFound) when calling the TerminateInstances operation: The instance ID &#39;i-1234567890abcdef0&#39; does not exist
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>An error occurred (InvalidInstanceID.NotFound) when calling the TerminateInstances operation: The instance ID 'i-1234567890abcdef0' does not exist
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>(no output — command completes silently)
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a># Azure
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Command group &#39;vm delete&#39; is deprecated and will be removed in a future release. Use &#39;az vm delete&#39; from &#39;azure-cli-core&#39; instead.
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Command group 'vm delete' is deprecated and will be removed in a future release. Use 'az vm delete' from 'azure-cli-core' instead.
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Are you sure you want to perform this operation? (y/N): y
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>- Running ..
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Finished operation: vm delete
@@ -8222,7 +8222,7 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a># GCP
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>ERROR: (gcloud.compute.instances.delete) Could not fetch resource:
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a> - The resource &#39;projects/my-project/zones/europe-west1-b/instances/&lt;hostname&gt;&#39; was not found
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a> - The resource 'projects/my-project/zones/europe-west1-b/instances/&lt;hostname&gt;' was not found
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8253,12 +8253,12 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Ansible — remove from inventory</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>inventory/production/host_vars/&lt;hostname&gt;.example.com/
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Remove host entry from hosts.yml</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Decommission &lt;hostname&gt; — CHG-XXXX&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Decommission &lt;hostname&gt; — CHG-XXXX"</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>git<span class="w"> </span>push
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># CMDB entry: Status → Retired, Decommission date → YYYY-MM-DD</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>rm &#39;inventory/production/host_vars/db-prod-03.example.com/&#39;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>rm 'inventory/production/host_vars/db-prod-03.example.com/'
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>[main 7a2f4c9] Decommission db-prod-03 — CHG-0047821
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a> 1 file changed, 47 deletions(-)
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a> delete mode 100644 inventory/production/host_vars/db-prod-03.example.com/ansible-vault.yml

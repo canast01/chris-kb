@@ -7069,7 +7069,7 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>uptime
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Scan for hardware errors</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fault\|fail&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fault\|fail"</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>root@esxi-prod-01.dc1 [ ~ ]# /etc/init.d/hostd status
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>hostd is running.
@@ -7077,7 +7077,7 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vpxa is running.
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>root@esxi-prod-01.dc1 [ ~ ]# uptime
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a> 14:32:18 up 187 days, 3:45, 0 users, load average: 0.42, 0.38, 0.35
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>root@esxi-prod-01.dc1 [ ~ ]# grep -i &quot;error\|fault\|fail&quot; /var/log/vmkernel.log | tail -20
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>root@esxi-prod-01.dc1 [ ~ ]# grep -i "error\|fault\|fail" /var/log/vmkernel.log | tail -20
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>2024-01-15T14:28:33.847Z cpu2:2097)FSS: 2097: Failed to open swap file /vmfs/volumes/datastore1/swap/esx-prod-01-2097.vswp
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>2024-01-15T14:15:22.451Z cpu5:2156)WARNING: NMP: nmp_ThrottleLogForDevice: Reducing number of error messages from device naa.6001405a1b2c4d8e9f0a1b2c3d4e5f6a
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>2024-01-15T13:42:10.923Z cpu1:2045)ALERT: FS: 2045: Failed to allocate memory for inode cache
@@ -7163,7 +7163,7 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 </div>
 <p>Wait 60–90 seconds — the host should reconnect to vCenter automatically.</p>
 <h2 id="fix-option-c-reconnect-via-powercli">Fix — Option C: Reconnect via PowerCLI<a class="headerlink" href="#fix-option-c-reconnect-via-powercli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-VMHost</span> <span class="s2">"esxi-host.domain"</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
 </code></pre></div>
 <h2 id="fix-option-d-evacuate-vms-via-host-client">Fix — Option D: Evacuate VMs via Host Client<a class="headerlink" href="#fix-option-d-evacuate-vms-via-host-client" title="Permanent link">&para;</a></h2>
 <p>Use when the host has a hardware fault but VMs are still running:</p>

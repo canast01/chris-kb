@@ -9155,44 +9155,44 @@ Configuration:
 - Approver groups: AD groups (any member can approve)
 - Auto-reject if not approved within: 5 business days</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List approval policies via API</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/policy/api/policies?type=com.vmware.policy.approval&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, scope: .scope, approvers: .definition.approvers}&#39;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/policy/api/policies?type=com.vmware.policy.approval"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.content[] | {name: .name, scope: .scope, approvers: .definition.approvers}'</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># List pending approvals</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/approval/api/requests?status=PENDING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, requester: .requestedBy, item: .catalogItemName}&#39;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/approval/api/requests?status=PENDING"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.content[] | {id: .id, requester: .requestedBy, item: .catalogItemName}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;name&quot;: &quot;Production Deployment Approval&quot;,
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;scope&quot;: &quot;prod-deployments&quot;,
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;approvers&quot;: [
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    &quot;infra-leads@example.com&quot;,
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    &quot;security-team@example.com&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "name": "Production Deployment Approval",
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  "scope": "prod-deployments",
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  "approvers": [
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    "infra-leads@example.com",
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    "security-team@example.com"
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  ]
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>}
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>{
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;name&quot;: &quot;Database Change Control&quot;,
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  &quot;scope&quot;: &quot;database-changes&quot;,
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  &quot;approvers&quot;: [
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    &quot;dba-group@example.com&quot;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  "name": "Database Change Control",
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  "scope": "database-changes",
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  "approvers": [
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    "dba-group@example.com"
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  ]
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>}
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>{
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  &quot;id&quot;: &quot;req-2024-08-15-001&quot;,
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;requester&quot;: &quot;john.smith@example.com&quot;,
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  &quot;item&quot;: &quot;Deploy CentOS 8 VM&quot;
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  "id": "req-2024-08-15-001",
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  "requester": "john.smith@example.com",
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  "item": "Deploy CentOS 8 VM"
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>}
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>{
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  &quot;id&quot;: &quot;req-2024-08-15-002&quot;,
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  &quot;requester&quot;: &quot;jane.doe@example.com&quot;,
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  &quot;item&quot;: &quot;Provision Database Server&quot;
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  "id": "req-2024-08-15-002",
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  "requester": "jane.doe@example.com",
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  "item": "Provision Database Server"
 <a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>}
 <a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>{
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  &quot;id&quot;: &quot;req-2024-08-15-003&quot;,
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  &quot;requester&quot;: &quot;admin@example.com&quot;,
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  &quot;item&quot;: &quot;Configure Load Balancer&quot;
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  "id": "req-2024-08-15-003",
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  "requester": "admin@example.com",
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  "item": "Configure Load Balancer"
 <a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9223,38 +9223,38 @@ Configuration:
 <hr />
 <h2 id="reviewing-role-assignments-via-api">Reviewing Role Assignments via API<a class="headerlink" href="#reviewing-role-assignments-via-api" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all organisation-level role assignments</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/orgs/&lt;org-id&gt;/role-assignments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {principal: .principal, role: .role}&#39;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/csp/gateway/am/api/orgs/&lt;org-id&gt;/role-assignments"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.items[] | {principal: .principal, role: .role}'</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># List project membership</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/project-service/api/projects/&lt;project-id&gt;/members&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.members[] | {email: .email, role: .role}&#39;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/project-service/api/projects/&lt;project-id&gt;/members"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.members[] | {email: .email, role: .role}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;principal&quot;: &quot;svc-automation@example.local&quot;,
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;role&quot;: &quot;org-owner&quot;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  "principal": "svc-automation@example.local",
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  "role": "org-owner"
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>}
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>{
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  &quot;principal&quot;: &quot;devops-team@example.local&quot;,
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  &quot;role&quot;: &quot;org-member&quot;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  "principal": "devops-team@example.local",
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  "role": "org-member"
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>}
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>{
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  &quot;principal&quot;: &quot;security-admins@example.local&quot;,
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  &quot;role&quot;: &quot;org-admin&quot;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  "principal": "security-admins@example.local",
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  "role": "org-admin"
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>}
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>{
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  &quot;email&quot;: &quot;alice.chen@example.local&quot;,
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  &quot;role&quot;: &quot;project-admin&quot;
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  "email": "alice.chen@example.local",
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  "role": "project-admin"
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>}
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>{
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  &quot;email&quot;: &quot;bob.martinez@example.local&quot;,
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  &quot;role&quot;: &quot;project-member&quot;
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  "email": "bob.martinez@example.local",
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  "role": "project-member"
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>}
 <a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>{
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  &quot;email&quot;: &quot;carol.singh@example.local&quot;,
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  &quot;role&quot;: &quot;project-viewer&quot;
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  "email": "carol.singh@example.local",
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  "role": "project-viewer"
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>}
 </code></pre></div>
 <div class="admonition warning">

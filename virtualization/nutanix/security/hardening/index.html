@@ -7545,13 +7545,13 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </div>
 <h3 id="cvm-ssh-key-management">CVM SSH Key Management<a class="headerlink" href="#cvm-ssh-key-management" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Add an authorized key to all CVMs</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>allssh<span class="w"> </span><span class="s2">&quot;echo &#39;ssh-rsa AAAA... user@host&#39; &gt;&gt; ~/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>allssh<span class="w"> </span><span class="s2">"echo 'ssh-rsa AAAA... user@host' &gt;&gt; ~/.ssh/authorized_keys"</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Remove a key (find and delete the specific line)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>allssh<span class="w"> </span><span class="s2">&quot;sed -i &#39;/user@host/d&#39; ~/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>allssh<span class="w"> </span><span class="s2">"sed -i '/user@host/d' ~/.ssh/authorized_keys"</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># List current authorized keys</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>allssh<span class="w"> </span><span class="s2">&quot;cat ~/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>allssh<span class="w"> </span><span class="s2">"cat ~/.ssh/authorized_keys"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>node-1-cvm: ssh-rsa AAAA...B3Z9 user@host
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>node-1-cvm: ssh-rsa AAAA...K7M2 admin@bastion
@@ -7633,7 +7633,7 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Enforce TLS 1.2+ (disable TLS 1.0/1.1)</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-ssl-key-config<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>key-type<span class="o">=</span>RSA_2048<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>cluster-certification-chain-key<span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w">  </span><span class="c1"># leave blank to use Nutanix self-signed</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>cluster-certification-chain-key<span class="o">=</span><span class="s2">""</span><span class="w">  </span><span class="c1"># leave blank to use Nutanix self-signed</span>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># For custom SSL cert (recommended — avoids browser warnings):</span>
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Prism Element → Settings → SSL Certificate → Import Certificate</span>
@@ -7732,7 +7732,7 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-L<span class="w"> </span>-n
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Verify AHV firewall</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>allssh<span class="w"> </span><span class="s2">&quot;sudo iptables -L -n -v | grep -E &#39;DROP|REJECT&#39; | head -20&quot;</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>allssh<span class="w"> </span><span class="s2">"sudo iptables -L -n -v | grep -E 'DROP|REJECT' | head -20"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>target     prot opt source               destination         

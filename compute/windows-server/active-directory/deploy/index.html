@@ -7748,8 +7748,8 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
 <h2 id="promote-the-first-domain-controller-new-forest">Promote the First Domain Controller (New Forest)<a class="headerlink" href="#promote-the-first-domain-controller-new-forest" title="Permanent link">&para;</a></h2>
 <p>Promote the server and create the new forest. Replace <code>corp.local</code> and <code>CORP</code> with your domain name and NetBIOS name.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Install-ADDSForest</span> <span class="p">`</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-DomainNetbiosName</span> <span class="s2">&quot;CORP&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">-DomainName</span> <span class="s2">"corp.local"</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-DomainNetbiosName</span> <span class="s2">"CORP"</span> <span class="p">`</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-InstallDns</span> <span class="p">`</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">-SafeModeAdministratorPassword</span> <span class="p">(</span><span class="nb">Read-Host</span> <span class="n">-AsSecureString</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">-Force</span>
@@ -7773,7 +7773,7 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
 <hr />
 <h2 id="configure-ntp-on-domain-controller">Configure NTP on Domain Controller<a class="headerlink" href="#configure-ntp-on-domain-controller" title="Permanent link">&para;</a></h2>
 <p>The PDC Emulator must synchronise with an external time source. All other DCs and domain members sync from the PDC Emulator automatically.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;time.windows.com&quot;</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span> <span class="p">/</span><span class="n">update</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">"time.windows.com"</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span> <span class="p">/</span><span class="n">update</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Restart-Service</span> <span class="n">w32tm</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
 </code></pre></div>
@@ -7789,7 +7789,7 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
 </code></pre></div>
 <p><strong>Step 2 — Promote as a replica DC:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Install-ADDSDomainController</span> <span class="p">`</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">-DomainName</span> <span class="s2">"corp.local"</span> <span class="p">`</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">-InstallDns</span> <span class="p">`</span>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">-Force</span>
@@ -7802,16 +7802,16 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
 <h2 id="create-organisational-unit-structure">Create Organisational Unit Structure<a class="headerlink" href="#create-organisational-unit-structure" title="Permanent link">&para;</a></h2>
 <p>A clear OU hierarchy is the foundation of GPO scope and delegation. Adjust the structure to your organisation.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Top-level OUs</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Servers&quot;</span>    <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Workstations&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Users&quot;</span>      <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Groups&quot;</span>     <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">"Servers"</span>    <span class="n">-Path</span> <span class="s2">"DC=corp,DC=local"</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">"Workstations"</span> <span class="n">-Path</span> <span class="s2">"DC=corp,DC=local"</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">"Users"</span>      <span class="n">-Path</span> <span class="s2">"DC=corp,DC=local"</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">"Groups"</span>     <span class="n">-Path</span> <span class="s2">"DC=corp,DC=local"</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">"ServiceAccounts"</span> <span class="n">-Path</span> <span class="s2">"DC=corp,DC=local"</span>
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c"># Server sub-OUs</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Domain Controllers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Member Servers&quot;</span>     <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;File Servers&quot;</span>       <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">"Domain Controllers"</span> <span class="n">-Path</span> <span class="s2">"OU=Servers,DC=corp,DC=local"</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">"Member Servers"</span>     <span class="n">-Path</span> <span class="s2">"OU=Servers,DC=corp,DC=local"</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">"File Servers"</span>       <span class="n">-Path</span> <span class="s2">"OU=Servers,DC=corp,DC=local"</span>
 </code></pre></div>
 <p>Verify structure:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Get-ADOrganizationalUnit</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DistinguishedName</span>
@@ -7820,14 +7820,14 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
 <h2 id="apply-security-baseline-gpo">Apply Security Baseline GPO<a class="headerlink" href="#apply-security-baseline-gpo" title="Permanent link">&para;</a></h2>
 <p>Download the Microsoft Security Compliance Toolkit from Microsoft, extract the Windows Server 2022 Security Baseline GPO, and import it.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Import the GPO backup (adjust GpoName and Path to match your download)</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Import-GPO</span> <span class="n">-BackupGpoName</span> <span class="s2">&quot;MSFT Windows Server 2022 - Domain Controller&quot;</span> <span class="p">`</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>           <span class="n">-Path</span> <span class="s2">&quot;C:\SCT\GPOs&quot;</span> <span class="p">`</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>           <span class="n">-TargetName</span> <span class="s2">&quot;Server Baseline - Domain Controllers&quot;</span> <span class="p">`</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Import-GPO</span> <span class="n">-BackupGpoName</span> <span class="s2">"MSFT Windows Server 2022 - Domain Controller"</span> <span class="p">`</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>           <span class="n">-Path</span> <span class="s2">"C:\SCT\GPOs"</span> <span class="p">`</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>           <span class="n">-TargetName</span> <span class="s2">"Server Baseline - Domain Controllers"</span> <span class="p">`</span>
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>           <span class="n">-CreateIfNeeded</span>
 </code></pre></div>
 <p>Link the GPO to the Domain Controllers OU:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">New-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Server Baseline - Domain Controllers&quot;</span> <span class="p">`</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>           <span class="n">-Target</span> <span class="s2">&quot;OU=Domain Controllers,OU=Servers,DC=corp,DC=local&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">New-GPLink</span> <span class="n">-Name</span> <span class="s2">"Server Baseline - Domain Controllers"</span> <span class="p">`</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>           <span class="n">-Target</span> <span class="s2">"OU=Domain Controllers,OU=Servers,DC=corp,DC=local"</span>
 </code></pre></div>
 <p>Force policy refresh and verify:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">gpupdate</span> <span class="p">/</span><span class="n">force</span>

@@ -7636,7 +7636,7 @@
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>restorecon<span class="w"> </span>-Rv<span class="w"> </span>/opt/webapp/public/
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Make a context change permanent (survives restorecon)</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>semanage<span class="w"> </span>fcontext<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span>httpd_sys_content_t<span class="w"> </span><span class="s2">&quot;/opt/webapp/public(/.*)?&quot;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>semanage<span class="w"> </span>fcontext<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span>httpd_sys_content_t<span class="w"> </span><span class="s2">"/opt/webapp/public(/.*)?"</span>
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>restorecon<span class="w"> </span>-Rv<span class="w"> </span>/opt/webapp/public/
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>-rw-r--r--. root root system_u:object_r:httpd_sys_content_t:s0 index.html
@@ -7736,7 +7736,7 @@
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>semodule<span class="w"> </span>-i<span class="w"> </span>mypolicy.pp
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check SELinux denials in journal</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;SELinux is preventing&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"SELinux is preventing"</span>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># sealert (setroubleshoot-server package) — human-readable denial explanations</span>
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>sealert<span class="w"> </span>-a<span class="w"> </span>/var/log/audit/audit.log
@@ -7746,7 +7746,7 @@
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aa-status
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List loaded profiles and their modes</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>aa-status<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;enforce|complain&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>aa-status<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"enforce|complain"</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Set a profile to enforce mode</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>aa-enforce<span class="w"> </span>/etc/apparmor.d/usr.sbin.nginx
@@ -7758,8 +7758,8 @@
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>apparmor_parser<span class="w"> </span>-r<span class="w"> </span>/etc/apparmor.d/usr.sbin.nginx
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
 <a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># View denials</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;apparmor&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;DENIED&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;apparmor=\&quot;DENIED\&quot;&quot;</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"apparmor"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"DENIED"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"apparmor=\"DENIED\""</span>
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>apparmor module is loaded.
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>29 profiles are loaded.
@@ -7779,9 +7779,9 @@
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Reloading /etc/apparmor.d/usr.sbin.nginx.
 <a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>(no output — command completes silently)
 <a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Nov 15 09:42:17 web-prod-01 kernel: apparmor=&quot;DENIED&quot; operation=&quot;open&quot; profile=&quot;nginx&quot; name=&quot;/etc/shadow&quot; pid=2847 comm=&quot;nginx&quot; requested_mask=&quot;r&quot; denied_mask=&quot;r&quot; fsuid=33 ouid=0
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Nov 15 09:41:53 web-prod-01 kernel: apparmor=&quot;DENIED&quot; operation=&quot;capable&quot; profile=&quot;nginx&quot; pid=2841 comm=&quot;nginx&quot; capability=36 capname=&quot;block_suspend&quot;
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>Nov 15 09:40:12 web-prod-01 kernel: apparmor=&quot;DENIED&quot; operation=&quot;mknod&quot; profile=&quot;nginx&quot; name=&quot;/var/run/nginx.sock&quot; pid=2839 comm=&quot;nginx&quot; requested_mask=&quot;c&quot; denied_mask=&quot;c&quot;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>Nov 15 09:42:17 web-prod-01 kernel: apparmor="DENIED" operation="open" profile="nginx" name="/etc/shadow" pid=2847 comm="nginx" requested_mask="r" denied_mask="r" fsuid=33 ouid=0
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>Nov 15 09:41:53 web-prod-01 kernel: apparmor="DENIED" operation="capable" profile="nginx" pid=2841 comm="nginx" capability=36 capname="block_suspend"
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>Nov 15 09:40:12 web-prod-01 kernel: apparmor="DENIED" operation="mknod" profile="nginx" name="/var/run/nginx.sock" pid=2839 comm="nginx" requested_mask="c" denied_mask="c"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7909,9 +7909,9 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Audit who has sudo access</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[^#]&quot;</span><span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.d/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^Defaults&quot;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"^[^#]"</span><span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.d/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^Defaults"</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Check a specific user&#39;s sudo permissions</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Check a specific user's sudo permissions</span>
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>jsmith
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>/etc/sudoers:root   ALL=(ALL)   ALL
@@ -8128,7 +8128,7 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Find world-writable files outside /tmp (should be none)</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-0002<span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/tmp/*&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/proc/*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-0002<span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">"/tmp/*"</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">"/proc/*"</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
 <a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
 <a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Find setuid binaries</span>
 <a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-4000<span class="w"> </span><span class="m">2</span>&gt;/dev/null
@@ -8140,10 +8140,10 @@
 <a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-nouser<span class="w"> </span>-o<span class="w"> </span>-nogroup<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 <a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>
 <a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="c1"># Check /etc/passwd for accounts with UID 0 (should only be root)</span>
-<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$3 == 0 { print $1 }&#39;</span><span class="w"> </span>/etc/passwd
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">'$3 == 0 { print $1 }'</span><span class="w"> </span>/etc/passwd
 <a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>
 <a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a><span class="c1"># Check for accounts with empty passwords</span>
-<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$2 == &quot;&quot; { print $1 }&#39;</span><span class="w"> </span>/etc/shadow
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">'$2 == "" { print $1 }'</span><span class="w"> </span>/etc/shadow
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>/usr/local/bin/backup.sh
 <a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>/opt/scripts/deploy.sh

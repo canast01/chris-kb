@@ -7765,10 +7765,10 @@ Run this check weekly or after any significant workload addition.
 <h2 id="vsan-capacity">vSAN Capacity<a class="headerlink" href="#vsan-capacity" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On any cluster ESXi host</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>capacity<span class="w"> </span>get
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Review: total capacity, used, free, and &quot;slack&quot; (reserved for rebuild)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Review: total capacity, used, free, and "slack" (reserved for rebuild)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Via vCenter UI: vSAN cluster → Monitor → Capacity</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Check &quot;Used Capacity&quot; — keep below 70% to allow object rebuild headroom</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Check "Used Capacity" — keep below 70% to allow object rebuild headroom</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster UUID: 52d4a8f1-7c2e-41e2-9a3f-8b1d6e9c2f4a
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Physical capacity: 12.34 TB
@@ -7809,7 +7809,7 @@ Run this check weekly or after any significant workload addition.
 <p>Action: snapshots older than 7 days should be reviewed with the VM owner; snapshots &gt; 50 GB should be removed if not actively in use.</p>
 <h2 id="thin-provisioning-risk">Thin Provisioning Risk<a class="headerlink" href="#thin-provisioning-risk" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Compare provisioned vs. actual used space per datastore</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;VMFS&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">"VMFS"</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nv">$provGB</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$vms</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>

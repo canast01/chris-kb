@@ -9184,8 +9184,8 @@ Hardening reference covering Default Account Hardening, Certificate Replacement,
 <hr />
 <h2 id="ssh-and-console-access">SSH and Console Access<a class="headerlink" href="#ssh-and-console-access" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restrict SSH access to management network CIDR</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;sshd: 10.0.1.0/24&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.allow
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ALL: ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.deny
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"sshd: 10.0.1.0/24"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.allow
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"ALL: ALL"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.deny
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Disable root password login — require key-based SSH</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Edit /etc/ssh/sshd_config:</span>
@@ -9222,7 +9222,7 @@ Hardening reference covering Default Account Hardening, Certificate Replacement,
 <h2 id="kubernetes-security">Kubernetes Security<a class="headerlink" href="#kubernetes-security" title="Permanent link">&para;</a></h2>
 <p>The embedded Kubernetes cluster should not be accessible outside the appliance:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify kubectl is only usable from within the appliance (localhost)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;server:&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"server:"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Should show: server: https://127.0.0.1:&lt;port&gt;</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>server: https://127.0.0.1:6443
@@ -9340,39 +9340,39 @@ Hardening reference covering Default Account Hardening, Certificate Replacement,
 <p>Aria Automation logs all deployment requests, approval decisions, and administrative actions in the audit log.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Access audit events via API</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/audit/api/events?size=100&amp;sort=timestamp,desc&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {type: .type, user: .principal, resource: .resource, time: .timestamp}&#39;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/audit/api/events?size=100&amp;sort=timestamp,desc"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.content[] | {type: .type, user: .principal, resource: .resource, time: .timestamp}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;type&quot;: &quot;RESOURCE_ACTION&quot;,
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;user&quot;: &quot;admin@example.local&quot;,
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;resource&quot;: &quot;/resources/deployments/dep-a7f2c9e1-4b3d&quot;,
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;time&quot;: &quot;2024-01-15T14:32:18.456Z&quot;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  "type": "RESOURCE_ACTION",
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  "user": "admin@example.local",
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  "resource": "/resources/deployments/dep-a7f2c9e1-4b3d",
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  "time": "2024-01-15T14:32:18.456Z"
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>}
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>{
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;type&quot;: &quot;POLICY_UPDATE&quot;,
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;user&quot;: &quot;policy-svc@example.local&quot;,
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;resource&quot;: &quot;/policies/governance/pol-8d2f1a9c&quot;,
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;time&quot;: &quot;2024-01-15T14:28:05.123Z&quot;
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  "type": "POLICY_UPDATE",
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  "user": "policy-svc@example.local",
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  "resource": "/policies/governance/pol-8d2f1a9c",
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  "time": "2024-01-15T14:28:05.123Z"
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>}
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>{
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  &quot;type&quot;: &quot;BLUEPRINT_DEPLOY&quot;,
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  &quot;user&quot;: &quot;devops-team@example.local&quot;,
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  &quot;resource&quot;: &quot;/blueprints/prod-web-tier/bp-3c6e2f41&quot;,
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  &quot;time&quot;: &quot;2024-01-15T14:15:42.789Z&quot;
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  "type": "BLUEPRINT_DEPLOY",
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  "user": "devops-team@example.local",
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  "resource": "/blueprints/prod-web-tier/bp-3c6e2f41",
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  "time": "2024-01-15T14:15:42.789Z"
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>}
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>{
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  &quot;type&quot;: &quot;USER_LOGIN&quot;,
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  &quot;user&quot;: &quot;svc-automation@example.local&quot;,
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  &quot;resource&quot;: &quot;/auth/sessions&quot;,
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  &quot;time&quot;: &quot;2024-01-15T14:02:19.234Z&quot;
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  "type": "USER_LOGIN",
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  "user": "svc-automation@example.local",
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  "resource": "/auth/sessions",
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  "time": "2024-01-15T14:02:19.234Z"
 <a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>}
 <a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>{
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  &quot;type&quot;: &quot;RESOURCE_DELETE&quot;,
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>  &quot;user&quot;: &quot;admin@example.local&quot;,
-<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>  &quot;resource&quot;: &quot;/resources/vms/vm-prod-db-02&quot;,
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>  &quot;time&quot;: &quot;2024-01-15T13:45:33.567Z&quot;
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  "type": "RESOURCE_DELETE",
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>  "user": "admin@example.local",
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>  "resource": "/resources/vms/vm-prod-db-02",
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>  "time": "2024-01-15T13:45:33.567Z"
 <a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9401,7 +9401,7 @@ Hardening reference covering Default Account Hardening, Certificate Replacement,
 </table>
 </div>
 <p>Forward syslog to Aria Ops for Logs or SIEM for centralised audit trail:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vra-audit.conf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'*.* @@vrli-prod-01.example.local:514'</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vra-audit.conf
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)

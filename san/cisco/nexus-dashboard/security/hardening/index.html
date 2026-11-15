@@ -7590,34 +7590,34 @@
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>## 9. Kubernetes Security Baseline
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ND&#39;s Kubernetes control plane has several security defaults that should be verified:
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ND's Kubernetes control plane has several security defaults that should be verified:
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>```bash
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>ssh ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a># Confirm no pods are running as root unnecessarily
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>kubectl get pods --all-namespaces -o jsonpath=&#39;{range .items[*]}{.metadata.namespace}{&quot;\t&quot;}{.metadata.name}{&quot;\t&quot;}{.spec.securityContext.runAsUser}{&quot;\n&quot;}{end}&#39; | grep -v &quot;^$&quot;
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>kubectl get pods --all-namespaces -o jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.metadata.name}{"\t"}{.spec.securityContext.runAsUser}{"\n"}{end}' | grep -v "^$"
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
 <a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a># Confirm no privileged pods (outside of system namespaces)
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>kubectl get pods --all-namespaces -o json | python3 -c &quot;
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>kubectl get pods --all-namespaces -o json | python3 -c "
 <a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>import sys, json
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>data = json.load(sys.stdin)
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>for item in data[&#39;items&#39;]:
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    ns = item[&#39;metadata&#39;][&#39;namespace&#39;]
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>    name = item[&#39;metadata&#39;][&#39;name&#39;]
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>    for c in item[&#39;spec&#39;].get(&#39;containers&#39;,[]):
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>        if c.get(&#39;securityContext&#39;,{}).get(&#39;privileged&#39;):
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>            print(f&#39;Privileged: {ns}/{name}/{c[\&quot;name\&quot;]}&#39;)
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>&quot; 2&gt;/dev/null | grep -v &quot;kube-system\|kube-proxy\|cilium&quot;
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>for item in data['items']:
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    ns = item['metadata']['namespace']
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>    name = item['metadata']['name']
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>    for c in item['spec'].get('containers',[]):
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>        if c.get('securityContext',{}).get('privileged'):
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>            print(f'Privileged: {ns}/{name}/{c[\"name\"]}')
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>" 2&gt;/dev/null | grep -v "kube-system\|kube-proxy\|cilium"
 <a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a># ND system pods require some elevated privileges; app pods should not
 <a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>
 <a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a># Confirm NetworkPolicies are in place (Cilium enforces by default in ND)
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>kubectl get networkpolicies --all-namespaces | grep -c &quot;NetworkPolicy&quot;
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>kubectl get networkpolicies --all-namespaces | grep -c "NetworkPolicy"
 <a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a># Should be non-zero
 </code></pre></div></li>
 </ol>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Welcome to Nexus Dashboard
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ndadmin@nd-dc1-1.corp.example.com&#39;s password:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ndadmin@nd-dc1-1.corp.example.com's password:
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.42.18.55
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>default nginx-deployment-5d4c8f7b9  1000

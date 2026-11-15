@@ -7612,8 +7612,8 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>iotop<span class="w"> </span>-o<span class="w"> </span>-P
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Filesystem fill causing ENOSPC errors</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 85&#39;</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ENOSPC\|no space left\|filesystem full&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'$5+0 &gt; 85'</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"ENOSPC\|no space left\|filesystem full"</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Large temp files</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>find<span class="w"> </span>/tmp<span class="w"> </span>/var/tmp<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span><span class="m">2</span>&gt;/dev/null
@@ -7677,14 +7677,14 @@ Quick reference for common problems and resolutions. Structured approach to diag
 </div>
 <h2 id="network-connectivity-issues">Network Connectivity Issues<a class="headerlink" href="#network-connectivity-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Is the interface up?</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;state UP|state DOWN&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"state UP|state DOWN"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Step 2 — Does the IP and route exist?</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ip<span class="w"> </span>route<span class="w"> </span>show
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Step 3 — Can we reach the gateway?</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="k">$(</span>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="k">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="k">$(</span>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $3}'</span><span class="k">)</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Step 4 — Can we reach DNS?</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>dig<span class="w"> </span>+short<span class="w"> </span>google.com<span class="w"> </span>@8.8.8.8
@@ -7713,7 +7713,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   --- 192.168.1.1 statistics ---
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   4 packets transmitted, 4 received, 0% packet loss, time 3004ms
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>4: 142.250.185.46
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>5: LISTEN    0      128                 0.0.0.0:22              0.0.0.0:*    users:((&quot;sshd&quot;,pid=1247,fd=3))
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>5: LISTEN    0      128                 0.0.0.0:22              0.0.0.0:*    users:(("sshd",pid=1247,fd=3))
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>6: public (active)
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>     ports: 22/tcp 80/tcp 443/tcp
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>   Status: active
@@ -7771,7 +7771,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       Docs: man:nginx(1)
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    Process: 8742 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=1)
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   Main PID: 8742 (code=exited, status=1)
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      Error: &#39;address already in use&#39;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      Error: 'address already in use'
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Jan 18 14:32:15 web-prod-01 nginx[8742]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Jan 18 14:32:15 web-prod-01 nginx[8742]: nginx: [emerg] bind() to [::]:80 failed (98: Address already in use)
@@ -7782,8 +7782,8 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>(no output — unit file is valid)
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>LISTEN    0         128          0.0.0.0:80            0.0.0.0:*    users:((&quot;apache&quot;,pid=5821,fd=4))
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>LISTEN    0         128             [::]:80               [::]:*    users:((&quot;apache&quot;,pid=5821,fd=4))
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>LISTEN    0         128          0.0.0.0:80            0.0.0.0:*    users:(("apache",pid=5821,fd=4))
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>LISTEN    0         128             [::]:80               [::]:*    users:(("apache",pid=5821,fd=4))
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
 <a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>nginx: [alert] master process terminated with code 1
 </code></pre></div>
@@ -7817,10 +7817,10 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sshd
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check sshd config for auth method restrictions</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PasswordAuth|PubkeyAuth|AllowUsers|DenyUsers|MaxAuthTries&quot;</span><span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"PasswordAuth|PubkeyAuth|AllowUsers|DenyUsers|MaxAuthTries"</span><span class="w"> </span>/etc/ssh/sshd_config
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check PAM for account restrictions</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed\|error\|pam&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Failed\|error\|pam"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check if account is locked</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>passwd<span class="w"> </span>-S<span class="w"> </span>&lt;username&gt;<span class="w">   </span><span class="c1"># L = locked</span>
@@ -7851,7 +7851,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Jan 18 14:46:01 prod-web-01 sshd[5634]: error: PAM: Authentication failure for user admin from 192.168.1.110
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Jan 18 14:47:15 prod-web-01 sshd[5645]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.1.115 user=admin
 <a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Jan 18 14:48:33 prod-web-01 sshd[5667]: Failed password for user deploy from 192.168.1.120 port 54389 ssh2
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Jan 18 14:49:10 prod-web-01 sshd[5678]: pam_faillock(sshd:auth): Consecutive login failures for user &quot;deploy&quot; (3)
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Jan 18 14:49:10 prod-web-01 sshd[5678]: pam_faillock(sshd:auth): Consecutive login failures for user "deploy" (3)
 <a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
 <a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>admin                PS      2024-01-15 14:22:10 +0000 3 0 0 0 0
 <a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
@@ -7863,14 +7863,14 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>Source:   192.168.1.125
 <a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>Valid:    Thu Jan 18 14:45:22 UTC 2024
 <a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
-<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>type=AVC msg=audit(1705594815.234:8921): avc:  denied  { name_connect } for  pid=2848 comm=&quot;sshd&quot; name=&quot;2222&quot; scontext=system_u:system_r:sshd_t:s0-s0:c0.c1023 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
-<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>type=AVC msg=audit(1705594816.445:8922): avc:  denied  { read } for  pid=2848 comm=&quot;sshd&quot; name=&quot;authorized_keys&quot; dev=&quot;dm-0&quot; ino=
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>type=AVC msg=audit(1705594815.234:8921): avc:  denied  { name_connect } for  pid=2848 comm="sshd" name="2222" scontext=system_u:system_r:sshd_t:s0-s0:c0.c1023 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>type=AVC msg=audit(1705594816.445:8922): avc:  denied  { read } for  pid=2848 comm="sshd" name="authorized_keys" dev="dm-0" ino=
 </code></pre></div>
 <h2 id="selinux-apparmor-mac-flow">SELinux / AppArmor MAC Flow<a class="headerlink" href="#selinux-apparmor-mac-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptUD2PwjAM3fsrLCYW2r0DEh_HhEQlpJu65BIrDUROlaYcCN3vuv1-GU4CEjp1if0cv-dnK-NRBuOoBm90F4piGL9OXKphdsxZS413EocB5ljqEroQejWD-9CJHpnGLYK0xZ-id9bI26ZDeWZ6kxAk2JIYlQkK_n7h-LE3NF4hd8N2PaklrHXfrLKKsaWVTA60FxRwerp7-T48be-MxTTQyTOGmDXOh0muQroxc8uBZ31ugAtGWLBOa1QtVRfhKwZVWiO_JeNJsdcJYbGEt5O8nyd-pQ3znhFm-_-borHiATsolqk=?" /></p>
 <h2 id="disk-full-emergency">Disk Full — Emergency<a class="headerlink" href="#disk-full-emergency" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find the full filesystem</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 90&#39;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'$5+0 &gt; 90'</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Largest directories</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
@@ -7878,7 +7878,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Large log files</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>find<span class="w"> </span>/var/log<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Truncate (don&#39;t delete — running process may hold FD open)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Truncate (don't delete — running process may hold FD open)</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>&gt;<span class="w"> </span>/var/log/large-logfile.log
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Open but deleted files still consuming space</span>
@@ -7954,14 +7954,14 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Was it a kernel panic?</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50<span class="w">   </span><span class="c1"># Previous boot</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;panic\|bug:\|BUG:\|Oops:&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"panic\|bug:\|BUG:\|Oops:"</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># kdump crash dump (if configured)</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>ls<span class="w"> </span>/var/crash/
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Hardware errors (memory, CPU, PCIe)</span>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>mcelog<span class="w"> </span>--client<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;mce|machine check|uncorrect|hardware error&quot;</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"mce|machine check|uncorrect|hardware error"</span>
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Check IPMI SEL (system event log)</span>
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>ipmitool<span class="w"> </span>sel<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
@@ -8015,7 +8015,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 </div>
 <h2 id="useful-one-liners">Useful One-Liners<a class="headerlink" href="#useful-one-liners" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># All errors in the last 10 minutes</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;10 minutes ago&quot;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>--since<span class="w"> </span><span class="s2">"10 minutes ago"</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Files recently modified in /etc</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>find<span class="w"> </span>/etc<span class="w"> </span>-newer<span class="w"> </span>/etc/fstab<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
@@ -8030,7 +8030,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>strace<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">200</span><span class="w"> </span>-f<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Check for time skew (NTP offset &gt; 1s = problematic)</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"System time"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>-- Logs begin at Wed 2024-01-10 14:22:33 UTC, end at Wed 2024-01-10 14:32:18 UTC. --
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Jan 10 14:28:45 prod-app-01 kernel: [12847.392] Out of memory: Kill process 2156 (java) score 892 or sacrifice child
@@ -8047,7 +8047,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>nginx    45821    root    5u   REG  10,2   4096    892145 /path/to/file
 <a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>nginx    45822   www-data 5u   REG  10,2   4096    892145 /path/to/file
 <a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>LISTEN    0      128          0.0.0.0:8080       0.0.0.0:*    users:((&quot;java&quot;,pid=3421,fd=42))
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>LISTEN    0      128          0.0.0.0:8080       0.0.0.0:*    users:(("java",pid=3421,fd=42))
 <a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
 <a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Process 3421 attached
 <a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>[pid  3421] mmap(NULL, 2097152, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8c2a400000

@@ -8082,10 +8082,10 @@ Active Directory domain and forest functional levels determine which features ar
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ADDomainController</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">OperatingSystem</span><span class="p">,</span> <span class="n">OperatingSystemVersion</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Raise domain functional level</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Set-ADDomainMode</span> <span class="n">-Identity</span> <span class="s2">&quot;corp.example.com&quot;</span> <span class="n">-DomainMode</span> <span class="n">Windows2016Domain</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Set-ADDomainMode</span> <span class="n">-Identity</span> <span class="s2">"corp.example.com"</span> <span class="n">-DomainMode</span> <span class="n">Windows2016Domain</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Raise forest functional level (requires DFL to already be at target level)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Set-ADForestMode</span> <span class="n">-Identity</span> <span class="s2">&quot;example.com&quot;</span> <span class="n">-ForestMode</span> <span class="n">Windows2016Forest</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Set-ADForestMode</span> <span class="n">-Identity</span> <span class="s2">"example.com"</span> <span class="n">-ForestMode</span> <span class="n">Windows2016Forest</span>
 </code></pre></div>
 <hr />
 <h2 id="sysvol-frs-to-dfsr-migration">SYSVOL FRS to DFSR Migration<a class="headerlink" href="#sysvol-frs-to-dfsr-migration" title="Permanent link">&para;</a></h2>
@@ -8121,7 +8121,7 @@ Active Directory domain and forest functional levels determine which features ar
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Transfer FSMO roles (preferred — run on the target DC)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="s2">&quot;DC02&quot;</span> <span class="n">-OperationMasterRole</span> <span class="p">`</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="s2">"DC02"</span> <span class="n">-OperationMasterRole</span> <span class="p">`</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="n">PDCEmulator</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">InfrastructureMaster</span><span class="p">,</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Seize FSMO roles (only when old DC is permanently offline)</span>
@@ -8164,12 +8164,12 @@ Active Directory domain and forest functional levels determine which features ar
 <h2 id="ad-recycle-bin">AD Recycle Bin<a class="headerlink" href="#ad-recycle-bin" title="Permanent link">&para;</a></h2>
 <p>Enable once per forest; requires DFL 2008 R2 or higher. Cannot be disabled after enabling.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Enable AD Recycle Bin</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Enable-ADOptionalFeature</span> <span class="s1">&#39;Recycle Bin Feature&#39;</span> <span class="p">`</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Enable-ADOptionalFeature</span> <span class="s1">'Recycle Bin Feature'</span> <span class="p">`</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="n">-Scope</span> <span class="n">ForestOrConfigurationSet</span> <span class="p">`</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="n">-Target</span> <span class="s2">&quot;example.com&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="n">-Target</span> <span class="s2">"example.com"</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Restore a deleted object (default tombstone lifetime: 180 days)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">"John Smith"</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  <span class="nb">Restore-ADObject</span>
 </code></pre></div>
 <hr />

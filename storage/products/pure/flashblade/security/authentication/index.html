@@ -8441,11 +8441,11 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>svc-monitoring  readonly        2024-01-15T09:26:33Z    2024-01-18T16:42:19Z
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pureuser        array_admin     2023-11-02T08:15:00Z    2024-01-18T17:01:45Z
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Admin account &#39;s.jones&#39; created successfully.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Admin account &#39;p.smith&#39; created successfully.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Admin account &#39;svc-monitoring&#39; created successfully.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Password updated for admin account &#39;s.jones&#39;.
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Admin account &#39;old-admin&#39; deleted successfully.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Admin account 's.jones' created successfully.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Admin account 'p.smith' created successfully.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Admin account 'svc-monitoring' created successfully.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Password updated for admin account 's.jones'.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Admin account 'old-admin' deleted successfully.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8501,10 +8501,10 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 </table>
 <p><strong>Break-glass account:</strong></p>
 <p>Maintain exactly one local <code>array_admin</code> account as a break-glass credential for use when SAML/AD is unavailable. Store this credential in a PAM vault (CyberArk, HashiCorp Vault) with access restricted to the on-call escalation procedure. Name the account <code>break-glass</code> or similar to make its purpose obvious in audit logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="k">break</span>-glass<span class="w"> </span>--role<span class="w"> </span>array_admin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>break-glass<span class="w"> </span>--role<span class="w"> </span>array_admin
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Immediately store the password in the PAM vault — do not leave it written down</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin user &#39;break-glass&#39; created successfully.
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin user 'break-glass' created successfully.
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Role: array_admin
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>User ID: 00000000-1111-2222-3333-444455556666
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>API token: T-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -8546,10 +8546,10 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure the AD join</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://dc01.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svc-pure-bind,OU=ServiceAccounts,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">"ldaps://dc01.example.com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">"DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">"CN=svc-pure-bind,OU=ServiceAccounts,DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">"&lt;bind_password&gt;"</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Test the directory service connection</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
@@ -8663,17 +8663,17 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <p>After joining AD, create role mappings from AD security groups to Purity//FB roles. Assign all operational access to AD groups — remove individual local accounts for human admins once AD groups are validated.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Map an AD group to the array_admin role</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-fb-admins,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">"CN=pure-fb-admins,OU=Groups,DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>--role<span class="w"> </span>array_admin
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Map a group to storage_admin</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-storage-ops,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">"CN=pure-storage-ops,OU=Groups,DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>--role<span class="w"> </span>storage_admin
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Map a group to readonly for monitoring</span>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">"CN=pure-readonly,OU=Groups,DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span>--role<span class="w"> </span><span class="nb">readonly</span>
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># List configured group-to-role mappings</span>
@@ -8722,7 +8722,7 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># krb5p = authentication + integrity + privacy (full encryption)</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>--name<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,no_root_squash,sec=krb5p)&quot;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">"10.0.1.0/24(rw,no_root_squash,sec=krb5p)"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Filesystem prod-nfs updated.
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Name: prod-nfs
@@ -8764,10 +8764,10 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Configure LDAP for NFS UID/GID mapping</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldap://ldap.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svc-pure-bind,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">"ldap://ldap.example.com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">"DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">"CN=svc-pure-bind,DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">"&lt;bind_password&gt;"</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Test the LDAP connection</span>
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
@@ -8977,53 +8977,53 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <p><strong>Authenticating with an API token (REST API example):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Use x-auth-token header for API calls</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/2.12/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">"https://&lt;fb-management-ip&gt;/api/2.12/arrays"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">"x-auth-token: &lt;api_token&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 <a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Or log in with username/password to get a session token, then use it</span>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;pureuser&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"https://&lt;fb-management-ip&gt;/api/login"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">'{"username":"pureuser","password":"&lt;password&gt;"}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">    </span>-c<span class="w"> </span>/tmp/fb_session.txt
 <a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/2.12/filesystems&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="s2">"https://&lt;fb-management-ip&gt;/api/2.12/filesystems"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">    </span>-b<span class="w"> </span>/tmp/fb_session.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  &quot;items&quot;: [
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  "items": [
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    {
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>      &quot;name&quot;: &quot;FB-M20R2-1&quot;,
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>      &quot;id&quot;: &quot;12345678-1234-5678-90ab-cdef12345678&quot;,
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>      &quot;version&quot;: &quot;4.2.1&quot;,
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>      &quot;status&quot;: &quot;healthy&quot;,
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>      &quot;capacity&quot;: 107374182400
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>      "name": "FB-M20R2-1",
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>      "id": "12345678-1234-5678-90ab-cdef12345678",
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>      "version": "4.2.1",
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>      "status": "healthy",
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>      "capacity": 107374182400
 <a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    }
 <a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  ],
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  &quot;continuation_token&quot;: null
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  "continuation_token": null
 <a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>}
 <a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>{
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;,
-<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>  &quot;username&quot;: &quot;pureuser&quot;,
-<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>  &quot;api_token&quot;: &quot;T-1a2b3c4d5e6f7g8h9i0j&quot;
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>  "username": "pureuser",
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>  "api_token": "T-1a2b3c4d5e6f7g8h9i0j"
 <a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>}
 <a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>{
-<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>  &quot;items&quot;: [
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>  "items": [
 <a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>    {
-<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>      &quot;name&quot;: &quot;fs-prod-01&quot;,
-<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>      &quot;id&quot;: &quot;87654321-4321-8765-ba09-fedcba987654&quot;,
-<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>      &quot;provisioned&quot;: 1099511627776,
-<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>      &quot;used&quot;: 549755813888,
-<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>      &quot;status&quot;: &quot;available&quot;
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>      "name": "fs-prod-01",
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>      "id": "87654321-4321-8765-ba09-fedcba987654",
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>      "provisioned": 1099511627776,
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>      "used": 549755813888,
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>      "status": "available"
 <a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>    },
 <a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>    {
-<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>      &quot;name&quot;: &quot;fs-backup-02&quot;,
-<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>      &quot;id&quot;: &quot;11223344-5566-7788-99aa-bbccddeeff00&quot;,
-<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>      &quot;provisioned&quot;: 549755813888,
-<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>      &quot;used&quot;: 274877906944,
-<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>      &quot;status&quot;: &quot;available&quot;
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>      "name": "fs-backup-02",
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>      "id": "11223344-5566-7788-99aa-bbccddeeff00",
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>      "provisioned": 549755813888,
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>      "used": 274877906944,
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>      "status": "available"
 <a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>    }
 <a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>  ],
-<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>  &quot;continuation_token&quot;: null
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>  "continuation_token": null
 <a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9067,7 +9067,7 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 <a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>list
 <a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>
 <a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="c1"># Check audit log for recent authentication events</span>
-<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|auth\|token&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"login\|auth\|token"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Name                          Role
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>admin                         storage_admin

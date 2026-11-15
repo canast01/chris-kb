@@ -10915,7 +10915,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 </table>
 <p>Select <strong>Full data migration</strong> for any hardware work or LCM upgrade.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — enter maintenance mode with full vSAN evacuation</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$host</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;vxrail-node-01.example.local&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$host</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">"vxrail-node-01.example.local"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="nv">$host</span> <span class="n">-State</span> <span class="n">Maintenance</span> <span class="n">-VsanDataMigrationMode</span> <span class="n">Full</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="step-3-wait-for-maintenance-mode-to-be-active">Step 3 — Wait for Maintenance Mode to be Active<a class="headerlink" href="#step-3-wait-for-maintenance-mode-to-be-active" title="Permanent link">&para;</a></h3>
@@ -10972,7 +10972,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 <p><img alt="Step 5 — Exit Maintenance Mode" src="../../../../../../assets/vxrail-proc-step-5-exit-maintenance-mode.svg" /></p>
 <p>In vCenter: right-click the host → <strong>Maintenance Mode → Exit Maintenance Mode</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># PowerCLI — exit maintenance mode</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;vxrail-node-01.example.local&quot;</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Connected</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">"vxrail-node-01.example.local"</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Connected</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="step-6-wait-for-vsan-resync">Step 6 — Wait for vSAN Resync<a class="headerlink" href="#step-6-wait-for-vsan-resync" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 6 — Wait for vSAN Resync" src="../../../../../../assets/vxrail-proc-step-6-wait-for-vsan-resync.svg" /></p>
@@ -11095,27 +11095,27 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 <p>Or trigger via API:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    &quot;hosts&quot;: [{</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">      &quot;idrac&quot;: {</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">        &quot;ip&quot;: &quot;10.0.100.25&quot;,</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s1">        &quot;username&quot;: &quot;root&quot;,</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">        &quot;password&quot;: &quot;CalvinIdrac1!&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'mystic:password'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    "hosts": [{</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">      "idrac": {</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">        "ip": "10.0.100.25",</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s1">        "username": "root",</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">        "password": "CalvinIdrac1!"</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s1">      }</span>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="s1">    }]</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxm-ip&gt;/rest/vxm/v1/cluster/expansion&quot;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span><span class="s2">"https://&lt;vxm-ip&gt;/rest/vxm/v1/cluster/expansion"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;request_id&quot;: &quot;req-a7f3-4c2e-9b1d-7e8f2c5a3b9d&quot;,
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;status&quot;: &quot;PENDING&quot;,
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  &quot;expansion_id&quot;: &quot;exp-2024-001&quot;,
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  &quot;hosts_added&quot;: 1,
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  &quot;cluster_name&quot;: &quot;vxrail-cluster-prod&quot;,
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  &quot;estimated_completion&quot;: &quot;2024-01-15T14:32:00Z&quot;,
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  &quot;message&quot;: &quot;Host expansion request submitted successfully&quot;
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  "request_id": "req-a7f3-4c2e-9b1d-7e8f2c5a3b9d",
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  "status": "PENDING",
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  "expansion_id": "exp-2024-001",
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  "hosts_added": 1,
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  "cluster_name": "vxrail-cluster-prod",
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  "estimated_completion": "2024-01-15T14:32:00Z",
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  "message": "Host expansion request submitted successfully"
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -11159,7 +11159,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 <p><img alt="Step 4 — Wait for vSAN Rebalance" src="../../../../../../assets/vxrail-proc-step-4-wait-for-vsan-rebalance.svg" /></p>
 <p>After the node joins, vSAN redistributes objects across the now-larger cluster. This is not instantaneous.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Monitor rebalance on any existing cluster node</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Total|Remaining&quot;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Total|Remaining"</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Proceed with no further changes until Remaining Bytes = 0</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Total Bytes: 1847293845504
@@ -11194,7 +11194,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span><span class="p">,</span> <span class="n">ConnectionState</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c"># vSAN cluster health</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">OverallHealth</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="s2">"VxRail-Cluster"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">OverallHealth</span>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c"># Confirm new node disk groups are in vSAN</span>
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c"># vCenter → Cluster → Configure → vSAN → Disk Management</span>
@@ -11275,7 +11275,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># ESXi — identify failed disk in vSAN</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Disk Group UUID|Display Name|In Caching Tier|Is SSD&quot;</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Disk Group UUID|Display Name|In Caching Tier|Is SSD"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Disk Group UUID: 52a4c8f1-7a2e-4f3b-9c1d-8e5b2a9f6d3c
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Display Name: mpx.vmhba0:C0:T0:L0
@@ -11590,7 +11590,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Confirm vSAN health is green and resync = 0</span>
 <a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
 <a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="c1"># Verify no components will become non-compliant after removal</span>
-<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;UUID|Compliant&quot;</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"UUID|Compliant"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>UUID: 52e4a8f1-7c2e-4a9b-b1d2-9f3e8c7a6b5d
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>Compliant: true
@@ -11627,7 +11627,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 <p><img alt="Step 2 — Migrate All VMs Off the Node" src="../../../../../../assets/vxrail-proc-step-2-migrate-all-vms-off-the-node.svg" /></p>
 <p>Use vSphere DRS or manual vMotion to move all running VMs to other cluster nodes. This is a separate step from vSAN evacuation.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c"># PowerCLI — vMotion all VMs from the target node</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="nv">$sourceHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;vxrail-node-04.example.local&quot;</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="nv">$sourceHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">"vxrail-node-04.example.local"</span>
 <a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="nv">$sourceHost</span> <span class="p">|</span> <span class="nb">Move-VM</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-ne</span> <span class="nv">$sourceHost</span><span class="p">.</span><span class="n">Name</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Get-Random</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="step-3-enter-maintenance-mode-with-full-data-migration">Step 3 — Enter Maintenance Mode with Full Data Migration<a class="headerlink" href="#step-3-enter-maintenance-mode-with-full-data-migration" title="Permanent link">&para;</a></h3>
@@ -11755,26 +11755,26 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Step 1 — Generate a CSR from VxRail Manager</span>
 <a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:&lt;password&gt;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;common_name&quot;:&quot;vxm.example.local&quot;,&quot;sans&quot;:[&quot;vxm.example.local&quot;,&quot;10.0.100.10&quot;]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxm-ip&gt;/rest/vxm/v1/system/certificates/csr&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'mystic:&lt;password&gt;'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"common_name":"vxm.example.local","sans":["vxm.example.local","10.0.100.10"]}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="w">  </span><span class="s2">"https://&lt;vxm-ip&gt;/rest/vxm/v1/system/certificates/csr"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>
 <a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="c1"># Save the returned CSR and submit to your CA to obtain a signed certificate</span>
 <a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>
 <a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="c1"># Step 2 — Upload the signed cert and private key to VxRail Manager</span>
 <a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:&lt;password&gt;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-34-17" name="__codelineno-34-17" href="#__codelineno-34-17"></a><span class="s1">    &quot;certificate&quot;: &quot;&lt;PEM cert content, single line with \\n&gt;&quot;,</span>
-<a id="__codelineno-34-18" name="__codelineno-34-18" href="#__codelineno-34-18"></a><span class="s1">    &quot;private_key&quot;: &quot;&lt;PEM key content, single line with \\n&gt;&quot;</span>
-<a id="__codelineno-34-19" name="__codelineno-34-19" href="#__codelineno-34-19"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-34-20" name="__codelineno-34-20" href="#__codelineno-34-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxm-ip&gt;/rest/vxm/v1/system/certificates&quot;</span>
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'mystic:&lt;password&gt;'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-34-17" name="__codelineno-34-17" href="#__codelineno-34-17"></a><span class="s1">    "certificate": "&lt;PEM cert content, single line with \\n&gt;",</span>
+<a id="__codelineno-34-18" name="__codelineno-34-18" href="#__codelineno-34-18"></a><span class="s1">    "private_key": "&lt;PEM key content, single line with \\n&gt;"</span>
+<a id="__codelineno-34-19" name="__codelineno-34-19" href="#__codelineno-34-19"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-20" name="__codelineno-34-20" href="#__codelineno-34-20"></a><span class="w">  </span><span class="s2">"https://&lt;vxm-ip&gt;/rest/vxm/v1/system/certificates"</span>
 </code></pre></div>
 <p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>{
-<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>  &quot;csr&quot;: &quot;-----BEGIN CERTIFICATE REQUEST-----\nMIICljCCAX4CAQAwGDEWMBQGA1UEAwwNdnhtLmV4YW1wbGUubG9jYWwwggEiMA0G\nCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC7VJTUt9Us8cKjMzEfYyjiWA4/4eTj\nxrx5qPXKqDMKGJHEhEqfKCqGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVE\nGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqF\nGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMV\nLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPv\nxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvV\nDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJ\nHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVV\nEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzq\nFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKM\nVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqP\nvxLpKMVLZJ
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>  "csr": "-----BEGIN CERTIFICATE REQUEST-----\nMIICljCCAX4CAQAwGDEWMBQGA1UEAwwNdnhtLmV4YW1wbGUubG9jYWwwggEiMA0G\nCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC7VJTUt9Us8cKjMzEfYyjiWA4/4eTj\nxrx5qPXKqDMKGJHEhEqfKCqGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVE\nGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqF\nGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMV\nLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPv\nxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvV\nDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJ\nHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVV\nEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzq\nFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKM\nVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqP\nvxLpKMVLZJ
 </code></pre></div>
 After uploading, VxRail Manager restarts its web service. Allow 1–2 minutes for the restart, then verify via browser that the new certificate is in effect.</p>
 <hr />
@@ -11821,7 +11821,7 @@ After uploading, VxRail Manager restarts its web service. Allow 1–2 minutes fo
 <h3 id="step-2-enter-maintenance-mode_1">Step 2 — Enter Maintenance Mode<a class="headerlink" href="#step-2-enter-maintenance-mode_1" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 2 — Enter Maintenance Mode" src="../../../../../../assets/vxrail-proc-step-2-enter-maintenance-mode.svg" /></p>
 <p>Put the node in maintenance mode with <strong>Ensure accessibility</strong> (not Full data migration — IP changes don't require full evacuation):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;vxrail-node-02.example.local&quot;</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Maintenance</span> <span class="n">-VsanDataMigrationMode</span> <span class="n">EnsureAccessibility</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">"vxrail-node-02.example.local"</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Maintenance</span> <span class="n">-VsanDataMigrationMode</span> <span class="n">EnsureAccessibility</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="step-3-reconfigure-ips-via-vxrail-manager">Step 3 — Reconfigure IPs via VxRail Manager<a class="headerlink" href="#step-3-reconfigure-ips-via-vxrail-manager" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Reconfigure IPs via VxRail Manager" src="../../../../../../assets/vxrail-proc-step-3-reconfigure-ips-via-vxrail-manager.svg" /></p>
@@ -11895,7 +11895,7 @@ After uploading, VxRail Manager restarts its web service. Allow 1–2 minutes fo
 </div>
 <h3 id="step-5-exit-maintenance-mode_1">Step 5 — Exit Maintenance Mode<a class="headerlink" href="#step-5-exit-maintenance-mode_1" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 5 — Exit Maintenance Mode" src="../../../../../../assets/vxrail-proc-step-5-exit-maintenance-mode.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;vxrail-node-02.example.local&quot;</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Connected</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">"vxrail-node-02.example.local"</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Connected</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="step-6-validate">Step 6 — Validate<a class="headerlink" href="#step-6-validate" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 6 — Validate" src="../../../../../../assets/vxrail-proc-step-6-validate.svg" /></p>

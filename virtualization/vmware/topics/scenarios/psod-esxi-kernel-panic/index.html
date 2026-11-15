@@ -9440,12 +9440,12 @@ and identifying driver/firmware mismatch as the most common production cause.
 <hr />
 <h2 id="4-retrieve-logs-after-host-reboots">4. Retrieve Logs After Host Reboots<a class="headerlink" href="#4-retrieve-logs-after-host-reboots" title="Permanent link">&para;</a></h2>
 <p>After the host reboots and SSH is accessible, collect the key log files.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cat<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;PSOD|panic|backtrace|oops&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cat<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"PSOD|panic|backtrace|oops"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>2024-01-15T14:32:18.123Z cpu2:65432)PANIC: Exception 14 in world 12345 ip=0x418f2a3c addr=0x7f8c9000
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2024-01-15T14:32:18.456Z cpu5:87654)Backtrace for world 12345:
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>2024-01-15T14:32:18.789Z cpu5:87654) 0x418f2a3c 0x418f1b2c 0x418f0e4a 0x41234567
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>2024-01-15T14:32:19.012Z cpu2:65432)PSOD: Unrecoverable error in module &#39;vmkernel&#39; at 0x418f2a3c
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>2024-01-15T14:32:19.012Z cpu2:65432)PSOD: Unrecoverable error in module 'vmkernel' at 0x418f2a3c
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>2024-01-15T14:32:19.234Z cpu3:45678)Oops: Page fault at 0x7f8c9000, code=0x00000002
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>2024-01-15T14:32:19.567Z cpu1:23456)Backtrace for world 87654:
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>2024-01-15T14:32:19.890Z cpu1:23456) 0x41234567 0x41234abc 0x41234def 0x41234999
@@ -9510,7 +9510,7 @@ and identifying driver/firmware mismatch as the most common production cause.
 </div>
 <p>Look for: the vmksummary.log gives a concise summary of the crash (timestamp, panic type, initiating world). The vmkernel.log contains the full backtrace.</p>
 <p>Check hostd for precursor events in the seconds before the crash:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cat<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ERROR|WARNING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cat<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"ERROR|WARNING"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>2024-01-15T09:23:47.123Z [INFO] hostd[94521] [Originator@6876 sub=Hostd] Hostd started
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>2024-01-15T09:24:12.456Z [WARNING] hostd[94521] [Originator@6876 sub=Libs] Failed to load module libvmkctl.so: symbol not found

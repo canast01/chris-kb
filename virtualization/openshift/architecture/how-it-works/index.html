@@ -7385,15 +7385,15 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>kube-controller-manager-master-1        1/1     Running   2          45d
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>kube-controller-manager-master-2        1/1     Running   0          45d
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>I1215 14:32:18.456789 1 server.go:412] &quot;starting kube-apiserver&quot; version=&quot;v1.27.3&quot;
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>I1215 14:32:19.123456 1 apiserver.go:89] &quot;APIServer listening&quot; address=&quot;0.0.0.0&quot; port=6443
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>I1215 14:32:21.789012 1 storage.go:234] &quot;etcd connection established&quot; endpoint=&quot;https://10.0.0.11:2379&quot;
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>I1215 14:32:45.234567 1 server.go:567] &quot;ready to handle requests&quot;
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>I1215 14:32:18.456789 1 server.go:412] "starting kube-apiserver" version="v1.27.3"
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>I1215 14:32:19.123456 1 apiserver.go:89] "APIServer listening" address="0.0.0.0" port=6443
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>I1215 14:32:21.789012 1 storage.go:234] "etcd connection established" endpoint="https://10.0.0.11:2379"
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>I1215 14:32:45.234567 1 server.go:567] "ready to handle requests"
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>I1215 14:33:02.567890 1 etcd.go:156] &quot;etcd server started&quot; version=&quot;v3.5.9&quot;
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>I1215 14:33:03.234567 1 embed.go:445] &quot;listening for client requests&quot; address=&quot;127.0.0.1:2379&quot;
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>I1215 14:33:04.901234 1 raft.go:789] &quot;raft election won&quot; term=42 leader=&quot;10.0.0.10&quot;
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>I1215 14:33:05.456789 1 backend.go:123] &quot;committed index&quot; index=8945672
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>I1215 14:33:02.567890 1 etcd.go:156] "etcd server started" version="v3.5.9"
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>I1215 14:33:03.234567 1 embed.go:445] "listening for client requests" address="127.0.0.1:2379"
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>I1215 14:33:04.901234 1 raft.go:789] "raft election won" term=42 leader="10.0.0.10"
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>I1215 14:33:05.456789 1 backend.go:123] "committed index" index=8945672
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7474,7 +7474,7 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--write-out<span class="o">=</span>table
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Compact manually if needed</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nv">ETCDCTL_API</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>etcdctl<span class="w"> </span>compact<span class="w"> </span><span class="k">$(</span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--write-out<span class="o">=</span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[0].Status.header.revision&#39;</span><span class="k">)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nv">ETCDCTL_API</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>etcdctl<span class="w"> </span>compact<span class="w"> </span><span class="k">$(</span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--write-out<span class="o">=</span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.[0].Status.header.revision'</span><span class="k">)</span>
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Snapshot backup</span>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>etcdctl<span class="w"> </span>snapshot<span class="w"> </span>save<span class="w"> </span>/var/home/core/etcd-backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.db
@@ -7495,7 +7495,7 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>compacted revision 4521847
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Snapshot saved at /var/home/core/etcd-backup-2024-01-15.db
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>{&quot;hash&quot;:2847361529,&quot;revision&quot;:4521847,&quot;totalKey&quot;:287456,&quot;totalSize&quot;:2147483648}
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>{"hash":2847361529,"revision":4521847,"totalKey":287456,"totalSize":2147483648}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7809,7 +7809,7 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span>ovs-ofctl<span class="w"> </span>dump-flows<span class="w"> </span>br-int
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
 <a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># Check network operator config</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>oc<span class="w"> </span>get<span class="w"> </span>network.operator<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;type:|clusterNetwork|serviceNetwork&quot;</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>oc<span class="w"> </span>get<span class="w"> </span>network.operator<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"type:|clusterNetwork|serviceNetwork"</span>
 <a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>oc<span class="w"> </span>get<span class="w"> </span>network.config<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>NAME                                      READY   STATUS    RESTARTS   AGE
@@ -7912,7 +7912,7 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span>Conditions
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Move infra workloads off worker nodes</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;infra-node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;infra-node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span><span class="s2">""</span>
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>oc<span class="w"> </span>adm<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;infra-node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>reserved:NoSchedule
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>NAME                    STATUS   ROLES           AGE    VERSION            INTERNAL-IP      EXTERNAL-IP   OS-IMAGE

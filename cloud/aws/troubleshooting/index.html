@@ -8063,26 +8063,26 @@ Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS 
 <h2 id="rds-connection-issues">RDS Connection Issues<a class="headerlink" href="#rds-connection-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check RDS security group</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].VpcSecurityGroups&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'DBInstances[*].VpcSecurityGroups'</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Verify security group allows inbound on DB port from app subnet</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>&lt;rds-sg-id&gt;
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Check RDS status</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].[DBInstanceStatus,Endpoint]&#39;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'DBInstances[*].[DBInstanceStatus,Endpoint]'</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># If connection refused after failover:</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-events<span class="w"> </span>--source-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span>--duration<span class="w"> </span><span class="m">60</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    {
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        &quot;GroupId&quot;: &quot;sg-0a7f2c8e9d1b4f6c2&quot;,
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        &quot;Status&quot;: &quot;active&quot;,
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        &quot;VpcSecurityGroupMemberships&quot;: [
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        "GroupId": "sg-0a7f2c8e9d1b4f6c2",
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        "Status": "active",
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        "VpcSecurityGroupMemberships": [
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>            {
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                &quot;VpcSecurityGroupId&quot;: &quot;sg-0a7f2c8e9d1b4f6c2&quot;,
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                &quot;Status&quot;: &quot;active&quot;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                "VpcSecurityGroupId": "sg-0a7f2c8e9d1b4f6c2",
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                "Status": "active"
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>            }
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        ]
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    }
@@ -8098,26 +8098,26 @@ Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS 
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
 <a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>[
 <a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    [
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        &quot;available&quot;,
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        "available",
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>        {
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>            &quot;Address&quot;: &quot;prod-mysql-01.c9akciq32.us-east-1.rds.amazonaws.com&quot;,
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>            &quot;Port&quot;: 3306
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>            "Address": "prod-mysql-01.c9akciq32.us-east-1.rds.amazonaws.com",
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>            "Port": 3306
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        }
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    ]
 <a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>]
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
 <a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>[
 <a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    {
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>        &quot;Message&quot;: &quot;DB instance restarted&quot;,
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        &quot;EventCategories&quot;: [&quot;failover&quot;],
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>        &quot;SourceType&quot;: &quot;db-instance&quot;,
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>        &quot;Timestamp&quot;: &quot;2024-01-15T14:32:18.000Z&quot;
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>        "Message": "DB instance restarted",
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        "EventCategories": ["failover"],
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>        "SourceType": "db-instance",
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>        "Timestamp": "2024-01-15T14:32:18.000Z"
 <a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    },
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    {
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>        &quot;Message&quot;: &quot;Failover completed successfully&quot;,
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>        &quot;EventCategories&quot;: [&quot;failover&quot;],
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>        &quot;SourceType&quot;: &quot;db-instance&quot;,
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>        &quot;Timestamp&quot;: &quot;2024-01-15T14:35:22.000Z&quot;
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>        "Message": "Failover completed successfully",
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>        "EventCategories": ["failover"],
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>        "SourceType": "db-instance",
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>        "Timestamp": "2024-01-15T14:35:22.000Z"
 <a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    }
 <a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>]
 </code></pre></div>
@@ -8151,7 +8151,7 @@ Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Query Flow Logs in CloudWatch Insights</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># CloudWatch → Logs Insights → select flow log group</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>fields<span class="w"> </span>@timestamp,<span class="w"> </span>srcAddr,<span class="w"> </span>dstAddr,<span class="w"> </span>dstPort,<span class="w"> </span>action
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">|</span><span class="w"> </span>filter<span class="w"> </span><span class="nv">dstAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;target-ip&gt;&quot;</span><span class="w"> </span>and<span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;REJECT&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">|</span><span class="w"> </span>filter<span class="w"> </span><span class="nv">dstAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&lt;target-ip&gt;"</span><span class="w"> </span>and<span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"REJECT"</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>@timestamp<span class="w"> </span>desc
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">|</span><span class="w"> </span>limit<span class="w"> </span><span class="m">50</span>
 </code></pre></div>
@@ -8194,10 +8194,10 @@ Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS 
 <h2 id="lambda-timeout-issues">Lambda Timeout Issues<a class="headerlink" href="#lambda-timeout-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check function configuration</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>lambda<span class="w"> </span>get-function-configuration<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;[Timeout, MemorySize, VpcConfig]&#39;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'[Timeout, MemorySize, VpcConfig]'</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># View X-Ray trace for a slow invocation</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>xray<span class="w"> </span>get-service-graph<span class="w"> </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 hour ago&#39;</span><span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>xray<span class="w"> </span>get-service-graph<span class="w"> </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">'1 hour ago'</span><span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check CloudWatch Logs for errors</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>aws<span class="w"> </span>logs<span class="w"> </span>get-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>/aws/lambda/&lt;name&gt;<span class="w"> </span><span class="se">\</span>
@@ -8207,47 +8207,47 @@ Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS 
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    300,
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    256,
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    {
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        &quot;SubnetIds&quot;: [
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            &quot;subnet-0a1b2c3d&quot;,
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>            &quot;subnet-4e5f6g7h&quot;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        "SubnetIds": [
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            "subnet-0a1b2c3d",
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>            "subnet-4e5f6g7h"
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        ],
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        &quot;SecurityGroupIds&quot;: [
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>            &quot;sg-0123456789abcdef0&quot;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        "SecurityGroupIds": [
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>            "sg-0123456789abcdef0"
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        ],
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        &quot;VpcId&quot;: &quot;vpc-12345678&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        "VpcId": "vpc-12345678"
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    }
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>]
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>{
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    &quot;StartTime&quot;: 1699564800.0,
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    &quot;EndTime&quot;: 1699568400.0,
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    &quot;Services&quot;: [
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    "StartTime": 1699564800.0,
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    "EndTime": 1699568400.0,
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    "Services": [
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        {
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>            &quot;ReferenceId&quot;: 0,
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>            &quot;Name&quot;: &quot;lambda&quot;,
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>            &quot;Names&quot;: [&quot;my-function&quot;],
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>            &quot;State&quot;: &quot;active&quot;,
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>            &quot;Type&quot;: &quot;aws::lambda::function&quot;
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>            "ReferenceId": 0,
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>            "Name": "lambda",
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>            "Names": ["my-function"],
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>            "State": "active",
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>            "Type": "aws::lambda::function"
 <a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>        }
 <a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    ],
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    &quot;EdgeList&quot;: []
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    "EdgeList": []
 <a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>}
 <a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>{
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>    &quot;events&quot;: [
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>    "events": [
 <a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>        {
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>            &quot;timestamp&quot;: 1699568123456,
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>            &quot;message&quot;: &quot;START RequestId: a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>            "timestamp": 1699568123456,
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>            "message": "START RequestId: a1b2c3d4-e5f6-7890-abcd-ef1234567890"
 <a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>        },
 <a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>        {
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>            &quot;timestamp&quot;: 1699568124123,
-<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>            &quot;message&quot;: &quot;Processing event: {\&quot;key\&quot;: \&quot;value\&quot;}&quot;
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>            "timestamp": 1699568124123,
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>            "message": "Processing event: {\"key\": \"value\"}"
 <a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>        },
 <a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>        {
-<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>            &quot;timestamp&quot;: 1699568125789,
-<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>            &quot;message&quot;: &quot;END RequestId: a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>            "timestamp": 1699568125789,
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>            "message": "END RequestId: a1b2c3d4-e5f6-7890-abcd-ef1234567890"
 <a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>        }
 <a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>    ],
-<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>    &quot;nextForwardToken&quot;: &quot;f/36028797018948608&quot;,
-<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>    &quot;nextBackwardToken&quot;: &quot;b/36028797018948608&quot;
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>    "nextForwardToken": "f/36028797018948608",
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>    "nextBackwardToken": "b/36028797018948608"
 <a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>}
 </code></pre></div>
 <div class="admonition warning">

@@ -9433,7 +9433,7 @@ host cluster.
 <h2 id="2-check-for-conflicting-vibs">2. Check for Conflicting VIBs<a class="headerlink" href="#2-check-for-conflicting-vibs" title="Permanent link">&para;</a></h2>
 <p>SSH to the affected ESXi host:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check for stale NSX-V VIBs (block NSX-T installation)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;esx-vsip|esx-vxlan|vmware-nsx&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"esx-vsip|esx-vxlan|vmware-nsx"</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check for partial NSX-T VIBs (failed mid-install)</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
@@ -9572,7 +9572,7 @@ will be rejected:</p>
 failure here points to a firewall or routing issue rather than a VIB conflict.</p>
 <hr />
 <h2 id="5-check-esxupdatelog-for-vib-install-errors">5. Check esxupdate.log for VIB Install Errors<a class="headerlink" href="#5-check-esxupdatelog-for-vib-install-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fail|conflict|reject&quot;</span><span class="w"> </span>/var/log/esxupdate.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"error|fail|conflict|reject"</span><span class="w"> </span>/var/log/esxupdate.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>2024-01-15T09:23:45.123Z [ERROR] VIB installation failed for esx-base: Dependency conflict detected
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2024-01-15T09:24:12.456Z [WARN] Staging area validation: 2 packages marked for removal

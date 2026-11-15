@@ -6973,7 +6973,7 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Limit-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-MaximumSize</span> <span class="n">512MB</span> <span class="n">-OverflowAction</span> <span class="n">OverwriteOlder</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Enable Windows Event Forwarding subscription (run on collector)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">wecutil</span> <span class="n">cs</span> <span class="s2">&quot;C:\WEF\SecurityEventsSubscription.xml&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">wecutil</span> <span class="n">cs</span> <span class="s2">"C:\WEF\SecurityEventsSubscription.xml"</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">wecutil</span> <span class="n">rs</span> <span class="n">SecurityEvents</span>
 </code></pre></div>
 <p>Windows Event Logs forwarded to SIEM are retained per SIEM policy (1 year online, archive thereafter). Local logs are a buffer only — do not rely on local retention for compliance.</p>
@@ -7037,14 +7037,14 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Microsoft Purview — place eDiscovery hold on mailbox and SharePoint</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Connect-IPPSSession</span> <span class="n">-UserPrincipalName</span> <span class="n">admin</span><span class="nv">@corp</span><span class="p">.</span><span class="n">onmicrosoft</span><span class="p">.</span><span class="n">com</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">New-CaseHoldPolicy</span> <span class="n">-Name</span> <span class="s2">&quot;Hold-LitigationMatter-2026-001&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">-Case</span> <span class="s2">&quot;Litigation-2026-001&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-ExchangeLocation</span> <span class="s2">&quot;john.doe@corp.com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">-SharePointLocation</span> <span class="s2">&quot;https://corp.sharepoint.com/sites/Finance&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">New-CaseHoldPolicy</span> <span class="n">-Name</span> <span class="s2">"Hold-LitigationMatter-2026-001"</span> <span class="p">`</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">-Case</span> <span class="s2">"Litigation-2026-001"</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-ExchangeLocation</span> <span class="s2">"john.doe@corp.com"</span> <span class="p">`</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">-SharePointLocation</span> <span class="s2">"https://corp.sharepoint.com/sites/Finance"</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">New-CaseHoldRule</span> <span class="n">-Name</span> <span class="s2">&quot;Hold-Rule-2026-001&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">-Policy</span> <span class="s2">&quot;Hold-LitigationMatter-2026-001&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">-ContentMatchQuery</span> <span class="s2">&quot;subject:ProjectAlpha AND date&gt;=2025-01-01&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">New-CaseHoldRule</span> <span class="n">-Name</span> <span class="s2">"Hold-Rule-2026-001"</span> <span class="p">`</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">-Policy</span> <span class="s2">"Hold-LitigationMatter-2026-001"</span> <span class="p">`</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">-ContentMatchQuery</span> <span class="s2">"subject:ProjectAlpha AND date&gt;=2025-01-01"</span>
 </code></pre></div>
 <hr />
 <h2 id="secure-data-deletion-procedure">Secure Data Deletion Procedure<a class="headerlink" href="#secure-data-deletion-procedure" title="Permanent link">&para;</a></h2>
@@ -7150,7 +7150,7 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">365</span><span class="p">)</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="p">}</span>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$oldPoints</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;Job &#39;</span><span class="p">$(</span><span class="nv">$job</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&#39; has </span><span class="p">$(</span><span class="nv">$oldPoints</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> restore points older than 1 year — review retention policy&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="nb">Write-Warning</span> <span class="s2">"Job '</span><span class="p">$(</span><span class="nv">$job</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">' has </span><span class="p">$(</span><span class="nv">$oldPoints</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> restore points older than 1 year — review retention policy"</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="p">}</span>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
 </code></pre></div>

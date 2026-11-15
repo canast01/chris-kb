@@ -7976,7 +7976,7 @@
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Show pods with issues only</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ev<span class="w"> </span><span class="s2">&quot;Running|Completed|Terminating&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ev<span class="w"> </span><span class="s2">"Running|Completed|Terminating"</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Show pod logs (replace &lt;pod-name&gt; and &lt;namespace&gt;)</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
@@ -8106,23 +8106,23 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Authenticate — returns a bearer token</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd-dc1.corp.example.com/login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s1">    &quot;userName&quot;: &quot;svc-automation&quot;,</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    &quot;userPasswd&quot;: &quot;&lt;password&gt;&quot;,</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">    &quot;domain&quot;: &quot;local&quot;</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s1">    "userName": "svc-automation",</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    "userPasswd": "&lt;password&gt;",</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">    "domain": "local"</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">  }'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; print(json.load(sys.stdin)['token'])"</span><span class="k">)</span>
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Token obtained&quot;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Token obtained"</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Refresh token (before expiry)</span>
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd-dc1.corp.example.com/login/refresh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; print(json.load(sys.stdin)['token'])"</span><span class="k">)</span>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># Logout (invalidate token)</span>
 <a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd-dc1.corp.example.com/logout<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Token obtained
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>(no output — command completes silently)
@@ -8152,111 +8152,111 @@
 </tbody>
 </table>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">ND</span><span class="o">=</span><span class="s2">&quot;https://nd-dc1.corp.example.com&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">ND</span><span class="o">=</span><span class="s2">"https://nd-dc1.corp.example.com"</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># List registered sites</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/nexus/api/v1/sites&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/nexus/api/v1/sites"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># List cluster nodes</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/nexus/api/v1/nodes&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/nexus/api/v1/nodes"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
 <a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># List installed apps</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/nexus/api/v1/apps&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/nexus/api/v1/apps"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
 <a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># List users</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/nexus/api/v1/users&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/nexus/api/v1/users"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;sites&quot;: [
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  "sites": [
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    {
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>      &quot;siteId&quot;: &quot;site-001&quot;,
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>      &quot;name&quot;: &quot;dc1-primary&quot;,
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>      &quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>      &quot;fabricType&quot;: &quot;ACI&quot;,
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>      &quot;lastHeartbeat&quot;: &quot;2024-01-15T14:32:18Z&quot;
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>      "siteId": "site-001",
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>      "name": "dc1-primary",
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>      "status": "HEALTHY",
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>      "fabricType": "ACI",
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>      "lastHeartbeat": "2024-01-15T14:32:18Z"
 <a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    },
 <a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    {
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>      &quot;siteId&quot;: &quot;site-002&quot;,
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>      &quot;name&quot;: &quot;dc2-secondary&quot;,
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>      &quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>      &quot;fabricType&quot;: &quot;ACI&quot;,
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>      &quot;lastHeartbeat&quot;: &quot;2024-01-15T14:31:52Z&quot;
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>      "siteId": "site-002",
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>      "name": "dc2-secondary",
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>      "status": "HEALTHY",
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>      "fabricType": "ACI",
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>      "lastHeartbeat": "2024-01-15T14:31:52Z"
 <a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    }
 <a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>  ]
 <a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>}
 <a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>{
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  &quot;nodes&quot;: [
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  "nodes": [
 <a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>    {
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>      &quot;nodeId&quot;: &quot;node-1&quot;,
-<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>      &quot;hostname&quot;: &quot;nd-node-01.corp.example.com&quot;,
-<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>      &quot;ipAddress&quot;: &quot;192.168.100.41&quot;,
-<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>      &quot;role&quot;: &quot;LEADER&quot;,
-<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>      &quot;status&quot;: &quot;READY&quot;,
-<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>      &quot;version&quot;: &quot;3.2.1.1a&quot;
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>      "nodeId": "node-1",
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>      "hostname": "nd-node-01.corp.example.com",
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>      "ipAddress": "192.168.100.41",
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>      "role": "LEADER",
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>      "status": "READY",
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>      "version": "3.2.1.1a"
 <a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>    },
 <a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>    {
-<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>      &quot;nodeId&quot;: &quot;node-2&quot;,
-<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>      &quot;hostname&quot;: &quot;nd-node-02.corp.example.com&quot;,
-<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>      &quot;ipAddress&quot;: &quot;192.168.100.42&quot;,
-<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>      &quot;role&quot;: &quot;FOLLOWER&quot;,
-<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>      &quot;status&quot;: &quot;READY&quot;,
-<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>      &quot;version&quot;: &quot;3.2.1.1a&quot;
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>      "nodeId": "node-2",
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>      "hostname": "nd-node-02.corp.example.com",
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>      "ipAddress": "192.168.100.42",
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>      "role": "FOLLOWER",
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>      "status": "READY",
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>      "version": "3.2.1.1a"
 <a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>    },
 <a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>    {
-<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>      &quot;nodeId&quot;: &quot;node-3&quot;,
-<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>      &quot;hostname&quot;: &quot;nd-node-03.corp.example.com&quot;,
-<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>      &quot;ipAddress&quot;: &quot;192.168.100.43&quot;,
-<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>      &quot;role&quot;: &quot;FOLLOWER&quot;,
-<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>      &quot;status&quot;: &quot;READY&quot;,
-<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a>      &quot;version&quot;: &quot;3.2.1.1a&quot;
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>      "nodeId": "node-3",
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>      "hostname": "nd-node-03.corp.example.com",
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>      "ipAddress": "192.168.100.43",
+<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>      "role": "FOLLOWER",
+<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>      "status": "READY",
+<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a>      "version": "3.2.1.1a"
 <a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a>    }
 <a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a>  ]
 <a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a>}
 <a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a>{
-<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>  &quot;apps&quot;: [
+<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>  "apps": [
 <a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a>    {
-<a id="__codelineno-15-50" name="__codelineno-15-50" href="#__codelineno-15-50"></a>      &quot;appId&quot;: &quot;app-aci-001&quot;,
-<a id="__codelineno-15-51" name="__codelineno-15-51" href="#__codelineno-15-51"></a>      &quot;name&quot;: &quot;ACI Multi-Site Orchestrator&quot;,
-<a id="__codelineno-15-52" name="__codelineno-15-52" href="#__codelineno-15-52"></a>      &quot;version&quot;: &quot;5.1.2&quot;,
-<a id="__codelineno-15-53" name="__codelineno-15-53" href="#__codelineno-15-53"></a>      &quot;status&quot;: &quot;RUNNING&quot;
+<a id="__codelineno-15-50" name="__codelineno-15-50" href="#__codelineno-15-50"></a>      "appId": "app-aci-001",
+<a id="__codelineno-15-51" name="__codelineno-15-51" href="#__codelineno-15-51"></a>      "name": "ACI Multi-Site Orchestrator",
+<a id="__codelineno-15-52" name="__codelineno-15-52" href="#__codelineno-15-52"></a>      "version": "5.1.2",
+<a id="__codelineno-15-53" name="__codelineno-15-53" href="#__codelineno-15-53"></a>      "status": "RUNNING"
 <a id="__codelineno-15-54" name="__codelineno-15-54" href="#__codelineno-15-54"></a>    },
 <a id="__codelineno-15-55" name="__codelineno-15-55" href="#__codelineno-15-55"></a>    {
-<a id="__codelineno-15-56" name="__codelineno-15-56" href="#__codelineno-15-56"></a>      &quot;appId&quot;: &quot;app-dcnm-001&quot;,
-<a id="__codelineno-15-57" name="__codelineno-15-57" href="#__codelineno-15-57"></a>      &quot;name&quot;: &quot;Data Center Network Manager&quot;,
-<a id="__codelineno-15-58" name="__codelineno-15-58" href="#__codelineno-15-58"></a>      &quot;version&quot;: &quot;12.1.3&quot;,
-<a id="__codelineno-15-59" name="__codelineno-15-59" href="#__codelineno-15-59"></a>      &quot;status&quot;: &quot;RUNNING&quot;
+<a id="__codelineno-15-56" name="__codelineno-15-56" href="#__codelineno-15-56"></a>      "appId": "app-dcnm-001",
+<a id="__codelineno-15-57" name="__codelineno-15-57" href="#__codelineno-15-57"></a>      "name": "Data Center Network Manager",
+<a id="__codelineno-15-58" name="__codelineno-15-58" href="#__codelineno-15-58"></a>      "version": "12.1.3",
+<a id="__codelineno-15-59" name="__codelineno-15-59" href="#__codelineno-15-59"></a>      "status": "RUNNING"
 <a id="__codelineno-15-60" name="__codelineno-15-60" href="#__codelineno-15-60"></a>    },
 <a id="__codelineno-15-61" name="__codelineno-15-61" href="#__codelineno-15-61"></a>    {
-<a id="__codelineno-15-62" name="__codelineno-15-62" href="#__codelineno-15-62"></a>      &quot;appId&quot;: &quot;app-assurance-001&quot;,
-<a id="__codelineno-15-63" name="__codelineno-15-63" href="#__codelineno-15-63"></a>      &quot;name&quot;: &quot;Nexus Dashboard Assurance&quot;,
-<a id="__codelineno-15-64" name="__codelineno-15-64" href="#__codelineno-15-64"></a>      &quot;version&quot;: &quot;6.2.1&quot;,
-<a id="__codelineno-15-65" name="__codelineno-15-65" href="#__codelineno-15-65"></a>      &quot;status&quot;: &quot;RUNNING&quot;
+<a id="__codelineno-15-62" name="__codelineno-15-62" href="#__codelineno-15-62"></a>      "appId": "app-assurance-001",
+<a id="__codelineno-15-63" name="__codelineno-15-63" href="#__codelineno-15-63"></a>      "name": "Nexus Dashboard Assurance",
+<a id="__codelineno-15-64" name="__codelineno-15-64" href="#__codelineno-15-64"></a>      "version": "6.2.1",
+<a id="__codelineno-15-65" name="__codelineno-15-65" href="#__codelineno-15-65"></a>      "status": "RUNNING"
 <a id="__codelineno-15-66" name="__codelineno-15-66" href="#__codelineno-15-66"></a>    }
 <a id="__codelineno-15-67" name="__codelineno-15-67" href="#__codelineno-15-67"></a>  ]
 <a id="__codelineno-15-68" name="__codelineno-15-68" href="#__codelineno-15-68"></a>}
 <a id="__codelineno-15-69" name="__codelineno-15-69" href="#__codelineno-15-69"></a>{
-<a id="__codelineno-15-70" name="__codelineno-15-70" href="#__codelineno-15-70"></a>  &quot;users&quot;: [
+<a id="__codelineno-15-70" name="__codelineno-15-70" href="#__codelineno-15-70"></a>  "users": [
 <a id="__codelineno-15-71" name="__codelineno-15-71" href="#__codelineno-15-71"></a>    {
-<a id="__codelineno-15-72" name="__codelineno-15-72" href="#__codelineno-15-72"></a>      &quot;userId&quot;: &quot;admin&quot;,
-<a id="__codelineno-15-73" name="__codelineno-15-73" href="#__codelineno-15-73"></a>      &quot;username&quot;: &quot;admin&quot;,
-<a id="__codelineno-15-74" name="__codelineno-15-74" href="#__codelineno-15-74"></a>      &quot;role&quot;: &quot;SUPER_ADMIN&quot;,
-<a id="__codelineno-15-75" name="__codelineno-15-75" href="#__codelineno-15-75"></a>      &quot;lastLogin&quot;: &quot;2024-01-15T13:45:22Z&quot;
+<a id="__codelineno-15-72" name="__codelineno-15-72" href="#__codelineno-15-72"></a>      "userId": "admin",
+<a id="__codelineno-15-73" name="__codelineno-15-73" href="#__codelineno-15-73"></a>      "username": "admin",
+<a id="__codelineno-15-74" name="__codelineno-15-74" href="#__codelineno-15-74"></a>      "role": "SUPER_ADMIN",
+<a id="__codelineno-15-75" name="__codelineno-15-75" href="#__codelineno-15-75"></a>      "lastLogin": "2024-01-15T13:45:22Z"
 <a id="__codelineno-15-76" name="__codelineno-15-76" href="#__codelineno-15-76"></a>    },
 <a id="__codelineno-15-77" name="__codelineno-15-77" href="#__codelineno-15-77"></a>    {
-<a id="__codelineno-15-78" name="__codelineno-15-78" href="#__codelineno-15-78"></a>      &quot;userId&quot;: &quot;user-noc-001&quot;,
-<a id="__codelineno-15-79" name="__codelineno-15-79" href="#__codelineno-15-79"></a>      &quot;username&quot;: &quot;noc-team&quot;,
-<a id="__codelineno-15-80" name="__codelineno-15-80" href="#__codelineno-15-80"></a>      &quot;role&quot;: &quot;ADMIN&quot;,
-<a id="__codelineno-15-81" name="__codelineno-15-81" href="#__codelineno-15-81"></a>      &quot;lastLogin&quot;: &quot;2024-01-15T12:18:09Z&quot;
+<a id="__codelineno-15-78" name="__codelineno-15-78" href="#__codelineno-15-78"></a>      "userId": "user-noc-001",
+<a id="__codelineno-15-79" name="__codelineno-15-79" href="#__codelineno-15-79"></a>      "username": "noc-team",
+<a id="__codelineno-15-80" name="__codelineno-15-80" href="#__codelineno-15-80"></a>      "role": "ADMIN",
+<a id="__codelineno-15-81" name="__codelineno-15-81" href="#__codelineno-15-81"></a>      "lastLogin": "2024-01-15T12:18:09Z"
 <a id="__codelineno-15-82" name="__codelineno-15-82" href="#__codelineno-15-82"></a>    },
 <a id="__codelineno-15-83" name="__codelineno-15-83" href="#__codelineno-15-83"></a>    {
-<a id="__codelineno-15-84" name="__codelineno-15-84" href="#__codelineno-15-84"></a>      &quot;userId&quot;: &quot;user-readonly-001&quot;,
-<a id="__codelineno-15-85" name="__codelineno-15-85" href="#__codelineno-15-85"></a>      &quot;username&quot;: &quot;monitoring-svc&quot;,
-<a id="__codelineno-15-86" name="__codelineno-15-86" href="#__codelineno-15-86"></a>      &quot;role&quot;: &quot;VIEWER&quot;,
-<a id="__codelineno-15-87" name="__codelineno-15-87" href="#__codelineno-15-87"></a>      &quot;lastLogin&quot;: &quot;2024-01-15T14:29:33Z&quot;
+<a id="__codelineno-15-84" name="__codelineno-15-84" href="#__codelineno-15-84"></a>      "userId": "user-readonly-001",
+<a id="__codelineno-15-85" name="__codelineno-15-85" href="#__codelineno-15-85"></a>      "username": "monitoring-svc",
+<a id="__codelineno-15-86" name="__codelineno-15-86" href="#__codelineno-15-86"></a>      "role": "VIEWER",
+<a id="__codelineno-15-87" name="__codelineno-15-87" href="#__codelineno-15-87"></a>      "lastLogin": "2024-01-15T14:29:33Z"
 <a id="__codelineno-15-88" name="__codelineno-15-88" href="#__codelineno-15-88"></a>    }
 <a id="__codelineno-15-89" name="__codelineno-15-89" href="#__codelineno-15-89"></a>  ]
 <a id="__codelineno-15-90" name="__codelineno-15-90" href="#__codelineno-15-90"></a>}
@@ -8265,207 +8265,207 @@
 <p class="admonition-title">Common errors</p>
 <p>**`curl: (60) SSL</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">NDFC_BASE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/appcenter/cisco/ndfc/api/v1&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">NDFC_BASE</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/appcenter/cisco/ndfc/api/v1"</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># List all fabrics</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/san/fabrics&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/san/fabrics"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># List all switches (inventory)</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/inventory/switches"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
 <a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># List VSANs for a fabric</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/san/vsans?fabricName=DC1-SAN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/san/vsans?fabricName=DC1-SAN"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
 <a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># List active zone sets</span>
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/san/zoning/activezonesets?fabricName=DC1-SAN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/san/zoning/activezonesets?fabricName=DC1-SAN"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
 <a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="c1"># List device aliases</span>
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/san/devicealias?fabricName=DC1-SAN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/san/devicealias?fabricName=DC1-SAN"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>
 <a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="c1"># List active alarms</span>
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/alarms/activealarms&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/alarms/activealarms"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>
 <a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="c1"># List firmware images in NDFC repository</span>
-<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/fm/image&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/fm/image"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>{
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  &quot;fabrics&quot;: [
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  "fabrics": [
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    {
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>      &quot;fabricName&quot;: &quot;DC1-SAN&quot;,
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>      &quot;fabricType&quot;: &quot;SAN&quot;,
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>      &quot;fabricId&quot;: &quot;1&quot;,
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>      &quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>      &quot;switchCount&quot;: 4
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>      "fabricName": "DC1-SAN",
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>      "fabricType": "SAN",
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>      "fabricId": "1",
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>      "status": "HEALTHY",
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>      "switchCount": 4
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    },
 <a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    {
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>      &quot;fabricName&quot;: &quot;DC2-SAN&quot;,
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>      &quot;fabricType&quot;: &quot;SAN&quot;,
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>      &quot;fabricId&quot;: &quot;2&quot;,
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>      &quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>      &quot;switchCount&quot;: 2
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>      "fabricName": "DC2-SAN",
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>      "fabricType": "SAN",
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>      "fabricId": "2",
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>      "status": "HEALTHY",
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>      "switchCount": 2
 <a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>    }
 <a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  ]
 <a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>}
 <a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>{
-<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>  &quot;switches&quot;: [
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>  "switches": [
 <a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>    {
-<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>      &quot;switchName&quot;: &quot;SAN-SWITCH-01&quot;,
-<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>      &quot;switchIp&quot;: &quot;10.50.20.11&quot;,
-<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>      &quot;switchRole&quot;: &quot;Principal&quot;,
-<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>      &quot;model&quot;: &quot;Nexus 5672UP&quot;,
-<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>      &quot;serialNumber&quot;: &quot;JAE2345ABCD&quot;,
-<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>      &quot;fabricName&quot;: &quot;DC1-SAN&quot;
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>      "switchName": "SAN-SWITCH-01",
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>      "switchIp": "10.50.20.11",
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>      "switchRole": "Principal",
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>      "model": "Nexus 5672UP",
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>      "serialNumber": "JAE2345ABCD",
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>      "fabricName": "DC1-SAN"
 <a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>    },
 <a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>    {
-<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>      &quot;switchName&quot;: &quot;SAN-SWITCH-02&quot;,
-<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>      &quot;switchIp&quot;: &quot;10.50.20.12&quot;,
-<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>      &quot;switchRole&quot;: &quot;Principal&quot;,
-<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>      &quot;model&quot;: &quot;Nexus 5672UP&quot;,
-<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>      &quot;serialNumber&quot;: &quot;JAE2345ABCE&quot;,
-<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>      &quot;fabricName&quot;: &quot;DC1-SAN&quot;
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>      "switchName": "SAN-SWITCH-02",
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>      "switchIp": "10.50.20.12",
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>      "switchRole": "Principal",
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>      "model": "Nexus 5672UP",
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>      "serialNumber": "JAE2345ABCE",
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>      "fabricName": "DC1-SAN"
 <a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>    }
 <a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>  ]
 <a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>}
 <a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a>{
-<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>  &quot;vsans&quot;: [
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>  "vsans": [
 <a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>    {
-<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>      &quot;vsanId&quot;: 100,
-<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>      &quot;vsanName&quot;: &quot;PROD-VSAN&quot;,
-<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a>      &quot;status&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>      &quot;memberCount&quot;: 4
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>      "vsanId": 100,
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>      "vsanName": "PROD-VSAN",
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a>      "status": "ACTIVE",
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>      "memberCount": 4
 <a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a>    },
 <a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a>    {
-<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a>      &quot;vsanId&quot;: 101,
-<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a>      &quot;vsanName&quot;: &quot;TEST-VSAN&quot;,
-<a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>      &quot;status&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a>      &quot;memberCount&quot;: 2
+<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a>      "vsanId": 101,
+<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a>      "vsanName": "TEST-VSAN",
+<a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>      "status": "ACTIVE",
+<a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a>      "memberCount": 2
 <a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a>    }
 <a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a>  ]
 <a id="__codelineno-17-54" name="__codelineno-17-54" href="#__codelineno-17-54"></a>}
 <a id="__codelineno-17-55" name="__codelineno-17-55" href="#__codelineno-17-55"></a>{
-<a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a>  &quot;activeZoneSets&quot;: [
+<a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a>  "activeZoneSets": [
 <a id="__codelineno-17-57" name="__codelineno-17-57" href="#__codelineno-17-57"></a>    {
-<a id="__codelineno-17-58" name="__codelineno-17-58" href="#__codelineno-17-58"></a>      &quot;zoneSetName&quot;: &quot;PROD-ZONESET&quot;,
-<a id="__codelineno-17-59" name="__codelineno-17-59" href="#__codelineno-17-59"></a>      &quot;vsanId&quot;: 100,
-<a id="__codelineno-17-60" name="__codelineno-17-60" href="#__codelineno-17-60"></a>      &quot;zoneCount&quot;: 8,
-<a id="__codelineno-17-61" name="__codelineno-17-61" href="#__codelineno-17-61"></a>      &quot;status&quot;: &quot;ACTIVE&quot;
+<a id="__codelineno-17-58" name="__codelineno-17-58" href="#__codelineno-17-58"></a>      "zoneSetName": "PROD-ZONESET",
+<a id="__codelineno-17-59" name="__codelineno-17-59" href="#__codelineno-17-59"></a>      "vsanId": 100,
+<a id="__codelineno-17-60" name="__codelineno-17-60" href="#__codelineno-17-60"></a>      "zoneCount": 8,
+<a id="__codelineno-17-61" name="__codelineno-17-61" href="#__codelineno-17-61"></a>      "status": "ACTIVE"
 <a id="__codelineno-17-62" name="__codelineno-17-62" href="#__codelineno-17-62"></a>    }
 <a id="__codelineno-17-63" name="__codelineno-17-63" href="#__codelineno-17-63"></a>  ]
 <a id="__codelineno-17-64" name="__codelineno-17-64" href="#__codelineno-17-64"></a>}
 <a id="__codelineno-17-65" name="__codelineno-17-65" href="#__codelineno-17-65"></a>{
-<a id="__codelineno-17-66" name="__codelineno-17-66" href="#__codelineno-17-66"></a>  &quot;deviceAliases&quot;: [
+<a id="__codelineno-17-66" name="__codelineno-17-66" href="#__codelineno-17-66"></a>  "deviceAliases": [
 <a id="__codelineno-17-67" name="__codelineno-17-67" href="#__codelineno-17-67"></a>    {
-<a id="__codelineno-17-68" name="__codelineno-17-68" href="#__codelineno-17-68"></a>      &quot;aliasName&quot;: &quot;PROD-STORAGE-01&quot;,
-<a id="__codelineno-17-69" name="__codelineno-17-69" href="#__codelineno-17-69"></a>      &quot;pwwn&quot;: &quot;50:00:14:40:5a:2b:c1:e0&quot;,
-<a id="__codelineno-17-70" name="__codelineno-17-70" href="#__codelineno-17-70"></a>      &quot;vsanId&quot;: 100
+<a id="__codelineno-17-68" name="__codelineno-17-68" href="#__codelineno-17-68"></a>      "aliasName": "PROD-STORAGE-01",
+<a id="__codelineno-17-69" name="__codelineno-17-69" href="#__codelineno-17-69"></a>      "pwwn": "50:00:14:40:5a:2b:c1:e0",
+<a id="__codelineno-17-70" name="__codelineno-17-70" href="#__codelineno-17-70"></a>      "vsanId": 100
 <a id="__codelineno-17-71" name="__codelineno-17-71" href="#__codelineno-17-71"></a>    },
 <a id="__codelineno-17-72" name="__codelineno-17-72" href="#__codelineno-17-72"></a>    {
-<a id="__codelineno-17-73" name="__codelineno-17-73" href="#__codelineno-17-73"></a>      &quot;aliasName&quot;: &quot;PROD-HOST-01&quot;,
-<a id="__codelineno-17-74" name="__codelineno-17-74" href="#__codelineno-17-74"></a>      &quot;pwwn&quot;: &quot;50:00:09:73:a2:1b:d4:f2&quot;,
-<a id="__codelineno-17-75" name="__codelineno-17-75" href="#__codelineno-17-75"></a>      &quot;vsanId&quot;: 100
+<a id="__codelineno-17-73" name="__codelineno-17-73" href="#__codelineno-17-73"></a>      "aliasName": "PROD-HOST-01",
+<a id="__codelineno-17-74" name="__codelineno-17-74" href="#__codelineno-17-74"></a>      "pwwn": "50:00:09:73:a2:1b:d4:f2",
+<a id="__codelineno-17-75" name="__codelineno-17-75" href="#__codelineno-17-75"></a>      "vsanId": 100
 <a id="__codelineno-17-76" name="__codelineno-17-76" href="#__codelineno-17-76"></a>    }
 <a id="__codelineno-17-77" name="__codelineno-17-77" href="#__codelineno-17-77"></a>  ]
 <a id="__codelineno-17-78" name="__codelineno-17-78" href="#__codelineno-17-78"></a>}
 <a id="__codelineno-17-79" name="__codelineno-17-79" href="#__codelineno-17-79"></a>{
-<a id="__codelineno-17-80" name="__codelineno-17-80" href="#__codelineno-17-80"></a>  &quot;activeAlarms&quot;: [
+<a id="__codelineno-17-80" name="__codelineno-17-80" href="#__codelineno-17-80"></a>  "activeAlarms": [
 <a id="__codelineno-17-81" name="__codelineno-17-81" href="#__codelineno-17-81"></a>    {
-<a id="__codelineno-17-82" name="__codelineno-17-82" href="#__codelineno-17-82"></a>      &quot;alarmId&quot;: &quot;ALM-2024-001&quot;,
-<a id="__codelineno-17-83" name="__codelineno-17-83" href="#__codelineno-17-83"></a>      &quot;severity&quot;: &quot;CRITICAL&quot;,
-<a id="__codelineno-17-84" name="__codelineno-17-84" href="#__codelineno-17-84"></a>      &quot;message&quot;: &quot;Switch SAN-SWITCH-03 unreachable&quot;,
-<a id="__codelineno-17-85" name="__codelineno-17-85" href="#__codelineno-17-85"></a>      &quot;timestamp&quot;: &quot;2024-01-15T14:32:18Z&quot;
+<a id="__codelineno-17-82" name="__codelineno-17-82" href="#__codelineno-17-82"></a>      "alarmId": "ALM-2024-001",
+<a id="__codelineno-17-83" name="__codelineno-17-83" href="#__codelineno-17-83"></a>      "severity": "CRITICAL",
+<a id="__codelineno-17-84" name="__codelineno-17-84" href="#__codelineno-17-84"></a>      "message": "Switch SAN-SWITCH-03 unreachable",
+<a id="__codelineno-17-85" name="__codelineno-17-85" href="#__codelineno-17-85"></a>      "timestamp": "2024-01-15T14:32:18Z"
 <a id="__codelineno-17-86" name="__codelineno-17-86" href="#__codelineno-17-86"></a>    },
 <a id="__codelineno-17-87" name="__codelineno-17-87" href="#__codelineno-17-87"></a>    {
-<a id="__codelineno-17-88" name="__codelineno-17-88" href="#__codelineno-17-88"></a>      &quot;alarmId&quot;: &quot;ALM-2024-002&quot;,
-<a id="__codelineno-17-89" name="__codelineno-17-89" href="#__codelineno-17-89"></a>      &quot;severity&quot;: &quot;WARNING&quot;,
-<a id="__codelineno-17-90" name="__codelineno-17-90" href="#__codelineno-17-90"></a>      &quot;message&quot;: &quot;VSAN 101 utilization at 85%&quot;,
-<a id="__codelineno-17-91" name="__codelineno-17-91" href="#__codelineno-17-91"></a>      &quot;timestamp&quot;: &quot;2024-01-15T13:45:22Z&quot;
+<a id="__codelineno-17-88" name="__codelineno-17-88" href="#__codelineno-17-88"></a>      "alarmId": "ALM-2024-002",
+<a id="__codelineno-17-89" name="__codelineno-17-89" href="#__codelineno-17-89"></a>      "severity": "WARNING",
+<a id="__codelineno-17-90" name="__codelineno-17-90" href="#__codelineno-17-90"></a>      "message": "VSAN 101 utilization at 85%",
+<a id="__codelineno-17-91" name="__codelineno-17-91" href="#__codelineno-17-91"></a>      "timestamp": "2024-01-15T13:45:22Z"
 <a id="__codelineno-17-92" name="__codelineno-17-92" href="#__codelineno-17-92"></a>    }
 <a id="__codelineno-17-93" name="__codelineno-17-93" href="#__codelineno-17-93"></a>  ]
 <a id="__codelineno-17-94" name="__codelineno-17-94" href="#__codelineno-17-94"></a>}
 <a id="__codelineno-17-95" name="__codelineno-17-95" href="#__codelineno-17-95"></a>{
-<a id="__codelineno-17-96" name="__codelineno-17-96" href="#__codelineno-17-96"></a>  &quot;images&quot;: [
+<a id="__codelineno-17-96" name="__codelineno-17-96" href="#__codelineno-17-96"></a>  "images": [
 <a id="__codelineno-17-97" name="__codelineno-17-97" href="#__codelineno-17-97"></a>    {
-<a id="__codelineno-17-98" name="__codelineno-17-98" href="#__codelineno-17-98"></a>      &quot;imageName&quot;: &quot;nx
+<a id="__codelineno-17-98" name="__codelineno-17-98" href="#__codelineno-17-98"></a>      "imageName": "nx
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nv">NDI_BASE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/appcenter/cisco/ndinsight/api/v1&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nv">NDI_BASE</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">ND</span><span class="si">}</span><span class="s2">/appcenter/cisco/ndinsight/api/v1"</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># List all anomalies (last 24 hours)</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDI_BASE</span><span class="si">}</span><span class="s2">/anomalies?timeRange=LAST_DAY&amp;severity=CRITICAL,MAJOR&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDI_BASE</span><span class="si">}</span><span class="s2">/anomalies?timeRange=LAST_DAY&amp;severity=CRITICAL,MAJOR"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Get anomaly details</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDI_BASE</span><span class="si">}</span><span class="s2">/anomalies/&lt;anomaly-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDI_BASE</span><span class="si">}</span><span class="s2">/anomalies/&lt;anomaly-id&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
 <a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># List flows (SAN Insights)</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDI_BASE</span><span class="si">}</span><span class="s2">/san/flows?fabricName=DC1-SAN&amp;timeRange=LAST_HOUR&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDI_BASE</span><span class="si">}</span><span class="s2">/san/flows?fabricName=DC1-SAN&amp;timeRange=LAST_HOUR"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>{
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  &quot;anomalies&quot;: [
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  "anomalies": [
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    {
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>      &quot;id&quot;: &quot;anom-2024-0847-fc1&quot;,
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>      &quot;severity&quot;: &quot;CRITICAL&quot;,
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>      &quot;type&quot;: &quot;PortErrorRate&quot;,
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>      &quot;fabricName&quot;: &quot;DC1-SAN&quot;,
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>      &quot;affectedDevice&quot;: &quot;switch-core-01&quot;,
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>      &quot;affectedPort&quot;: &quot;fc1/42&quot;,
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>      &quot;detectedTime&quot;: &quot;2024-01-15T14:32:18Z&quot;,
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>      &quot;description&quot;: &quot;FC port error rate exceeded 5% threshold&quot;
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>      "id": "anom-2024-0847-fc1",
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>      "severity": "CRITICAL",
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>      "type": "PortErrorRate",
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>      "fabricName": "DC1-SAN",
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>      "affectedDevice": "switch-core-01",
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>      "affectedPort": "fc1/42",
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>      "detectedTime": "2024-01-15T14:32:18Z",
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>      "description": "FC port error rate exceeded 5% threshold"
 <a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    },
 <a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>    {
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>      &quot;id&quot;: &quot;anom-2024-0846-fc2&quot;,
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>      &quot;severity&quot;: &quot;MAJOR&quot;,
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>      &quot;type&quot;: &quot;LinkLatency&quot;,
-<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>      &quot;fabricName&quot;: &quot;DC1-SAN&quot;,
-<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>      &quot;affectedDevice&quot;: &quot;switch-edge-03&quot;,
-<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>      &quot;affectedPort&quot;: &quot;fc2/8&quot;,
-<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>      &quot;detectedTime&quot;: &quot;2024-01-15T13:47:52Z&quot;,
-<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>      &quot;description&quot;: &quot;ISL latency increased to 2.8ms&quot;
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>      "id": "anom-2024-0846-fc2",
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>      "severity": "MAJOR",
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>      "type": "LinkLatency",
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>      "fabricName": "DC1-SAN",
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>      "affectedDevice": "switch-edge-03",
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>      "affectedPort": "fc2/8",
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>      "detectedTime": "2024-01-15T13:47:52Z",
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>      "description": "ISL latency increased to 2.8ms"
 <a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>    }
 <a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>  ],
-<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>  &quot;totalCount&quot;: 2,
-<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>  &quot;timeRange&quot;: &quot;LAST_DAY&quot;
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>  "totalCount": 2,
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>  "timeRange": "LAST_DAY"
 <a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>}
 <a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>{
-<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>  &quot;anomalyId&quot;: &quot;anom-2024-0847-fc1&quot;,
-<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>  &quot;severity&quot;: &quot;CRITICAL&quot;,
-<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>  &quot;status&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>  &quot;rootCause&quot;: &quot;CRC errors on FC port&quot;,
-<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>  &quot;recommendedAction&quot;: &quot;Check transceiver health and cable integrity&quot;,
-<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a>  &quot;impactedFlows&quot;: 47,
-<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>  &quot;estimatedImpact&quot;: &quot;HIGH&quot;
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>  "anomalyId": "anom-2024-0847-fc1",
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>  "severity": "CRITICAL",
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>  "status": "ACTIVE",
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>  "rootCause": "CRC errors on FC port",
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>  "recommendedAction": "Check transceiver health and cable integrity",
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a>  "impactedFlows": 47,
+<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>  "estimatedImpact": "HIGH"
 <a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a>}
 <a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a>{
-<a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a>  &quot;flows&quot;: [
+<a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a>  "flows": [
 <a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a>    {
-<a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a>      &quot;flowId&quot;: &quot;flow-dc1-san-001&quot;,
-<a id="__codelineno-19-40" name="__codelineno-19-40" href="#__codelineno-19-40"></a>      &quot;initiator&quot;: &quot;10.48.12.45&quot;,
-<a id="__codelineno-19-41" name="__codelineno-19-41" href="#__codelineno-19-41"></a>      &quot;target&quot;: &quot;10.48.12.89&quot;,
-<a id="__codelineno-19-42" name="__codelineno-19-42" href="#__codelineno-19-42"></a>      &quot;protocol&quot;: &quot;SCSI&quot;,
-<a id="__codelineno-19-43" name="__codelineno-19-43" href="#__codelineno-19-43"></a>      &quot;throughput&quot;: &quot;8.2 Gbps&quot;,
-<a id="__codelineno-19-44" name="__codelineno-19-44" href="#__codelineno-19-44"></a>      &quot;packetLoss&quot;: &quot;0.02%&quot;,
-<a id="__codelineno-19-45" name="__codelineno-19-45" href="#__codelineno-19-45"></a>      &quot;latency&quot;: &quot;1.2ms&quot;
+<a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a>      "flowId": "flow-dc1-san-001",
+<a id="__codelineno-19-40" name="__codelineno-19-40" href="#__codelineno-19-40"></a>      "initiator": "10.48.12.45",
+<a id="__codelineno-19-41" name="__codelineno-19-41" href="#__codelineno-19-41"></a>      "target": "10.48.12.89",
+<a id="__codelineno-19-42" name="__codelineno-19-42" href="#__codelineno-19-42"></a>      "protocol": "SCSI",
+<a id="__codelineno-19-43" name="__codelineno-19-43" href="#__codelineno-19-43"></a>      "throughput": "8.2 Gbps",
+<a id="__codelineno-19-44" name="__codelineno-19-44" href="#__codelineno-19-44"></a>      "packetLoss": "0.02%",
+<a id="__codelineno-19-45" name="__codelineno-19-45" href="#__codelineno-19-45"></a>      "latency": "1.2ms"
 <a id="__codelineno-19-46" name="__codelineno-19-46" href="#__codelineno-19-46"></a>    },
 <a id="__codelineno-19-47" name="__codelineno-19-47" href="#__codelineno-19-47"></a>    {
-<a id="__codelineno-19-48" name="__codelineno-19-48" href="#__codelineno-19-48"></a>      &quot;flowId&quot;: &quot;flow-dc1-san-002&quot;,
-<a id="__codelineno-19-49" name="__codelineno-19-49" href="#__codelineno-19-49"></a>      &quot;initiator&quot;: &quot;10.48.12.67&quot;,
-<a id="__codelineno-19-50" name="__codelineno-19-50" href="#__codelineno-19-50"></a>      &quot;target&quot;: &quot;10.48.12.91&quot;,
-<a id="__codelineno-19-51" name="__codelineno-19-51" href="#__codelineno-19-51"></a>      &quot;protocol&quot;: &quot;SCSI&quot;,
-<a id="__codelineno-19-52" name="__codelineno-19-52" href="#__codelineno-19-52"></a>      &quot;throughput&quot;: &quot;6.8 Gbps&quot;,
-<a id="__codelineno-19-53" name="__codelineno-19-53" href="#__codelineno-19-53"></a>      &quot;packetLoss&quot;: &quot;0.00%&quot;,
-<a id="__codelineno-19-54" name="__codelineno-19-54" href="#__codelineno-19-54"></a>      &quot;latency&quot;: &quot;1.1ms&quot;
+<a id="__codelineno-19-48" name="__codelineno-19-48" href="#__codelineno-19-48"></a>      "flowId": "flow-dc1-san-002",
+<a id="__codelineno-19-49" name="__codelineno-19-49" href="#__codelineno-19-49"></a>      "initiator": "10.48.12.67",
+<a id="__codelineno-19-50" name="__codelineno-19-50" href="#__codelineno-19-50"></a>      "target": "10.48.12.91",
+<a id="__codelineno-19-51" name="__codelineno-19-51" href="#__codelineno-19-51"></a>      "protocol": "SCSI",
+<a id="__codelineno-19-52" name="__codelineno-19-52" href="#__codelineno-19-52"></a>      "throughput": "6.8 Gbps",
+<a id="__codelineno-19-53" name="__codelineno-19-53" href="#__codelineno-19-53"></a>      "packetLoss": "0.00%",
+<a id="__codelineno-19-54" name="__codelineno-19-54" href="#__codelineno-19-54"></a>      "latency": "1.1ms"
 <a id="__codelineno-19-55" name="__codelineno-19-55" href="#__codelineno-19-55"></a>    }
 <a id="__codelineno-19-56" name="__codelineno-19-56" href="#__codelineno-19-56"></a>  ],
-<a id="__codelineno-19-57" name="__codelineno-19-57" href="#__codelineno-19-57"></a>  &quot;totalFlows&quot;: 156,
-<a id="__codelineno-19-58" name="__codelineno-19-58" href="#__codelineno-19-58"></a>  &quot;timeRange&quot;: &quot;LAST_HOUR&quot;
+<a id="__codelineno-19-57" name="__codelineno-19-57" href="#__codelineno-19-57"></a>  "totalFlows": 156,
+<a id="__codelineno-19-58" name="__codelineno-19-58" href="#__codelineno-19-58"></a>  "timeRange": "LAST_HOUR"
 <a id="__codelineno-19-59" name="__codelineno-19-59" href="#__codelineno-19-59"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -8494,32 +8494,32 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Count switches by management state</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/inventory/switches"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="s2">import sys, json, collections</span>
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s2">states = collections.Counter(s.get(&#39;managementState&#39;,&#39;unknown&#39;) for s in data)</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s2">states = collections.Counter(s.get('managementState','unknown') for s in data)</span>
 <a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="s2">print(dict(states))</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="s2">&quot;</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="s2">"</span>
 <a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
 <a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1"># List all non-healthy ND pods</span>
 <a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--no-headers<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{if ($4 != &quot;Running&quot; &amp;&amp; $4 != &quot;Completed&quot;) print $0}&#39;</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{if ($4 != "Running" &amp;&amp; $4 != "Completed") print $0}'</span>
 <a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
 <a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="c1"># Export NDFC switch inventory to CSV</span>
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NDFC_BASE</span><span class="si">}</span><span class="s2">/inventory/switches"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="s2">import sys, json, csv</span>
 <a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="s2">fields = [&#39;switchName&#39;,&#39;ipAddress&#39;,&#39;model&#39;,&#39;release&#39;,&#39;managementState&#39;,&#39;fabricName&#39;]</span>
-<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="s2">w = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction=&#39;ignore&#39;)</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="s2">fields = ['switchName','ipAddress','model','release','managementState','fabricName']</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="s2">w = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction='ignore')</span>
 <a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="s2">w.writeheader()</span>
 <a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a><span class="s2">for s in data: w.writerow(s)</span>
-<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>ndfc-switches-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span>ndfc-switches-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{&#39;managed&#39;: 48, &#39;unmanaged&#39;: 3, &#39;offline&#39;: 1}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{'managed': 48, 'unmanaged': 3, 'offline': 1}
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>kube-system          coredns-558bd4d5db-7x9k2                    0/1       CrashLoopBackOff   12         3h22m
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>kube-system          etcd-ndfc-master-01                         1/1       Error              2          2d14h
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>monitoring           prometheus-operator-6d8f4c9b-8xk2l           0/1       ImagePullBackOff   0          1d8h

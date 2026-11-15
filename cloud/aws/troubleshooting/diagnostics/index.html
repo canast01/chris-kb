@@ -8093,29 +8093,29 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--max-results<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--lookup-attributes<span class="w"> </span><span class="nv">AttributeKey</span><span class="o">=</span>EventName,AttributeValue<span class="o">=</span>DeleteSecurityGroup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Events[*].[EventTime,Username,EventName,Resources[0].ResourceName]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Events[*].[EventTime,Username,EventName,Resources[0].ResourceName]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Find events by resource ARN (e.g., who modified a specific S3 bucket)</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--max-results<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--lookup-attributes<span class="w"> </span><span class="nv">AttributeKey</span><span class="o">=</span>ResourceName,AttributeValue<span class="o">=</span>my-bucket<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Events[*].[EventTime,Username,EventName,ErrorCode]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Events[*].[EventTime,Username,EventName,ErrorCode]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Look for: ErrorCode = AccessDenied or DeleteBucket events</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Last 1 hour of all error events in this region</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>--max-results<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">"1 hour ago"</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">                </span>date<span class="w"> </span>-u<span class="w"> </span>-v-1H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Events[?ErrorCode!=null].[EventTime,Username,EventName,ErrorCode]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Events[?ErrorCode!=null].[EventTime,Username,EventName,ErrorCode]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    &quot;UserId&quot;: &quot;AIDAI45Q7LQVEXAMPLE&quot;,
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    &quot;Account&quot;: &quot;123456789012&quot;,
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    &quot;Arn&quot;: &quot;arn:aws:iam::123456789012:user/admin-user&quot;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    "UserId": "AIDAI45Q7LQVEXAMPLE",
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    "Account": "123456789012",
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    "Arn": "arn:aws:iam::123456789012:user/admin-user"
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>}
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>     Name                    Value             Type    Location
@@ -8177,9 +8177,9 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Find REJECT entries in VPC Flow Logs (identifies blocked traffic)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>logs<span class="w"> </span>filter-log-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--log-group-name<span class="w"> </span>/aws/vpc/flowlogs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--filter-pattern<span class="w"> </span><span class="s1">&#39;[version, account, eni, source, dest, srcport, destport, protocol, packets, bytes, start, end, action=&quot;REJECT&quot;, log_status]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--filter-pattern<span class="w"> </span><span class="s1">'[version, account, eni, source, dest, srcport, destport, protocol, packets, bytes, start, end, action="REJECT", log_status]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(($(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">3600</span><span class="k">))</span><span class="m">000</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;events[*].message&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'events[*].message'</span><span class="w"> </span>--output<span class="w"> </span>text
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Each line: source-ip destination-ip dest-port REJECT</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Find the port being rejected; match to SG inbound rule</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
@@ -8189,19 +8189,19 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--destination<span class="w"> </span>sg-0def456abc123<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--protocol<span class="w"> </span>TCP<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--destination-port<span class="w"> </span><span class="m">443</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;NetworkInsightsPath.NetworkInsightsPathId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'NetworkInsightsPath.NetworkInsightsPathId'</span><span class="w"> </span>--output<span class="w"> </span>text
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Returns: path ID</span>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="nv">PATH_ID</span><span class="o">=</span>nip-0abc123
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>aws<span class="w"> </span>ec2<span class="w"> </span>start-network-insights-analysis<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--network-insights-path-id<span class="w"> </span><span class="nv">$PATH_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;NetworkInsightsAnalysis.NetworkInsightsAnalysisId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'NetworkInsightsAnalysis.NetworkInsightsAnalysisId'</span><span class="w"> </span>--output<span class="w"> </span>text
 <a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
 <a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="nv">ANALYSIS_ID</span><span class="o">=</span>nia-0def456
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Poll until status = succeeded (usually &lt; 60 seconds)</span>
 <a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-network-insights-analyses<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>--network-insights-analysis-ids<span class="w"> </span><span class="nv">$ANALYSIS_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;NetworkInsightsAnalyses[0].[NetworkPathFound,Explanations]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'NetworkInsightsAnalyses[0].[NetworkPathFound,Explanations]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">  </span>--output<span class="w"> </span>json
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># NetworkPathFound: true = path exists; false = path blocked; Explanations shows why</span>
 </code></pre></div>
@@ -8211,14 +8211,14 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>nip-0a1b2c3d4e5f6g7h8
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>nia-0f1e2d3c4b5a6978
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>{
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    &quot;NetworkInsightsAnalyses&quot;: [
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    "NetworkInsightsAnalyses": [
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        {
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>            &quot;NetworkPathFound&quot;: false,
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>            &quot;Explanations&quot;: [
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>            "NetworkPathFound": false,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>            "Explanations": [
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>                {
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                    &quot;ExplanationCode&quot;: &quot;SecurityGroupNotFound&quot;,
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>                    &quot;NetworkInterfaceId&quot;: &quot;eni-0abc123def456&quot;,
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                    &quot;SecurityGroupId&quot;: &quot;sg-0def456abc123&quot;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                    "ExplanationCode": "SecurityGroupNotFound",
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>                    "NetworkInterfaceId": "eni-0abc123def456",
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                    "SecurityGroupId": "sg-0def456abc123"
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>                }
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>            ]
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        }
@@ -8254,22 +8254,22 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <h2 id="step-3-diagnose-iam-access-denied-errors">Step 3 — Diagnose IAM access denied errors<a class="headerlink" href="#step-3-diagnose-iam-access-denied-errors" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Simulate whether a role can perform a specific action</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>simulate-principal-policy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--policy-source-arn<span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;account-id&gt;:role/MyRole&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--action-names<span class="w"> </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--resource-arns<span class="w"> </span><span class="s2">&quot;arn:aws:s3:::my-bucket/key&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;EvaluationResults[*].[EvalActionName,EvalDecision,MatchedStatements[*].SourcePolicyId]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--policy-source-arn<span class="w"> </span><span class="s2">"arn:aws:iam::&lt;account-id&gt;:role/MyRole"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--action-names<span class="w"> </span><span class="s2">"s3:PutObject"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--resource-arns<span class="w"> </span><span class="s2">"arn:aws:s3:::my-bucket/key"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'EvaluationResults[*].[EvalActionName,EvalDecision,MatchedStatements[*].SourcePolicyId]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># EvalDecision: allowed = permitted; implicitDeny = no allow found; explicitDeny = Deny statement</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Add context entries for condition-based policies (e.g., region, MFA)</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>aws<span class="w"> </span>iam<span class="w"> </span>simulate-principal-policy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--policy-source-arn<span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;account&gt;:role/MyRole&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--action-names<span class="w"> </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--resource-arns<span class="w"> </span><span class="s2">&quot;arn:aws:s3:::my-bucket/key&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--policy-source-arn<span class="w"> </span><span class="s2">"arn:aws:iam::&lt;account&gt;:role/MyRole"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--action-names<span class="w"> </span><span class="s2">"s3:PutObject"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--resource-arns<span class="w"> </span><span class="s2">"arn:aws:s3:::my-bucket/key"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--context-entries<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="s1">&#39;ContextKeyName=aws:RequestedRegion,ContextKeyValues=eu-west-1,ContextKeyType=string&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="s1">&#39;ContextKeyName=aws:MultiFactorAuthPresent,ContextKeyValues=true,ContextKeyType=bool&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;EvaluationResults[*].[EvalDecision,MatchedStatements[*].SourcePolicyId]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="s1">'ContextKeyName=aws:RequestedRegion,ContextKeyValues=eu-west-1,ContextKeyType=string'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="s1">'ContextKeyName=aws:MultiFactorAuthPresent,ContextKeyValues=true,ContextKeyType=bool'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'EvaluationResults[*].[EvalDecision,MatchedStatements[*].SourcePolicyId]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
 <a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># List all policies attached to a role</span>
@@ -8278,14 +8278,14 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
 <a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># View trust policy (which services/accounts can assume this role)</span>
 <a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> </span>--role-name<span class="w"> </span>MyRole<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Role.AssumeRolePolicyDocument&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Role.AssumeRolePolicyDocument'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│                          EvaluationResults                                                            │
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>├─────────────────────────────┬──────────────┬─────────────────────────────────┤
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│ EvalActionName              │ EvalDecision │ MatchedStatements                                        │
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>├─────────────────────────────┼──────────────┼─────────────────────────────────┤
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│ s3:PutObject                │ allowed      │ [&#39;arn:aws:iam::123456789012:...                          │
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│ s3:PutObject                │ allowed      │ ['arn:aws:iam::123456789012:...                          │
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>└─────────────────────────────┴──────────────┴──────────────────────────────────────────────────────────┘
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -8307,18 +8307,18 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
 <a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>RolePolicies:
 <a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>[
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    &quot;MyRoleInlinePolicy&quot;
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    "MyRoleInlinePolicy"
 <a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>]
 <a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
 <a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>{
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>  &quot;Version&quot;: &quot;2012-10-17&quot;,
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>  &quot;Statement&quot;: [
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>  "Version": "2012-10-17",
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>  "Statement": [
 <a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>    {
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>      &quot;Effect&quot;: &quot;Allow&quot;,
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      &quot;Principal&quot;: {
-<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>        &quot;Service&quot;: &quot;ec2.amazonaws.com&quot;
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>      "Effect": "Allow",
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      "Principal": {
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>        "Service": "ec2.amazonaws.com"
 <a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>      },
-<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>      &quot;Action&quot;: &quot;sts:AssumeRole&quot;
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>      "Action": "sts:AssumeRole"
 <a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>    }
 <a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>  ]
 <a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>}
@@ -8353,7 +8353,7 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check instance status checks (system = AWS infrastructure; instance = OS)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instance-status<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--instance-ids<span class="w"> </span>i-0abc123<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceStatuses[0].[InstanceState.Name,SystemStatus.Status,InstanceStatus.Status]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'InstanceStatuses[0].[InstanceState.Name,SystemStatus.Status,InstanceStatus.Status]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Expected: running, ok, ok</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Problem: impaired = hardware or OS issue; initializing = just started</span>
@@ -8374,9 +8374,9 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Describe the effective SG rules for an instance</span>
 <a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">  </span>--group-ids<span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instances<span class="w"> </span>--instance-ids<span class="w"> </span>i-0abc123<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;Reservations[0].Instances[0].SecurityGroups[*].GroupId&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'Reservations[0].Instances[0].SecurityGroups[*].GroupId'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">    </span>--output<span class="w"> </span>text<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[*].[GroupName,IpPermissions]&#39;</span><span class="w"> </span>--output<span class="w"> </span>json
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'SecurityGroups[*].[GroupName,IpPermissions]'</span><span class="w"> </span>--output<span class="w"> </span>json
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>---------------------------------
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>|      InstanceStatuses      |
@@ -8399,21 +8399,21 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>10.0.45.123
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
 <a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>{
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  &quot;SecurityGroups&quot;: [
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  "SecurityGroups": [
 <a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    {
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>      &quot;GroupName&quot;: &quot;web-tier-sg&quot;,
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>      &quot;IpPermissions&quot;: [
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>      "GroupName": "web-tier-sg",
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>      "IpPermissions": [
 <a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>        {
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>          &quot;IpProtocol&quot;: &quot;tcp&quot;,
-<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>          &quot;FromPort&quot;: 22,
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>          &quot;ToPort&quot;: 22,
-<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>          &quot;IpRanges&quot;: [{&quot;CidrIp&quot;: &quot;10.0.0.0/8&quot;}]
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>          "IpProtocol": "tcp",
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>          "FromPort": 22,
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>          "ToPort": 22,
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>          "IpRanges": [{"CidrIp": "10.0.0.0/8"}]
 <a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>        },
 <a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>        {
-<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>          &quot;IpProtocol&quot;: &quot;tcp&quot;,
-<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>          &quot;FromPort&quot;: 443,
-<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>          &quot;ToPort&quot;: 443,
-<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>          &quot;IpRanges&quot;: [{&quot;CidrIp&quot;: &quot;0.0.0.0/0&quot;}]
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>          "IpProtocol": "tcp",
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>          "FromPort": 443,
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>          "ToPort": 443,
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>          "IpRanges": [{"CidrIp": "0.0.0.0/0"}]
 <a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>        }
 <a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>      ]
 <a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>    }
@@ -8452,28 +8452,28 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--source-identifier<span class="w"> </span>prod-mysql<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--source-type<span class="w"> </span>db-instance<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--duration<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Events[*].[Date,Message]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Events[*].[Date,Message]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># CloudWatch metrics: CPU, connections, free storage (last 1 hour)</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">for</span><span class="w"> </span>METRIC<span class="w"> </span><span class="k">in</span><span class="w"> </span>CPUUtilization<span class="w"> </span>DatabaseConnections<span class="w"> </span>FreeStorageSpace<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- </span><span class="nv">$METRIC</span><span class="s2"> ---&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"--- </span><span class="nv">$METRIC</span><span class="s2"> ---"</span>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span>--namespace<span class="w"> </span>AWS/RDS<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span>--metric-name<span class="w"> </span><span class="nv">$METRIC</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>DBInstanceIdentifier,Value<span class="o">=</span>prod-mysql<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 hour ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">'1 hour ago'</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">                  </span>date<span class="w"> </span>-u<span class="w"> </span>-v-1H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;sort_by(Datapoints, &amp;Timestamp)[-1].Average&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'sort_by(Datapoints, &amp;Timestamp)[-1].Average'</span><span class="w"> </span>--output<span class="w"> </span>text
 <a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="k">done</span>
 <a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
 <a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># Slow query log (if enabled via parameter group)</span>
 <a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>aws<span class="w"> </span>logs<span class="w"> </span>filter-log-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">  </span>--log-group-name<span class="w"> </span>/aws/rds/instance/prod-mysql/slowquery<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(($(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">3600</span><span class="k">))</span><span class="m">000</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;events[*].message&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'events[*].message'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>2024-01-15 14:32:15+00:00 | DB instance restarted
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>2024-01-15 13:18:42+00:00 | Failover event initiated
@@ -8489,9 +8489,9 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>--- FreeStorageSpace ---
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>5368709120.0
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a># User prod_app [15/Jan/2024 14:28:15] Query_time: 12.543 Lock_time: 0.002 Rows_sent: 45000 Rows_examined: 2100000 SELECT * FROM transactions WHERE status=&#39;pending&#39; AND created_at &gt; DATE_SUB(NOW(), INTERVAL 7 DAY);
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a># User prod_app [15/Jan/2024 14:15:22] Query_time: 8.127 Lock_time: 0.001 Rows_sent: 12 Rows_examined: 890000 SELECT COUNT(*) FROM audit_logs WHERE action=&#39;DELETE&#39;;
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a># User analytics [15/Jan/2024 13:52:08] Query_time: 5.634 Lock_time: 0.000 Rows_sent: 1 Rows_examined: 450000 SELECT AVG(amount) FROM orders WHERE region=&#39;US&#39;;
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a># User prod_app [15/Jan/2024 14:28:15] Query_time: 12.543 Lock_time: 0.002 Rows_sent: 45000 Rows_examined: 2100000 SELECT * FROM transactions WHERE status='pending' AND created_at &gt; DATE_SUB(NOW(), INTERVAL 7 DAY);
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a># User prod_app [15/Jan/2024 14:15:22] Query_time: 8.127 Lock_time: 0.001 Rows_sent: 12 Rows_examined: 890000 SELECT COUNT(*) FROM audit_logs WHERE action='DELETE';
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a># User analytics [15/Jan/2024 13:52:08] Query_time: 5.634 Lock_time: 0.000 Rows_sent: 1 Rows_examined: 450000 SELECT AVG(amount) FROM orders WHERE region='US';
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8523,16 +8523,16 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Lambda — recent error events</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>aws<span class="w"> </span>logs<span class="w"> </span>filter-log-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--log-group-name<span class="w"> </span>/aws/lambda/my-function<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--filter-pattern<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--filter-pattern<span class="w"> </span><span class="s2">"ERROR"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(($(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">3600</span><span class="k">))</span><span class="m">000</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;events[*].message&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'events[*].message'</span><span class="w"> </span>--output<span class="w"> </span>text
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Lambda — invoke manually and capture response + logs</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--function-name<span class="w"> </span>my-function<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--payload<span class="w"> </span><span class="s1">&#39;{&quot;key&quot;:&quot;value&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--payload<span class="w"> </span><span class="s1">'{"key":"value"}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>--log-type<span class="w"> </span>Tail<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;LogResult&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'LogResult'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span>/tmp/lambda-output.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>cat<span class="w"> </span>/tmp/lambda-output.json
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
@@ -8541,15 +8541,15 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/Lambda<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span>--metric-name<span class="w"> </span>Throttles<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>FunctionName,Value<span class="o">=</span>my-function<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 hour ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">'1 hour ago'</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">                </span>date<span class="w"> </span>-u<span class="w"> </span>-v-1H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Sum<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;sort_by(Datapoints, &amp;Timestamp)[-1].Sum&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'sort_by(Datapoints, &amp;Timestamp)[-1].Sum'</span><span class="w"> </span>--output<span class="w"> </span>text
 <a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>
 <a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="c1"># EKS — node and pod health</span>
 <a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">"Conditions:"</span>
 <a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--field-selector<span class="o">=</span>status.phase!<span class="o">=</span>Running,status.phase!<span class="o">=</span>Succeeded
 <a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>
 <a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="c1"># EKS — control plane audit logs</span>
@@ -8557,20 +8557,20 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="w">  </span>--log-group-name<span class="w"> </span>/aws/eks/my-cluster/cluster<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="w">  </span>--log-stream-name-prefix<span class="w"> </span>kube-apiserver-audit<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(($(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">3600</span><span class="k">))</span><span class="m">000</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;events[*].message&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'events[*].message'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
 </code></pre></div>
 <h2 id="expected-output2024-01-15t104233521z-error-connection-timeout-after-30s-2024-01-15t104112089z-error-invalid-json-payload-2024-01-15t103945203z-error-permission-denied-accessing-dynamodb-statuscode-200-functionversion-latest-executedversion-latest-start-requestid-550e8400-e29b-41d4-a716-446655440000-version-latest-end-requestid-550e8400-e29b-41d4-a716-446655440000-report-requestid-550e8400-e29b-41d4-a716-446655440000-duration-24567-ms-billed-duration-246-ms-memory-used-128-mb-init-duration-52345-ms-keyvalue-none-name-status-roles-age-version-internal-ip-external-ip-os-image-ip-10-0-1-45ec2internal-ready-none-89d-v1276-eks-100145-203011342-amazon-linux-2-ip-10-0-2-78ec2internal-ready-none-45d-v1276-eks-100278-203011351-amazon-linux-2-ip-10-0-3-12ec2internal-ready-none-12d-v1276-eks-100312-203011363-amazon-linux-2-conditions-type-status-lastheartbeattime-lasttransitiontime-reason-message-ready-true-mon-15-jan-2024-104522-0000-mon-15-jan-2024-104522-0000-kubeletready-kubelet-is-posting-ready-status-memorypressure-false-mon-15-jan-2024-104522-0000-mon-15-jan-2024-104522-0000-kubelethassufficientmemory-kubelet-has-sufficient-memory-available-diskpressure-false-mon-15-jan-2024-104522-0000-mon-15-jan-2024-104522-0000-kubelethasnodiskpressure-kubelet-has-no-disk-pressure-pidpressure-false-mon-15-jan-2024-104522-0000-mon-15-jan-2024-104522-0000-kubelethassufficientpid-kubelet-has-sufficient-pid-available-namespace-name-ready-status-restarts-age-kube-system-coredns-558bd4d5db-7x9kl-01-crashloopbackoff-12-2h-monitoring-prometheus-operator-6d4f7c8b9f"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>2024-01-15T10:42:33.521Z    ERROR: Connection timeout after 30s 2024-01-15T10:41:12.089Z    ERROR: Invalid JSON payload 2024-01-15T10:39:45.203Z    ERROR: Permission denied accessing DynamoDB
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>{
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  &quot;StatusCode&quot;: 200,
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  &quot;FunctionVersion&quot;: &quot;$LATEST&quot;,
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  &quot;ExecutedVersion&quot;: &quot;$LATEST&quot;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  "StatusCode": 200,
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  "FunctionVersion": "$LATEST",
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  "ExecutedVersion": "$LATEST"
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>}
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>START RequestId: 550e8400-e29b-41d4-a716-446655440000 Version: $LATEST
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>END RequestId: 550e8400-e29b-41d4-a716-446655440000
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>REPORT RequestId: 550e8400-e29b-41d4-a716-446655440000 Duration: 245.67 ms Billed Duration: 246 ms Memory Used: 128 MB Init Duration: 523.45 ms
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>{&quot;key&quot;:&quot;value&quot;}
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>{"key":"value"}
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
 <a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>None
 <a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
@@ -8594,32 +8594,32 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Show stack events (most recent first) — find the ROLLBACK trigger</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stack-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--stack-name<span class="w"> </span>my-stack<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;sort_by(StackEvents, &amp;Timestamp)[-20:].[LogicalResourceId,ResourceStatus,ResourceStatusReason,Timestamp]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'sort_by(StackEvents, &amp;Timestamp)[-20:].[LogicalResourceId,ResourceStatus,ResourceStatusReason,Timestamp]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Look for: ROLLBACK_IN_PROGRESS and the ResourceStatusReason in the same block</span>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Detect drift (resources changed outside CloudFormation)</span>
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="nv">DRIFT_TOKEN</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>cloudformation<span class="w"> </span>detect-stack-drift<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>--stack-name<span class="w"> </span>my-stack<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;StackDriftDetectionId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'StackDriftDetectionId'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stack-drift-detection-status<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span>--stack-drift-detection-id<span class="w"> </span><span class="nv">$DRIFT_TOKEN</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[StackDriftStatus,DriftedStackResourceCount]&#39;</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'[StackDriftStatus,DriftedStackResourceCount]'</span>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stack-resource-drifts<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">  </span>--stack-name<span class="w"> </span>my-stack<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">  </span>--stack-resource-drift-status-filters<span class="w"> </span>MODIFIED<span class="w"> </span>DELETED<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;StackResourceDrifts[*].[LogicalResourceId,ResourceType,StackResourceDriftStatus]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'StackResourceDrifts[*].[LogicalResourceId,ResourceType,StackResourceDriftStatus]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>
 <a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="c1"># Open an AWS Support case (requires Business or Enterprise Support plan)</span>
 <a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>aws<span class="w"> </span>support<span class="w"> </span>create-case<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">  </span>--subject<span class="w"> </span><span class="s2">&quot;VPC connectivity issue - instance unreachable&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">  </span>--service-code<span class="w"> </span><span class="s2">&quot;virtual-private-cloud&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="w">  </span>--severity-code<span class="w"> </span><span class="s2">&quot;urgent&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="w">  </span>--category-code<span class="w"> </span><span class="s2">&quot;connectivity&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">  </span>--communication-body<span class="w"> </span><span class="s2">&quot;Instance i-0abc123 unreachable since 14:30 UTC. Flow Logs show REJECT on port 443.&quot;</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">  </span>--subject<span class="w"> </span><span class="s2">"VPC connectivity issue - instance unreachable"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">  </span>--service-code<span class="w"> </span><span class="s2">"virtual-private-cloud"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="w">  </span>--severity-code<span class="w"> </span><span class="s2">"urgent"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="w">  </span>--category-code<span class="w"> </span><span class="s2">"connectivity"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">  </span>--communication-body<span class="w"> </span><span class="s2">"Instance i-0abc123 unreachable since 14:30 UTC. Flow Logs show REJECT on port 443."</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>|LogicalResourceId|ResourceStatus|ResourceStatusReason|Timestamp|
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>|-|-|-|-|
@@ -8643,7 +8643,7 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 <a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>|InstanceProfile|AWS::IAM::InstanceProfile|DELETED|
 <a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
 <a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>{
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>    &quot;CaseId&quot;: &quot;case-123456789012-1234567890&quot;
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>    "CaseId": "case-123456789012-1234567890"
 <a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>}
 </code></pre></div>
 <div class="admonition warning">

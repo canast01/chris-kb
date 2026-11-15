@@ -7910,11 +7910,115 @@ Disaster Recovery Runbook reference covering Overview, Activation Criteria, Comm
 </tr>
 <tr>
 <td>TLS certificates</td>
-<td>`openssl s_client -connect <app-fqdn>:443</td>
-<td></td>
+<td><code>openssl s_client -connect &lt;app-fqdn&gt;:443 &lt;/dev/null</code></td>
+<td>Certificate valid, not expired, chain trusted</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Grafana / monitoring UI</td>
+<td>DR-site dashboards active; alert routing confirmed</td>
+</tr>
+<tr>
+<td>Backup jobs</td>
+<td>Veeam / NetBackup job history</td>
+<td>At least one successful backup since cutover</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="return-to-normal-checklist-failback">Return-to-Normal Checklist (Failback)<a class="headerlink" href="#return-to-normal-checklist-failback" title="Permanent link">&para;</a></h2>
+<p>Only begin failback after the primary site is confirmed healthy and capacity has been validated.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Owner</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F.1</td>
+<td>Confirm primary site infrastructure is fully restored and tested</td>
+<td>Infrastructure Director</td>
+<td>Do not failback to an untested site</td>
+</tr>
+<tr>
+<td>F.2</td>
+<td>Re-enable replication from DR site back to primary (reverse replication)</td>
+<td>Storage lead</td>
+<td>Use RecoverPoint re-protect or SRM re-protect workflow</td>
+</tr>
+<tr>
+<td>F.3</td>
+<td>Allow replication to synchronise; verify lag reaches near-zero</td>
+<td>Storage lead</td>
+<td>Monitor via <code>boxmgmt cgs show_lag</code> or SRM dashboard</td>
+</tr>
+<tr>
+<td>F.4</td>
+<td>Schedule failback window; notify all application owners and stakeholders</td>
+<td>Incident Commander</td>
+<td>Treat as a planned maintenance event</td>
+</tr>
+<tr>
+<td>F.5</td>
+<td>Execute planned failback (SRM planned migration or RecoverPoint planned failover)</td>
+<td>Storage lead</td>
+<td>Confirm all VMs gracefully shut down before storage switch</td>
+</tr>
+<tr>
+<td>F.6</td>
+<td>Validate all services at primary site using the Validation Checklist above</td>
+<td>App leads</td>
+<td>Run full checklist — do not assume success</td>
+</tr>
+<tr>
+<td>F.7</td>
+<td>Redirect traffic back to primary site (DNS, load balancers)</td>
+<td>Network lead</td>
+<td>Verify external resolution before closing the event</td>
+</tr>
+<tr>
+<td>F.8</td>
+<td>Re-enable standard backup schedules targeting primary site storage</td>
+<td>Storage lead</td>
+<td>Confirm first backup job completes successfully</td>
+</tr>
+<tr>
+<td>F.9</td>
+<td>Restore monitoring to primary-site configuration; decommission DR-site monitoring overrides</td>
+<td>Platform Eng</td>
+<td>Verify alerting is routing correctly</td>
+</tr>
+<tr>
+<td>F.10</td>
+<td>Hold post-DR review meeting within 48 hours</td>
+<td>Infrastructure Director</td>
+<td>Document timeline, gaps, action items — update this runbook</td>
+</tr>
+</tbody>
+</table>
+<h3 id="post-dr-review-agenda">Post-DR Review Agenda<a class="headerlink" href="#post-dr-review-agenda" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Timeline reconstruction: when was the incident detected, declared, and resolved?</li>
+<li>RPO and RTO actuals vs targets — did we meet them?</li>
+<li>What went well and what failed?</li>
+<li>Action items with owners and due dates</li>
+<li>Runbook updates required based on lessons learned</li>
+</ul>
+<blockquote>
+<p>Update this runbook after every DR event and every annual DR test. Version-control all changes via git.</p>
+</blockquote>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../">DR Runbooks</a></li>
+<li><a href="../failover/">Failover</a></li>
+<li><a href="../failback/">Failback</a></li>
+<li><a href="../../dr-design/">DR Design</a></li>
+<li><a href="../../health-checks/">Health Checks</a></li>
+</ul>
 
 
 

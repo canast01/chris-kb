@@ -7556,7 +7556,7 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>-M<span class="w"> </span>svcaccount
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Create an interactive user with home directory</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>useradd<span class="w"> </span>-m<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Jane Smith&quot;</span><span class="w"> </span>jsmith
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>useradd<span class="w"> </span>-m<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"Jane Smith"</span><span class="w"> </span>jsmith
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Lock an account immediately</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>passwd<span class="w"> </span>-l<span class="w"> </span>username
@@ -7568,7 +7568,7 @@
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>passwd<span class="w"> </span>-S<span class="w"> </span>username
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all accounts with UID &gt;= 1000 (non-system)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$3 &gt;= 1000 { print $1, $3, $7 }&#39;</span><span class="w"> </span>/etc/passwd
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">'$3 &gt;= 1000 { print $1, $3, $7 }'</span><span class="w"> </span>/etc/passwd
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(no output — command completes silently)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>(no output — command completes silently)
@@ -7826,13 +7826,13 @@ jsmith:
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Generate an Ed25519 key (preferred) with passphrase</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;jsmith@corp.local&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/id_ed25519
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">"jsmith@corp.local"</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/id_ed25519
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Deploy public key to a server</span>
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span>jsmith@server01
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Manually append key (when ssh-copy-id not available)</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>cat<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>jsmith@server01<span class="w"> </span><span class="s2">&quot;mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>cat<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>jsmith@server01<span class="w"> </span><span class="s2">"mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys"</span>
 <a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Correct permissions — SSH refuses keys with wrong permissions</span>
 <a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
@@ -7846,7 +7846,7 @@ jsmith:
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Your public key has been saved in /home/jsmith/.ssh/id_ed25519.pub
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>The key fingerprint is:
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>SHA256:8mK9vL2pQxRj4nWsYtB6cDeFgHiJkLmNoPqRsT7uVwX jsmith@corp.local
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>The key&#39;s randomart image is:
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>The key's randomart image is:
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>+--[ED25519 256]--+
 <a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>|        .o.      |
 <a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>|       o.o .     |
@@ -7854,7 +7854,7 @@ jsmith:
 <a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>+----[SHA256]-----+
 <a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
 <a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Number of key(s) added: 1
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>Now try logging in with: &quot;ssh jsmith@server01&quot;
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>Now try logging in with: "ssh jsmith@server01"
 <a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>
 <a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>(no output — command completes silently)
 <a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>(no output — command completes silently)
@@ -7992,8 +7992,8 @@ jsmith:
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>(no output — command opens interactive editor)
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>Defaults env_keep += &quot;COLORS&quot;
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Defaults secure_path=&quot;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>Defaults env_keep += "COLORS"
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 <a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
 <a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a># User privilege specification
 <a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>root    ALL=(ALL:ALL) ALL
@@ -8004,7 +8004,7 @@ jsmith:
 <a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a># Allow members of group sudo to execute any command
 <a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>%sudo   ALL=(ALL:ALL) ALL
 <a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>
-<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a># See sudoers(5) for more information on &quot;#include&quot; directives:
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a># See sudoers(5) for more information on "#include" directives:
 <a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>
 <a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>#includedir /etc/sudoers.d
 </code></pre></div>
@@ -8085,7 +8085,7 @@ jsmith:
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>(no output — command completes silently)
 <a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>
 <a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>Matching Defaults entries for jsmith on ip-172-31-45-12:
-<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>    !visiblepw, always_set_home, match_group_name, env_reset, env_keep=&quot;COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS&quot;, secure_path=/sbin:/bin:/usr/sbin:/usr/bin
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>    !visiblepw, always_set_home, match_group_name, env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS", secure_path=/sbin:/bin:/usr/sbin:/usr/bin
 <a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>
 <a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>User jsmith may run the following commands on ip-172-31-45-12:
 <a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>    (ALL) ALL
@@ -8123,7 +8123,7 @@ jsmith:
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Place overrides in /etc/sudoers.d/ — avoids editing main sudoers</span>
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/sudoers.d/99-linuxadmins<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/sudoers.d/99-linuxadmins<span class="w"> </span><span class="s">&lt;&lt; 'EOF'</span>
 <a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="s">%linuxadmins ALL=(ALL) ALL</span>
 <a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="s">EOF</span>
 <a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>chmod<span class="w"> </span><span class="m">0440</span><span class="w"> </span>/etc/sudoers.d/99-linuxadmins
@@ -8176,7 +8176,7 @@ jsmith:
 <a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a> 34567812
 <a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a> 78123456
 <a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>
-<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>Do you want me to update your &quot;/home/user/.google_authenticator&quot; file? (y/n) y
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>Do you want me to update your "/home/user/.google_authenticator" file? (y/n) y
 <a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>Do you want to disallow multiple uses of the same authentication token? (y/n) y
 <a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>Do you want to enable rate-limiting? (y/n) y
 </code></pre></div>
@@ -8291,7 +8291,7 @@ jsmith:
 <a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a><span class="nv">ikey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>DIXXXXXXXXXXXXXXXXXX
 <a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="nv">skey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 <a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a><span class="nv">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>api-XXXXXXXX.duosecurity.com
-<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="nv">failmode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>safe<span class="w">    </span><span class="c1"># &#39;safe&#39; allows login if Duo is unreachable; &#39;secure&#39; blocks</span>
+<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="nv">failmode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>safe<span class="w">    </span><span class="c1"># 'safe' allows login if Duo is unreachable; 'secure' blocks</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>(no output — command completes silently)
 </code></pre></div>
@@ -8324,15 +8324,15 @@ jsmith:
 <a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="c1"># /etc/ssh/sshd_config</span>
 <a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>TrustedUserCAKeys<span class="w"> </span>/etc/ssh/ca.pub
 <a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>
-<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="c1"># Sign a user&#39;s public key with the CA</span>
-<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>ca_key<span class="w"> </span>-I<span class="w"> </span><span class="s2">&quot;jsmith@corp.local&quot;</span><span class="w"> </span>-n<span class="w"> </span>jsmith<span class="w"> </span>-V<span class="w"> </span>+52w<span class="w"> </span>~/.ssh/id_ed25519.pub
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="c1"># Sign a user's public key with the CA</span>
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>ca_key<span class="w"> </span>-I<span class="w"> </span><span class="s2">"jsmith@corp.local"</span><span class="w"> </span>-n<span class="w"> </span>jsmith<span class="w"> </span>-V<span class="w"> </span>+52w<span class="w"> </span>~/.ssh/id_ed25519.pub
 <a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="c1"># This creates id_ed25519-cert.pub</span>
 <a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a>
 <a id="__codelineno-42-9" name="__codelineno-42-9" href="#__codelineno-42-9"></a><span class="c1"># The user presents both the key and certificate automatically</span>
 <a id="__codelineno-42-10" name="__codelineno-42-10" href="#__codelineno-42-10"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519<span class="w"> </span>server01
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>Signed user key: /home/jsmith/.ssh/id_ed25519-cert.pub
-<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>Key ID: &quot;jsmith@corp.local&quot;
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>Key ID: "jsmith@corp.local"
 <a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>Serial: 0
 <a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>Valid: from 2024-01-15T09:42:00 to 2025-01-15T09:42:00
 <a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>Certificate valid
@@ -8364,7 +8364,7 @@ jsmith:
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Failed SSH logins</span>
-<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed password\|Invalid user&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Failed password\|Invalid user"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 <a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
 <a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># Successful logins</span>
 <a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>last<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span>
@@ -8377,7 +8377,7 @@ jsmith:
 <a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a>who
 <a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a>
 <a id="__codelineno-44-14" name="__codelineno-44-14" href="#__codelineno-44-14"></a><span class="c1"># Failed sudo attempts</span>
-<a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a>grep<span class="w"> </span><span class="s2">&quot;FAILED&quot;</span><span class="w"> </span>/var/log/sudo.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a>grep<span class="w"> </span><span class="s2">"FAILED"</span><span class="w"> </span>/var/log/sudo.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 <a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a><span class="c1"># or</span>
 <a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_CMD<span class="w"> </span>--success<span class="w"> </span>no<span class="w"> </span>--start<span class="w"> </span>today
 </code></pre></div>

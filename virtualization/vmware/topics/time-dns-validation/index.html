@@ -8206,7 +8206,7 @@ DNS and NTP Validation reference covering Why This Matters, NTP Validation — E
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check time synchronisation status</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>timedatectl<span class="w"> </span>status
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Key output: &quot;System clock synchronized: yes&quot; and offset &lt; 100ms</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Key output: "System clock synchronized: yes" and offset &lt; 100ms</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reference id : 91.189.89.198 (ntp.ubuntu.com)
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   stratum   : 2
@@ -8351,7 +8351,7 @@ DNS and NTP Validation reference covering Why This Matters, NTP Validation — E
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nv">$esxi</span> <span class="p">=</span> <span class="nv">$_</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nv">$hostTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-View</span> <span class="nv">$esxi</span><span class="p">).</span><span class="n">ConfigManager</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="c"># Use vCenter&#39;s view of host time (not always accurate — use SSH for precise check)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="c"># Use vCenter's view of host time (not always accurate — use SSH for precise check)</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Host</span> <span class="p">=</span> <span class="nv">$esxi</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span> <span class="n">UpTime</span> <span class="p">=</span> <span class="nv">$esxi</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Summary</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">BootTime</span> <span class="p">}</span>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
 </code></pre></div>
@@ -8362,13 +8362,13 @@ DNS and NTP Validation reference covering Why This Matters, NTP Validation — E
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># 2. Time offset (acceptable range: &lt; 1 second from reference)</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ntpq<span class="w"> </span>-p<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#\|^=&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ntpq<span class="w"> </span>-p<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^#\|^="</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># 3. Forward DNS</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>nslookup<span class="w"> </span><span class="k">$(</span>hostname<span class="k">)</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># 4. Reverse DNS</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>nslookup<span class="w"> </span><span class="k">$(</span>esxcfg-nics<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmnic0<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $5}&#39;</span><span class="k">)</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>nslookup<span class="w"> </span><span class="k">$(</span>esxcfg-nics<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmnic0<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $5}'</span><span class="k">)</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># 5. vCenter hostname resolves</span>
 <a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>nslookup<span class="w"> </span>vcenter.example.local

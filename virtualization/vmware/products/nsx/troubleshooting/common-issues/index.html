@@ -9023,12 +9023,12 @@
 <h1 id="nsx-common-issues">NSX — Common Issues<a class="headerlink" href="#nsx-common-issues" title="Permanent link">&para;</a></h1>
 <p><em>Applies to: VMware NSX-T 3.x / 4.x</em>
 <img alt="NSX — Common Issues" src="../../../../../../assets/virtualization-vmware-nsx-troubleshooting-common-issues.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Confirm the VM&#39;s segment and gateway IP</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Confirm the VM's segment and gateway IP</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Check segment config in NSX Manager UI or API</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/segments/&lt;segment-id&gt;&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/policy/api/v1/infra/segments/&lt;segment-id&gt;"</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Step 2 — Check DFW on the VM&#39;s ESXi host</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Step 2 — Check DFW on the VM's ESXi host</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># SSH to the ESXi host running the VM</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vm-name&gt;
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;
@@ -9042,17 +9042,17 @@
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Source: VM vNIC, Destination: gateway IP, Protocol: ICMP</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;resource_type&quot;: &quot;Segment&quot;,
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;id&quot;: &quot;segment-prod-web-01&quot;,
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;display_name&quot;: &quot;Production-Web-Tier&quot;,
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;subnets&quot;: [
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  "resource_type": "Segment",
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  "id": "segment-prod-web-01",
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  "display_name": "Production-Web-Tier",
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  "subnets": [
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    {
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      &quot;gateway_address&quot;: &quot;192.168.10.1/24&quot;,
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      &quot;network&quot;: &quot;192.168.10.0/24&quot;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      "gateway_address": "192.168.10.1/24",
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      "network": "192.168.10.0/24"
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    }
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  ],
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;connectivity_path&quot;: &quot;/infra/tier-1s/tier1-prod&quot;,
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;state&quot;: &quot;realized&quot;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  "connectivity_path": "/infra/tier-1s/tier1-prod",
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  "state": "realized"
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>}
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>VM: prod-web-vm-04
@@ -9172,13 +9172,13 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — Confirm the policy is published (not in draft)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies/&lt;policy-id&gt;&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check: &quot;publish_state&quot;: &quot;realized&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies/&lt;policy-id&gt;"</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check: "publish_state": "realized"</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Step 2 — Check realisation status on the transport node</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/realized-state/realized-entities?intent_path=&lt;policy-path&gt;&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/policy/api/v1/infra/realized-state/realized-entities?intent_path=&lt;policy-path&gt;"</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Step 3 — Check rules on the ESXi host</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># SSH to ESXi host running the VM</span>
@@ -9187,32 +9187,32 @@
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Step 4 — Check group membership</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Is the VM actually in the security group referenced by the rule?</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/groups/&lt;group-id&gt;/members/virtual-machines&quot;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/groups/&lt;group-id&gt;/members/virtual-machines"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;resource_type&quot;: &quot;SecurityPolicy&quot;,
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;id&quot;: &quot;policy-001&quot;,
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;display_name&quot;: &quot;prod-web-tier-policy&quot;,
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;publish_state&quot;: &quot;realized&quot;,
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  &quot;path&quot;: &quot;/infra/domains/default/security-policies/policy-001&quot;,
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  &quot;rules&quot;: [
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  "resource_type": "SecurityPolicy",
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  "id": "policy-001",
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  "display_name": "prod-web-tier-policy",
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  "publish_state": "realized",
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  "path": "/infra/domains/default/security-policies/policy-001",
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  "rules": [
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    {
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      &quot;id&quot;: &quot;rule-1&quot;,
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      &quot;display_name&quot;: &quot;allow-http&quot;,
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      &quot;action&quot;: &quot;ALLOW&quot;,
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      &quot;sequence_number&quot;: 0
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      "id": "rule-1",
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      "display_name": "allow-http",
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      "action": "ALLOW",
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      "sequence_number": 0
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    }
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  ]
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>}
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Realized state check:
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>{
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  &quot;results&quot;: [
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  "results": [
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    {
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>      &quot;entity_type&quot;: &quot;SecurityPolicy&quot;,
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>      &quot;state&quot;: &quot;REALIZED&quot;,
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>      &quot;realization_specific_identifier&quot;: &quot;policy-001&quot;
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>      "entity_type": "SecurityPolicy",
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>      "state": "REALIZED",
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>      "realization_specific_identifier": "policy-001"
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    }
 <a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  ]
 <a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>}
@@ -9225,14 +9225,14 @@
 <a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>
 <a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>Group membership check:
 <a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>{
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>  &quot;results&quot;: [
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>  "results": [
 <a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>    {
-<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>      &quot;external_id&quot;: &quot;vm-prod-web-01&quot;,
-<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>      &quot;display_name&quot;: &quot;vm-prod-web-01&quot;,
-<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>      &quot;resource_type&quot;: &quot;VirtualMachine&quot;
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>      "external_id": "vm-prod-web-01",
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>      "display_name": "vm-prod-web-01",
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>      "resource_type": "VirtualMachine"
 <a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>    }
 <a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>  ],
-<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>  &quot;result_count&quot;: 1
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>  "result_count": 1
 <a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9336,8 +9336,8 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check transport node state details</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/&lt;tn-id&gt;/state&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/transport-nodes/&lt;tn-id&gt;/state"</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check the specific error message</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># It will indicate which step failed: VIB install, TEP IP allocation, etc.</span>
@@ -9347,18 +9347,18 @@
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># If VIBs are missing or showing wrong version, re-run preparation</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Check IP pool has available IPs</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;transport_node_id&quot;: &quot;tn-12345678-abcd-ef01-2345-6789abcdef01&quot;,
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;state&quot;: &quot;FAILED&quot;,
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;status&quot;: &quot;DOWN&quot;,
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  &quot;failure_details&quot;: {
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    &quot;error_code&quot;: &quot;INSTALL_FAILED&quot;,
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    &quot;error_message&quot;: &quot;NSX VIB installation failed on host esxi-prod-01.lab.local&quot;,
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    &quot;failed_step&quot;: &quot;VIB_INSTALL&quot;,
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    &quot;timestamp&quot;: &quot;2024-01-15T14:32:18.123Z&quot;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "transport_node_id": "tn-12345678-abcd-ef01-2345-6789abcdef01",
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  "state": "FAILED",
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  "status": "DOWN",
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  "failure_details": {
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    "error_code": "INSTALL_FAILED",
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    "error_message": "NSX VIB installation failed on host esxi-prod-01.lab.local",
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    "failed_step": "VIB_INSTALL",
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    "timestamp": "2024-01-15T14:32:18.123Z"
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  }
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>}
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
@@ -9367,23 +9367,23 @@
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>nsx-vib-esx-nsx-lldp                 3.2.1.0-20456789       2024-01-10
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
 <a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>{
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  &quot;results&quot;: [
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  "results": [
 <a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>    {
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>      &quot;ip_address&quot;: &quot;192.168.100.45&quot;,
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>      &quot;allocation_id&quot;: &quot;alloc-uuid-001&quot;,
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>      &quot;status&quot;: &quot;ALLOCATED&quot;,
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>      &quot;host_id&quot;: &quot;esxi-prod-01&quot;
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>      "ip_address": "192.168.100.45",
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>      "allocation_id": "alloc-uuid-001",
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>      "status": "ALLOCATED",
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>      "host_id": "esxi-prod-01"
 <a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>    },
 <a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>    {
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>      &quot;ip_address&quot;: &quot;192.168.100.46&quot;,
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>      &quot;allocation_id&quot;: &quot;alloc-uuid-002&quot;,
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>      &quot;status&quot;: &quot;ALLOCATED&quot;,
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>      &quot;host_id&quot;: &quot;esxi-prod-02&quot;
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>      "ip_address": "192.168.100.46",
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>      "allocation_id": "alloc-uuid-002",
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>      "status": "ALLOCATED",
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>      "host_id": "esxi-prod-02"
 <a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>    }
 <a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>  ],
-<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>  &quot;result_count&quot;: 2,
-<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>  &quot;pool_size&quot;: 10,
-<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>  &quot;available_ips&quot;: 8
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>  "result_count": 2,
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>  "pool_size": 10,
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>  "available_ips": 8
 <a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>}
 </code></pre></div>
 <div class="admonition warning">

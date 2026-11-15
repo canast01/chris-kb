@@ -9120,23 +9120,23 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 <h2 id="step-1-check-platform-api-health">Step 1 — Check platform API health<a class="headerlink" href="#step-1-check-platform-api-health" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From any host that can reach vRNI — no auth required</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vrni-platform-ip&gt;/api/ni/health
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;OK&quot;} or similar JSON with per-service health</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: {"status": "OK"} or similar JSON with per-service health</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check API version</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vrni-platform-ip&gt;/api/ni/info
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Returns: apiVersion, buildNumber, platformVersion</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Get a vRNI API token (required for most data queries)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vrni-platform-ip&gt;/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"https://&lt;vrni-platform-ip&gt;/api/ni/auth/token"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"username":"admin@local","password":"&lt;password&gt;","domain":{"domain_type":"LOCAL"}}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import json,sys; print(json.load(sys.stdin)['token'])"</span><span class="k">)</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$TOKEN</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Expected: JWT string; empty = auth failed (check credentials)</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{&quot;status&quot;:&quot;OK&quot;,&quot;services&quot;:{&quot;platform&quot;:&quot;UP&quot;,&quot;collector&quot;:&quot;UP&quot;,&quot;api&quot;:&quot;UP&quot;,&quot;ui&quot;:&quot;UP&quot;}}
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>{&quot;apiVersion&quot;:&quot;1.0&quot;,&quot;buildNumber&quot;:&quot;21345678&quot;,&quot;platformVersion&quot;:&quot;6.10.1&quot;,&quot;timestamp&quot;:&quot;2024-01-15T09:42:33Z&quot;}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{"status":"OK","services":{"platform":"UP","collector":"UP","api":"UP","ui":"UP"}}
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>{"apiVersion":"1.0","buildNumber":"21345678","platformVersion":"6.10.1","timestamp":"2024-01-15T09:42:33Z"}
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBsb2NhbCIsImV4cCI6MTcwNTMzODk1MywiaWF0IjoxNzA1MzM1MzUzfQ.kR9mN2pL8vQ5xW1jZ3aB6cD4eF7gH0iJ2kL5mN8oP1q
 </code></pre></div>
 <div class="admonition warning">
@@ -9167,33 +9167,33 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 <hr />
 <h2 id="step-2-check-data-source-connectivity-and-sync-status">Step 2 — Check data source connectivity and sync status<a class="headerlink" href="#step-2-check-data-source-connectivity-and-sync-status" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all vCenter data sources with connection status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrni-platform-ip&gt;/api/ni/data-sources/vcenters&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">"https://&lt;vrni-platform-ip&gt;/api/ni/data-sources/vcenters"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">for ds in json.load(sys.stdin).get(&#39;results&#39;, []):</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">    print(ds.get(&#39;ip&#39;,&#39;&#39;), &#39;|&#39;, ds.get(&#39;nickname&#39;,&#39;&#39;), &#39;|&#39;, ds.get(&#39;connection_status&#39;,&#39;&#39;))</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">for ds in json.load(sys.stdin).get('results', []):</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">    print(ds.get('ip',''), '|', ds.get('nickname',''), '|', ds.get('connection_status',''))</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">"</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Expected: connection_status = CONNECTED for all configured vCenters</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Problem: DISCONNECTED or FAILED</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># List NSX data sources</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrni-platform-ip&gt;/api/ni/data-sources/nsxt-managers&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="s2">"https://&lt;vrni-platform-ip&gt;/api/ni/data-sources/nsxt-managers"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">import json,sys</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">for ds in json.load(sys.stdin).get(&#39;results&#39;, []):</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">    print(ds.get(&#39;ip&#39;,&#39;&#39;), &#39;|&#39;, ds.get(&#39;connection_status&#39;,&#39;&#39;))</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">for ds in json.load(sys.stdin).get('results', []):</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">    print(ds.get('ip',''), '|', ds.get('connection_status',''))</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s2">"</span>
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># From the COLLECTOR VM — test vCenter API reachability</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-ip&gt;/rest/com/vmware/cis/session&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;svc-vrni-vc@vsphere.local:&lt;password&gt;&quot;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"https://&lt;vcenter-ip&gt;/rest/com/vmware/cis/session"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s2">"svc-vrni-vc@vsphere.local:&lt;password&gt;"</span>
 <a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Expected: session token JSON; Error = credentials or network issue</span>
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
 <a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># From the COLLECTOR VM — test NSX Manager API reachability</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;svc-vrni-nsx:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager-ip&gt;/api/v1/cluster/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">"svc-vrni-nsx:&lt;password&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager-ip&gt;/api/v1/cluster/status"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># Test network connectivity from collector to each data source</span>
 <a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter-ip&gt;<span class="w"> </span><span class="m">443</span>
@@ -9205,11 +9205,11 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>10.20.1.52 | dr-vcenter-01 | DISCONNECTED
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>10.20.2.100 | CONNECTED
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>10.20.2.101 | CONNECTED
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>{&quot;id&quot;:&quot;52b2d4a8-1234-5678-abcd-ef1234567890&quot;,&quot;user&quot;:&quot;svc-vrni-vc@vsphere.local&quot;}
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>{"id":"52b2d4a8-1234-5678-abcd-ef1234567890","user":"svc-vrni-vc@vsphere.local"}
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>{
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;cluster_status&quot;: &quot;STABLE&quot;,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  &quot;node_count&quot;: 3,
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;control_cluster_status&quot;: &quot;STABLE&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  "cluster_status": "STABLE",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  "node_count": 3,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  "control_cluster_status": "STABLE"
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>}
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Connection to 10.20.1.50 443 port [tcp/https] succeeded!
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Connection to 10.20.2.100 443 port [tcp/https] succeeded!
@@ -9252,16 +9252,16 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># No packets = switch not sending, or firewall blocking UDP 2055 to collector IP</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check proxy.log for flow receipt rate</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/proxy.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;received\|processed\|drop\|error&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Expected: &quot;Received X flows&quot; at regular intervals</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Problem: &quot;Dropping&quot; or long pause in received counts</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/proxy.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"received\|processed\|drop\|error"</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Expected: "Received X flows" at regular intervals</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Problem: "Dropping" or long pause in received counts</span>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Restart event engine if traps arrive but flows don&#39;t appear in vRNI</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Restart event engine if traps arrive but flows don't appear in vRNI</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sannav-event-engine<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>collector
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>admin@collector-01:~$ ssh admin@192.168.1.45
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>admin@192.168.1.45&#39;s password: 
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>admin@192.168.1.45's password: 
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.100
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>admin@collector-01:~$ sudo tcpdump -i eth0 -n udp port 2055 -c 20
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>tcpdump: verbose output suppressed, use -v or -vv for full packet decode
@@ -9273,7 +9273,7 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>14:35:24.667234 IP 10.50.12.5.54823 &gt; 192.168.1.45.2055: UDP, length 1472
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>...
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>20 packets captured
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>admin@collector-01:~$ tail -100 /var/log/proxy.log | grep -i &quot;received\|processed\|drop\|error&quot;
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>admin@collector-01:~$ tail -100 /var/log/proxy.log | grep -i "received\|processed\|drop\|error"
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>2025-01-15 14:34:58 [INFO] Received 4521 flows from 10.50.12.5 in 2.3s
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>2025-01-15 14:35:12 [INFO] Processed 4521 flows, 0 dropped
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>2025-01-15 14:35:28 [INFO] Received 4389 flows from 10.50.12.6 in 2.1s
@@ -9316,15 +9316,15 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 <h2 id="step-4-inspect-platform-and-collector-logs">Step 4 — Inspect platform and collector logs<a class="headerlink" href="#step-4-inspect-platform-and-collector-logs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the platform VM — main application log</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/app.log
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ERROR\|Exception\|fail&quot;</span><span class="w"> </span>/var/log/app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"ERROR\|Exception\|fail"</span><span class="w"> </span>/var/log/app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># On the collector VM — flow proxy log</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/proxy.log
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop\|disconnect&quot;</span><span class="w"> </span>/var/log/proxy.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|drop\|disconnect"</span><span class="w"> </span>/var/log/proxy.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Collector service status</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>collector
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>collector<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>collector<span class="w"> </span>--since<span class="w"> </span><span class="s2">"1 hour ago"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Test connectivity from collector to platform</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vrni-platform-ip&gt;<span class="w"> </span><span class="m">443</span>
@@ -9430,7 +9430,7 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject<span class="w"> </span>-issuer
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Expected: notAfter date in the future; subject matches the FQDN</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Check issuer (confirm it&#39;s the expected CA)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Check issuer (confirm it's the expected CA)</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vrni-platform-ip&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
@@ -9489,7 +9489,7 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># - Time window when data was last seen correctly</span>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># - Any recent changes to data sources, network, or certificates</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@vrni-platform-01&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@vrni-platform-01's password: 
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Generating support bundle...
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Collecting system logs...
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Collecting database diagnostics...

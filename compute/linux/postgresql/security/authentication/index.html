@@ -8051,10 +8051,10 @@ PostgreSQL authentication — pg_hba.conf methods (scram-sha-256, md5, peer, lda
 Or from psql: <code>SELECT pg_reload_conf();</code></p>
 <h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Set / change password</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;NewPass1!&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">'NewPass1!'</span><span class="p">;</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- Expire password (force reset on next login)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">VALID</span><span class="w"> </span><span class="k">UNTIL</span><span class="w"> </span><span class="s1">&#39;2026-12-31&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">VALID</span><span class="w"> </span><span class="k">UNTIL</span><span class="w"> </span><span class="s1">'2026-12-31'</span><span class="p">;</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">-- Check password expiry</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">usename</span><span class="p">,</span><span class="w"> </span><span class="n">valuntil</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_user</span><span class="p">;</span>
@@ -8064,15 +8064,15 @@ Or from psql: <code>SELECT pg_reload_conf();</code></p>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>hostssl  app_prod  certuser  10.0.1.0/24  cert  clientcert=verify-full
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Connect with client cert</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span><span class="s2">&quot;host=db.example.com dbname=app_prod user=certuser \</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span><span class="s2">"host=db.example.com dbname=app_prod user=certuser \</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">  sslcert=/etc/ssl/client.crt \</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">  sslkey=/etc/ssl/client.key \</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s2">  sslrootcert=/etc/ssl/ca.crt \</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">  sslmode=verify-full&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">  sslmode=verify-full"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>psql (14.8 (Debian 14.8-1.pgdg110+1))
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>SSL connection (protocol: TLSv1.3, cipher: ECDHE-RSA-AES256-GCM-SHA384, compression: off)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Type &quot;help&quot; for help.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Type "help" for help.
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>app_prod=&gt; SELECT version();
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>                                                     version
@@ -8109,7 +8109,7 @@ Or from psql: <code>SELECT pg_reload_conf();</code></p>
 </div>
 <h2 id="ldap-authentication">LDAP Authentication<a class="headerlink" href="#ldap-authentication" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># pg_hba.conf
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>host  all  all  10.0.1.0/24  ldap  ldapserver=ldap.example.com  ldapbasedn=&quot;dc=example,dc=com&quot;  ldapsearchattribute=sAMAccountName
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>host  all  all  10.0.1.0/24  ldap  ldapserver=ldap.example.com  ldapbasedn="dc=example,dc=com"  ldapsearchattribute=sAMAccountName
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

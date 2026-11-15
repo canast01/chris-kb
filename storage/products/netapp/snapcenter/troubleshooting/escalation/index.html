@@ -8552,7 +8552,7 @@ How to escalate NetApp SnapCenter issues to NetApp support: what data to collect
 5. Download the resulting archive when ready.</p>
 <p><strong>Via PowerShell:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Generate the support bundle directly (on SnapCenter Server host)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$bundlePath</span> <span class="p">=</span> <span class="s2">&quot;C:\Temp\sc-support-bundle-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$bundlePath</span> <span class="p">=</span> <span class="s2">"C:\Temp\sc-support-bundle-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">'yyyyMMdd'</span><span class="p">)</span><span class="s2">"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-SmSupportBundle</span> <span class="n">-Path</span> <span class="nv">$bundlePath</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># The bundle is stored as a ZIP in the specified directory</span>
@@ -8560,12 +8560,12 @@ How to escalate NetApp SnapCenter issues to NetApp support: what data to collect
 </code></pre></div>
 <h3 id="4-collect-the-windows-event-log-for-service-level-failures">4. Collect the Windows Event Log (for service-level failures)<a class="headerlink" href="#4-collect-the-windows-event-log-for-service-level-failures" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Export the Application log (SnapCenter logs here)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Application</span> <span class="s2">&quot;C:\Temp\Application-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">.evtx&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Application</span> <span class="s2">"C:\Temp\Application-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">'yyyyMMdd'</span><span class="p">)</span><span class="s2">.evtx"</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Recent SnapCenter entries as text (for pasting into the case description)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-Source</span> <span class="s2">&quot;*SnapCenter*&quot;</span> <span class="n">-Newest</span> <span class="n">50</span> <span class="p">|</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-Source</span> <span class="s2">"*SnapCenter*"</span> <span class="n">-Newest</span> <span class="n">50</span> <span class="p">|</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="nb">Select-Object</span> <span class="n">TimeGenerated</span><span class="p">,</span> <span class="n">EntryType</span><span class="p">,</span> <span class="n">Source</span><span class="p">,</span> <span class="n">EventID</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="nb">Out-File</span> <span class="s2">&quot;C:\Temp\sc-events-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">.txt&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="nb">Out-File</span> <span class="s2">"C:\Temp\sc-events-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">'yyyyMMdd'</span><span class="p">)</span><span class="s2">.txt"</span>
 </code></pre></div>
 <h3 id="5-collect-ontap-events-for-snapshotsnapmirror-failures">5. Collect ONTAP events for snapshot/SnapMirror failures<a class="headerlink" href="#5-collect-ontap-events-for-snapshotsnapmirror-failures" title="Permanent link">&para;</a></h3>
 <p>If the issue involves snapshot creation or SnapMirror replication failures, run this on the ONTAP cluster:</p>
@@ -8623,7 +8623,7 @@ How to escalate NetApp SnapCenter issues to NetApp support: what data to collect
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Changes in 24h before the issue:
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  - 2026-06-13 20:00: SnapCenter 5.0.0 → 5.0.1 upgrade applied
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  - 2026-06-14 02:15: All SQL resource group backup jobs failed
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  - Error: &quot;Failed to create snapshot on storage system — error code 13001&quot;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  - Error: "Failed to create snapshot on storage system — error code 13001"
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  - Job IDs failing: 14521, 14522, 14523 (all SQL backup resource groups)
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Steps already taken:
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  - ONTAP: volume show — all volumes online and accessible
@@ -8744,7 +8744,7 @@ How to escalate NetApp SnapCenter issues to NetApp support: what data to collect
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nb">Get-SmJobDetails</span> <span class="n">-JobId</span> <span class="p">&lt;</span><span class="n">job-id</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Format-List</span>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c"># SnapCenter service status on SC Server (PowerShell)</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nb">Get-Service</span> <span class="s2">&quot;SnapCenter*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nb">Get-Service</span> <span class="s2">"SnapCenter*"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c"># ONTAP connectivity test</span>
 <a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">ontap-mgmt-ip</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>

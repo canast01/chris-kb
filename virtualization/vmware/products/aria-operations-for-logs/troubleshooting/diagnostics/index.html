@@ -9115,15 +9115,15 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/loginsight/runtime.log
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Search for errors across all core logs</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop&quot;</span><span class="w">           </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;slow\|timeout\|error&quot;</span><span class="w">  </span>/var/log/loginsight/query.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|exception\|fail"</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|drop"</span><span class="w">           </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"slow\|timeout\|error"</span><span class="w">  </span>/var/log/loginsight/query.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Check disk usage — vRLI stops accepting events if disk exceeds threshold</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage<span class="w"> </span>/dev/sdb
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Expected: &lt; 80% on storage partition; &gt; 80% = ingestion pauses</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@vRLI-01&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@vRLI-01's password: 
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.50.12.44
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2025-01-15T14:35:22.441Z [main] ERROR com.vmware.loginsight.core.IndexWriter - Failed to write segment to disk: IOException on /storage/index/segment_2025_01_15_14_35
@@ -9163,45 +9163,45 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 <hr />
 <h2 id="step-2-check-cluster-node-health">Step 2 — Check cluster node health<a class="headerlink" href="#step-2-check-cluster-node-health" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via REST API (run from any host that can reach vRLI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vRLI-IP&gt;/api/v1/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">"https://&lt;vRLI-IP&gt;/api/v1/cluster/nodes"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Expected: each node shows &quot;state&quot;: &quot;ACTIVE&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Expected: each node shows "state": "ACTIVE"</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check ingestion statistics</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vRLI-IP&gt;/api/v2/cluster/stats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(&#39;EPS:&#39;, d.get(&#39;eventsIngested&#39;), &#39;Disk%:&#39;, d.get(&#39;diskUsagePercent&#39;))&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="s2">"https://&lt;vRLI-IP&gt;/api/v2/cluster/stats"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; d=json.load(sys.stdin); print('EPS:', d.get('eventsIngested'), 'Disk%:', d.get('diskUsagePercent'))"</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Expected: eventsIngested &gt; 0 if senders are active</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Via UI: Admin → Cluster (top navigation)</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Each node shows: Status, Role (master/worker), Disk, CPU, Memory</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;nodes&quot;: [
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "nodes": [
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    {
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      &quot;nodeId&quot;: &quot;node-1&quot;,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;hostname&quot;: &quot;vRLI-master-01.corp.local&quot;,
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      &quot;ipAddress&quot;: &quot;192.168.1.45&quot;,
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      &quot;role&quot;: &quot;MASTER&quot;,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;version&quot;: &quot;8.14.0.21234567&quot;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      "nodeId": "node-1",
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      "hostname": "vRLI-master-01.corp.local",
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      "ipAddress": "192.168.1.45",
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      "state": "ACTIVE",
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      "role": "MASTER",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      "version": "8.14.0.21234567"
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    },
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    {
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      &quot;nodeId&quot;: &quot;node-2&quot;,
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;hostname&quot;: &quot;vRLI-worker-01.corp.local&quot;,
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;ipAddress&quot;: &quot;192.168.1.46&quot;,
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;role&quot;: &quot;WORKER&quot;,
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>      &quot;version&quot;: &quot;8.14.0.21234567&quot;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      "nodeId": "node-2",
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      "hostname": "vRLI-worker-01.corp.local",
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      "ipAddress": "192.168.1.46",
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      "state": "ACTIVE",
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      "role": "WORKER",
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>      "version": "8.14.0.21234567"
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    },
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    {
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      &quot;nodeId&quot;: &quot;node-3&quot;,
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      &quot;hostname&quot;: &quot;vRLI-worker-02.corp.local&quot;,
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      &quot;ipAddress&quot;: &quot;192.168.1.47&quot;,
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      &quot;role&quot;: &quot;WORKER&quot;,
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      &quot;version&quot;: &quot;8.14.0.21234567&quot;
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      "nodeId": "node-3",
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      "hostname": "vRLI-worker-02.corp.local",
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      "ipAddress": "192.168.1.47",
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      "state": "ACTIVE",
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      "role": "WORKER",
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      "version": "8.14.0.21234567"
 <a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    }
 <a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  ]
 <a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>}
@@ -9235,16 +9235,16 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 <hr />
 <h2 id="step-3-check-syslog-and-ingestion">Step 3 — Check syslog and ingestion<a class="headerlink" href="#step-3-check-syslog-and-ingestion" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify syslog listeners are running</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;514|1514|9543&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"514|1514|9543"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected: UDP/TCP 514 (syslog), TCP 1514 (structured syslog), TCP 9543 (liagent)</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test sending a test syslog event from a source host</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>logger<span class="w"> </span>-n<span class="w"> </span>&lt;vRLI-IP&gt;<span class="w"> </span>-P<span class="w"> </span><span class="m">514</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;test message from diagnostic </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Then search Interactive Analytics in vRLI UI for &quot;test message&quot; — should appear within 30 seconds</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>logger<span class="w"> </span>-n<span class="w"> </span>&lt;vRLI-IP&gt;<span class="w"> </span>-P<span class="w"> </span><span class="m">514</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"test message from diagnostic </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">"</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Then search Interactive Analytics in vRLI UI for "test message" — should appear within 30 seconds</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check for parse failures or dropped events</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;drop\|parse error\|overflow\|reject&quot;</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Problem: &quot;Dropping event&quot; or &quot;parse error&quot; lines with high count</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"drop\|parse error\|overflow\|reject"</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Problem: "Dropping event" or "parse error" lines with high count</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>tcp        0      0 0.0.0.0:9543           0.0.0.0:*               LISTEN      12847/liagent
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>udp        0      0 0.0.0.0:514            0.0.0.0:*               12891/rsyslogd
@@ -9289,14 +9289,14 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># If compaction is active: wait 15–30 minutes before further investigation</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Check Cassandra heap usage</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>nodetool<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heap&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>nodetool<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"heap"</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Expected: Heap Memory (Used/Max) &lt; 90%</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># &gt; 90% heap = queries slow; &gt; 95% = OOM risk; requires memory increase or GC tuning</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Check recent Cassandra errors</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|exception&quot;</span><span class="w"> </span>/var/log/loginsight/cassandra/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|warn\|exception"</span><span class="w"> </span>/var/log/loginsight/cassandra/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>admin@vRLI-IP&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>admin@vRLI-IP's password: 
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>CompactionStats:
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pending tasks: 0
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Active compactions:
@@ -9346,18 +9346,18 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Expected: active (running)</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check agent log for errors</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/loginsight-agent/liagent.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|connect\|ssl\|fail&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/loginsight-agent/liagent.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|connect\|ssl\|fail"</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Common errors:</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1">#   &quot;connection refused&quot; → vRLI port 9543 not reachable</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">#   &quot;SSL handshake failed&quot; → certificate mismatch or expired cert on vRLI</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1">#   &quot;authentication failed&quot; → agent key no longer valid</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1">#   "connection refused" → vRLI port 9543 not reachable</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">#   "SSL handshake failed" → certificate mismatch or expired cert on vRLI</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1">#   "authentication failed" → agent key no longer valid</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Test connectivity from agent to vRLI</span>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vRLI-IP&gt;<span class="w"> </span><span class="m">9543</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Expected: &quot;succeeded&quot;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Expected: "succeeded"</span>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
 <a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Check agent configuration</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#\|^</span>$<span class="s2">&quot;</span><span class="w"> </span>/var/lib/loginsight-agent/liagent.ini
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^#\|^</span>$<span class="s2">"</span><span class="w"> </span>/var/lib/loginsight-agent/liagent.ini
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Verify: hostname (the vRLI address), proto=cfapi, ssl=yes/no</span>
 <a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
 <a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Restart agent if configuration was changed</span>
@@ -9426,17 +9426,17 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check NTP sync status</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Expected: &quot;System time&quot; offset &lt; 0.1 seconds; &quot;Leap status: Normal&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Expected: "System time" offset &lt; 0.1 seconds; "Leap status: Normal"</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Show NTP sources</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Expected: at least one source with &quot;*&quot; (currently selected); offset &lt; 10ms</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Expected: at least one source with "*" (currently selected); offset &lt; 10ms</span>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># If NTP is drifting: restart chronyd</span>
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>chronyc<span class="w"> </span>sources
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>admin@vrli-01.lab.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>admin@vrli-01.lab.local's password: 
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.20.50.100
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Reference ID    : 91002F (ntp.ubuntu.com)
@@ -9505,7 +9505,7 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># - Timeline: when the issue started, any recent changes</span>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># - vRLI version: Admin → About</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@vRLI-01&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>admin@vRLI-01's password: 
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Generating support bundle...
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Collecting system logs (this may take several minutes)...
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Collecting application logs...

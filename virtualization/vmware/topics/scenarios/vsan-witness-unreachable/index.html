@@ -9493,7 +9493,7 @@ or absent from the member list:</p>
 routing is broken. If both fail, the witness host or VM is down.</p>
 <hr />
 <h2 id="3-audit-affected-objects">3. Audit Affected Objects<a class="headerlink" href="#3-audit-affected-objects" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>--cluster-uuid<span class="w"> </span>&lt;cluster-uuid&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ABSENT|DEGRADED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>--cluster-uuid<span class="w"> </span>&lt;cluster-uuid&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"ABSENT|DEGRADED"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Object UUID                          State      Policy
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>52a4c8f1-2b3e-4f9a-8c1d-7e9f2a3b4c5d DEGRADED   raid1 (2) - 1 component missing
@@ -9526,7 +9526,7 @@ routing is broken. If both fail, the witness host or VM is down.</p>
 <p>Objects with only witness components ABSENT are tolerable (VMs still running). Objects with a data
 component ABSENT are at risk — a second failure causes immediate inaccessibility.</p>
 <p>To get the cluster UUID:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster UUID&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Sub-Cluster UUID"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Sub-Cluster UUID: 52e84d1a-c4f2-4e8b-9f3a-7b2c1d9e4f6a
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Sub-Cluster UUID: 7f3a2b1c-9e4d-4f8b-3c2a-1d9e4f6a5b2c
@@ -9555,8 +9555,8 @@ component ABSENT are at risk — a second failure causes immediate inaccessibili
 <hr />
 <h2 id="4-review-witness-logs">4. Review Witness Logs<a class="headerlink" href="#4-review-witness-logs" title="Permanent link">&para;</a></h2>
 <p>SSH to the witness host (if reachable via management network):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vsan&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;partition\|disconnect\|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"heartbeat"</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"vsan"</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"partition\|disconnect\|timeout"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>2024-01-15T09:23:47.123Z [INFO] Heartbeat from host esx-prod-02.corp.local (192.168.1.42) received successfully
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2024-01-15T09:24:12.456Z [WARN] Heartbeat timeout detected for host esx-prod-03.corp.local after 60 seconds
@@ -9608,7 +9608,7 @@ component ABSENT are at risk — a second failure causes immediate inaccessibili
 <h3 id="witness-vm-or-host-down-power-on">Witness VM or Host Down — Power On<a class="headerlink" href="#witness-vm-or-host-down-power-on" title="Permanent link">&para;</a></h3>
 <p>If using the VMware vSAN Witness Appliance (OVA-deployed VM):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Via vCenter or directly on the vSphere cluster hosting the witness VM</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vSAN-Witness-*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Start-VM
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">"vSAN-Witness-*"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Start-VM
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Name                 PowerState Num CPUs MemoryGB
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>----                 ---------- -------- --------
@@ -9760,16 +9760,16 @@ unnecessary data moves during the outage window:</p>
 <hr />
 <h2 id="6-verification">6. Verification<a class="headerlink" href="#6-verification" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c"># PowerCLI — check vSAN health summary</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">Get-VsanHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster-name&gt;&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OverallHealth</span> <span class="o">-ne</span> <span class="s1">&#39;green&#39;</span> <span class="p">}</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">Get-VsanHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"&lt;cluster-name&gt;"</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OverallHealth</span> <span class="o">-ne</span> <span class="s1">'green'</span> <span class="p">}</span>
 </code></pre></div>
 <p>Expected: no results (all checks green).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># ESXi — confirm 3-member cluster</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster Member Count&quot;</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Sub-Cluster Member Count"</span>
 <a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1"># Expected: Sub-Cluster Member Count: 3</span>
 <a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
 <a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1"># ESXi — confirm no ABSENT witness components</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ABSENT&quot;</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ABSENT"</span>
 <a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Expected: 0</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Sub-Cluster Member Count: 3

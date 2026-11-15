@@ -7491,26 +7491,26 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>push<span class="w"> </span>backup<span class="w"> </span>--mirror
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Automate daily mirror</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/usr/local/bin/github-repo-mirror.sh<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/usr/local/bin/github-repo-mirror.sh<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s">#!/bin/bash</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s">set -euo pipefail</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s">REPOS=(</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s">  &quot;git@github.com:org/infra.git&quot;</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s">  &quot;git@github.com:org/app.git&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s">  "git@github.com:org/infra.git"</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s">  "git@github.com:org/app.git"</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s">)</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s">BACKUP_DIR=&quot;/backups/github&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s">BACKUP_DIR="/backups/github"</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s">for repo in &quot;${REPOS[@]}&quot;; do</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s">  name=$(basename &quot;$repo&quot; .git)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s">  if [ -d &quot;$BACKUP_DIR/$name.git&quot; ]; then</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s">    git -C &quot;$BACKUP_DIR/$name.git&quot; fetch --all</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s">for repo in "${REPOS[@]}"; do</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s">  name=$(basename "$repo" .git)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s">  if [ -d "$BACKUP_DIR/$name.git" ]; then</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s">    git -C "$BACKUP_DIR/$name.git" fetch --all</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s">  else</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s">    git clone --mirror &quot;$repo&quot; &quot;$BACKUP_DIR/$name.git&quot;</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s">    git clone --mirror "$repo" "$BACKUP_DIR/$name.git"</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s">  fi</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="s">done</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s">EOF</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/github-repo-mirror.sh
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;0 2 * * * /usr/local/bin/github-repo-mirror.sh&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>crontab<span class="w"> </span>-
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"0 2 * * * /usr/local/bin/github-repo-mirror.sh"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>crontab<span class="w"> </span>-
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Enumerating objects: 1247, done.
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Counting objects: 100% (1247/1247), done.
@@ -7518,7 +7518,7 @@
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Compressing objects: 100% (892/892), done.
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Writing objects: 100% (1247/1247), 156.3 MiB | 8.2 MiB/s, done.
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Total 1247 (delta 445), reused 1247 (delta 445), pack-reused 0
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Cloning into bare repository &#39;/backups/github/infra.git&#39;...
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Cloning into bare repository '/backups/github/infra.git'...
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>remote: Enumerating objects: 3892, done.
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>remote: Counting objects: 100% (3892/3892), done.
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>remote: Compressing objects: 100% (2156/2156), done.
@@ -7560,14 +7560,14 @@
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>DEPLOY_SSH_KEY<span class="w"> </span>&lt;<span class="w"> </span>~/.ssh/deploy_ed25519
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># AWS credentials — from IAM (or use OIDC — no secret needed)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>AWS_ACCESS_KEY_ID<span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AWS_ACCESS_KEY_ID</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>AWS_SECRET_ACCESS_KEY<span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AWS_SECRET_ACCESS_KEY</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>AWS_ACCESS_KEY_ID<span class="w"> </span>--body<span class="w"> </span><span class="s2">"</span><span class="nv">$AWS_ACCESS_KEY_ID</span><span class="s2">"</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>AWS_SECRET_ACCESS_KEY<span class="w"> </span>--body<span class="w"> </span><span class="s2">"</span><span class="nv">$AWS_SECRET_ACCESS_KEY</span><span class="s2">"</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Vault token — from HashiCorp Vault</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>VAULT_TOKEN<span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>vault<span class="w"> </span>token<span class="w"> </span>create<span class="w"> </span>-field<span class="o">=</span>token<span class="w"> </span>-policy<span class="o">=</span>github-actions<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>VAULT_TOKEN<span class="w"> </span>--body<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>vault<span class="w"> </span>token<span class="w"> </span>create<span class="w"> </span>-field<span class="o">=</span>token<span class="w"> </span>-policy<span class="o">=</span>github-actions<span class="k">)</span><span class="s2">"</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Slack bot token — from Slack app settings</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>SLACK_BOT_TOKEN<span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SLACK_BOT_TOKEN</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>SLACK_BOT_TOKEN<span class="w"> </span>--body<span class="w"> </span><span class="s2">"</span><span class="nv">$SLACK_BOT_TOKEN</span><span class="s2">"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>✓ Set secret DEPLOY_SSH_KEY for repo acme-corp/infrastructure
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>✓ Set secret AWS_ACCESS_KEY_ID for repo acme-corp/infrastructure
@@ -7610,10 +7610,10 @@
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Add required reviewers</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>PUT<span class="w"> </span>repos/ORG/REPO/environments/production<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-f<span class="w"> </span><span class="s1">&#39;reviewers[][type]=User&#39;</span><span class="w"> </span>-f<span class="w"> </span><span class="s1">&#39;reviewers[][id]=123&#39;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-f<span class="w"> </span><span class="s1">'reviewers[][type]=User'</span><span class="w"> </span>-f<span class="w"> </span><span class="s1">'reviewers[][id]=123'</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Set environment secrets</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>PROD_DB_PASSWORD<span class="w"> </span>--env<span class="w"> </span>production<span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROD_DB_PASSWORD</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>PROD_DB_PASSWORD<span class="w"> </span>--env<span class="w"> </span>production<span class="w"> </span>--body<span class="w"> </span><span class="s2">"</span><span class="nv">$PROD_DB_PASSWORD</span><span class="s2">"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(no output — command completes silently)
@@ -7651,21 +7651,21 @@
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">cd</span><span class="w"> </span>/home/github-runner/actions-runner
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>./config.sh<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--url<span class="w"> </span>https://github.com/ORG/REPO<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REG_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;prod-runner-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--labels<span class="w"> </span><span class="s2">&quot;self-hosted,linux,prod&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--token<span class="w"> </span><span class="s2">"</span><span class="nv">$REG_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"prod-runner-01"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--labels<span class="w"> </span><span class="s2">"self-hosted,linux,prod"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--unattended
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Start service</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>sudo<span class="w"> </span>./svc.sh<span class="w"> </span>install
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>sudo<span class="w"> </span>./svc.sh<span class="w"> </span>start
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{&quot;token&quot;:&quot;AABCD1EF2GH3I4J5K6L7M8N9O0P1Q2R3S4T5U6V7W8X9Y0Z1A2B3C4D5E6F7G&quot;,&quot;expires_at&quot;:&quot;2024-01-15T14:32:18Z&quot;}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{"token":"AABCD1EF2GH3I4J5K6L7M8N9O0P1Q2R3S4T5U6V7W8X9Y0Z1A2B3C4D5E6F7G","expires_at":"2024-01-15T14:32:18Z"}
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>AABCD1EF2GH3I4J5K6L7M8N9O0P1Q2R3S4T5U6V7W8X9Y0Z1A2B3C4D5E6F7G
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>√ Connected to GitHub
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>√ Runner registration is complete
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>√ You are authenticated for the runner to use actions and repo packages
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>√ Runner name: &#39;prod-runner-01&#39;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>√ Runner name: 'prod-runner-01'
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>√ Runner version 2.311.0
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>√ Runner labels: self-hosted,linux,prod
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>√ Creating launch wrapper
@@ -7706,7 +7706,7 @@
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:ORG/.github.git<span class="w"> </span>/backups/github/org-github-repo
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Export runner groups</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>gh<span class="w"> </span>api<span class="w"> </span>orgs/ORG/actions/runner-groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.runner_groups[]&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>runner-groups.json
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>gh<span class="w"> </span>api<span class="w"> </span>orgs/ORG/actions/runner-groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.runner_groups[]'</span><span class="w"> </span>&gt;<span class="w"> </span>runner-groups.json
 </code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpV0D9vwkAMBfDdn8JiogMgBpYMFX8VJoYSwcJyvRiwQnzB51PVb98LCKlsT88_vcHzaE4ttTeIDUvn1LUY6Z5IPC1Uw091Zd8IxYjT8ewf0pCk9kGFFGcAuTT23DkxHOxDUk8nGZZs2_SNC28cJH4M0EXcf63e9dL5JnW4kQsLPchmV76TyumFDCd4cOlmD1OVFUDewtFn7ws8kPL5F3Luq3wu8KhsBDni6KVWQc6sLdVPmOu8UeA6CAHMSer-FX9CWVop?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>

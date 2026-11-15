@@ -9369,7 +9369,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 <p><strong>In vCenter:</strong> Right-click VM → <strong>Snapshots → Manage Snapshots</strong>.</p>
 <p>Snapshot Manager should show no snapshots (they were supposed to be deleted). If it shows no snapshots but the warning still appears, orphaned delta files exist on disk — this is the consolidation-needed condition.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the ESXi host or via datastore browser — list snapshot-related files for the VM</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.vmsd&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*-delta.vmdk"</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.vmsd"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check how large the delta files are</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/*-delta.vmdk
@@ -9474,7 +9474,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 </code></pre></div>
 <p>Free space on the datastore before retrying — Storage vMotion the VM to a datastore with more headroom, then consolidate.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Move VM to a larger datastore first</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;larger-datastore&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">"vm-name"</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">"larger-datastore"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Cause 3: Stale or corrupt snapshot descriptor</strong></p>
 <p>The <code>.vmsd</code> file (snapshot descriptor) contains references to snapshot states. If it is corrupt or references deleted files, consolidation fails.</p>
@@ -9482,28 +9482,28 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cat<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vm-folder&gt;/&lt;vm&gt;.vmsd
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># A clean (no snapshots) .vmsd looks like this:</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># .encoding = &quot;UTF-8&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># snapshot.lastUID = &quot;0&quot;</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># snapshot.current = &quot;0&quot;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># .encoding = "UTF-8"</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># snapshot.lastUID = "0"</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># snapshot.current = "0"</span>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># (no snapshot.XXX.uid entries)</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># If delta files exist but .vmsd shows no snapshots, this is the orphan condition</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>.encoding = &quot;UTF-8&quot;
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>snapshot.lastUID = &quot;3&quot;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>snapshot.current = &quot;2&quot;
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>snapshot.0.uid = &quot;1&quot;
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>snapshot.0.filename = &quot;vm-000001.vmdk&quot;
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>snapshot.0.displayName = &quot;Before patch Tuesday&quot;
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>snapshot.0.createTime = &quot;2024-01-16T14:32:45.123456Z&quot;
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>snapshot.1.uid = &quot;2&quot;
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>snapshot.1.filename = &quot;vm-000002.vmdk&quot;
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>snapshot.1.displayName = &quot;Post-migration backup&quot;
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>snapshot.1.createTime = &quot;2024-01-18T09:15:22.654321Z&quot;
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>snapshot.2.uid = &quot;3&quot;
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>snapshot.2.filename = &quot;vm-000003.vmdk&quot;
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>snapshot.2.displayName = &quot;Current working state&quot;
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>snapshot.2.createTime = &quot;2024-01-20T11:47:08.987654Z&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>.encoding = "UTF-8"
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>snapshot.lastUID = "3"
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>snapshot.current = "2"
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>snapshot.0.uid = "1"
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>snapshot.0.filename = "vm-000001.vmdk"
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>snapshot.0.displayName = "Before patch Tuesday"
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>snapshot.0.createTime = "2024-01-16T14:32:45.123456Z"
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>snapshot.1.uid = "2"
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>snapshot.1.filename = "vm-000002.vmdk"
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>snapshot.1.displayName = "Post-migration backup"
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>snapshot.1.createTime = "2024-01-18T09:15:22.654321Z"
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>snapshot.2.uid = "3"
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>snapshot.2.filename = "vm-000003.vmdk"
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>snapshot.2.displayName = "Current working state"
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>snapshot.2.createTime = "2024-01-20T11:47:08.987654Z"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9554,7 +9554,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>2024-01-15T09:47:32Z: Inflating snapshot chain for vm-prod-db01
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Source: /vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-000001.vmdk
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Destination: /vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-flat-merged.vmdk
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Cloning virtual disk &#39;/vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-000001.vmdk&#39;...
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Cloning virtual disk '/vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-000001.vmdk'...
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Clone: 100% done.
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Virtual disk cloned successfully. Size: 524288 MB (512 GB allocated, 287 GB used)
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Merging delta layers into flat disk...
@@ -9597,7 +9597,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">$vmsToConsolidate</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="p">}</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vmsToConsolidate</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Consolidating: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="nb">Write-Host</span> <span class="s2">"Consolidating: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">"</span>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="nv">$vm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConsolidateVMDisks_Task</span><span class="p">()</span>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p">}</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
@@ -9605,7 +9605,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">30</span>
 <a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="nv">$vmsToConsolidate</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
 <a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    <span class="nv">$status</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: ConsolidationNeeded = $status&quot;</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>    <span class="nb">Write-Host</span> <span class="s2">"</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: ConsolidationNeeded = $status"</span>
 <a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -9616,7 +9616,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  [ ] Set snapshot retention policy: maximum age 72 hours, maximum 3 snapshots per VM
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  [ ] Configure backup solution to alert on failed quiesce / snapshot delete operations
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  [ ] Review backup job failure reports weekly — failed jobs silently leave delta files
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  [ ] For VADP backups: verify &quot;Remove Snapshot after backup&quot; is always enabled
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  [ ] For VADP backups: verify "Remove Snapshot after backup" is always enabled
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  [ ] Monitor vSAN or datastore space: delta files can fill a datastore if undetected for weeks
 </code></pre></div>
 <p>In vCenter, create an alarm:

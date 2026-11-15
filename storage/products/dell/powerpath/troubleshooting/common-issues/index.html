@@ -9061,7 +9061,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <li>
 <p>Check HBA port state on the host:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — check FC HBA port state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;port_name|port_state|speed&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"port_name|port_state|speed"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm expected HBA ports are online</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_state
@@ -9101,8 +9101,8 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># (Verify at the array console that the LUN is still masked to this host)</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># 4. Check HBA port logins — trigger a LIP to force fabric re-login</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/fc_host/host0/issue_lip
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/fc_host/host1/issue_lip
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"1"</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/fc_host/host0/issue_lip
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"1"</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/fc_host/host1/issue_lip
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># 5. After LIP, rescan for devices</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>powermt<span class="w"> </span>config
@@ -9163,8 +9163,8 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <p><strong>Symptom:</strong> A new LUN has been provisioned at the array and masked to this host, but it does not appear in <code>powermt display dev=all</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Rescan the SCSI bus at the HBA level to make the OS see the new LUN</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Repeat for each HBA host adapter</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host0/scan
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host1/scan
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"- - -"</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host0/scan
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"- - -"</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host1/scan
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># On RHEL/OEL — use the rescan utility if installed</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>/usr/bin/rescan-scsi-bus.sh<span class="w"> </span>-a
@@ -9295,7 +9295,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>emcpowerd                   emcpowerd  Alive         4      EMC
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>------------------------------------------------------------------------
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>cat: cannot open file &#39;prod-db-01-powermt-baseline-2024-01-15.txt&#39; (No such file or directory)
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>cat: cannot open file 'prod-db-01-powermt-baseline-2024-01-15.txt' (No such file or directory)
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Logical device name=emcpowerc
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Physical devices=3
@@ -9422,14 +9422,14 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>emcp
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Check for module load errors in dmesg</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|emcpower\|PowerPath&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"emcp\|emcpower\|PowerPath"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Attempt to load the module manually</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>modprobe<span class="w"> </span>emcp
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># If modprobe fails with &quot;Module not found&quot;, the module is missing for this kernel</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># If modprobe fails with "Module not found", the module is missing for this kernel</span>
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Check available modules</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>find<span class="w"> </span>/lib/modules/<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;emcp*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>find<span class="w"> </span>/lib/modules/<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">"emcp*"</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># If not found: a kernel update invalidated the existing module</span>
 <a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Rebuild via DKMS (if PowerPath was installed with DKMS support)</span>
@@ -9449,8 +9449,8 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>      Memory: 48.3M
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>emcp                  245760  0
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>dmesg | grep -i &quot;emcp\|emcpower\|PowerPath&quot; | tail -30
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>[    2.847291] emcp: module license &#39;Proprietary&#39; taints kernel.
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>dmesg | grep -i "emcp\|emcpower\|PowerPath" | tail -30
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>[    2.847291] emcp: module license 'Proprietary' taints kernel.
 <a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>[    2.847401] emcp: loading out-of-tree module taints kernel.
 <a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>[    2.851234] emcp: module initialization successful
 <a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>[   14.223847] PowerPath: Initialized version 6.1.0 build 1234
@@ -9607,7 +9607,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <h2 id="path-flapping">Path Flapping<a class="headerlink" href="#path-flapping" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> The host OS syslog shows repeated path dead and path restored messages for the same path. Application I/O shows intermittent latency spikes. The path state in <code>powermt display dev=all</code> alternates between <code>alive</code> and <code>dead</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check for repeated path events in syslog</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|path dead\|path restored\|powerpath&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"emcp\|path dead\|path restored\|powerpath"</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Check HBA error statistics for the affected port</span>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>cat<span class="w"> </span>/sys/class/fc_host/host0/statistics/link_failure_count
@@ -9690,18 +9690,18 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>multipathd
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Check if Dell/EMC devices are claimed by DM-Multipath</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;DGC|EMC|SYMMETRIX&quot;</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"DGC|EMC|SYMMETRIX"</span>
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Add blacklist entries to /etc/multipath.conf</span>
 <a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># (Edit the file and add the following inside the blacklist section)</span>
 <a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># blacklist {</span>
 <a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1">#     device {</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1">#         vendor &quot;DGC&quot;</span>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1">#         product &quot;.*&quot;</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1">#         vendor "DGC"</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1">#         product ".*"</span>
 <a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1">#     }</span>
 <a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="c1">#     device {</span>
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="c1">#         vendor &quot;EMC&quot;</span>
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="c1">#         product &quot;SYMMETRIX&quot;</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="c1">#         vendor "EMC"</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="c1">#         product "SYMMETRIX"</span>
 <a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="c1">#     }</span>
 <a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="c1"># }</span>
 <a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>
@@ -9709,7 +9709,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>multipathd
 <a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>
 <a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="c1"># Confirm Dell/EMC devices are no longer in multipath -ll</span>
-<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;DGC|EMC|SYMMETRIX&quot;</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"DGC|EMC|SYMMETRIX"</span>
 <a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>
 <a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a><span class="c1"># If multipathd is not needed on this host</span>
 <a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>multipathd
@@ -9724,13 +9724,13 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>                └─2847 /sbin/multipathd -d -s
 <a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
 <a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>360060e8007042000294e047682e1001 dm-2 DGC,VRAID
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>size=500G features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>`-+- policy='service-time 0' prio=50 status=active
 <a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>  |- 2:0:0:1 sdb 8:16 active ready running
 <a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  `- 3:0:0:1 sdc 8:32 active ready running
 <a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>360060e8007042000294e047682e1002 dm-3 EMC,SYMMETRIX
-<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>size=1.0T features=&#39;1 queue_if_no_path&#39; hwhandler=&#39;1 alua&#39; wp=rw
-<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>`-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>size=1.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>`-+- policy='service-time 0' prio=50 status=active
 <a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>  |- 4:0:0:2 sdd 8:48 active ready running
 <a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>  `- 5:0:0:2 sde 8:64 active ready running
 <a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>

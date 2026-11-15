@@ -7697,10 +7697,10 @@
 
 <h1 id="windows-server-backup-and-restore">Windows Server — Backup and Restore<a class="headerlink" href="#windows-server-backup-and-restore" title="Permanent link">&para;</a></h1>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Silent installation of Veeam Agent for Windows</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Start-Process</span> <span class="n">-Wait</span> <span class="n">-FilePath</span> <span class="s2">&quot;VeeamAgentWindows.exe&quot;</span> <span class="n">-ArgumentList</span> <span class="s2">&quot;/silent /accepteula&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Start-Process</span> <span class="n">-Wait</span> <span class="n">-FilePath</span> <span class="s2">"VeeamAgentWindows.exe"</span> <span class="n">-ArgumentList</span> <span class="s2">"/silent /accepteula"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Verify service is running</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;Veeam Agent for Microsoft Windows&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">"Veeam Agent for Microsoft Windows"</span>
 </code></pre></div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Install Windows Server Backup feature</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">Windows-Server-Backup</span> <span class="n">-IncludeManagementTools</span>
@@ -7712,7 +7712,7 @@
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">New-WBPolicy</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Add the C: volume</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">$volume</span> <span class="p">=</span> <span class="nb">Get-WBVolume</span> <span class="n">-VolumePath</span> <span class="s2">&quot;C:&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">$volume</span> <span class="p">=</span> <span class="nb">Get-WBVolume</span> <span class="n">-VolumePath</span> <span class="s2">"C:"</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Add-WBVolume</span> <span class="n">-Policy</span> <span class="nv">$policy</span> <span class="n">-Volume</span> <span class="nv">$volume</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Add system state (recommended for domain controllers)</span>
@@ -7722,7 +7722,7 @@
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">Add-WBBareMetalRecovery</span> <span class="n">-Policy</span> <span class="nv">$policy</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c"># Set network backup target</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nv">$netTarget</span> <span class="p">=</span> <span class="nb">New-WBBackupTarget</span> <span class="n">-NetworkPath</span> <span class="s2">&quot;\\backupserver\WSB-SERVER01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nv">$netTarget</span> <span class="p">=</span> <span class="nb">New-WBBackupTarget</span> <span class="n">-NetworkPath</span> <span class="s2">"\\backupserver\WSB-SERVER01"</span> <span class="p">`</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nb">Add-WBBackupTarget</span> <span class="n">-Policy</span> <span class="nv">$policy</span> <span class="n">-Target</span> <span class="nv">$netTarget</span>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
@@ -7750,25 +7750,25 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Veeam: Mount a restore point to a drive letter for manual file copy</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># (Available via VBR console for agent backups managed by VBR)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Mount-VBRBackup</span> <span class="n">-BackupName</span> <span class="s2">&quot;SERVER01-Daily&quot;</span> <span class="n">-RestorePoint</span> <span class="p">(</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">Get-VBRRestorePoint</span> <span class="n">-BackupName</span> <span class="s2">&quot;SERVER01-Daily&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Mount-VBRBackup</span> <span class="n">-BackupName</span> <span class="s2">"SERVER01-Daily"</span> <span class="n">-RestorePoint</span> <span class="p">(</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">Get-VBRRestorePoint</span> <span class="n">-BackupName</span> <span class="s2">"SERVER01-Daily"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Create Veeam Recovery Media (run before disaster)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># From Veeam Agent control panel: Recovery Media &gt; Create Recovery Media</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># Output: ISO file or directly to USB</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Or via VBR server:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">New-VBRLinuxIsoMediaFile</span> <span class="n">-OutputPath</span> <span class="s2">&quot;C:\Media\VeeamRecovery.iso&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">New-VBRLinuxIsoMediaFile</span> <span class="n">-OutputPath</span> <span class="s2">"C:\Media\VeeamRecovery.iso"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Alternatively, use wbadmin for BMR from the command line (WinRE environment)</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">wbadmin</span> <span class="n">get</span> <span class="n">versions</span> <span class="n">-backuptarget</span><span class="p">:\\</span><span class="n">backupserver</span><span class="p">\</span><span class="n">WSB-SERVER01</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">wbadmin</span> <span class="nb">start </span><span class="n">sysrecovery</span> <span class="n">-version</span><span class="p">:&lt;</span><span class="n">version-identifier</span><span class="p">&gt;</span> <span class="n">-backuptarget</span><span class="p">:\\</span><span class="n">backupserver</span><span class="p">\</span><span class="n">WSB-SERVER01</span> <span class="n">-recreateDisks</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># List restore points</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-WBBackupSet</span> <span class="n">-BackupTarget</span> <span class="p">(</span><span class="nb">New-WBBackupTarget</span> <span class="n">-NetworkPath</span> <span class="s2">&quot;\\backupserver\WSB-SERVER01&quot;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">))</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-WBBackupSet</span> <span class="n">-BackupTarget</span> <span class="p">(</span><span class="nb">New-WBBackupTarget</span> <span class="n">-NetworkPath</span> <span class="s2">"\\backupserver\WSB-SERVER01"</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">))</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Start a file recovery</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Start-WBFileRecovery</span> <span class="n">-BackupSet</span> <span class="p">&lt;</span><span class="n">backupset-object</span><span class="p">&gt;</span> <span class="n">-SourcePath</span> <span class="s2">&quot;C:\Data\file.txt&quot;</span> <span class="n">-TargetPath</span> <span class="s2">&quot;C:\Restored\&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Start-WBFileRecovery</span> <span class="n">-BackupSet</span> <span class="p">&lt;</span><span class="n">backupset-object</span><span class="p">&gt;</span> <span class="n">-SourcePath</span> <span class="s2">"C:\Data\file.txt"</span> <span class="n">-TargetPath</span> <span class="s2">"C:\Restored\"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>REM Boot into Directory Services Restore Mode (DSRM) — F8 at boot
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>REM Perform authoritative or non-authoritative restore
@@ -7778,7 +7778,7 @@
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>REM Authoritative restore (use to restore deleted AD objects)
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>REM After wbadmin restore, run ntdsutil before DC restarts replication:
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>ntdsutil &quot;activate instance ntds&quot; &quot;authoritative restore&quot; &quot;restore subtree OU=Users,DC=corp,DC=local&quot; quit quit
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>ntdsutil "activate instance ntds" "authoritative restore" "restore subtree OU=Users,DC=corp,DC=local" quit quit
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Veeam — verify a specific restore point (runs checksum validation)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c"># In VBR console: Jobs &gt; right-click job &gt; Verify</span>
@@ -7786,36 +7786,36 @@
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Windows Server Backup — verify last backup</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">$summary</span> <span class="p">=</span> <span class="nb">Get-WBSummary</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$summary</span><span class="p">.</span><span class="n">LastBackupResultHR</span> <span class="o">-ne</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="nb">Write-Warning</span> <span class="s2">&quot;Last WSB backup failed with HR: </span><span class="p">$(</span><span class="nv">$summary</span><span class="p">.</span><span class="n">LastBackupResultHR</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="nb">Write-Warning</span> <span class="s2">"Last WSB backup failed with HR: </span><span class="p">$(</span><span class="nv">$summary</span><span class="p">.</span><span class="n">LastBackupResultHR</span><span class="p">)</span><span class="s2">"</span>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c"># Test file-level restore monthly</span>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c"># 1. Mount a restore point or image</span>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c"># 2. Copy a test file to a staging location</span>
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c"># 3. Verify the file matches the source (compare hash)</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nv">$sourceHash</span> <span class="p">=</span> <span class="nb">Get-FileHash</span> <span class="s2">&quot;C:\Data\critical-file.db&quot;</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nv">$restoredHash</span> <span class="p">=</span> <span class="nb">Get-FileHash</span> <span class="s2">&quot;C:\Restored\critical-file.db&quot;</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nv">$sourceHash</span> <span class="p">=</span> <span class="nb">Get-FileHash</span> <span class="s2">"C:\Data\critical-file.db"</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nv">$restoredHash</span> <span class="p">=</span> <span class="nb">Get-FileHash</span> <span class="s2">"C:\Restored\critical-file.db"</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span>
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$sourceHash</span><span class="p">.</span><span class="n">Hash</span> <span class="o">-eq</span> <span class="nv">$restoredHash</span><span class="p">.</span><span class="n">Hash</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Restore validation PASSED&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    <span class="nb">Write-Host</span> <span class="s2">"Restore validation PASSED"</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
 <a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="nb">Write-Warning</span> <span class="s2">&quot;Hash mismatch — investigate restore&quot;</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="nb">Write-Warning</span> <span class="s2">"Hash mismatch — investigate restore"</span>
 <a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="p">}</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Check Veeam Agent service</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;Veeam Agent for Microsoft Windows&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">"Veeam Agent for Microsoft Windows"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Check Veeam Agent event log</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Get-WinEvent</span> <span class="n">-ProviderName</span> <span class="s2">&quot;Veeam Agent&quot;</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Get-WinEvent</span> <span class="n">-ProviderName</span> <span class="s2">"Veeam Agent"</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">LevelDisplayName</span><span class="p">,</span> <span class="n">Message</span>
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c"># Alert on WSB failures (add to monitoring task)</span>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nv">$summary</span> <span class="p">=</span> <span class="nb">Get-WBSummary</span>
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$summary</span><span class="p">.</span><span class="n">LastBackupResultHR</span> <span class="o">-ne</span> <span class="n">0</span> <span class="o">-or</span>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="nv">$summary</span><span class="p">.</span><span class="n">LastSuccessfulBackupTime</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">25</span><span class="p">))</span> <span class="p">{</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="nb">Send-MailMessage</span> <span class="n">-To</span> <span class="s2">&quot;alerts@corp.local&quot;</span> <span class="n">-From</span> <span class="s2">&quot;monitor@corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>      <span class="n">-Subject</span> <span class="s2">&quot;Backup Alert: SERVER01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>      <span class="n">-Body</span> <span class="s2">&quot;Last successful backup: </span><span class="p">$(</span><span class="nv">$summary</span><span class="p">.</span><span class="n">LastSuccessfulBackupTime</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>      <span class="n">-SmtpServer</span> <span class="s2">&quot;smtp.example.local&quot;</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="nb">Send-MailMessage</span> <span class="n">-To</span> <span class="s2">"alerts@corp.local"</span> <span class="n">-From</span> <span class="s2">"monitor@corp.local"</span> <span class="p">`</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>      <span class="n">-Subject</span> <span class="s2">"Backup Alert: SERVER01"</span> <span class="p">`</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>      <span class="n">-Body</span> <span class="s2">"Last successful backup: </span><span class="p">$(</span><span class="nv">$summary</span><span class="p">.</span><span class="n">LastSuccessfulBackupTime</span><span class="p">)</span><span class="s2">"</span> <span class="p">`</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>      <span class="n">-SmtpServer</span> <span class="s2">"smtp.example.local"</span>
 <a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="p">}</span>
 </code></pre></div></p>
 <p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpV0L0OwjAMBODdT2ExwQCIoUsHxK-6MUAFC0uUGrBKneIkIN6eFIQE2-n86QbPfDAaYnMFX7O0Rk2Dnm6RxNJc1T3KC9tayHucjLIfpC5KZZ0KKWYAqQxsuTUSsLdzUS0dpX9gqdzD4470TjrooUl5u_zXC2Pr2OJaziz0JutN8U9Ko2cKOMa9idfwNmVRAqQtHE47n-OelE9PSLmr0jnHg3IgSBGHX7V0cmJtqPrAVKeNHFdOCGBGUnWveAF5UFp3?" /></p>

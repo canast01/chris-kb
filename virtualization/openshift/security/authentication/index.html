@@ -7403,7 +7403,7 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <p>Adding or removing users requires updating the Secret in-place — the OAuth server watches for changes.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Extract current htpasswd file from the Secret</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>htpass-secret<span class="w"> </span>-n<span class="w"> </span>openshift-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.htpasswd}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>/tmp/users.htpasswd
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.htpasswd}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>/tmp/users.htpasswd
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. Add a new user</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>htpasswd<span class="w"> </span>-bB<span class="w"> </span>/tmp/users.htpasswd<span class="w"> </span>newuser<span class="w"> </span>MyP@ssw0rd
@@ -7424,7 +7424,7 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Adding password for user newuser
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Deleting user olduser
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>secret/htpass-secret data updated
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>deployment &quot;oauth-openshift&quot; successfully rolled out
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>deployment "oauth-openshift" successfully rolled out
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7454,7 +7454,7 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <h2 id="ldap-identity-provider">LDAP Identity Provider<a class="headerlink" href="#ldap-identity-provider" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create bind password secret</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>ldap-bind-password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">bindPassword</span><span class="o">=</span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">bindPassword</span><span class="o">=</span><span class="s1">'&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-n<span class="w"> </span>openshift-config
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Create CA cert configmap (required for LDAPS)</span>
@@ -7473,18 +7473,18 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s">  - name: ldap</span>
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s">    type: LDAP</span>
 <a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s">    ldap:</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s">      url: &quot;ldaps://ad.example.com/CN=Users,DC=example,DC=com?sAMAccountName&quot;</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="s">      bindDN: &quot;CN=svc-ocp,OU=ServiceAccounts,DC=example,DC=com&quot;</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s">      url: "ldaps://ad.example.com/CN=Users,DC=example,DC=com?sAMAccountName"</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="s">      bindDN: "CN=svc-ocp,OU=ServiceAccounts,DC=example,DC=com"</span>
 <a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="s">      bindPassword:</span>
 <a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="s">        name: ldap-bind-password</span>
 <a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="s">      insecure: false</span>
 <a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="s">      ca:</span>
 <a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="s">        name: ldap-ca</span>
 <a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="s">      attributes:</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="s">        id: [&quot;dn&quot;]</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="s">        email: [&quot;mail&quot;]</span>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="s">        name: [&quot;cn&quot;]</span>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="s">        preferredUsername: [&quot;sAMAccountName&quot;]</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="s">        id: ["dn"]</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="s">        email: ["mail"]</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="s">        name: ["cn"]</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="s">        preferredUsername: ["sAMAccountName"]</span>
 <a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="s">EOF</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>secret/ldap-bind-password created
@@ -7520,7 +7520,7 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <p>OIDC providers (Okta, Azure AD, Keycloak, Dex) issue JWTs verified by the OAuth server. MFA is handled entirely by the external IdP.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create client secret</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>oidc-client-secret<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">clientSecret</span><span class="o">=</span><span class="s1">&#39;&lt;oidc-client-secret&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">clientSecret</span><span class="o">=</span><span class="s1">'&lt;oidc-client-secret&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-n<span class="w"> </span>openshift-config
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
@@ -7533,15 +7533,15 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s">  - name: okta</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s">    type: OpenID</span>
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s">    openID:</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s">      clientID: &quot;0oa1b2c3d4e5&quot;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s">      clientID: "0oa1b2c3d4e5"</span>
 <a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s">      clientSecret:</span>
 <a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="s">        name: oidc-client-secret</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="s">      issuer: &quot;https://dev-12345.okta.com&quot;</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="s">      issuer: "https://dev-12345.okta.com"</span>
 <a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="s">      claims:</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="s">        preferredUsername: [&quot;email&quot;]</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="s">        name: [&quot;name&quot;]</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="s">        email: [&quot;email&quot;]</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="s">        groups: [&quot;groups&quot;]</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="s">        preferredUsername: ["email"]</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="s">        name: ["name"]</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="s">        email: ["email"]</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="s">        groups: ["groups"]</span>
 <a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="s">EOF</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>secret/oidc-client-secret created
@@ -7579,7 +7579,7 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Extend access token TTL (example: 48h)</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>oc<span class="w"> </span>patch<span class="w"> </span>oauth<span class="w"> </span>cluster<span class="w"> </span>--type<span class="o">=</span>merge<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;tokenConfig&quot;:{&quot;accessTokenMaxAgeSeconds&quot;:172800}}}&#39;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">'{"spec":{"tokenConfig":{"accessTokenMaxAgeSeconds":172800}}}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>tokenConfig:
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  accessTokenInactivityTimeoutSeconds: 300
@@ -7675,7 +7675,7 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <h2 id="token-management">Token Management<a class="headerlink" href="#token-management" title="Permanent link">&para;</a></h2>
 <h3 id="checking-and-rotating-tokens">Checking and Rotating Tokens<a class="headerlink" href="#checking-and-rotating-tokens" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># View current token stored in kubeconfig</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>oc<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span>--minify<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.users[0].user.token}&#39;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>oc<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span>--minify<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.users[0].user.token}'</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Show token for the current session</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>oc<span class="w"> </span>whoami<span class="w"> </span>--show-token
@@ -7727,14 +7727,14 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Filter by user</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>oc<span class="w"> </span>get<span class="w"> </span>oauthaccesstokens<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | select(.userName==&quot;alice&quot;) | {name: .metadata.name, expires: .expiresIn}&#39;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.items[] | select(.userName=="alice") | {name: .metadata.name, expires: .expiresIn}'</span>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Revoke a specific token (immediate effect)</span>
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>oc<span class="w"> </span>delete<span class="w"> </span>oauthaccesstoken<span class="w"> </span>&lt;token-name&gt;
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
 <a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Revoke all tokens for a user (force re-login)</span>
 <a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>oc<span class="w"> </span>get<span class="w"> </span>oauthaccesstokens<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.items[] | select(.userName==&quot;alice&quot;) | .metadata.name&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.items[] | select(.userName=="alice") | .metadata.name'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">  </span>xargs<span class="w"> </span>oc<span class="w"> </span>delete<span class="w"> </span>oauthaccesstoken
 <a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
 <a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># Invalidate current session (client-side)</span>
@@ -7747,21 +7747,21 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>sha256~efgh012ijk345lmn678opqr   charlie          2024-01-12T16:33:21Z 2024-01-19T16:33:21Z
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>{
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  &quot;name&quot;: &quot;sha256~abc123def456ghi789jkl&quot;,
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  &quot;expires&quot;: 604800
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  "name": "sha256~abc123def456ghi789jkl",
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  "expires": 604800
 <a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>}
 <a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>{
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  &quot;name&quot;: &quot;sha256~mnop456qrs789tuv012wxyz&quot;,
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>  &quot;expires&quot;: 604800
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  "name": "sha256~mnop456qrs789tuv012wxyz",
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>  "expires": 604800
 <a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>}
 <a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>oauthaccesstoken.oauth.openshift.io &quot;sha256~abc123def456ghi789jkl&quot; deleted
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>oauthaccesstoken.oauth.openshift.io "sha256~abc123def456ghi789jkl" deleted
 <a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>oauthaccesstoken.oauth.openshift.io &quot;sha256~abc123def456ghi789jkl&quot; deleted
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>oauthaccesstoken.oauth.openshift.io &quot;sha256~mnop456qrs789tuv012wxyz&quot; deleted
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>oauthaccesstoken.oauth.openshift.io "sha256~abc123def456ghi789jkl" deleted
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>oauthaccesstoken.oauth.openshift.io "sha256~mnop456qrs789tuv012wxyz" deleted
 <a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
 <a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Logging out...
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>Removed config entry for context &quot;default/api-prod-cluster-01:6443/system:admin&quot;
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>Removed config entry for context "default/api-prod-cluster-01:6443/system:admin"
 <a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>Logged out.
 </code></pre></div>
 <div class="admonition warning">
@@ -7802,10 +7802,10 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Login successful.
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>You have access to 67 projects, the list has been truncated. You can list all projects with &#39;oc projects&#39;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>You have access to 67 projects, the list has been truncated. You can list all projects with 'oc projects'
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Using project &quot;default&quot;.
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>clusterrolebinding.rbac.authorization.k8s.io/cluster-admin added: &quot;alice&quot;
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Using project "default".
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>clusterrolebinding.rbac.authorization.k8s.io/cluster-admin added: "alice"
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>NAME                                    STATUS   ROLES    AGE   VERSION
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>worker-01.prod.internal                 Ready    worker   45d   v1.27.8+4fab27b
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>worker-02.prod.internal                 Ready    worker   45d   v1.27.8+4fab27b
@@ -7816,7 +7816,7 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 <a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>authentication                             4.13.12   True        False         False      2d      
 <a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>baremetal                                  4.13.12   True        False         False      2d      
 <a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>cloud-controller-manager                   4.13.12   True        False         False      2d      
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>secret &quot;kubeadmin&quot; deleted
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>secret "kubeadmin" deleted
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

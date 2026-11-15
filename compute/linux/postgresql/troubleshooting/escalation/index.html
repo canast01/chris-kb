@@ -8235,13 +8235,13 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <h2 id="step-by-step-data-collection">Step-by-Step Data Collection<a class="headerlink" href="#step-by-step-data-collection" title="Permanent link">&para;</a></h2>
 <h3 id="1-get-the-postgresql-version-and-configuration">1. Get the PostgreSQL version and configuration<a class="headerlink" href="#1-get-the-postgresql-version-and-configuration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version();&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT version();"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Key configuration parameters</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW ALL;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SHOW ALL;"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Data directory and log path</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW data_directory; SHOW log_directory;&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SHOW data_directory; SHOW log_directory;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>version
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>────────────────────────────────────────────────────────────────────────────────
@@ -8295,11 +8295,11 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-500<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-error-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.log
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Search for PANIC and FATAL entries (the critical ones)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PANIC|FATAL|ERROR&quot;</span><span class="w"> </span>/tmp/pg-error-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"PANIC|FATAL|ERROR"</span><span class="w"> </span>/tmp/pg-error-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d%H%M<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>2024-01-15 09:47:23.156 UTC [8432] LOG:  database system was interrupted; last known up at 2024-01-15 09:45:12 UTC
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15 09:47:24.892 UTC [8432] FATAL:  could not open file &quot;pg_wal/000000010000000000000042&quot;: No such file or directory
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15 09:47:25.103 UTC [8445] ERROR:  relation &quot;public.users&quot; does not exist at character 15
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15 09:47:24.892 UTC [8432] FATAL:  could not open file "pg_wal/000000010000000000000042": No such file or directory
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15 09:47:25.103 UTC [8445] ERROR:  relation "public.users" does not exist at character 15
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15 09:47:26.541 UTC [8450] PANIC:  write failed: No space left on device
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2024-01-15 09:47:27.234 UTC [8451] ERROR:  permission denied for schema public
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2024-01-15 09:47:28.667 UTC [8452] FATAL:  remaining connection slots are reserved for non-replication superuser connections
@@ -8329,18 +8329,18 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </div>
 <h3 id="3-capture-active-sessions-and-lock-waits">3. Capture active sessions and lock waits<a class="headerlink" href="#3-capture-active-sessions-and-lock-waits" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Active sessions with duration and query</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-activity-$(date +%Y%m%d%H%M).txt</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; 'SQL' &gt; /tmp/pg-activity-$(date +%Y%m%d%H%M).txt</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s">SELECT pid, usename, application_name, client_addr, state,</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">       now() - query_start AS query_duration,</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s">       wait_event_type, wait_event,</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s">       LEFT(query, 200) AS query_text</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s">FROM pg_stat_activity</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s">WHERE state != &#39;idle&#39;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s">WHERE state != 'idle'</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s">ORDER BY query_duration DESC NULLS LAST;</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s">SQL</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Lock waits (sessions blocked waiting for a lock)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt;&gt; /tmp/pg-activity-$(date +%Y%m%d%H%M).txt</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; 'SQL' &gt;&gt; /tmp/pg-activity-$(date +%Y%m%d%H%M).txt</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s">SELECT blocked.pid AS blocked_pid,</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s">       blocked.query AS blocked_query,</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s">       blocking.pid AS blocking_pid,</span>
@@ -8355,7 +8355,7 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pid  | usename  | application_name | client_addr | state  | query_duration | wait_event_type | wait_event |                query_text
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>------+----------+------------------+-------------+--------+----------------+-----------------+------------+------------------------------------------
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a> 4521 | postgres | psql             | 127.0.0.1   | active | 00:02:34.521   | IO              | DataFileRead | SELECT * FROM large_table WHERE id &gt; 50
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a> 3847 | appuser  | java-app         | 192.168.1.5 | active | 00:01:12.043   | Lock            | transactionid | UPDATE orders SET status = &#39;shipped&#39; W
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a> 3847 | appuser  | java-app         | 192.168.1.5 | active | 00:01:12.043   | Lock            | transactionid | UPDATE orders SET status = 'shipped' W
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a> 2156 | postgres | pgAdmin          | 10.0.0.42   | active | 00:00:45.892   |                 |            | CREATE INDEX idx_orders_date ON orders(
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a> 5234 | postgres | psql             | 127.0.0.1   | active | 00:00:08.156   | CPU             |            | VACUUM ANALYZE customers;
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>(4 rows)
@@ -8392,7 +8392,7 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </div>
 <h3 id="4-capture-replication-state-if-primary-with-replicas">4. Capture replication state (if primary with replicas)<a class="headerlink" href="#4-capture-replication-state-if-primary-with-replicas" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the primary server</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-replication-$(date +%Y%m%d%H%M).txt</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; 'SQL' &gt; /tmp/pg-replication-$(date +%Y%m%d%H%M).txt</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s">SELECT client_addr, state, sent_lsn, write_lsn, flush_lsn, replay_lsn,</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s">       pg_wal_lsn_diff(sent_lsn, replay_lsn) AS lag_bytes,</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s">       sync_state</span>
@@ -8447,7 +8447,7 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>df<span class="w"> </span>-h<span class="w">  </span><span class="c1"># full disk picture</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Autovacuum status (tables with high dead tuple counts)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt; /tmp/pg-vacuum-$(date +%Y%m%d).txt</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; 'SQL' &gt; /tmp/pg-vacuum-$(date +%Y%m%d).txt</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s">SELECT schemaname, relname, n_live_tup, n_dead_tup,</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s">       round(n_dead_tup::numeric / NULLIF(n_live_tup + n_dead_tup, 0) * 100, 1) AS dead_pct,</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s">       last_autovacuum, last_autoanalyze</span>
@@ -8457,7 +8457,7 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s">SQL</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># XID wraparound distance (tables needing freeze)</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; &#39;SQL&#39; &gt;&gt; /tmp/pg-vacuum-$(date +%Y%m%d).txt</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="s">&lt;&lt; 'SQL' &gt;&gt; /tmp/pg-vacuum-$(date +%Y%m%d).txt</span>
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s">SELECT datname, age(datfrozenxid) AS xid_age,</span>
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s">       2147483647 - age(datfrozenxid) AS xids_remaining</span>
 <a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s">FROM pg_database</span>
@@ -8523,13 +8523,13 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Changes in 24h before the issue:
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  - 10:00: nightly maintenance job ran; included ALTER TABLE orders ADD COLUMN
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  - 12:00: application reports connection timeouts from app servers
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  - 12:05: pg_stat_activity: 150 sessions in state &quot;idle in transaction&quot; for &gt; 30 min
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  - 12:10: pg_locks: 80 sessions blocked waiting for lock on &quot;orders&quot; table
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  - 12:05: pg_stat_activity: 150 sessions in state "idle in transaction" for &gt; 30 min
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  - 12:10: pg_locks: 80 sessions blocked waiting for lock on "orders" table
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Steps already taken:
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  - Identified head blocker: PID 12345, idle in transaction since 10:00 UTC
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>  - Did NOT cancel the blocking session (awaiting DBA review)
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>  - Did NOT restart PostgreSQL
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Blast radius: All writes to &quot;orders&quot; table blocked; e-commerce checkout halted; 500 users affected
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Blast radius: All writes to "orders" table blocked; e-commerce checkout halted; 500 users affected
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-case">How to Open the Case<a class="headerlink" href="#how-to-open-the-case" title="Permanent link">&para;</a></h2>
@@ -8615,22 +8615,22 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>postgresql
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Active session count and states</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT state, count(*) FROM pg_stat_activity GROUP BY state;&quot;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT state, count(*) FROM pg_stat_activity GROUP BY state;"</span>
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Lock waits (non-zero = blocking occurring)</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_locks WHERE NOT granted;&quot;</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT count(*) FROM pg_locks WHERE NOT granted;"</span>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Replication lag (run on primary)</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT client_addr, state, pg_wal_lsn_diff(sent_lsn, replay_lsn) AS lag_bytes FROM pg_stat_replication;&quot;</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT client_addr, state, pg_wal_lsn_diff(sent_lsn, replay_lsn) AS lag_bytes FROM pg_stat_replication;"</span>
 <a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
 <a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># XID wraparound distance (run on each DB)</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;&quot;</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;"</span>
 <a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
 <a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Disk space on PGDATA and WAL</span>
 <a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="nv">$PGDATA</span>
 <a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>
 <a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="c1"># Error log recent entries</span>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PANIC|FATAL|ERROR&quot;</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"PANIC|FATAL|ERROR"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>● postgresql.service - PostgreSQL Database Server
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>     Loaded: loaded (/lib/systemd/postgresql.service; enabled; vendor preset: enabled)
@@ -8712,19 +8712,19 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>vacuumdb<span class="w"> </span>--dbname<span class="o">=</span>app_prod<span class="w"> </span>--freeze<span class="w"> </span>--analyze<span class="w"> </span>--echo
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;&quot;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vacuumdb: vacuuming database &quot;postgres&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vacuumdb: vacuuming database "postgres"
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>VACUUM FREEZE ANALYZE;
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>vacuumdb: vacuuming database &quot;template1&quot;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>vacuumdb: vacuuming database "template1"
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>VACUUM FREEZE ANALYZE;
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vacuumdb: vacuuming database &quot;template0&quot;
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vacuumdb: vacuuming database "template0"
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>VACUUM FREEZE ANALYZE;
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>vacuumdb: vacuuming database &quot;app_prod&quot;
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>vacuumdb: vacuuming database "app_prod"
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>VACUUM FREEZE ANALYZE;
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>vacuumdb: vacuuming database &quot;monitoring&quot;
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>vacuumdb: vacuuming database "monitoring"
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>VACUUM FREEZE ANALYZE;
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>vacuumdb: vacuuming database &quot;app_staging&quot;
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>vacuumdb: vacuuming database "app_staging"
 <a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>VACUUM FREEZE ANALYZE;
 <a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
 <a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a> datname  | age

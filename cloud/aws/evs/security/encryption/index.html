@@ -8614,7 +8614,7 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Backed up with vCenter; no external KMS dependency</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># Enable vSAN encryption via PowerCLI</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;EVS-Management-Cluster&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">"EVS-Management-Cluster"</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-VsanClusterConfiguration</span> <span class="nv">$vsanConfig</span> <span class="n">-EncryptionEnabled</span> <span class="nv">$true</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Note: enabling encryption triggers full data rekey; 30-60 min for small clusters</span>
@@ -8624,21 +8624,21 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c"># Check which key provider is active</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Encryption enabled: </span><span class="p">$(</span><span class="nv">$vsanConfig</span><span class="p">.</span><span class="n">EncryptionEnabled</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Key provider: </span><span class="p">$(</span><span class="nv">$vsanConfig</span><span class="p">.</span><span class="n">KeyProviderId</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Write-Host</span> <span class="s2">"Encryption enabled: </span><span class="p">$(</span><span class="nv">$vsanConfig</span><span class="p">.</span><span class="n">EncryptionEnabled</span><span class="p">)</span><span class="s2">"</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">Write-Host</span> <span class="s2">"Key provider: </span><span class="p">$(</span><span class="nv">$vsanConfig</span><span class="p">.</span><span class="n">KeyProviderId</span><span class="p">)</span><span class="s2">"</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c"># Check per-host encryption state</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="nv">$hostView</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-Id</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: </span><span class="p">$(</span><span class="nv">$hostView</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">VsanHostConfig</span><span class="p">.</span><span class="n">NetworkInfo</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="nb">Write-Host</span> <span class="s2">"</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: </span><span class="p">$(</span><span class="nv">$hostView</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">VsanHostConfig</span><span class="p">.</span><span class="n">NetworkInfo</span><span class="p">)</span><span class="s2">"</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p">}</span>
 </code></pre></div>
 <p>Enabling encryption on an existing cluster triggers a rolling disk reformat. Every vSAN object must be re-written in encrypted form. For a cluster with significant data, this can take hours. Plan a maintenance window and ensure at least one full FTT (Failures to Tolerate) worth of headroom before starting. Monitor resync progress with:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Monitor vSAN resync progress during encryption enablement</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">while</span> <span class="p">(</span><span class="nv">$true</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nv">$resync</span> <span class="p">=</span> <span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nv">$stats</span> <span class="p">=</span> <span class="nv">$resync</span><span class="p">.</span><span class="n">QueryVsanClusterHealthSummary</span><span class="p">(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="p">@(</span><span class="s2">&quot;vsanRebalanceHealth&quot;</span><span class="p">),</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="s2">&quot;defaultView&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="nv">$stats</span><span class="p">.</span><span class="n">Groups</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GroupName</span><span class="p">)</span><span class="s2">: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GroupHealth</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nv">$resync</span> <span class="p">=</span> <span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">"VsanVcClusterHealthSystem-vsan-cluster-health-system"</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nv">$stats</span> <span class="p">=</span> <span class="nv">$resync</span><span class="p">.</span><span class="n">QueryVsanClusterHealthSummary</span><span class="p">(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="p">@(</span><span class="s2">"vsanRebalanceHealth"</span><span class="p">),</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="s2">"defaultView"</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="nv">$stats</span><span class="p">.</span><span class="n">Groups</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">"</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GroupName</span><span class="p">)</span><span class="s2">: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GroupHealth</span><span class="p">)</span><span class="s2">"</span> <span class="p">}</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">60</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
 </code></pre></div>
@@ -8649,13 +8649,13 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 <p><strong>KMIP proxy (e.g., HashiCorp Vault, Thales):</strong> Run a KMIP proxy VM in the management cluster VPC. The proxy forwards KMIP requests from vCenter to AWS KMS using the KMS Encrypt/Decrypt API. Thales CipherTrust Manager and HashiCorp Vault Enterprise both support this pattern.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create KMS key for vSAN/VM encryption</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>kms<span class="w"> </span>create-key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;EVS vSAN Encryption Key&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">"EVS vSAN Encryption Key"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--key-usage<span class="w"> </span>ENCRYPT_DECRYPT<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--key-spec<span class="w"> </span>SYMMETRIC_DEFAULT<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">TagKey</span><span class="o">=</span>Project,TagValue<span class="o">=</span>evs
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Get key ID for vCenter KMS configuration</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>kms<span class="w"> </span>describe-key<span class="w"> </span>--key-id<span class="w"> </span>&lt;key-id&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;KeyMetadata.[KeyId,Arn]&#39;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>kms<span class="w"> </span>describe-key<span class="w"> </span>--key-id<span class="w"> </span>&lt;key-id&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">'KeyMetadata.[KeyId,Arn]'</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Configure external KMS in vCenter</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># vCenter → Administration → Key Providers → Add Standard Key Provider</span>
@@ -8669,17 +8669,17 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>aws<span class="w"> </span>kms<span class="w"> </span>get-key-rotation-status<span class="w"> </span>--key-id<span class="w"> </span>&lt;key-id&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    &quot;KeyMetadata&quot;: {
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        &quot;AWSAccountId&quot;: &quot;123456789012&quot;,
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        &quot;KeyId&quot;: &quot;arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        &quot;Arn&quot;: &quot;arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        &quot;CreationDate&quot;: &quot;2024-01-15T14:32:18.123000+00:00&quot;,
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        &quot;Enabled&quot;: true,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        &quot;Description&quot;: &quot;EVS vSAN Encryption Key&quot;,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        &quot;KeyUsage&quot;: &quot;ENCRYPT_DECRYPT&quot;,
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        &quot;KeySpec&quot;: &quot;SYMMETRIC_DEFAULT&quot;,
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        &quot;KeyState&quot;: &quot;Enabled&quot;,
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        &quot;Origin&quot;: &quot;AWS_KMS&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    "KeyMetadata": {
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        "AWSAccountId": "123456789012",
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        "KeyId": "arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        "Arn": "arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        "CreationDate": "2024-01-15T14:32:18.123000+00:00",
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        "Enabled": true,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        "Description": "EVS vSAN Encryption Key",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        "KeyUsage": "ENCRYPT_DECRYPT",
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        "KeySpec": "SYMMETRIC_DEFAULT",
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        "KeyState": "Enabled",
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        "Origin": "AWS_KMS"
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    }
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>}
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
@@ -8689,7 +8689,7 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>(no output — command completes silently)
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>{
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    &quot;KeyRotationEnabled&quot;: true
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    "KeyRotationEnabled": true
 <a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -8721,23 +8721,23 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 - The cluster does not have vSAN (VMs stored on NFS/VMFS datastores).</p>
 <p>VM Encryption uses Storage Policy Based Management (SPBM). Create a storage policy with the VM Encryption capability, then apply that policy to target VMs.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create VM Storage Policy with encryption</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Encrypted&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;Encrypted VM policy&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">"VM-Encrypted"</span> <span class="n">-Description</span> <span class="s2">"Encrypted VM policy"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Associate encryption capability with policy</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span><span class="nb">Get-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;vmencryption.enabled&quot;</span><span class="p">)</span> <span class="n">-Value</span> <span class="nv">$true</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span><span class="nb">Get-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">"vmencryption.enabled"</span><span class="p">)</span> <span class="n">-Value</span> <span class="nv">$true</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  <span class="p">)</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">)</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Set-SpbmStoragePolicy</span> <span class="n">-StoragePolicy</span> <span class="nv">$policy</span> <span class="n">-RuleSet</span> <span class="nv">$rule</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Apply policy to VM</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;my-vm&quot;</span><span class="p">)</span> <span class="n">-StoragePolicy</span> <span class="s2">&quot;VM-Encrypted&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">"my-vm"</span><span class="p">)</span> <span class="n">-StoragePolicy</span> <span class="s2">"VM-Encrypted"</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># This triggers encryption of VM home + all disks — backup the VM first</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c"># Check compliance status for VMs using the encrypted policy</span>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nb">Get-SpbmEntityConfiguration</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">StoragePolicy</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;VM-Encrypted&quot;</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">StoragePolicy</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">"VM-Encrypted"</span>
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="n">ComplianceTaskStatus</span>
 </code></pre></div>
 <p>VM Encryption and vSAN Encryption can coexist. With both enabled, VM data is encrypted at the VM layer and then stored in an already-encrypted vSAN object. This is sometimes called "double encryption" and may be required by certain compliance frameworks.</p>
@@ -8745,74 +8745,74 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 <p>VCF components use self-signed certificates by default after bringup. Replace these with CA-signed certificates for production environments to avoid certificate trust warnings and to satisfy compliance requirements.</p>
 <p>SDDC Manager manages certificate lifecycle for all VCF components (vCenter, NSX-T, SDDC Manager itself, ESXi hosts).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate a CSR for vCenter via SDDC Manager API</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SDDC_USER</span><span class="s2">:</span><span class="nv">$SDDC_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://sddc-manager.vcf.internal/v1/certificates/csrs&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;csrGenerationSpec&quot;: {</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">      &quot;country&quot;: &quot;US&quot;,</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">      &quot;state&quot;: &quot;California&quot;,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">      &quot;locality&quot;: &quot;San Jose&quot;,</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">      &quot;organization&quot;: &quot;Example Corp&quot;,</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">      &quot;organizationUnit&quot;: &quot;Platform Engineering&quot;,</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">      &quot;keySize&quot;: 2048,</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s1">      &quot;keyAlgorithm&quot;: &quot;RSA&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">"</span><span class="nv">$SDDC_USER</span><span class="s2">:</span><span class="nv">$SDDC_PASS</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">"https://sddc-manager.vcf.internal/v1/certificates/csrs"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    "csrGenerationSpec": {</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">      "country": "US",</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">      "state": "California",</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">      "locality": "San Jose",</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">      "organization": "Example Corp",</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">      "organizationUnit": "Platform Engineering",</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">      "keySize": 2048,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s1">      "keyAlgorithm": "RSA"</span>
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s1">    },</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">    &quot;resources&quot;: [</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s1">      {&quot;fqdn&quot;: &quot;vcenter.vcf.internal&quot;, &quot;type&quot;: &quot;VCENTER&quot;, &quot;name&quot;: &quot;vcenter&quot;}</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">    "resources": [</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s1">      {"fqdn": "vcenter.vcf.internal", "type": "VCENTER", "name": "vcenter"}</span>
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s1">    ]</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">  }'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># After signing the CSR with your CA, import the signed certificate</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SDDC_USER</span><span class="s2">:</span><span class="nv">$SDDC_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://sddc-manager.vcf.internal/v1/certificates&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s1">    &quot;caType&quot;: &quot;Microsoft&quot;,</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="s1">    &quot;pemCertificates&quot;: [</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">"</span><span class="nv">$SDDC_USER</span><span class="s2">:</span><span class="nv">$SDDC_PASS</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">"https://sddc-manager.vcf.internal/v1/certificates"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s1">    "caType": "Microsoft",</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="s1">    "pemCertificates": [</span>
 <a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="s1">      {</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="s1">        &quot;certificate&quot;: &quot;&lt;PEM-encoded-signed-cert&gt;&quot;,</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="s1">        &quot;certChain&quot;: &quot;&lt;PEM-encoded-CA-chain&gt;&quot;,</span>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="s1">        &quot;resource&quot;: {&quot;fqdn&quot;: &quot;vcenter.vcf.internal&quot;, &quot;type&quot;: &quot;VCENTER&quot;, &quot;name&quot;: &quot;vcenter&quot;}</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="s1">        "certificate": "&lt;PEM-encoded-signed-cert&gt;",</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="s1">        "certChain": "&lt;PEM-encoded-CA-chain&gt;",</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="s1">        "resource": {"fqdn": "vcenter.vcf.internal", "type": "VCENTER", "name": "vcenter"}</span>
 <a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="s1">      }</span>
 <a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="s1">    ]</span>
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="s1">  }'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &quot;id&quot;: &quot;550e8400-e29b-41d4-a716-446655440000&quot;,
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  &quot;csrGenerationSpec&quot;: {
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    &quot;country&quot;: &quot;US&quot;,
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    &quot;state&quot;: &quot;California&quot;,
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    &quot;locality&quot;: &quot;San Jose&quot;,
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    &quot;organization&quot;: &quot;Example Corp&quot;,
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    &quot;organizationUnit&quot;: &quot;Platform Engineering&quot;,
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    &quot;keySize&quot;: 2048,
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    &quot;keyAlgorithm&quot;: &quot;RSA&quot;
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  "id": "550e8400-e29b-41d4-a716-446655440000",
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  "csrGenerationSpec": {
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    "country": "US",
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    "state": "California",
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    "locality": "San Jose",
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    "organization": "Example Corp",
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    "organizationUnit": "Platform Engineering",
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    "keySize": 2048,
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    "keyAlgorithm": "RSA"
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  },
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  &quot;resources&quot;: [
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  "resources": [
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    {
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>      &quot;fqdn&quot;: &quot;vcenter.vcf.internal&quot;,
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>      &quot;type&quot;: &quot;VCENTER&quot;,
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>      &quot;name&quot;: &quot;vcenter&quot;,
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>      &quot;certificateStatus&quot;: &quot;PENDING&quot;
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>      "fqdn": "vcenter.vcf.internal",
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>      "type": "VCENTER",
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>      "name": "vcenter",
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>      "certificateStatus": "PENDING"
 <a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    }
 <a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>  ],
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>  &quot;creationTimestamp&quot;: &quot;2024-01-15T09:42:17.123Z&quot;,
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>  &quot;status&quot;: &quot;GENERATED&quot;
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>  "creationTimestamp": "2024-01-15T09:42:17.123Z",
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>  "status": "GENERATED"
 <a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>}
 <a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>{
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>  &quot;id&quot;: &quot;550e8400-e29b-41d4-a716-446655440001&quot;,
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>  &quot;caType&quot;: &quot;Microsoft&quot;,
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>  &quot;resources&quot;: [
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>  "id": "550e8400-e29b-41d4-a716-446655440001",
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>  "caType": "Microsoft",
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>  "resources": [
 <a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>    {
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>      &quot;fqdn&quot;: &quot;vcenter.vcf.internal&quot;,
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>      &quot;type&quot;: &quot;VCENTER&quot;,
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>      &quot;name&quot;: &quot;vcenter&quot;,
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>      &quot;certificateStatus&quot;: &quot;INSTALLED&quot;,
-<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>      &quot;expiryDate&quot;: &quot;2026-01-15T09:42:17.000Z&quot;
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>      "fqdn": "vcenter.vcf.internal",
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>      "type": "VCENTER",
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>      "name": "vcenter",
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>      "certificateStatus": "INSTALLED",
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>      "expiryDate": "2026-01-15T09:42:17.000Z"
 <a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>    }
 <a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>  ],
-<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>  &quot;status&quot;: &quot;COMPLETED&quot;
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>  "status": "COMPLETED"
 <a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -8841,20 +8841,20 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify current TLS configuration on vCenter</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$VCENTER</span>:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Protocol|Cipher&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$VCENTER</span>:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Protocol|Cipher"</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># NSX-T management API — TLS 1.2 required</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>--tlsv1.2<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/cluster/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin).get(&#39;mgmt_cluster_status&#39;,{}).get(&#39;status&#39;))&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>--tlsv1.2<span class="w"> </span>-u<span class="w"> </span><span class="s2">"admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/cluster/status"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; print(json.load(sys.stdin).get('mgmt_cluster_status',{}).get('status'))"</span>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check certificate expiry for all VCF components via SDDC Manager</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SDDC_USER</span><span class="s2">:</span><span class="nv">$SDDC_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.vcf.internal/v1/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">"</span><span class="nv">$SDDC_USER</span><span class="s2">:</span><span class="nv">$SDDC_PASS</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="s2">"https://sddc-manager.vcf.internal/v1/certificates"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s2">import sys, json</span>
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s2">certs = json.load(sys.stdin)</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s2">for c in certs.get(&#39;elements&#39;, []):</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s2">    print(f\&quot;{c[&#39;resource&#39;][&#39;fqdn&#39;]}: expires {c.get(&#39;notAfter&#39;, &#39;unknown&#39;)}\&quot;)&quot;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s2">for c in certs.get('elements', []):</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s2">    print(f\"{c['resource']['fqdn']}: expires {c.get('notAfter', 'unknown')}\")"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Protocol  : TLSv1.2
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Cipher    : ECDHE-RSA-AES256-GCM-SHA384
@@ -8893,7 +8893,7 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 </div>
 <h2 id="in-transit-encryption">In-Transit Encryption<a class="headerlink" href="#in-transit-encryption" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># vMotion encryption — enabled per VM or globally</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># PowerCLI: Set-VM -VM $vm -EncryptedVMotion &quot;Required&quot;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># PowerCLI: Set-VM -VM $vm -EncryptedVMotion "Required"</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Options: Disabled, Opportunistic (default, encrypts if supported), Required (enforced)</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># vSAN in-transit (data-in-transit encryption)</span>
@@ -8905,7 +8905,7 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># VCF management traffic — all APIs use TLS 1.2+ by default</span>
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Verify TLS version on vCenter</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$VCENTER</span>:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Protocol|Cipher&quot;</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$VCENTER</span>:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Protocol|Cipher"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>depth=0 OU = US, O = VMware, CN = vcenter.corp.local, emailAddress = admin@corp.local
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>verify return:1

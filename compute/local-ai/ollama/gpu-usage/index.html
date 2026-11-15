@@ -7192,18 +7192,18 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkctKxDAUhvd9ikNXupgXmIVQOuDG4tChbkMmiTGQS81FqeK725NSKZiZWeb8l5x84coLFpWze-Du01YVc_ZVeaOsJHJMJAUqxR7q9m8Mj8cBBhzX8B3e6DjL2EGt1OKnYolTEkRMI6aGQwMnPBS93jFDqOH5pjXTP7cG7prugBfdX0l_eGqIF-9pfoIRNgZynohxXGgS1Bcu_dI3HfQbB5wn6NABp9lR3t_Z6J3WKwBNJ-EJc8nGBcOqZg5PqEKLarHNJB0V1mSsMnm6sK47FHZY0W6VYknxT2D3AFvWKYiwgY9yCW-2_RfQfpNnzt5w5bWuIVz2vOzAgkvUcvYX_RgAZw==?" /></p>
 <h2 id="confirming-gpu-usage">Confirming GPU Usage<a class="headerlink" href="#confirming-gpu-usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># When running a model, check if GPU layers are loaded</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;Hello&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">"Hello"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># In a separate terminal, watch GPU utilisation</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>nvidia-smi
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Or query Ollama&#39;s running model info</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Or query Ollama's running model info</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>http://localhost:11434/api/show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;:&quot;llama3.1:8b&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.details&#39;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"name":"llama3.1:8b"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.details'</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check Ollama logs for GPU detection</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ollama<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Look for: &quot;detected GPU&quot; or &quot;loaded model ... on GPU&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Look for: "detected GPU" or "loaded model ... on GPU"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Hello
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
@@ -7215,16 +7215,16 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  0%   38C    P8     5W / 575W |      0MiB / 24576MiB |      0%      Default |
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>{
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;parameter_size&quot;: &quot;8.0B&quot;,
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;quantization_level&quot;: &quot;Q4_K_M&quot;,
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  &quot;family&quot;: &quot;llama&quot;,
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;families&quot;: [&quot;llama&quot;],
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  &quot;object_type&quot;: &quot;model&quot;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  "parameter_size": "8.0B",
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  "quantization_level": "Q4_K_M",
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  "family": "llama",
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  "families": ["llama"],
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  "object_type": "model"
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>}
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Nov 15 14:32:18 gpu-server ollama[2847]: time=2024-11-15T14:32:18.234Z level=INFO msg=&quot;detected GPU&quot; id=0 name=&quot;NVIDIA RTX 4090&quot; vram=24576000000
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Nov 15 14:32:19 gpu-server ollama[2847]: time=2024-11-15T14:32:19.567Z level=INFO msg=&quot;loaded model llama3.1:8b on GPU 0&quot; layers=33/33
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Nov 15 14:32:20 gpu-server ollama[2847]: time=2024-11-15T14:32:20.891Z level=INFO msg=&quot;inference complete&quot; duration=2.3s tokens_per_sec=45.2
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Nov 15 14:32:18 gpu-server ollama[2847]: time=2024-11-15T14:32:18.234Z level=INFO msg="detected GPU" id=0 name="NVIDIA RTX 4090" vram=24576000000
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Nov 15 14:32:19 gpu-server ollama[2847]: time=2024-11-15T14:32:19.567Z level=INFO msg="loaded model llama3.1:8b on GPU 0" layers=33/33
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Nov 15 14:32:20 gpu-server ollama[2847]: time=2024-11-15T14:32:20.891Z level=INFO msg="inference complete" duration=2.3s tokens_per_sec=45.2
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7258,7 +7258,7 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nvidia-smi
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check Ollama detects the GPU</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>gpu
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">"test"</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>gpu
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Set specific GPU(s) (CUDA device index)</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>ollama<span class="w"> </span>serve<span class="w">   </span><span class="c1"># Use GPU 0 only</span>
@@ -7277,8 +7277,8 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>| 25%   38C    P0    72W / 575W |   6144MiB / 24576MiB |     32%      Default |
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>+---------------------------------------------------------------------------------------+
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>time=2025-01-10T14:32:47.123Z level=INFO msg=&quot;GPU detected&quot; device_id=0 device_name=&quot;NVIDIA RTX 4090&quot; compute_capability=&quot;8.9&quot;
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>time=2025-01-10T14:32:47.124Z level=INFO msg=&quot;GPU detected&quot; device_id=1 device_name=&quot;NVIDIA RTX 4090&quot; compute_capability=&quot;8.9&quot;
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>time=2025-01-10T14:32:47.123Z level=INFO msg="GPU detected" device_id=0 device_name="NVIDIA RTX 4090" compute_capability="8.9"
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>time=2025-01-10T14:32:47.124Z level=INFO msg="GPU detected" device_id=1 device_name="NVIDIA RTX 4090" compute_capability="8.9"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7469,7 +7469,7 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 <h2 id="multi-gpu-configuration">Multi-GPU Configuration<a class="headerlink" href="#multi-gpu-configuration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ollama distributes layers across multiple GPUs automatically</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Check layer distribution in debug output</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:70b<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;layer&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:70b<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"layer"</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Restrict to specific GPUs</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>,1,2,3<span class="w"> </span>ollama<span class="w"> </span>serve
@@ -7477,12 +7477,12 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Monitor all GPUs during inference</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>nvidia-smi<span class="w"> </span>dmon<span class="w"> </span>-s<span class="w"> </span>u<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[1] &quot;llm_load_tensors: ggml_cuda_host_alloc: allocated 0 bytes on CPU&quot;
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>[1] &quot;llm_load_tensors: offloading 48 layers to GPU 0&quot;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>[1] &quot;llm_load_tensors: offloading 22 layers to GPU 1&quot;
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>[1] &quot;llm_load_tensors: layer 0 -&gt; GPU 0 (2048 MB)&quot;
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>[1] &quot;llm_load_tensors: layer 24 -&gt; GPU 1 (1856 MB)&quot;
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>[1] &quot;llm_load_tensors: layer 48 -&gt; GPU 0 (2104 MB)&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[1] "llm_load_tensors: ggml_cuda_host_alloc: allocated 0 bytes on CPU"
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>[1] "llm_load_tensors: offloading 48 layers to GPU 0"
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>[1] "llm_load_tensors: offloading 22 layers to GPU 1"
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>[1] "llm_load_tensors: layer 0 -&gt; GPU 0 (2048 MB)"
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>[1] "llm_load_tensors: layer 24 -&gt; GPU 1 (1856 MB)"
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>[1] "llm_load_tensors: layer 48 -&gt; GPU 0 (2104 MB)"
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Listening on 127.0.0.1:11434
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>#gpu   pid  sm   mem   enc   dec
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>   0 12847  42  8532     0     0
@@ -7519,13 +7519,13 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 <p>Enable flash attention for lower VRAM usage and faster inference on supported models:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">OLLAMA_FLASH_ATTENTION</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>serve
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>time=2024-01-15T09:42:33.847Z level=INFO msg=&quot;Starting Ollama server&quot;
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>time=2024-01-15T09:42:33.912Z level=INFO msg=&quot;Listening on 127.0.0.1:11434&quot;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>time=2024-01-15T09:42:34.156Z level=INFO msg=&quot;Loaded dynamic library /usr/lib/libcuda.so.1&quot;
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>time=2024-01-15T09:42:34.203Z level=INFO msg=&quot;GPU detected: NVIDIA A100 (compute capability 8.0)&quot;
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>time=2024-01-15T09:42:34.245Z level=INFO msg=&quot;Flash Attention enabled for GPU acceleration&quot;
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>time=2024-01-15T09:42:34.312Z level=INFO msg=&quot;VRAM available: 40960 MB&quot;
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>time=2024-01-15T09:42:34.401Z level=INFO msg=&quot;Ollama server ready&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>time=2024-01-15T09:42:33.847Z level=INFO msg="Starting Ollama server"
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>time=2024-01-15T09:42:33.912Z level=INFO msg="Listening on 127.0.0.1:11434"
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>time=2024-01-15T09:42:34.156Z level=INFO msg="Loaded dynamic library /usr/lib/libcuda.so.1"
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>time=2024-01-15T09:42:34.203Z level=INFO msg="GPU detected: NVIDIA A100 (compute capability 8.0)"
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>time=2024-01-15T09:42:34.245Z level=INFO msg="Flash Attention enabled for GPU acceleration"
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>time=2024-01-15T09:42:34.312Z level=INFO msg="VRAM available: 40960 MB"
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>time=2024-01-15T09:42:34.401Z level=INFO msg="Ollama server ready"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

@@ -7829,11 +7829,11 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Confirm system is healthy before making changes</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uptime
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 85&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'$5+0 &gt; 85'</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Capture current state for comparison</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--qf<span class="w"> </span><span class="s2">&quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-change-packages.txt<span class="w">   </span><span class="c1"># RHEL</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;5&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-change-packages.txt<span class="w">   </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--qf<span class="w"> </span><span class="s2">"%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-change-packages.txt<span class="w">   </span><span class="c1"># RHEL</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'NR&gt;5'</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-change-packages.txt<span class="w">   </span><span class="c1"># Ubuntu</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Capture running kernel</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uname<span class="w"> </span>-r
@@ -7874,11 +7874,11 @@
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>/proc/meminfo
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check OOM (Out of Memory) killer events</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>journalctl<span class="w"> </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;oom\|killed process&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;oom\|killed process&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>journalctl<span class="w"> </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"oom\|killed process"</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"oom\|killed process"</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check which process the OOM killer targeted</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;out of memory&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"out of memory"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Drop caches if available memory is low (safe on production — does not affect file data)</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">echo</span><span class="w"> </span><span class="m">3</span><span class="w"> </span>&gt;<span class="w"> </span>/proc/sys/vm/drop_caches
@@ -7975,9 +7975,9 @@
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>--- 8.8.8.8 statistics ---
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>4 packets transmitted, 4 received, 0% packet loss, time 3004ms
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>rtt min/avg/max/stddev = 11.8/12.1/12.4/0.24 ms
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>LISTEN    0      128          0.0.0.0:22            0.0.0.0:*    users:((&quot;sshd&quot;,pid=1247,fd=3))
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>LISTEN    0      128             [::]:22               [::]:*    users:((&quot;sshd&quot;,pid=1247,fd=4))
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>LISTEN    0      100        127.0.0.1:25            0.0.0.0:*    users:((&quot;master&quot;,pid=2156,fd=13))
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>LISTEN    0      128          0.0.0.0:22            0.0.0.0:*    users:(("sshd",pid=1247,fd=3))
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>LISTEN    0      128             [::]:22               [::]:*    users:(("sshd",pid=1247,fd=4))
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>LISTEN    0      100        127.0.0.1:25            0.0.0.0:*    users:(("master",pid=2156,fd=13))
 <a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>; &lt;&lt;&gt;&gt; DiG 9.16.23-RH &lt;&lt;&gt;&gt; google.com
 <a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>;; Query time: 45 msec
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>;; SERVER: 192.168.1.1#53(192.168.1.1)
@@ -7998,20 +7998,20 @@
 <a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>  rich
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Search journal for a specific service over a time range</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>sshd<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2024-01-15 08:00&quot;</span><span class="w"> </span>--until<span class="w"> </span><span class="s2">&quot;2024-01-15 09:00&quot;</span><span class="w"> </span>--no-pager
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>sshd<span class="w"> </span>--since<span class="w"> </span><span class="s2">"2024-01-15 08:00"</span><span class="w"> </span>--until<span class="w"> </span><span class="s2">"2024-01-15 09:00"</span><span class="w"> </span>--no-pager
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Follow logs in real time</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>journalctl<span class="w"> </span>-f
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>journalctl<span class="w"> </span>-f<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check authentication log (failed/successful logins)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>sshd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Failed|Accepted&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>sshd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Failed|Accepted"</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>cat<span class="w"> </span>/var/log/secure<span class="w">   </span><span class="c1"># RHEL</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>cat<span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="c1"># Ubuntu/Debian</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Kernel messages (hardware errors, OOM, filesystem errors)</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warning\|fail&quot;</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>dmesg<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|warning\|fail"</span>
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>-- Logs begin at Mon 2024-01-15 07:45:23 EST, end at Mon 2024-01-15 09:15:47 EST. --
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Jan 15 08:12:34 prod-web-01 sshd[2847]: Accepted publickey for ubuntu from 203.0.113.42 port 54321 ssh2: RSA SHA256:aBcD1234efGH5678ijKL9012mnOP3456qrST7890uvW
@@ -8088,7 +8088,7 @@
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># View full service logs</span>
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">"1 hour ago"</span>
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>UNIT                                        LOAD   ACTIVE SUB     DESCRIPTION
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>accounts-daemon.service                     loaded active running Accounts Service
@@ -8115,10 +8115,10 @@
 <a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>Jan 15 14:32:18 prod-web-01 systemd[1]: Started A high performance web server and a reverse proxy server.
 <a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
 <a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>-- Logs begin at Mon 2024-01-15 10:18:42 UTC, end at Wed 2024-01-17 09:45:33 UTC. --
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>Jan 17 09:42:15 prod-web-01 nginx[4521]: 192.168.1.105 - - [17/Jan/2024:09:42:15 +0000] &quot;GET / HTTP/1.1&quot; 200 612 &quot;-&quot; &quot;Mozilla/5.0&quot;
-<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>Jan 17 09:42:16 prod-web-01 nginx[4521]: 192.168.1.106 - - [17/Jan/2024:09:42:16 +0000] &quot;GET /api/health HTTP/1.1&quot; 200 45 &quot;-&quot; &quot;curl/7.68.0&quot;
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>Jan 17 09:42:15 prod-web-01 nginx[4521]: 192.168.1.105 - - [17/Jan/2024:09:42:15 +0000] "GET / HTTP/1.1" 200 612 "-" "Mozilla/5.0"
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>Jan 17 09:42:16 prod-web-01 nginx[4521]: 192.168.1.106 - - [17/Jan/2024:09:42:16 +0000] "GET /api/health HTTP/1.1" 200 45 "-" "curl/7.68.0"
 <a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>Jan 17 09:42:18 prod-web-01 nginx[4521]: 2024/01/17 09:42:18 [notice] 4521#4521: signal process started
-<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>Jan 17 09:43:02 prod-web-01 nginx[4521]: 192.168.1.107 - - [17/Jan/2024:09:43:02 +0000] &quot;POST /api/submit HTTP/1.1&quot; 201 89 &quot;-&quot; &quot;curl/7.68.0&quot;
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>Jan 17 09:43:02 prod-web-01 nginx[4521]: 192.168.1.107 - - [17/Jan/2024:09:43:02 +0000] "POST /api/submit HTTP/1.1" 201 89 "-" "curl/7.68.0"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8263,7 +8263,7 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Check current limits on a running service</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>systemctl<span class="w"> </span>show<span class="w"> </span>&lt;service&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;LimitNOFILE|LimitNPROC|MemoryMax|CPUQuota&quot;</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>systemctl<span class="w"> </span>show<span class="w"> </span>&lt;service&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"LimitNOFILE|LimitNPROC|MemoryMax|CPUQuota"</span>
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Set memory limit via drop-in</span>
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/systemd/system/&lt;service&gt;.service.d/
@@ -8368,11 +8368,11 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># 1. Confirm system is healthy before patching</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>uptime
 <a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 85&#39;</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'$5+0 &gt; 85'</span>
 <a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
 <a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># 2. Capture current package versions (rollback reference)</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--qf<span class="w"> </span><span class="s2">&quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w">   </span><span class="c1"># RHEL</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;5&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w">   </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--qf<span class="w"> </span><span class="s2">"%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w">   </span><span class="c1"># RHEL</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'NR&gt;5'</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w">   </span><span class="c1"># Ubuntu</span>
 <a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>
 <a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="c1"># 3. Capture running kernel</span>
 <a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>uname<span class="w"> </span>-r
@@ -8641,7 +8641,7 @@
 <a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="c1"># Exit code 1 = reboot required</span>
 <a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>
 <a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="c1"># Check if a reboot is required (Ubuntu)</span>
-<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>ls<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>ls<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Reboot required"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"No reboot needed"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Reboot is required
 </code></pre></div>
@@ -8676,7 +8676,7 @@
 <a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>systemctl<span class="w"> </span>--failed
 <a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>
 <a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="c1"># Compare package list to pre-patch snapshot</span>
-<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--qf<span class="w"> </span><span class="s2">&quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/post-patch-packages.txt
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--qf<span class="w"> </span><span class="s2">"%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/post-patch-packages.txt
 <a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>diff<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w"> </span>/tmp/post-patch-packages.txt
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>5.10.0-28.el7.x86_64
@@ -8821,7 +8821,7 @@
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>/etc/sudoers: parsed OK
 <a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>/etc/sudoers.d/jsmith: parsed OK
 <a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>Matching Defaults entries for jsmith on host-prod-01:
-<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>    env_reset, env_keep=&quot;COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS&quot;,
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>    env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS",
 <a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin
 <a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>
 <a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>User jsmith may run the following commands on host-prod-01:
@@ -8858,19 +8858,19 @@
 <a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>show
 <a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
 <a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># Show current connection details</span>
-<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">"&lt;connection-name&gt;"</span>
 <a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>
 <a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="c1"># Set static IP address (replace DHCP)</span>
-<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv4.method<span class="w"> </span>manual<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="w">    </span>ipv4.addresses<span class="w"> </span><span class="s2">&quot;192.168.1.100/24&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="w">    </span>ipv4.gateway<span class="w"> </span><span class="s2">&quot;192.168.1.1&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a><span class="w">    </span>ipv4.dns<span class="w"> </span><span class="s2">&quot;192.168.1.10,8.8.8.8&quot;</span>
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">"&lt;connection-name&gt;"</span><span class="w"> </span>ipv4.method<span class="w"> </span>manual<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="w">    </span>ipv4.addresses<span class="w"> </span><span class="s2">"192.168.1.100/24"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="w">    </span>ipv4.gateway<span class="w"> </span><span class="s2">"192.168.1.1"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a><span class="w">    </span>ipv4.dns<span class="w"> </span><span class="s2">"192.168.1.10,8.8.8.8"</span>
 <a id="__codelineno-40-12" name="__codelineno-40-12" href="#__codelineno-40-12"></a>
 <a id="__codelineno-40-13" name="__codelineno-40-13" href="#__codelineno-40-13"></a><span class="c1"># Disable IPv6 if not required</span>
-<a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv6.method<span class="w"> </span>ignore
+<a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">"&lt;connection-name&gt;"</span><span class="w"> </span>ipv6.method<span class="w"> </span>ignore
 <a id="__codelineno-40-15" name="__codelineno-40-15" href="#__codelineno-40-15"></a>
 <a id="__codelineno-40-16" name="__codelineno-40-16" href="#__codelineno-40-16"></a><span class="c1"># Apply changes by restarting the connection</span>
-<a id="__codelineno-40-17" name="__codelineno-40-17" href="#__codelineno-40-17"></a>nmcli<span class="w"> </span>con<span class="w"> </span>down<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nmcli<span class="w"> </span>con<span class="w"> </span>up<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span>
+<a id="__codelineno-40-17" name="__codelineno-40-17" href="#__codelineno-40-17"></a>nmcli<span class="w"> </span>con<span class="w"> </span>down<span class="w"> </span><span class="s2">"&lt;connection-name&gt;"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nmcli<span class="w"> </span>con<span class="w"> </span>up<span class="w"> </span><span class="s2">"&lt;connection-name&gt;"</span>
 <a id="__codelineno-40-18" name="__codelineno-40-18" href="#__codelineno-40-18"></a>
 <a id="__codelineno-40-19" name="__codelineno-40-19" href="#__codelineno-40-19"></a><span class="c1"># Verify the new configuration</span>
 <a id="__codelineno-40-20" name="__codelineno-40-20" href="#__codelineno-40-20"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
@@ -8893,8 +8893,8 @@
 <a id="__codelineno-41-14" name="__codelineno-41-14" href="#__codelineno-41-14"></a>Connection successfully modified.
 <a id="__codelineno-41-15" name="__codelineno-41-15" href="#__codelineno-41-15"></a>Connection successfully modified.
 <a id="__codelineno-41-16" name="__codelineno-41-16" href="#__codelineno-41-16"></a>Connection successfully modified.
-<a id="__codelineno-41-17" name="__codelineno-41-17" href="#__codelineno-41-17"></a>Connection &#39;Wired connection 1&#39; successfully deactivated.
-<a id="__codelineno-41-18" name="__codelineno-41-18" href="#__codelineno-41-18"></a>Connection &#39;Wired connection 1&#39; successfully activated with 192.168.1.100/24.
+<a id="__codelineno-41-17" name="__codelineno-41-17" href="#__codelineno-41-17"></a>Connection 'Wired connection 1' successfully deactivated.
+<a id="__codelineno-41-18" name="__codelineno-41-18" href="#__codelineno-41-18"></a>Connection 'Wired connection 1' successfully activated with 192.168.1.100/24.
 <a id="__codelineno-41-19" name="__codelineno-41-19" href="#__codelineno-41-19"></a>
 <a id="__codelineno-41-20" name="__codelineno-41-20" href="#__codelineno-41-20"></a>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
 <a id="__codelineno-41-21" name="__codelineno-41-21" href="#__codelineno-41-21"></a>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -8935,10 +8935,10 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Add a secondary DNS search domain</span>
-<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv4.dns-search<span class="w"> </span><span class="s2">&quot;example.local,corp.local&quot;</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">"&lt;connection-name&gt;"</span><span class="w"> </span>ipv4.dns-search<span class="w"> </span><span class="s2">"example.local,corp.local"</span>
 <a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>
 <a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="c1"># Verify NetworkManager applied the settings</span>
-<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>nmcli<span class="w"> </span>-p<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ipv4|ipv6&quot;</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>nmcli<span class="w"> </span>-p<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">"&lt;connection-name&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"ipv4|ipv6"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ipv4.addresses:                          192.168.1.100/24
 <a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>ipv4.gateway:                            192.168.1.1
@@ -8991,7 +8991,7 @@
 <a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/data
 <a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/mnt/data
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>/dev/sdb1: UUID=&quot;a7f3c2e1-9b4d-4f8a-b2c6-1d5e8f3a9b7c&quot; TYPE=&quot;ext4&quot; PARTUUID=&quot;5a8b2c1d-01&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>/dev/sdb1: UUID="a7f3c2e1-9b4d-4f8a-b2c6-1d5e8f3a9b7c" TYPE="ext4" PARTUUID="5a8b2c1d-01"
 <a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>Filesystem      Size  Used Avail Use% Mounted on
 <a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>/dev/sdb1       100G  2.1G   92G   3% /mnt/data
 <a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>/dev/sdb1 on /mnt/data type ext4 (rw,relatime)
@@ -9062,7 +9062,7 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <a id="__codelineno-48-6" name="__codelineno-48-6" href="#__codelineno-48-6"></a>chronyc<span class="w"> </span>tracking
 <a id="__codelineno-48-7" name="__codelineno-48-7" href="#__codelineno-48-7"></a>
 <a id="__codelineno-48-8" name="__codelineno-48-8" href="#__codelineno-48-8"></a><span class="c1"># Check offset — should be &lt; 1 second in normal operation</span>
-<a id="__codelineno-48-9" name="__codelineno-48-9" href="#__codelineno-48-9"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-48-9" name="__codelineno-48-9" href="#__codelineno-48-9"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"System time"</span>
 <a id="__codelineno-48-10" name="__codelineno-48-10" href="#__codelineno-48-10"></a>
 <a id="__codelineno-48-11" name="__codelineno-48-11" href="#__codelineno-48-11"></a><span class="c1"># Force immediate sync</span>
 <a id="__codelineno-48-12" name="__codelineno-48-12" href="#__codelineno-48-12"></a>chronyc<span class="w"> </span>makestep
@@ -9073,9 +9073,9 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>Created symlink /etc/systemd/system/multi-user.target.wants/chronyd.service → /etc/systemd/system/chronyd.service.
 <a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>210 Number of sources = 8
 <a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>
-<a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>  .-- Source mode  &#39;^&#39; = server, &#39;=&#39; = peer, &#39;#&#39; = local clock.
-<a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a> / .- Source state &#39;*&#39; = current synced, &#39;+&#39; = combined , &#39;-&#39; = not combined,
-<a id="__codelineno-49-6" name="__codelineno-49-6" href="#__codelineno-49-6"></a>| /   &#39;?&#39; = unreachable, &#39;x&#39; = time may be wrong, &#39;~&#39; = time too variable.
+<a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>  .-- Source mode  '^' = server, '=' = peer, '#' = local clock.
+<a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a> / .- Source state '*' = current synced, '+' = combined , '-' = not combined,
+<a id="__codelineno-49-6" name="__codelineno-49-6" href="#__codelineno-49-6"></a>| /   '?' = unreachable, 'x' = time may be wrong, '~' = time too variable.
 <a id="__codelineno-49-7" name="__codelineno-49-7" href="#__codelineno-49-7"></a>| |       Name/IP Address         Stratum Poll Reach LastRx Last sample
 <a id="__codelineno-49-8" name="__codelineno-49-8" href="#__codelineno-49-8"></a>==============================================================================
 <a id="__codelineno-49-9" name="__codelineno-49-9" href="#__codelineno-49-9"></a>^* ntp.ubuntu.com                       2  10   377    12    -45us[ -102us] +/-   21ms
@@ -9194,7 +9194,7 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <a id="__codelineno-53-9" name="__codelineno-53-9" href="#__codelineno-53-9"></a>vgextend<span class="w"> </span>&lt;vg-name&gt;<span class="w"> </span>/dev/sdb
 <a id="__codelineno-53-10" name="__codelineno-53-10" href="#__codelineno-53-10"></a>
 <a id="__codelineno-53-11" name="__codelineno-53-11" href="#__codelineno-53-11"></a><span class="c1"># 4. Confirm free extents are available</span>
-<a id="__codelineno-53-12" name="__codelineno-53-12" href="#__codelineno-53-12"></a>vgdisplay<span class="w"> </span>&lt;vg-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Free  PE&quot;</span>
+<a id="__codelineno-53-12" name="__codelineno-53-12" href="#__codelineno-53-12"></a>vgdisplay<span class="w"> </span>&lt;vg-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Free  PE"</span>
 <a id="__codelineno-53-13" name="__codelineno-53-13" href="#__codelineno-53-13"></a>
 <a id="__codelineno-53-14" name="__codelineno-53-14" href="#__codelineno-53-14"></a><span class="c1"># 5. Extend the Logical Volume (use all available space with -l +100%FREE)</span>
 <a id="__codelineno-53-15" name="__codelineno-53-15" href="#__codelineno-53-15"></a>lvextend<span class="w"> </span>-l<span class="w"> </span>+100%FREE<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
@@ -9223,9 +9223,9 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <a id="__codelineno-54-9" name="__codelineno-54-9" href="#__codelineno-54-9"></a>Units: sectors of 1 * 512 = 512 bytes
 <a id="__codelineno-54-10" name="__codelineno-54-10" href="#__codelineno-54-10"></a>Sector size (logical/physical): 512 bytes / 512 bytes
 <a id="__codelineno-54-11" name="__codelineno-54-11" href="#__codelineno-54-11"></a>
-<a id="__codelineno-54-12" name="__codelineno-54-12" href="#__codelineno-54-12"></a>Physical volume &quot;/dev/sdb&quot; successfully created with label size 2.00 MiB.
+<a id="__codelineno-54-12" name="__codelineno-54-12" href="#__codelineno-54-12"></a>Physical volume "/dev/sdb" successfully created with label size 2.00 MiB.
 <a id="__codelineno-54-13" name="__codelineno-54-13" href="#__codelineno-54-13"></a>
-<a id="__codelineno-54-14" name="__codelineno-54-14" href="#__codelineno-54-14"></a>Volume group &quot;vg0&quot; successfully extended
+<a id="__codelineno-54-14" name="__codelineno-54-14" href="#__codelineno-54-14"></a>Volume group "vg0" successfully extended
 <a id="__codelineno-54-15" name="__codelineno-54-15" href="#__codelineno-54-15"></a>
 <a id="__codelineno-54-16" name="__codelineno-54-16" href="#__codelineno-54-16"></a>  Free  PE / Size       50 / 12.50 GiB
 <a id="__codelineno-54-17" name="__codelineno-54-17" href="#__codelineno-54-17"></a>
@@ -9310,13 +9310,13 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <a id="__codelineno-57-8" name="__codelineno-57-8" href="#__codelineno-57-8"></a>ss<span class="w"> </span>-tnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:514
 <a id="__codelineno-57-9" name="__codelineno-57-9" href="#__codelineno-57-9"></a>
 <a id="__codelineno-57-10" name="__codelineno-57-10" href="#__codelineno-57-10"></a><span class="c1"># Send a test message and confirm it appears on the remote server</span>
-<a id="__codelineno-57-11" name="__codelineno-57-11" href="#__codelineno-57-11"></a>logger<span class="w"> </span>-t<span class="w"> </span>TEST<span class="w"> </span><span class="s2">&quot;rsyslog forwarding test from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-57-11" name="__codelineno-57-11" href="#__codelineno-57-11"></a>logger<span class="w"> </span>-t<span class="w"> </span>TEST<span class="w"> </span><span class="s2">"rsyslog forwarding test from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">"</span>
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>rsyslogd: version 8.2102.0, config validation run (level 0), master config /etc/rsyslog.conf
 <a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>rsyslogd: End of config validation run. Bye.
 <a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a>(no output — command completes silently)
-<a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a>LISTEN    0      25           0.0.0.0:514      0.0.0.0:*    users:((&quot;rsyslogd&quot;,pid=4782,fd=5))
-<a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a>LISTEN    0      25              [::]:514         [::]:*    users:((&quot;rsyslogd&quot;,pid=4782,fd=6))
+<a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a>LISTEN    0      25           0.0.0.0:514      0.0.0.0:*    users:(("rsyslogd",pid=4782,fd=5))
+<a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a>LISTEN    0      25              [::]:514         [::]:*    users:(("rsyslogd",pid=4782,fd=6))
 <a id="__codelineno-58-6" name="__codelineno-58-6" href="#__codelineno-58-6"></a>(no output — command completes silently)
 </code></pre></div>
 <div class="admonition warning">
@@ -9416,15 +9416,15 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <a id="__codelineno-61-5" name="__codelineno-61-5" href="#__codelineno-61-5"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
 <a id="__codelineno-61-6" name="__codelineno-61-6" href="#__codelineno-61-6"></a>
 <a id="__codelineno-61-7" name="__codelineno-61-7" href="#__codelineno-61-7"></a><span class="c1"># Logs since a specific time</span>
-<a id="__codelineno-61-8" name="__codelineno-61-8" href="#__codelineno-61-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
+<a id="__codelineno-61-8" name="__codelineno-61-8" href="#__codelineno-61-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">"1 hour ago"</span>
 <a id="__codelineno-61-9" name="__codelineno-61-9" href="#__codelineno-61-9"></a>
 <a id="__codelineno-61-10" name="__codelineno-61-10" href="#__codelineno-61-10"></a><span class="c1"># Reload all unit files after editing a unit</span>
 <a id="__codelineno-61-11" name="__codelineno-61-11" href="#__codelineno-61-11"></a>systemctl<span class="w"> </span>daemon-reload
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>-- Logs begin at Mon 2024-01-15 08:23:47 UTC, end at Mon 2024-01-15 14:52:19 UTC. --
-<a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a>Jan 15 14:52:15 prod-app-01 nginx[2847]: 192.168.1.105 - - [15/Jan/2024:14:52:15 +0000] &quot;GET /health HTTP/1.1&quot; 200 145 &quot;-&quot; &quot;curl/7.68.0&quot;
-<a id="__codelineno-62-3" name="__codelineno-62-3" href="#__codelineno-62-3"></a>Jan 15 14:52:16 prod-app-01 nginx[2847]: 192.168.1.106 - - [15/Jan/2024:14:52:16 +0000] &quot;POST /api/users HTTP/1.1&quot; 201 892 &quot;-&quot; &quot;python-requests/2.28.1&quot;
-<a id="__codelineno-62-4" name="__codelineno-62-4" href="#__codelineno-62-4"></a>Jan 15 14:52:17 prod-app-01 nginx[2847]: 192.168.1.107 - - [15/Jan/2024:14:52:17 +0000] &quot;GET /api/config HTTP/1.1&quot; 200 2341 &quot;-&quot; &quot;curl/7.68.0&quot;
+<a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a>Jan 15 14:52:15 prod-app-01 nginx[2847]: 192.168.1.105 - - [15/Jan/2024:14:52:15 +0000] "GET /health HTTP/1.1" 200 145 "-" "curl/7.68.0"
+<a id="__codelineno-62-3" name="__codelineno-62-3" href="#__codelineno-62-3"></a>Jan 15 14:52:16 prod-app-01 nginx[2847]: 192.168.1.106 - - [15/Jan/2024:14:52:16 +0000] "POST /api/users HTTP/1.1" 201 892 "-" "python-requests/2.28.1"
+<a id="__codelineno-62-4" name="__codelineno-62-4" href="#__codelineno-62-4"></a>Jan 15 14:52:17 prod-app-01 nginx[2847]: 192.168.1.107 - - [15/Jan/2024:14:52:17 +0000] "GET /api/config HTTP/1.1" 200 2341 "-" "curl/7.68.0"
 <a id="__codelineno-62-5" name="__codelineno-62-5" href="#__codelineno-62-5"></a>Jan 15 14:52:18 prod-app-01 nginx[2847]: 2024-01-15T14:52:18.234Z [INFO] Request processed in 45ms
 <a id="__codelineno-62-6" name="__codelineno-62-6" href="#__codelineno-62-6"></a>Jan 15 14:52:19 prod-app-01 nginx[2847]: 2024-01-15T14:52:19.567Z [INFO] Cache hit ratio: 87.3%
 <a id="__codelineno-62-7" name="__codelineno-62-7" href="#__codelineno-62-7"></a>(no output — command completes silently)
@@ -9591,7 +9591,7 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <a id="__codelineno-67-3" name="__codelineno-67-3" href="#__codelineno-67-3"></a>apt-get<span class="w"> </span>upgrade<span class="w"> </span>-y
 <a id="__codelineno-67-4" name="__codelineno-67-4" href="#__codelineno-67-4"></a>
 <a id="__codelineno-67-5" name="__codelineno-67-5" href="#__codelineno-67-5"></a><span class="c1"># Check if reboot is required (Ubuntu)</span>
-<a id="__codelineno-67-6" name="__codelineno-67-6" href="#__codelineno-67-6"></a>ls<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span>
+<a id="__codelineno-67-6" name="__codelineno-67-6" href="#__codelineno-67-6"></a>ls<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Reboot required"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"No reboot needed"</span>
 <a id="__codelineno-67-7" name="__codelineno-67-7" href="#__codelineno-67-7"></a>cat<span class="w"> </span>/var/run/reboot-required.pkgs<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
@@ -9665,11 +9665,11 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <h2 id="configure-ssh-key-authentication">Configure SSH Key Authentication<a class="headerlink" href="#configure-ssh-key-authentication" title="Permanent link">&para;</a></h2>
 <p>Generate an SSH key pair, deploy the public key to a remote host, and harden the SSH daemon configuration.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a><span class="c1"># 1. Generate an Ed25519 key pair (recommended — smaller and more secure than RSA)</span>
-<a id="__codelineno-71-2" name="__codelineno-71-2" href="#__codelineno-71-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-71-2" name="__codelineno-71-2" href="#__codelineno-71-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">"</span>
 <a id="__codelineno-71-3" name="__codelineno-71-3" href="#__codelineno-71-3"></a><span class="c1"># Default output: ~/.ssh/id_ed25519 (private) and ~/.ssh/id_ed25519.pub (public)</span>
 <a id="__codelineno-71-4" name="__codelineno-71-4" href="#__codelineno-71-4"></a>
 <a id="__codelineno-71-5" name="__codelineno-71-5" href="#__codelineno-71-5"></a><span class="c1"># For RSA (use when Ed25519 is not supported)</span>
-<a id="__codelineno-71-6" name="__codelineno-71-6" href="#__codelineno-71-6"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-71-6" name="__codelineno-71-6" href="#__codelineno-71-6"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">"</span>
 <a id="__codelineno-71-7" name="__codelineno-71-7" href="#__codelineno-71-7"></a>
 <a id="__codelineno-71-8" name="__codelineno-71-8" href="#__codelineno-71-8"></a><span class="c1"># 2. Copy the public key to the remote host</span>
 <a id="__codelineno-71-9" name="__codelineno-71-9" href="#__codelineno-71-9"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span>&lt;user&gt;@&lt;remote-host&gt;
@@ -9686,7 +9686,7 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <a id="__codelineno-72-6" name="__codelineno-72-6" href="#__codelineno-72-6"></a>Your public key has been saved in /home/admin/.ssh/id_ed25519.pub
 <a id="__codelineno-72-7" name="__codelineno-72-7" href="#__codelineno-72-7"></a>The key fingerprint is:
 <a id="__codelineno-72-8" name="__codelineno-72-8" href="#__codelineno-72-8"></a>SHA256:7kR9mQ2xL8vN5pJ3wK6bH4cD1eF9gT2uY7sA8vB5nC admin@prod-web-01-20240115
-<a id="__codelineno-72-9" name="__codelineno-72-9" href="#__codelineno-72-9"></a>The key&#39;s randomart image is:
+<a id="__codelineno-72-9" name="__codelineno-72-9" href="#__codelineno-72-9"></a>The key's randomart image is:
 <a id="__codelineno-72-10" name="__codelineno-72-10" href="#__codelineno-72-10"></a>+--[ED25519 256]--+
 <a id="__codelineno-72-11" name="__codelineno-72-11" href="#__codelineno-72-11"></a>|        .o.      |
 <a id="__codelineno-72-12" name="__codelineno-72-12" href="#__codelineno-72-12"></a>|       o.o .     |
@@ -9698,7 +9698,7 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <a id="__codelineno-72-18" name="__codelineno-72-18" href="#__codelineno-72-18"></a>Number of key(s) added: 1
 <a id="__codelineno-72-19" name="__codelineno-72-19" href="#__codelineno-72-19"></a>
 <a id="__codelineno-72-20" name="__codelineno-72-20" href="#__codelineno-72-20"></a>Now try logging in with:
-<a id="__codelineno-72-21" name="__codelineno-72-21" href="#__codelineno-72-21"></a>    &quot;ssh -i /home/admin/.ssh/id_ed25519 admin@prod-web-01&quot;
+<a id="__codelineno-72-21" name="__codelineno-72-21" href="#__codelineno-72-21"></a>    "ssh -i /home/admin/.ssh/id_ed25519 admin@prod-web-01"
 <a id="__codelineno-72-22" name="__codelineno-72-22" href="#__codelineno-72-22"></a>
 <a id="__codelineno-72-23" name="__codelineno-72-23" href="#__codelineno-72-23"></a>and check to make sure that only the key(s) you wanted were added.
 <a id="__codelineno-72-24" name="__codelineno-72-24" href="#__codelineno-72-24"></a>
@@ -9731,7 +9731,7 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a><span class="c1"># Manually add a public key (when ssh-copy-id is not available)</span>
 <a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.ssh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
-<a id="__codelineno-73-3" name="__codelineno-73-3" href="#__codelineno-73-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA... comment&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.ssh/authorized_keys
+<a id="__codelineno-73-3" name="__codelineno-73-3" href="#__codelineno-73-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"ssh-ed25519 AAAA... comment"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.ssh/authorized_keys
 <a id="__codelineno-73-4" name="__codelineno-73-4" href="#__codelineno-73-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/authorized_keys
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>(no output — command completes silently)

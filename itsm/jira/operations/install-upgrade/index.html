@@ -7487,14 +7487,14 @@
 
 <h1 id="jira-install-and-upgrade">Jira — Install and Upgrade<a class="headerlink" href="#jira-install-and-upgrade" title="Permanent link">&para;</a></h1>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all installed apps and versions</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/plugins/1.0/plugin&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/plugins/1.0/plugin"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s2">import sys, json</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s2">plugins = json.load(sys.stdin)</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s2">for p in plugins:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s2">    print(f\&quot;{p.get(&#39;key&#39;,&#39;&#39;)}\t{p.get(&#39;version&#39;,&#39;&#39;)}\t{p.get(&#39;name&#39;,&#39;&#39;)}\&quot;)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-plugins-before.txt
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s2">    print(f\"{p.get('key','')}\t{p.get('version','')}\t{p.get('name','')}\")</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-plugins-before.txt
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>cat<span class="w"> </span>/tmp/jira-plugins-before.txt
 </code></pre></div>
@@ -7532,8 +7532,8 @@
 </table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Download installer (replace version as appropriate)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">JIRA_VERSION</span><span class="o">=</span><span class="s2">&quot;9.12.0&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>wget<span class="w"> </span><span class="s2">&quot;https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-</span><span class="si">${</span><span class="nv">JIRA_VERSION</span><span class="si">}</span><span class="s2">-x64.bin&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">JIRA_VERSION</span><span class="o">=</span><span class="s2">"9.12.0"</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>wget<span class="w"> </span><span class="s2">"https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-</span><span class="si">${</span><span class="nv">JIRA_VERSION</span><span class="si">}</span><span class="s2">-x64.bin"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-O<span class="w"> </span>/tmp/jira-installer.bin
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>chmod<span class="w"> </span>+x<span class="w"> </span>/tmp/jira-installer.bin
@@ -7542,7 +7542,7 @@
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>/tmp/jira-installer.bin
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Or with response file for silent install:</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-response.varfile<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/tmp/jira-response.varfile<span class="w"> </span><span class="s">&lt;&lt; 'EOF'</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">#install4j response file</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">sys.adminRights$Boolean=true</span>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s">app.jiraHome=/var/atlassian/application-data/jira</span>
@@ -7552,7 +7552,7 @@
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>/tmp/jira-installer.bin<span class="w"> </span>-q<span class="w"> </span>-varfile<span class="w"> </span>/tmp/jira-response.varfile
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">&lt;jira-database-config&gt;</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>defaultDS<span class="nt">&lt;/name&gt;</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&lt;delegator-name&gt;</span>default<span class="nt">&lt;/delegator-name&gt;</span>
@@ -7585,7 +7585,7 @@
 </code></pre></div>
 <img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kbtOwzAUhvc8xVFniFS6dUBySIQoURw5jsSQxTRuatXYluNOiHfHlwJLyHik7z-X74zC8qMTWu3BiunssqxAT699u4cNZRcOBTtermYDn_OZGe4hTzM1Sf6VlQS9NJ4rLRMKGj1y2A7qZPUH1MVioqO43fpE57SBg7BsUCm2SPftM0FlFQK9mSwb-SreUURo6s6sW0VbjOtAEu6u9m91p_9bvKneaOQNZw5O2qb2MzzcwS7P82U_uKl8CEkZJ8yDup0xLuIE13VwH-ZoKd-9-NUjbo-C-0eIn0j_CGXUnGSH8sfjr9DEBFvJRKjDhfHM2M9vnn0Dq_qpnw==?" />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Database backup</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>pg_dump<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_DB_PASSWORD</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>pg_dump<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-Fc<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-f<span class="w"> </span>/backup/jira/db/jira_pre_upgrade_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.pgdump
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
@@ -7594,12 +7594,12 @@
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>/backup/jira/shared-pre-upgrade-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>/
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pg_dump: [client_min_messages=warning] 
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pg_dump: dumping database &quot;jiradb&quot; schema public
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pg_dump: dumping database &quot;jiradb&quot; schema public table &quot;cwd_user&quot;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>pg_dump: dumping database &quot;jiradb&quot; schema public table &quot;jira_issue&quot;
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pg_dump: dumping database &quot;jiradb&quot; schema public table &quot;jira_worklog&quot;
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pg_dump: dumping database &quot;jiradb&quot; schema public table &quot;ao_60db71_board&quot;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>pg_dump: dumping database &quot;jiradb&quot; schema public table &quot;ao_60db71_sprint&quot;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pg_dump: dumping database "jiradb" schema public
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pg_dump: dumping database "jiradb" schema public table "cwd_user"
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>pg_dump: dumping database "jiradb" schema public table "jira_issue"
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pg_dump: dumping database "jiradb" schema public table "jira_worklog"
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pg_dump: dumping database "jiradb" schema public table "ao_60db71_board"
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>pg_dump: dumping database "jiradb" schema public table "ao_60db71_sprint"
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>sending incremental file list
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>shared/
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>shared/plugins/
@@ -7640,8 +7640,8 @@
 </tbody>
 </table>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">NEW_VERSION</span><span class="o">=</span><span class="s2">&quot;9.12.3&quot;</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>wget<span class="w"> </span><span class="s2">&quot;https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-</span><span class="si">${</span><span class="nv">NEW_VERSION</span><span class="si">}</span><span class="s2">-x64.bin&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">NEW_VERSION</span><span class="o">=</span><span class="s2">"9.12.3"</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>wget<span class="w"> </span><span class="s2">"https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-</span><span class="si">${</span><span class="nv">NEW_VERSION</span><span class="si">}</span><span class="s2">-x64.bin"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-O<span class="w"> </span>/tmp/jira-upgrade-<span class="si">${</span><span class="nv">NEW_VERSION</span><span class="si">}</span>.bin
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>chmod<span class="w"> </span>+x<span class="w"> </span>/tmp/jira-upgrade-<span class="si">${</span><span class="nv">NEW_VERSION</span><span class="si">}</span>.bin
 </code></pre></div>
@@ -7650,7 +7650,7 @@
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Connecting to www.atlassian.com (www.atlassian.com)|104.16.132.229|:443... connected.
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>HTTP request sent, awaiting response... 200 OK
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Length: 892547821 (851M) [application/octet-stream]
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Saving to: &#39;/tmp/jira-upgrade-9.12.3.bin&#39;
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Saving to: '/tmp/jira-upgrade-9.12.3.bin'
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>jira-upgrade-9.12.3.bin    45%[=========&gt;          ] 382.4M  8.92MB/s  eta 52s
 </code></pre></div>
@@ -7680,16 +7680,16 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># HAProxy — mark backend server as drain</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;set server jira_backend/jira-app-01 state drain&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"set server jira_backend/jira-app-01 state drain"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>socat<span class="w"> </span>stdio<span class="w"> </span>/var/run/haproxy/admin.sock
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Wait for active connections to complete (check count)</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>watch<span class="w"> </span>-n5<span class="w"> </span><span class="s2">&quot;echo &#39;show stat&#39; | socat stdio /var/run/haproxy/admin.sock | cut -d&#39;,&#39; -f1,2,8&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>watch<span class="w"> </span>-n5<span class="w"> </span><span class="s2">"echo 'show stat' | socat stdio /var/run/haproxy/admin.sock | cut -d',' -f1,2,8"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># First command (no output — command completes silently)
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a># Second command output (watch refreshes every 5 seconds):
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Every 5.0s: echo &#39;show stat&#39; | socat stdio /var/run/haproxy/admin.sock | cut -d&#39;,&#39; -f1,2,8
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Every 5.0s: echo 'show stat' | socat stdio /var/run/haproxy/admin.sock | cut -d',' -f1,2,8
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>pxname,svname,scur
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>jira_backend,jira-app-01,12
@@ -7697,7 +7697,7 @@
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>jira_backend,jira-app-03,15
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>jira_backend,BACKEND,35
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Every 5.0s: echo &#39;show stat&#39; | socat stdio /var/run/haproxy/admin.sock | cut -d&#39;,&#39; -f1,2,8
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Every 5.0s: echo 'show stat' | socat stdio /var/run/haproxy/admin.sock | cut -d',' -f1,2,8
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
 <a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>pxname,svname,scur
 <a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>jira_backend,jira-app-01,8
@@ -7705,7 +7705,7 @@
 <a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>jira_backend,jira-app-03,15
 <a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>jira_backend,BACKEND,31
 <a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Every 5.0s: echo &#39;show stat&#39; | socat stdio /var/run/haproxy/admin.sock | cut -d&#39;,&#39; -f1,2,8
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>Every 5.0s: echo 'show stat' | socat stdio /var/run/haproxy/admin.sock | cut -d',' -f1,2,8
 <a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
 <a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>pxname,svname,scur
 <a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>jira_backend,jira-app-01,0
@@ -7818,7 +7818,7 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Schema upgrade progress (during startup)</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;schema|migration|upgrade&quot;</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"schema|migration|upgrade"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>2024-01-15 09:42:17,234 INFO [main] [com.atlassian.jira.upgrade.UpgradeManager] Starting schema upgrade from version 8.19.0 to 8.20.1
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>2024-01-15 09:42:18,567 INFO [main] [com.atlassian.jira.upgrade.SchemaUpgradeTask] Executing migration: AddColumnToIssueTable
@@ -7852,31 +7852,31 @@
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Monitor startup</span>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/atlassian/jira/logs/catalina.out<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;INFO|ERROR|WARN|started&quot;</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"INFO|ERROR|WARN|started"</span>
 <a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Health check</span>
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://jira.example.com/status
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># {&quot;state&quot;:&quot;RUNNING&quot;}</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># {"state":"RUNNING"}</span>
 <a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
 <a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># Version check</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/serverInfo&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">  </span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/serverInfo"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>[1] 12345
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>tail: cannot open &#39;/opt/atlassian/jira/logs/catalina.out&#39; for reading: No such file or directory
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>tail: cannot open '/opt/atlassian/jira/logs/catalina.out' for reading: No such file or directory
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>2024-01-15 09:42:23,156 INFO [main] atlassian.jira.startup.JiraStartupListener - JIRA started successfully in 45 seconds
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>2024-01-15 09:42:24,203 INFO [main] atlassian.jira.startup.JiraStartupListener - Jira 8.20.6 started
 <a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>2024-01-15 09:42:25,891 WARN [main] com.atlassian.jira.upgrade - Running upgrade tasks
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>2024-01-15 09:42:31,445 INFO [main] atlassian.jira.upgrade - Upgrade completed
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>{&quot;state&quot;:&quot;RUNNING&quot;}
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>{"state":"RUNNING"}
 <a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>{
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  &quot;baseUrl&quot;: &quot;https://jira.example.com&quot;,
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  &quot;version&quot;: &quot;8.20.6&quot;,
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  &quot;versionNumbers&quot;: [8, 20, 6, 0],
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>  &quot;buildNumber&quot;: 820061,
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  &quot;buildDate&quot;: &quot;2023-11-22T00:00:00.000+0000&quot;,
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  &quot;serverTitle&quot;: &quot;JIRA Production&quot;,
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>  &quot;scmInfo&quot;: &quot;abc1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9&quot;
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  "baseUrl": "https://jira.example.com",
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  "version": "8.20.6",
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  "versionNumbers": [8, 20, 6, 0],
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>  "buildNumber": 820061,
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  "buildDate": "2023-11-22T00:00:00.000+0000",
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  "serverTitle": "JIRA Production",
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>  "scmInfo": "abc1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9"
 <a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -7904,7 +7904,7 @@
 </tbody>
 </table>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;set server jira_backend/jira-app-01 state ready&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"set server jira_backend/jira-app-01 state ready"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>socat<span class="w"> </span>stdio<span class="w"> </span>/var/run/haproxy/admin.sock
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>(no output — command completes silently)
@@ -7931,23 +7931,23 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Verify all apps (plugins) re-enabled</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/plugins/1.0/plugin&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/plugins/1.0/plugin"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="s2">import sys, json</span>
 <a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="s2">plugins = json.load(sys.stdin)</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="s2">disabled = [p for p in plugins if not p.get(&#39;enabled&#39;, True)]</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="s2">print(f&#39;{len(disabled)} plugin(s) disabled:&#39;)</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="s2">disabled = [p for p in plugins if not p.get('enabled', True)]</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="s2">print(f'{len(disabled)} plugin(s) disabled:')</span>
 <a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="s2">for p in disabled:</span>
-<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="s2">    print(f\&quot;  {p.get(&#39;key&#39;)} — {p.get(&#39;name&#39;)}\&quot;)</span>
-<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="s2">&quot;</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="s2">    print(f\"  {p.get('key')} — {p.get('name')}\")</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="s2">"</span>
 <a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>
 <a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="c1"># Re-index if major version upgrade</span>
-<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex?type=BACKGROUND_PREFERRED&quot;</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="w">  </span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex?type=BACKGROUND_PREFERRED"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>0 plugin(s) disabled:
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>{&quot;taskId&quot;: &quot;AO_12345678_REINDEX_001&quot;}
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>{"taskId": "AO_12345678_REINDEX_001"}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7983,11 +7983,11 @@
 <a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>
 <a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="c1"># 3. Restore database (only if DB schema was modified)</span>
 <a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = &#39;jiradb&#39;;&quot;</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'jiradb';"</span>
 <a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE jiradb; CREATE DATABASE jiradb OWNER jira ENCODING &#39;UTF8&#39;;&quot;</span>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">"DROP DATABASE jiradb; CREATE DATABASE jiradb OWNER jira ENCODING 'UTF8';"</span>
 <a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>
-<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>pg_restore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">JIRA_DB_PASSWORD</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>pg_restore<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="w">  </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>--jobs<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">  </span>/backup/jira/db/jira_pre_upgrade_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.pgdump
 <a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>
@@ -7999,18 +7999,18 @@
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>(no output — command completes silently)
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>(no output — command completes silently)
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>WARNING:  terminating connection for user &quot;postgres&quot; auth method md5
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>WARNING:  terminating connection for user "postgres" auth method md5
 <a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>       pg_terminate_backend
 <a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>------------------------
 <a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>                       t
 <a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>                       t
 <a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>                       t
 <a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>(3 rows)
-<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>NOTICE:  database &quot;jiradb&quot; does not exist, skipping
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>NOTICE:  database "jiradb" does not exist, skipping
 <a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>CREATE DATABASE
-<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>pg_restore: error: could not execute query: ERROR:  role &quot;jira&quot; does not exist
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>pg_restore: error: could not execute query: ERROR:  role "jira" does not exist
 <a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>(no output — command completes silently)
-<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>{&quot;state&quot;:&quot;RUNNING&quot;,&quot;buildNumber&quot;:8503,&quot;version&quot;:&quot;8.20.11&quot;,&quot;type&quot;:&quot;Cloud&quot;}
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>{"state":"RUNNING","buildNumber":8503,"version":"8.20.11","type":"Cloud"}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

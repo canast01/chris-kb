@@ -7326,23 +7326,23 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Confirm last test completed successfully within the past 30 days</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># SRM REST API — check last test result</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">&quot;https://srm-prod.corp.local/api/rest/vr/1.0/api/recoveryplans&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;lastTestResult&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">"admin:&lt;pass&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">"https://srm-prod.corp.local/api/rest/vr/1.0/api/recoveryplans"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Accept: application/json"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">"lastTestResult"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    &quot;id&quot;: &quot;recoveryplan-42&quot;,
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    &quot;name&quot;: &quot;DR-Failover-Primary-DC&quot;,
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    &quot;description&quot;: &quot;Production VMware cluster failover to secondary site&quot;,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    &quot;lastTestResult&quot;: {
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        &quot;status&quot;: &quot;SUCCESS&quot;,
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        &quot;timestamp&quot;: &quot;2024-01-15T14:32:18.000Z&quot;,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        &quot;duration&quot;: &quot;PT2H14M&quot;,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        &quot;recoveredVMs&quot;: 47,
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        &quot;failedVMs&quot;: 0
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    "id": "recoveryplan-42",
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    "name": "DR-Failover-Primary-DC",
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    "description": "Production VMware cluster failover to secondary site",
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    "lastTestResult": {
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        "status": "SUCCESS",
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        "timestamp": "2024-01-15T14:32:18.000Z",
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        "duration": "PT2H14M",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        "recoveredVMs": 47,
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        "failedVMs": 0
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    },
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    &quot;nextScheduledTest&quot;: &quot;2024-02-15T02:00:00.000Z&quot;,
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    &quot;protectionGroupCount&quot;: 3
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    "nextScheduledTest": "2024-02-15T02:00:00.000Z",
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    "protectionGroupCount": 3
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -7435,8 +7435,8 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Example: stop application services on VMs at primary site</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># (Application-specific — coordinate with app owner)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ssh<span class="w"> </span>app-server-01.prod<span class="w"> </span><span class="s2">&quot;sudo systemctl stop myapp&quot;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ssh<span class="w"> </span>db-server-01.prod<span class="w"> </span><span class="s2">&quot;sudo systemctl stop postgresql&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ssh<span class="w"> </span>app-server-01.prod<span class="w"> </span><span class="s2">"sudo systemctl stop myapp"</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ssh<span class="w"> </span>db-server-01.prod<span class="w"> </span><span class="s2">"sudo systemctl stop postgresql"</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Force a final SnapMirror update to capture quiesced state</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
@@ -7444,12 +7444,12 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Wait for transfer to complete</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:*<span class="w"> </span>-fields<span class="w"> </span>transfer-state
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># State must be &quot;Idle&quot; before proceeding</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># State must be "Idle" before proceeding</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Connection to app-server-01.prod closed.
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Connection to db-server-01.prod closed.
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Operation succeeded: SnapMirror update started for destination &quot;svm_dr:vol_dr_app01&quot;.
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Operation succeeded: SnapMirror update started for destination &quot;svm_dr:vol_dr_db01&quot;.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Operation succeeded: SnapMirror update started for destination "svm_dr:vol_dr_app01".
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Operation succeeded: SnapMirror update started for destination "svm_dr:vol_dr_db01".
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Destination Path             Transfer State
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>svm_dr:vol_dr_app01          Transferring
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>svm_dr:vol_dr_db01          Transferring
@@ -7492,31 +7492,31 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Via SRM UI (preferred for audit trail):</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># 1. Log in to SRM at primary site (or DR site if primary is down)</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># 2. Navigate: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 3. Click &quot;Run&quot; &gt; select &quot;Failover&quot; (not Test)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># 4. Confirm: &quot;I understand this is not a test&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 3. Click "Run" &gt; select "Failover" (not Test)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># 4. Confirm: "I understand this is not a test"</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># 5. Monitor progress in the recovery plan steps panel</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Via SRM REST API (for automation/scripted DR):</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Get recovery plan ID first</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nv">PLAN_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="s2">&quot;https://srm-dr.corp.local/api/rest/vr/1.0/api/recoveryplans&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d[&#39;list&#39;][0][&#39;id&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nv">PLAN_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">"admin:&lt;pass&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="s2">"https://srm-dr.corp.local/api/rest/vr/1.0/api/recoveryplans"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Accept: application/json"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; d=json.load(sys.stdin); print(d['list'][0]['id'])"</span><span class="k">)</span>
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Start recovery plan</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span><span class="s2">&quot;https://srm-dr.corp.local/api/rest/vr/1.0/api/recoveryplans/</span><span class="si">${</span><span class="nv">PLAN_ID</span><span class="si">}</span><span class="s2">/run&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;mode&quot;: &quot;failover&quot;}&#39;</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s2">"admin:&lt;pass&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span><span class="s2">"https://srm-dr.corp.local/api/rest/vr/1.0/api/recoveryplans/</span><span class="si">${</span><span class="nv">PLAN_ID</span><span class="si">}</span><span class="s2">/run"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"mode": "failover"}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  {
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    &quot;id&quot;: &quot;rp-42857d9c-1a3f-4b2e-9e11c-7f2d8a9b5c3e&quot;,
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    &quot;name&quot;: &quot;Production-DR-Plan-01&quot;,
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    &quot;status&quot;: &quot;ready&quot;,
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    &quot;siteId&quot;: &quot;site-dr-001&quot;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    "id": "rp-42857d9c-1a3f-4b2e-9e11c-7f2d8a9b5c3e",
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    "name": "Production-DR-Plan-01",
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    "status": "ready",
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    "siteId": "site-dr-001"
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  }
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>]
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>{&quot;taskId&quot;: &quot;task-8f4c2a91-7e3d-4b1f-a8c9-2e5f7d3a1b6c&quot;, &quot;status&quot;: &quot;running&quot;, &quot;progress&quot;: 0}
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>{"taskId": "task-8f4c2a91-7e3d-4b1f-a8c9-2e5f7d3a1b6c", "status": "running", "progress": 0}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7557,8 +7557,8 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># List available snapshots on the newly promoted DR volume</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Operation succeeded: SnapMirror relationship between &quot;svm_prod:vol_app01&quot; and &quot;svm_dr:vol_dr_app01&quot; has been broken.
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Operation succeeded: SnapMirror relationship between &quot;svm_prod:vol_db01&quot; and &quot;svm_dr:vol_dr_db01&quot; has been broken.
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Operation succeeded: SnapMirror relationship between "svm_prod:vol_app01" and "svm_dr:vol_dr_app01" has been broken.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Operation succeeded: SnapMirror relationship between "svm_prod:vol_db01" and "svm_dr:vol_dr_db01" has been broken.
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Vserver     Volume          Type
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>----------- --------------- ----
@@ -7600,15 +7600,15 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-dr</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c"># Rescan storage on all DR ESXi hosts</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nv">$drHosts</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span><span class="p">)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nv">$drHosts</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"DR-Cluster"</span><span class="p">)</span>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$drHosts</span><span class="p">)</span> <span class="p">{</span>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="nb">Get-VMHostStorage</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-RescanAllHba</span> <span class="n">-RescanVmfs</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="p">}</span>
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c"># Add NFS datastore pointing to DR ONTAP LIF</span>
 <a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$drHosts</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    <span class="nb">New-Datastore</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-Name</span> <span class="s2">&quot;ONTAP-DR-DS01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>      <span class="n">-NfsHost</span> <span class="s2">&quot;&lt;dr-nfs-lif-ip&gt;&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;/vol_dr_app01&quot;</span> <span class="n">-Nfs</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    <span class="nb">New-Datastore</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-Name</span> <span class="s2">"ONTAP-DR-DS01"</span> <span class="p">`</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>      <span class="n">-NfsHost</span> <span class="s2">"&lt;dr-nfs-lif-ip&gt;"</span> <span class="n">-Path</span> <span class="s2">"/vol_dr_app01"</span> <span class="n">-Nfs</span>
 <a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -7619,24 +7619,24 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-dr</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c"># Check VM status after SRM recovery</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"DR-Cluster"</span><span class="p">)</span> <span class="p">|</span>
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span> <span class="p">|</span>
 <a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  <span class="nb">Sort-Object</span> <span class="n">Name</span>
 <a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
 <a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c"># Power on any VM that did not start automatically (in dependency order)</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;db-server-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">"db-server-01"</span><span class="p">)</span>
 <a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">120</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;app-server-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">"app-server-01"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="32-application-health-checks">3.2 Application Health Checks<a class="headerlink" href="#32-application-health-checks" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Verify application service is running on DR VMs</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ssh<span class="w"> </span>app-server-01.dr<span class="w"> </span><span class="s2">&quot;systemctl is-active myapp &amp;&amp; curl -sf http://localhost:8080/health&quot;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ssh<span class="w"> </span>app-server-01.dr<span class="w"> </span><span class="s2">"systemctl is-active myapp &amp;&amp; curl -sf http://localhost:8080/health"</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Database connectivity</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;psql -U app_user -h localhost -c &#39;SELECT 1;&#39;&quot;</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">"psql -U app_user -h localhost -c 'SELECT 1;'"</span>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Check for data consistency (compare row counts against last known good)</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;psql -U app_user -d appdb -c &#39;SELECT COUNT(*) FROM orders;&#39;&quot;</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">"psql -U app_user -d appdb -c 'SELECT COUNT(*) FROM orders;'"</span>
 <a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Confirm storage I/O on DR ONTAP volume</span>
 <a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># On DR ONTAP cluster:</span>
@@ -7644,9 +7644,9 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01<span class="w"> </span>-fields<span class="w"> </span>used,available
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>active
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>{&quot;status&quot;:&quot;healthy&quot;,&quot;uptime&quot;:&quot;2847s&quot;,&quot;version&quot;:&quot;3.2.1&quot;}
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>{"status":"healthy","uptime":"2847s","version":"3.2.1"}
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a> psql (14.8, server 14.8)
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Type &quot;help&quot; for help.
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Type "help" for help.
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a> ?column? 
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>----------
@@ -7708,10 +7708,10 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
 <a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Update load balancer pool to use DR backend</span>
 <a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="c1"># (Vendor-specific — NSX ALB example)</span>
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="w">  </span><span class="s2">&quot;https://nsx-alb.corp.local/api/pool/app-pool&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;servers&quot;: [{&quot;ip&quot;: {&quot;addr&quot;: &quot;&lt;dr-app-ip&gt;&quot;, &quot;type&quot;: &quot;V4&quot;}, &quot;enabled&quot;: true}]}&#39;</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-u<span class="w"> </span><span class="s2">"admin:&lt;pass&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="w">  </span><span class="s2">"https://nsx-alb.corp.local/api/pool/app-pool"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"servers": [{"ip": {"addr": "&lt;dr-app-ip&gt;", "type": "V4"}, "enabled": true}]}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>;; TSIG error with server: tsig verify failure
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>;; Query time: 2 msec
@@ -7721,7 +7721,7 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
 <a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>192.168.50.25
 <a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>{&quot;status&quot;: &quot;success&quot;, &quot;pool_uuid&quot;: &quot;pool-app-001&quot;, &quot;servers_updated&quot;: 1, &quot;config_version&quot;: 42}
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>{"status": "success", "pool_uuid": "pool-app-001", "servers_updated": 1, "config_version": 42}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7756,8 +7756,8 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># (Primary volume is now the destination; DR volume is source)</span>
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Quiesce current DR production writes first (coordinate with app team)</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>ssh<span class="w"> </span>app-server-01.dr<span class="w"> </span><span class="s2">&quot;sudo systemctl stop myapp&quot;</span>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;sudo systemctl stop postgresql&quot;</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>ssh<span class="w"> </span>app-server-01.dr<span class="w"> </span><span class="s2">"sudo systemctl stop myapp"</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">"sudo systemctl stop postgresql"</span>
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
 <a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># On PRIMARY cluster — resync (pull changes from DR)</span>
 <a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>svm_dr:vol_dr_app01<span class="w"> </span><span class="se">\</span>
@@ -7807,8 +7807,8 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># In SRM UI at primary site (now fully restored):</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># 1. Navigate: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt;</span>
 <a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># 2. Confirm primary site is listed as the Recovery Site</span>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># 3. Click &quot;Reprotect&quot; — this reverses protection groups back to primary</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># 4. After reprotect completes, run the plan with &quot;Planned Migration&quot; mode</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># 3. Click "Reprotect" — this reverses protection groups back to primary</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># 4. After reprotect completes, run the plan with "Planned Migration" mode</span>
 <a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1">#    to fail VMs back cleanly without data loss</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c"># Post-failback: update DNS back to primary site IPs</span>
@@ -7820,7 +7820,7 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="n">EOF</span>
 <a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
 <a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="c"># Verify services healthy on primary</span>
-<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="n">ssh</span> <span class="n">app-server</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">prod</span> <span class="s2">&quot;systemctl is-active myapp &amp;&amp; curl -sf http://localhost:8080/health&quot;</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="n">ssh</span> <span class="n">app-server</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">prod</span> <span class="s2">"systemctl is-active myapp &amp;&amp; curl -sf http://localhost:8080/health"</span>
 </code></pre></div>
 <h3 id="43-re-establish-normal-snapmirror-direction">4.3 Re-establish Normal SnapMirror Direction<a class="headerlink" href="#43-re-establish-normal-snapmirror-direction" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># After failback, restore the original SnapMirror direction</span>
@@ -7839,11 +7839,11 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="c1"># Verify</span>
 <a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:*<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Operation succeeded: SnapMirror relationship between &quot;svm_prod:vol_prod_app01&quot; and &quot;svm_dr:vol_dr_app01&quot; is broken.
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Operation succeeded: SnapMirror relationship between "svm_prod:vol_prod_app01" and "svm_dr:vol_dr_app01" is broken.
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
 <a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>Operation succeeded: SnapMirror relationship created
 <a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Operation succeeded: SnapMirror resync started on destination &quot;svm_dr:vol_dr_app01&quot;.
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Operation succeeded: SnapMirror resync started on destination "svm_dr:vol_dr_app01".
 <a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
 <a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>Source Destination State Lag-time
 <a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>------- ----------- ------- --------
@@ -7944,7 +7944,7 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>svm_dr      vol_dr_app01    daily.2024-01-15_0000                    2.3GB valid
 <a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>svm_dr      vol_dr_app01    daily.2024-01-14_0000                    2.2GB valid
 <a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
-<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>Volume restore: Restoring from snapshot &quot;hourly.2024-01-15_2300&quot; on volume &quot;vol_dr_app01&quot; in Vserver &quot;svm_dr&quot;.
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>Volume restore: Restoring from snapshot "hourly.2024-01-15_2300" on volume "vol_dr_app01" in Vserver "svm_dr".
 <a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>This operation will overwrite all data on the volume.
 <a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>Do you want to continue? {y|n}: y
 <a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>Restore operation completed successfully.

@@ -8172,7 +8172,7 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div></li>
 <li>If a large resync is in progress, wait for it to complete before taking action — do not add hosts or make policy changes mid-resync:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s1">&#39;esxcli vsan debug resync list&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s1">'esxcli vsan debug resync list'</span>
 </code></pre></div></li>
 <li>If capacity is genuinely exhausted, defer any maintenance window that would trigger additional resync.</li>
 <li>If running an erasure coding policy (RAID-5/6), consider whether switching lower-priority VMs to RAID-1 temporarily frees space (RAID-5 uses 1.33× vs RAID-1 at 2×).</li>
@@ -8247,7 +8247,7 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
 </code></pre></div></li>
 <li>If identity source (AD) is unreachable, verify DNS and connectivity to the domain controller from the VCSA:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>nslookup<span class="w"> </span>&lt;domain-controller-fqdn&gt;
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-ip&gt;<span class="w"> </span>-x<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=local&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-ip&gt;<span class="w"> </span>-x<span class="w"> </span>-b<span class="w"> </span><span class="s2">"dc=corp,dc=local"</span>
 </code></pre></div></li>
 </ol>
 <hr />
@@ -8308,13 +8308,13 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
 <li>
 <p>To monitor resync progress:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># From any host SSH — watch resync clear</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;esxcli vsan debug resync list&#39;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">'esxcli vsan debug resync list'</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>If the object remains inaccessible after the host recovers, force a resync via CLOM:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From host SSH — trigger CLOM to re-evaluate object placement</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>reconfigure<span class="w"> </span>--object-uuid<span class="w"> </span>&lt;uuid&gt;<span class="w"> </span>--policy<span class="w"> </span><span class="s2">&quot;&lt;storage-policy-XML&gt;&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>reconfigure<span class="w"> </span>--object-uuid<span class="w"> </span>&lt;uuid&gt;<span class="w"> </span>--policy<span class="w"> </span><span class="s2">"&lt;storage-policy-XML&gt;"</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -8392,7 +8392,7 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
 <p>If the log partition is full (common cause), archive and truncate large logs:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/log
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Find large files</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log&quot;</span><span class="w"> </span>-size<span class="w"> </span>+500M
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.log"</span><span class="w"> </span>-size<span class="w"> </span>+500M
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Truncate (do not delete — open file handles)</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>&gt;<span class="w"> </span>/storage/log/vmware/vpxd/vpxd.log
 </code></pre></div></p>
@@ -8480,7 +8480,7 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
 <ol>
 <li>
 <p><strong>Immediate:</strong> If VMs were running on the host, confirm HA has restarted them on other hosts:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Host</span><span class="p">.</span><span class="n">Name</span> <span class="o">-ne</span> <span class="s2">&quot;&lt;failed-host&gt;&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Host</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Host</span><span class="p">.</span><span class="n">Name</span> <span class="o">-ne</span> <span class="s2">"&lt;failed-host&gt;"</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Host</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c"># Check recent HA events</span>
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">500</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-is</span> <span class="no">[VMware.Vim.VmFailoverSucceededEvent]</span> <span class="p">}</span>
 </code></pre></div></p>
@@ -8494,7 +8494,7 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
 </li>
 <li>
 <p>After reboot, check vmkernel log for the panic cause and module:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>grep<span class="w"> </span>-B5<span class="w"> </span>-A20<span class="w"> </span><span class="s2">&quot;PCPU&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>grep<span class="w"> </span>-B5<span class="w"> </span>-A20<span class="w"> </span><span class="s2">"PCPU"</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
 </code></pre></div></p>
 </li>
 <li>

@@ -7337,13 +7337,13 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1">#    exitCode 127 → Command not found (CMD path wrong inside image)</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1">#    exitCode 139 → Segmentation fault (SIGSEGV) — memory corruption or arch mismatch</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1">#    exitCode 143 → SIGTERM not handled; terminationGracePeriodSeconds exceeded</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1">#    &quot;exec format error&quot; → Image built for wrong CPU architecture (e.g. arm64 on x86 node)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1">#    "exec format error" → Image built for wrong CPU architecture (e.g. arm64 on x86 node)</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># 5. Debug the image interactively (overrides entrypoint)</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>oc<span class="w"> </span>debug<span class="w"> </span>deployment/&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># 6. Check if a ConfigMap or Secret the pod depends on is missing</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Reason\|Error\|Warning&quot;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">"Reason\|Error\|Warning"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$ oc logs nginx-deployment-5d4b8c9f7-k2x9m -n production
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2024-01-15T09:23:45.123Z [INFO] Starting nginx server
@@ -7374,10 +7374,10 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>$ oc debug deployment/nginx-deployment -n production
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Starting pod/nginx-deployment-debug, command was: /usr/sbin/nginx -g daemon off;
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Pod IP: 10.244.2.15
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>If you don&#39;t see a command prompt, try entering &#39;sh&#39;.
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>If you don't see a command prompt, try entering 'sh'.
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>sh-4.4#
 <a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>$ oc describe pod nginx-deployment-5d4b8c9f7-k2x9m -n production | grep -A5 &quot;Reason\|Error\|Warning&quot;
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>$ oc describe pod nginx-deployment-5d4b8c9f7-k2x9m -n production | grep -A5 "Reason\|Error\|Warning"
 <a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  Warning  Failed     45s   Error: OOMKilled
 <a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  Warning  BackOff    1m    Back-off restarting failed container
 </code></pre></div>
@@ -7409,7 +7409,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <h2 id="imagepullbackoff">ImagePullBackOff<a class="headerlink" href="#imagepullbackoff" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Check which image and exact error</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Events: Failed to pull image &quot;quay.io/myapp:latest&quot;: ...</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Events: Failed to pull image "quay.io/myapp:latest": ...</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. Common causes and fixes:</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># a) Wrong image name/tag → fix image reference in deployment</span>
@@ -7430,7 +7430,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
 <a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># 4. Check global pull secret (applies to all namespaces)</span>
 <a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>oc<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>pull-secret<span class="w"> </span>-n<span class="w"> </span>openshift-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.\.dockerconfigjson}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.\.dockerconfigjson}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
 <a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># 5. Check ImageContentSourcePolicy for air-gapped mirror config</span>
 <a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>oc<span class="w"> </span>get<span class="w"> </span>imagecontentsourcepolicy
@@ -7443,18 +7443,18 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Type     Reason                 Age                From               Message
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  ----     ------                 ---                ----               -------
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Normal   Scheduled              2m45s              default-scheduler  Successfully assigned production/my-app-pod-5d8f9 to worker-node-03
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Warning  Failed                 2m30s              kubelet            Failed to pull image &quot;quay.io/myapp:latest&quot;: rpc error: code = Unknown desc = failed to pull and unpack image &quot;quay.io/myapp:latest&quot;: failed to resolve reference &quot;quay.io/myapp:latest&quot;: unexpected status code [manifests latest]: 401
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Warning  Failed                 2m30s              kubelet            Failed to pull image "quay.io/myapp:latest": rpc error: code = Unknown desc = failed to pull and unpack image "quay.io/myapp:latest": failed to resolve reference "quay.io/myapp:latest": unexpected status code [manifests latest]: 401
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>secret/registry-creds created
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>secretlink.authorization.openshift.io/default-registry-creds-pull created
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>{
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  &quot;auths&quot;: {
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    &quot;quay.io&quot;: {
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;auth&quot;: &quot;dXNlcjp0b2tlbjEyMzQ1Ng==&quot;
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  "auths": {
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    "quay.io": {
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      "auth": "dXNlcjp0b2tlbjEyMzQ1Ng=="
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    },
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    &quot;registry.redhat.io&quot;: {
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>      &quot;auth&quot;: &quot;c2VydmljZWFjY291bnQ6cGFzc3dvcmQ=&quot;
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    "registry.redhat.io": {
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>      "auth": "c2VydmljZWFjY291bnQ6cGFzc3dvcmQ="
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    }
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  }
 <a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>}
@@ -7502,20 +7502,20 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Check events — scheduling failure reason is always in events</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># a) Insufficient resources: &quot;0/6 nodes are available: Insufficient cpu&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># a) Insufficient resources: "0/6 nodes are available: Insufficient cpu"</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {name: .metadata.name, cpu: .status.allocatable.cpu, mem: .status.allocatable.memory}&#39;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.items[] | {name: .metadata.name, cpu: .status.allocatable.cpu, mem: .status.allocatable.memory}'</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># b) SCC violation: &quot;unable to validate against any security context constraint&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># b) SCC violation: "unable to validate against any security context constraint"</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>scc-subject-review<span class="w"> </span>-f<span class="w"> </span>pod.yaml
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>add-scc-to-user<span class="w"> </span>anyuid<span class="w"> </span>-z<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># c) Taint/toleration mismatch: &quot;node(s) had untolerated taint&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># c) Taint/toleration mismatch: "node(s) had untolerated taint"</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Taint
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Add toleration to pod spec if intentional; otherwise investigate node taints</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># d) NodeAffinity mismatch: &quot;node(s) didn&#39;t match nodeAffinity&quot;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># d) NodeAffinity mismatch: "node(s) didn't match nodeAffinity"</span>
 <a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--show-labels<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;required-label&gt;
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># e) PVC not bound: pod stays Pending until PVC is Bound</span>
@@ -7524,7 +7524,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Common: wrong StorageClass or no provisioner available</span>
 <a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
 <a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># f) Topology constraint: PodTopologySpreadConstraints too strict</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.topologySpreadConstraints}&#39;</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.topologySpreadConstraints}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Name:         nginx-app-5d4c9f2b1
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Namespace:    production
@@ -7547,7 +7547,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>RESOURCE   ALLOWED  MATCHED  TEMPLATE
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>scc        anyuid   false    -
 <a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>pod &quot;nginx-app-5d4c9f2b1&quot; is forbidden: unable to validate against any security context constraint: [spec.securityContext.runAsUser: Invalid value: 1000: must be in ranges [0-65535]]
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>pod "nginx-app-5d4c9f2b1" is forbidden: unable to validate against any security context constraint: [spec.securityContext.runAsUser: Invalid value: 1000: must be in ranges [0-65535]]
 <a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Name:        worker-04.lab.local
 <a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Taints:      gpu=true:NoSchedule,workload=batch:NoExecute
@@ -7560,7 +7560,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>app-data-pvc        Pending                                             10Gi       RWO            fast-ssd       3m
 <a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>database-pvc        Bound    pvc-a7f2c8d1-9e4b-4a2c-b1f3-8c9d2e1f5a6b  50Gi       RWO            standard       12h
 <a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>[{&quot;maxSkew&quot;:1,&quot;topologyKey&quot;:&quot;kubernetes.io/hostname&quot;,&quot;whenUnsatisfiable&quot;:&quot;DoNotSchedule&quot;}]
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>[{"maxSkew":1,"topologyKey":"kubernetes.io/hostname","whenUnsatisfiable":"DoNotSchedule"}]
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7596,7 +7596,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span>--containers
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 3. Check Prometheus for historical memory usage</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Query: container_memory_working_set_bytes{pod=&quot;&lt;pod&gt;&quot;, namespace=&quot;&lt;ns&gt;&quot;}</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Query: container_memory_working_set_bytes{pod="&lt;pod&gt;", namespace="&lt;ns&gt;"}</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># 4. Increase memory limit</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>oc<span class="w"> </span><span class="nb">set</span><span class="w"> </span>resources<span class="w"> </span>deployment<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="se">\</span>
@@ -7734,7 +7734,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">ETCD_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">etcd</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check endpoint status: DB SIZE and RAFT_APPLIED_INDEX</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">"</span><span class="nv">$ETCD_POD</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>--write-out<span class="o">=</span>table<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
@@ -7743,16 +7743,16 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Check P99 WAL fsync latency via Prometheus</span>
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Alert threshold: &gt; 10ms P99</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Query: etcd_disk_wal_fsync_duration_seconds{quantile=&quot;0.99&quot;}</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Query: etcd_disk_wal_fsync_duration_seconds{quantile="0.99"}</span>
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Check disk latency on the etcd node</span>
 <a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;master-node&gt;
 <a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>chroot<span class="w"> </span>/host
 <a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Use iostat to identify disk saturation:</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Device|sd|nvme&quot;</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Device|sd|nvme"</span>
 <a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
 <a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="c1"># Defrag etcd if DB size &gt; 8 GB</span>
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ETCD_POD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span><span class="s2">"</span><span class="nv">$ETCD_POD</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">  </span>etcdctl<span class="w"> </span>defrag<span class="w"> </span>--cluster<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://localhost:2379<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">  </span>--cacert<span class="o">=</span>...<span class="w"> </span>--cert<span class="o">=</span>...<span class="w"> </span>--key<span class="o">=</span>...
@@ -7845,8 +7845,8 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Address: 172.30.0.1
 <a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
 <a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>[INFO] plugin/reload: Running configuration MD5 = 1a2b3c4d5e6f7g8h
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>[INFO] 10.128.0.15:54321 - 16384 &quot;A&quot; &quot;nginx.default.svc.cluster.local.&quot; udp 54 false 2 0.001234s
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>[INFO] 10.128.1.22:45678 - 16384 &quot;A&quot; &quot;kubernetes.default.svc.cluster.local.&quot; udp 54 false 2 0.000891s
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>[INFO] 10.128.0.15:54321 - 16384 "A" "nginx.default.svc.cluster.local." udp 54 false 2 0.001234s
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>[INFO] 10.128.1.22:45678 - 16384 "A" "kubernetes.default.svc.cluster.local." udp 54 false 2 0.000891s
 <a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
 <a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>apiVersion: v1
 <a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>kind: ConfigMap
@@ -7916,7 +7916,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># storage degraded → CSI driver pods; check underlying storage system</span>
 <a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
 <a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># 4. Check if Progressing is stuck (often indicates upgrade issue)</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True.*False.*False&quot;</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"True.*False.*False"</span>
 <a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Any CO with Available=False, Degraded=True, or Progressing=True for &gt; 15 min</span>
 <a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>
 <a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="c1"># 5. Force operator to reconcile (redeploy its managed pods)</span>
@@ -7969,7 +7969,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 <a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a>2024-01-15T14:18:22.891Z [INFO] Successfully loaded Corefile configuration
 <a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a>2024-01-15T14:18:23.012Z [INFO] Ready to accept queries
 <a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a>
-<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>$ oc get co | grep -v &quot;True.*False.*False&quot;
+<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>$ oc get co | grep -v "True.*False.*False"
 <a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a>NAME                                       AVAILABLE   DEGRADED   PROGRESSING   SINCE   VERSION
 <a id="__codelineno-15-50" name="__codelineno-15-50" href="#__codelineno-15-50"></a>authentication                             True        False      False         2d      4.13.8
 <a id="__codelineno-15-51" name="__codelineno-15-51" href="#__codelineno-15-51"></a>cloud-credential                           True        False      False         2d      4.13.8

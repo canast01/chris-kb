@@ -8913,7 +8913,7 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify all DNS entries resolve from the management network</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span><span class="w"> </span>fqdn<span class="w"> </span><span class="k">in</span><span class="w"> </span>sddc-manager.example.local<span class="w"> </span>vcenter-mgmt.example.local<span class="w"> </span>nsx-mgr-01.example.local<span class="w"> </span>esxi-mgmt-01.example.local<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$fqdn</span><span class="s2">: &quot;</span><span class="p">;</span><span class="w"> </span>nslookup<span class="w"> </span><span class="nv">$fqdn</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Address&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$fqdn</span><span class="s2">: "</span><span class="p">;</span><span class="w"> </span>nslookup<span class="w"> </span><span class="nv">$fqdn</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Address"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">done</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sddc-manager.example.local: Address: 192.168.1.10
@@ -8982,10 +8982,10 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 <h3 id="esxi-pre-install-on-management-hosts">ESXi Pre-Install on Management Hosts<a class="headerlink" href="#esxi-pre-install-on-management-hosts" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each management host: install ESXi, set management IP, FQDN, DNS, NTP</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Then verify SSH access</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ssh<span class="w"> </span>root@esxi-mgmt-01.example.local<span class="w"> </span><span class="s2">&quot;esxcli system hostname get&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ssh<span class="w"> </span>root@esxi-mgmt-02.example.local<span class="w"> </span><span class="s2">&quot;esxcli system hostname get&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ssh<span class="w"> </span>root@esxi-mgmt-03.example.local<span class="w"> </span><span class="s2">&quot;esxcli system hostname get&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ssh<span class="w"> </span>root@esxi-mgmt-04.example.local<span class="w"> </span><span class="s2">&quot;esxcli system hostname get&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ssh<span class="w"> </span>root@esxi-mgmt-01.example.local<span class="w"> </span><span class="s2">"esxcli system hostname get"</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ssh<span class="w"> </span>root@esxi-mgmt-02.example.local<span class="w"> </span><span class="s2">"esxcli system hostname get"</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ssh<span class="w"> </span>root@esxi-mgmt-03.example.local<span class="w"> </span><span class="s2">"esxcli system hostname get"</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ssh<span class="w"> </span>root@esxi-mgmt-04.example.local<span class="w"> </span><span class="s2">"esxcli system hostname get"</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># All must return correct FQDNs</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Domain Name: example.local
@@ -9050,28 +9050,28 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 <h3 id="prepare-bringup-json-spec">Prepare Bringup JSON Spec<a class="headerlink" href="#prepare-bringup-json-spec" title="Permanent link">&para;</a></h3>
 <p>The VCF deployment parameter workbook (Excel) generates the JSON spec. Key sections:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;sddcManagerSpec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sddc-manager&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">&quot;ipAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.20&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&quot;netmask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;255.255.255.0&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">&quot;gateway&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.1&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example.local&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&quot;adminPassword&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">&quot;localPassword&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">"sddcManagerSpec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">"hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sddc-manager"</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">"ipAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.20"</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">"netmask"</span><span class="p">:</span><span class="w"> </span><span class="s2">"255.255.255.0"</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.1"</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">"domain"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example.local"</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">"adminPassword"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;password&gt;"</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">"localPassword"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;password&gt;"</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nt">&quot;vcenterSpec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nt">&quot;vcenterIp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.21&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nt">&quot;vcenterHostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vcenter-mgmt&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nt">&quot;licenseFile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;vCenter-licence-key&gt;&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nt">"vcenterSpec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nt">"vcenterIp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.21"</span><span class="p">,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nt">"vcenterHostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vcenter-mgmt"</span><span class="p">,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nt">"licenseFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;vCenter-licence-key&gt;"</span>
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="nt">&quot;nsxTSpec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="nt">&quot;nsxManagerSpecs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">      </span><span class="p">{</span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nsx-mgr-01&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.31&quot;</span><span class="p">},</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">      </span><span class="p">{</span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nsx-mgr-02&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.32&quot;</span><span class="p">},</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">      </span><span class="p">{</span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nsx-mgr-03&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.33&quot;</span><span class="p">}</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="nt">"nsxTSpec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="nt">"nsxManagerSpecs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">      </span><span class="p">{</span><span class="nt">"hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nsx-mgr-01"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.31"</span><span class="p">},</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">      </span><span class="p">{</span><span class="nt">"hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nsx-mgr-02"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.32"</span><span class="p">},</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">      </span><span class="p">{</span><span class="nt">"hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nsx-mgr-03"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.33"</span><span class="p">}</span>
 <a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="p">],</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="nt">&quot;vip&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.30&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="nt">&quot;vipFqdn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nsx-vip&quot;</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="nt">"vip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.30"</span><span class="p">,</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="nt">"vipFqdn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nsx-vip"</span>
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">}</span>
 </code></pre></div>
@@ -9121,11 +9121,11 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ssh<span class="w"> </span>admin@cloud-builder.example.local
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vcf/bringup/vcf-bringup.log
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>The authenticity of host &#39;cloud-builder.example.local (192.168.1.45)&#39; can&#39;t be established.
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>The authenticity of host 'cloud-builder.example.local (192.168.1.45)' can't be established.
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ECDSA key fingerprint is SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCd.
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Are you sure you want to continue connecting (yes/no)? yes
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Warning: Permanently added &#39;cloud-builder.example.local,192.168.1.45&#39; (ECDSA) to the list of known_hosts.
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>admin@cloud-builder.example.local&#39;s password:
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Warning: Permanently added 'cloud-builder.example.local,192.168.1.45' (ECDSA) to the list of known_hosts.
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>admin@cloud-builder.example.local's password:
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Last login: Wed Mar 13 14:22:18 2024 from 192.168.1.10
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>2024-03-13T14:35:42.123Z [INFO] VCF Bringup: Starting deployment phase 2 of 5
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>2024-03-13T14:35:58.456Z [INFO] Configuring management domain networking
@@ -9161,22 +9161,22 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Login: admin@local / &lt;password from JSON spec&gt;</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check management domain status</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin@local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>https://sddc-manager.example.local/v1/domains<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;status&quot;&#39;</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Expected: &quot;MANAGEMENT&quot; domain status &quot;ACTIVE&quot;</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"name"|"status"'</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Expected: "MANAGEMENT" domain status "ACTIVE"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  &quot;name&quot;: &quot;MANAGEMENT&quot;,
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;status&quot;: &quot;ACTIVE&quot;
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  "name": "MANAGEMENT",
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  "status": "ACTIVE"
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>}
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>{
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  &quot;name&quot;: &quot;WORKLOAD-01&quot;,
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  &quot;status&quot;: &quot;ACTIVE&quot;
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  "name": "WORKLOAD-01",
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  "status": "ACTIVE"
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>}
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>{
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  &quot;name&quot;: &quot;WORKLOAD-02&quot;,
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  &quot;status&quot;: &quot;ACTIVE&quot;
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  "name": "WORKLOAD-02",
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  "status": "ACTIVE"
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9212,33 +9212,33 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Rotate passwords for: vCenter SSO, NSX admin, ESXi root, SDDC Manager admin</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Via API: rotate all ESXi root passwords</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentialType&quot;:&quot;SSH&quot;,&quot;resourceType&quot;:&quot;ESXI&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin@local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"credentialType":"SSH","resourceType":"ESXI"}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span>https://sddc-manager.example.local/v1/credentials/rotate
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Monitor rotation task status</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin@local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span>https://sddc-manager.example.local/v1/tasks<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;type&quot;|&quot;status&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"type"|"status"'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  &quot;id&quot;: &quot;task-a7f2c9e1-4b6d-11ed-9c3a-005056a1b3f4&quot;,
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  &quot;type&quot;: &quot;CREDENTIAL_ROTATION&quot;,
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  &quot;status&quot;: &quot;RUNNING&quot;,
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  &quot;creationTimestamp&quot;: &quot;2024-01-15T09:42:33.521Z&quot;,
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  &quot;updateTimestamp&quot;: &quot;2024-01-15T09:43:12.891Z&quot;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  "id": "task-a7f2c9e1-4b6d-11ed-9c3a-005056a1b3f4",
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  "type": "CREDENTIAL_ROTATION",
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  "status": "RUNNING",
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  "creationTimestamp": "2024-01-15T09:42:33.521Z",
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  "updateTimestamp": "2024-01-15T09:43:12.891Z"
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>}
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>&quot;type&quot;: &quot;CREDENTIAL_ROTATION&quot;
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>&quot;status&quot;: &quot;RUNNING&quot;
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>&quot;type&quot;: &quot;CREDENTIAL_ROTATION&quot;
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>&quot;status&quot;: &quot;COMPLETED&quot;
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>&quot;type&quot;: &quot;BACKUP_TASK&quot;
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>&quot;status&quot;: &quot;COMPLETED&quot;
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>&quot;type&quot;: &quot;REMEDIATION&quot;
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>&quot;status&quot;: &quot;RUNNING&quot;
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>&quot;type&quot;: &quot;REMEDIATION&quot;
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>&quot;status&quot;: &quot;COMPLETED&quot;
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>"type": "CREDENTIAL_ROTATION"
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>"status": "RUNNING"
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>"type": "CREDENTIAL_ROTATION"
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>"status": "COMPLETED"
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>"type": "BACKUP_TASK"
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>"status": "COMPLETED"
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>"type": "REMEDIATION"
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>"status": "RUNNING"
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>"type": "REMEDIATION"
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>"status": "COMPLETED"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9286,33 +9286,33 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 </code></pre></div>
 <h3 id="verify-certificate-status">Verify Certificate Status<a class="headerlink" href="#verify-certificate-status" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check all component cert expiry</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin@local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>https://sddc-manager.example.local/v1/certificates<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;expirationDate|resourceFqdn&quot;</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"expirationDate|resourceFqdn"</span>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
 <a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># If CA-signed certs required:</span>
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># SDDC Manager → Security → Certificate Management</span>
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># → Generate CSR per component → sign with enterprise CA → import signed cert</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>{
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    &quot;expirationDate&quot;: &quot;2025-03-15T14:32:00.000Z&quot;,
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    &quot;resourceFqdn&quot;: &quot;sddc-manager.example.local&quot;
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    "expirationDate": "2025-03-15T14:32:00.000Z",
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    "resourceFqdn": "sddc-manager.example.local"
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>},
 <a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>{
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    &quot;expirationDate&quot;: &quot;2025-04-22T09:18:00.000Z&quot;,
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    &quot;resourceFqdn&quot;: &quot;vcenter.example.local&quot;
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    "expirationDate": "2025-04-22T09:18:00.000Z",
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    "resourceFqdn": "vcenter.example.local"
 <a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>},
 <a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>{
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    &quot;expirationDate&quot;: &quot;2025-02-28T16:45:00.000Z&quot;,
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    &quot;resourceFqdn&quot;: &quot;nsx-manager.example.local&quot;
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    "expirationDate": "2025-02-28T16:45:00.000Z",
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    "resourceFqdn": "nsx-manager.example.local"
 <a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>},
 <a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>{
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>    &quot;expirationDate&quot;: &quot;2025-05-10T11:22:00.000Z&quot;,
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    &quot;resourceFqdn&quot;: &quot;esxi-01.example.local&quot;
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>    "expirationDate": "2025-05-10T11:22:00.000Z",
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    "resourceFqdn": "esxi-01.example.local"
 <a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>},
 <a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>{
-<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>    &quot;expirationDate&quot;: &quot;2025-01-20T08:00:00.000Z&quot;,
-<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>    &quot;resourceFqdn&quot;: &quot;wsa.example.local&quot;
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>    "expirationDate": "2025-01-20T08:00:00.000Z",
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>    "resourceFqdn": "wsa.example.local"
 <a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9350,7 +9350,7 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># SDDC Manager → Inventory → Hosts → Commission</span>
 <a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># Provide: ESXi host FQDN, root credentials</span>
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># SDDC Manager validates: HCL match, DNS, NTP, SSH connectivity</span>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Host enters &quot;Unassigned&quot; state when commissioned</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Host enters "Unassigned" state when commissioned</span>
 </code></pre></div>
 <h3 id="create-network-pool">Create Network Pool<a class="headerlink" href="#create-network-pool" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>SDDC Manager → Network Settings → Network Pools → Create
@@ -9376,16 +9376,16 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 <a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>  Duration: ~45 minutes
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Monitor workload domain creation</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin@local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span>https://sddc-manager.example.local/v1/domains<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;status&quot;&#39;</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"name"|"status"'</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>&quot;name&quot;: &quot;management&quot;,
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>&quot;status&quot;: &quot;RUNNING&quot;
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>&quot;name&quot;: &quot;workload-domain-01&quot;,
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>&quot;status&quot;: &quot;CREATING&quot;
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>&quot;name&quot;: &quot;workload-domain-02&quot;,
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>&quot;status&quot;: &quot;RUNNING&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>"name": "management",
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>"status": "RUNNING"
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>"name": "workload-domain-01",
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>"status": "CREATING"
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>"name": "workload-domain-02",
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>"status": "RUNNING"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9420,7 +9420,7 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 <a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># All checks should return PASS</span>
 <a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># WARN items: document and create follow-up tickets</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>vcf@sddc-manager.example.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>vcf@sddc-manager.example.local's password: 
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Welcome to SDDC Manager v5.4.1 (Build 21567890)
 <a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.45
 <a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
@@ -9467,32 +9467,32 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 </div>
 <h3 id="verify-management-domain-components">Verify Management Domain Components<a class="headerlink" href="#verify-management-domain-components" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Check all component status via SDDC Manager API</span>
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin@local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span>https://sddc-manager.example.local/v1/system/inventory/components<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;componentType&quot;|&quot;status&quot;&#39;</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"componentType"|"status"'</span>
 <a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="c1"># Expected: all components ACTIVE</span>
 <a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
 <a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="c1"># Verify NSX Manager cluster health</span>
-<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin@local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="w">  </span>https://sddc-manager.example.local/v1/nsxt-clusters<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;status&quot;|&quot;version&quot;&#39;</span>
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"status"|"version"'</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>&quot;componentType&quot;: &quot;SDDC_MANAGER&quot;,
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>&quot;status&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>&quot;componentType&quot;: &quot;VCENTER&quot;,
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>&quot;status&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>&quot;componentType&quot;: &quot;NSX_MANAGER&quot;,
-<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>&quot;status&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>&quot;componentType&quot;: &quot;ESXI_MGMT&quot;,
-<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>&quot;status&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>&quot;componentType&quot;: &quot;VSAN&quot;,
-<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>&quot;status&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>&quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>&quot;version&quot;: &quot;3.2.1.1&quot;,
-<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>&quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>&quot;version&quot;: &quot;3.2.1.1&quot;,
-<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>&quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>&quot;version&quot;: &quot;3.2.1.1&quot;,
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>"componentType": "SDDC_MANAGER",
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>"status": "ACTIVE",
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>"componentType": "VCENTER",
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>"status": "ACTIVE",
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>"componentType": "NSX_MANAGER",
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>"status": "ACTIVE",
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>"componentType": "ESXI_MGMT",
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>"status": "ACTIVE",
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>"componentType": "VSAN",
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>"status": "ACTIVE",
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>"status": "HEALTHY",
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>"version": "3.2.1.1",
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>"status": "HEALTHY",
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>"version": "3.2.1.1",
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>"status": "HEALTHY",
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>"version": "3.2.1.1",
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9521,7 +9521,7 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 </div>
 <h3 id="verify-lcm-bundle-access">Verify LCM Bundle Access<a class="headerlink" href="#verify-lcm-bundle-access" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Confirm SDDC Manager can reach VMware depot</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://depot.vmware.com
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>https://depot.vmware.com
 <a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="c1"># Expected: 200</span>
 <a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>
 <a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1"># Trigger bundle check</span>

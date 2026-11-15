@@ -7984,7 +7984,7 @@ Active Directory diagnostic commands: run dcdiag tests on domain controllers, ch
 <h2 id="step-1-run-dcdiag-on-the-affected-dc">Step 1 — Run dcdiag on the affected DC<a class="headerlink" href="#step-1-run-dcdiag-on-the-affected-dc" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>:: Run ALL dcdiag tests — always start here
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dcdiag /test:all /v /s:&lt;dc-fqdn&gt; /f:C:\Logs\dcdiag.log
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>:: Review output: look for &quot;FAILED&quot; lines
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>:: Review output: look for "FAILED" lines
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>:: Quick focused run: most common failure sources
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>dcdiag /test:connectivity /test:dns /test:replications /test:services /test:netlogons /v
@@ -8125,13 +8125,13 @@ Active Directory diagnostic commands: run dcdiag tests on domain controllers, ch
 <hr />
 <h2 id="step-5-review-directory-services-and-security-event-logs">Step 5 — Review Directory Services and Security event logs<a class="headerlink" href="#step-5-review-directory-services-and-security-event-logs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Directory Services log — primary AD error source</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Services&quot;</span> <span class="n">-Newest</span> <span class="n">100</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">EntryType</span> <span class="o">-match</span> <span class="s2">&quot;Error|Warning&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">"Directory Services"</span> <span class="n">-Newest</span> <span class="n">100</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">EntryType</span> <span class="o">-match</span> <span class="s2">"Error|Warning"</span><span class="p">}</span> <span class="p">|</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="nb">Select </span><span class="n">TimeGenerated</span><span class="p">,</span> <span class="n">EventID</span><span class="p">,</span> <span class="n">Source</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  <span class="nb">Format-List</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Key replication event IDs</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Services&quot;</span> <span class="n">-Newest</span> <span class="n">200</span> <span class="p">|</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">"Directory Services"</span> <span class="n">-Newest</span> <span class="n">200</span> <span class="p">|</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">EventID</span> <span class="n">-in</span> <span class="p">@(</span><span class="n">1311</span><span class="p">,</span><span class="n">1388</span><span class="p">,</span><span class="n">1864</span><span class="p">,</span><span class="n">2042</span><span class="p">,</span><span class="n">1722</span><span class="p">,</span><span class="n">1925</span><span class="p">)}</span> <span class="p">|</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  <span class="nb">Select </span><span class="n">TimeGenerated</span><span class="p">,</span> <span class="n">EventID</span><span class="p">,</span> <span class="n">Message</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
@@ -8210,7 +8210,7 @@ Active Directory diagnostic commands: run dcdiag tests on domain controllers, ch
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>nltest /dbflag:0x0
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>:: Export Directory Services event log
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>wevtutil epl &quot;Directory Services&quot; C:\Logs\DirectoryServices.evtx
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>wevtutil epl "Directory Services" C:\Logs\DirectoryServices.evtx
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>wevtutil epl Security C:\Logs\Security.evtx
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>:: Full dcdiag to file

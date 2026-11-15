@@ -7001,7 +7001,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </table>
 </div>
 <p><strong>2. Attempt HTTPS connectivity:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter.corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>https://vcenter.corp.local
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>200
 </code></pre></div>
@@ -7064,7 +7064,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>root@vcenter.corp.local
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>service-control<span class="w"> </span>--status
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>root@vcenter.corp.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>root@vcenter.corp.local's password: 
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Connected to VCSA 7.0.3 Build 20899307
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>root@vcenter [ ~ ]# service-control --status
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Service                                 Running  Enabled
@@ -7128,7 +7128,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 <h3 id="check-vcenter-logs">Check vCenter logs<a class="headerlink" href="#check-vcenter-logs" title="Permanent link">&para;</a></h3>
 <p>SSH to the vCenter appliance and inspect the primary service log:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fatal\|exception&quot;</span><span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fatal\|exception"</span><span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>2024-01-15T14:32:18.456Z [7F2A4C1E9B00] [INFO] vCenter Server 8.0.1 build-21495797 started
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2024-01-15T14:32:45.123Z [7F2A4C1E9B01] [INFO] Connecting to SSO server sso.corp.local
@@ -7137,13 +7137,13 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>2024-01-15T14:36:01.234Z [7F2A4C1E9B04] [INFO] Datastore ds-nfs-01 mounted successfully
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>2024-01-15T14:38:15.567Z [7F2A4C1E9B05] [ERROR] Failed to connect to PSC at psc.corp.local:443 - Connection timeout
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>2024-01-15T14:39:44.890Z [7F2A4C1E9B06] [FATAL] Certificate validation failed for host esx-prod-02.corp.local
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>2024-01-15T14:40:12.345Z [7F2A4C1E9B07] [ERROR] Exception in thread &quot;InventorySync&quot;: java.net.SocketTimeoutException: connect timed out
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>2024-01-15T14:40:12.345Z [7F2A4C1E9B07] [ERROR] Exception in thread "InventorySync": java.net.SocketTimeoutException: connect timed out
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>2024-01-15T14:41:33.678Z [7F2A4C1E9B08] [WARN] Retrying connection to 192.168.1.43 (3/5 attempts)
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>2024-01-15T14:42:05.901Z [7F2A4C1E9B09] [INFO] Successfully recovered connection to esx-prod-03.corp.local
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>2024-01-15T14:35:22.456Z [7F2A4C1E9B03] [ERROR] Failed to connect to PSC at psc.corp.local:443 - Connection timeout
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>2024-01-15T14:36:01.234Z [7F2A4C1E9B04] [FATAL] Certificate validation failed for host esx-prod-02.corp.local
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>2024-01-15T14:38:15.567Z [7F2A4C1E9B05] [ERROR] Exception in thread &quot;InventorySync&quot;: java.net.SocketTimeoutException: connect timed out
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>2024-01-15T14:38:15.567Z [7F2A4C1E9B05] [ERROR] Exception in thread "InventorySync": java.net.SocketTimeoutException: connect timed out
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>2024-01-15T14:39:44.890Z [7F2A4C1E9B06] [ERROR] Unable to authenticate user admin@vsphere.local against SSO
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>2024-01-15T14:40:12.345Z [7F2A4C1E9B07] [FATAL] Inventory service unavailable - marking vCenter as degraded
 </code></pre></div>
@@ -7200,7 +7200,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </table>
 </div>
 <p>Check database connectivity:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/opt/vmware/vpostgres/current/bin/psql<span class="w"> </span>-U<span class="w"> </span>vc<span class="w"> </span>-d<span class="w"> </span>VCDB<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/opt/vmware/vpostgres/current/bin/psql<span class="w"> </span>-U<span class="w"> </span>vc<span class="w"> </span>-d<span class="w"> </span>VCDB<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT 1;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>?column? 
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>----------
@@ -7281,7 +7281,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </div>
 <p>Monitor startup progress:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>service-control<span class="w"> </span>--status
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s1">&#39;service-control --status | grep -E &quot;stopped|running&quot;&#39;</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s1">'service-control --status | grep -E "stopped|running"'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>SERVICE                                                    RUNNING  STOPPED
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>applmgmt                                                      1        0
@@ -7291,7 +7291,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 <a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>eam                                                           1        0
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>envoy                                                         1        0
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>imagebuilder                                                 1        0
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>Every 5.0s: service-control --status | grep -E &quot;stopped|running&quot;  Mon Jan 15 14:32:18 2024
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>Every 5.0s: service-control --status | grep -E "stopped|running"  Mon Jan 15 14:32:18 2024
 <a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
 <a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>applmgmt                                                      1        0
 <a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>certificatemanagement                                         1        0
@@ -7334,7 +7334,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ssh<span class="w"> </span>root@vcenter.corp.local
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>service-control<span class="w"> </span>--status
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>root@vcenter.corp.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>root@vcenter.corp.local's password: 
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Connected to localhost (127.0.0.1) -- Server version: VMware vCenter Server 8.0.1 Build 22385101
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Service                                 Running  Enabled
@@ -7389,7 +7389,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <p>Once services are running, verify the full stack:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Connect via PowerCLI</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Connect-VIServer<span class="w"> </span>-Server<span class="w"> </span>vcenter.corp.local<span class="w"> </span>-User<span class="w"> </span>administrator@vsphere.local<span class="w"> </span>-Password<span class="w"> </span><span class="s1">&#39;yourpass&#39;</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Connect-VIServer<span class="w"> </span>-Server<span class="w"> </span>vcenter.corp.local<span class="w"> </span>-User<span class="w"> </span>administrator@vsphere.local<span class="w"> </span>-Password<span class="w"> </span><span class="s1">'yourpass'</span>
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Check cluster status</span>
 <a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>Get-Cluster<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>HAEnabled,<span class="w"> </span>DrsEnabled

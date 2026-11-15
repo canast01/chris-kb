@@ -9406,10 +9406,10 @@ pre-check failures, handling mid-upgrade node failures, and safely retrying afte
 <h2 id="2-pre-check-failures">2. Pre-check Failures<a class="headerlink" href="#2-pre-check-failures" title="Permanent link">&para;</a></h2>
 <p>Pre-checks run before any change is made — the cluster is unmodified and safe to investigate.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>mystic@&lt;vxm-ip&gt;
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/mystic/lcm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;pre-check|precheck|ERROR|FAIL&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/mystic/lcm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"pre-check|precheck|ERROR|FAIL"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Last login: Wed Mar 15 14:22:18 2024 from 10.45.32.18
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>[mystic@vxm-prod-01 ~]$ tail -100 /var/log/mystic/lcm.log | grep -iE &quot;pre-check|precheck|ERROR|FAIL&quot;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>[mystic@vxm-prod-01 ~]$ tail -100 /var/log/mystic/lcm.log | grep -iE "pre-check|precheck|ERROR|FAIL"
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2024-03-15 14:18:32.445 [INFO] Starting pre-check validation for cluster upgrade
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2024-03-15 14:18:45.221 [INFO] Pre-check: Validating vSAN health status
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2024-03-15 14:18:47.892 [INFO] Pre-check: Checking ESXi host connectivity (8/8 hosts online)
@@ -9444,7 +9444,7 @@ pre-check failures, handling mid-upgrade node failures, and safely retrying afte
 red or yellow items. LCM will not proceed with any vSAN health warning outstanding.</p>
 <p><strong>Host stuck in maintenance mode:</strong> A host manually put into maintenance mode blocks LCM. Exit maintenance mode in vCenter and retry.</p>
 <p><strong>Unsupported customisation — non-LCM VIBs:</strong> Check for VIBs installed outside of VxRail LCM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;VMware\|Dell\|Broadcom\|QLogic&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"VMware\|Dell\|Broadcom\|QLogic"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esx-ui                                    1.45.0-20567896                VMware    CommunitySupported
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>lsi-mr3                                   7.714.06.00-1OEM.700.1.0.15160174  VMware    CommunitySupported
@@ -9531,7 +9531,7 @@ pre-check after NTP is corrected.</p>
 </div>
 <p>Look for:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Installation failed: Conflict with existing VIB  → manual VIB present that blocks the upgrade VIB
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Device not supported: &lt;device-id&gt;                → hardware not in the new bundle&#39;s HCL
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Device not supported: &lt;device-id&gt;                → hardware not in the new bundle's HCL
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Maintenance mode entry failed: timeout           → VM not evacuated before maintenance mode timeout
 </code></pre></div>
 <hr />
@@ -9541,26 +9541,26 @@ pre-check after NTP is corrected.</p>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/upgrade/bundle/status
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  &quot;id&quot;: &quot;upgrade-bundle-20240115&quot;,
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  &quot;status&quot;: &quot;READY&quot;,
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  &quot;version&quot;: &quot;8.0.1&quot;,
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  &quot;buildNumber&quot;: &quot;21493496&quot;,
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  &quot;releaseDate&quot;: &quot;2024-01-15T00:00:00Z&quot;,
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  &quot;bundleSize&quot;: &quot;2847563648&quot;,
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  &quot;checksum&quot;: &quot;a7f3e9c2d1b4f8e6a9c3d5e7f1b3a5c7&quot;,
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  &quot;components&quot;: [
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  "id": "upgrade-bundle-20240115",
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  "status": "READY",
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  "version": "8.0.1",
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  "buildNumber": "21493496",
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  "releaseDate": "2024-01-15T00:00:00Z",
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  "bundleSize": "2847563648",
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  "checksum": "a7f3e9c2d1b4f8e6a9c3d5e7f1b3a5c7",
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  "components": [
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    {
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>      &quot;name&quot;: &quot;vxrail-manager&quot;,
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>      &quot;version&quot;: &quot;8.0.1&quot;,
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>      &quot;status&quot;: &quot;READY&quot;
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>      "name": "vxrail-manager",
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>      "version": "8.0.1",
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>      "status": "READY"
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    },
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    {
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>      &quot;name&quot;: &quot;vcenter-server&quot;,
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>      &quot;version&quot;: &quot;8.0.1&quot;,
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>      &quot;status&quot;: &quot;READY&quot;
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>      "name": "vcenter-server",
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>      "version": "8.0.1",
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>      "status": "READY"
 <a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    }
 <a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>  ],
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>  &quot;lastChecked&quot;: &quot;2024-01-16T14:32:18Z&quot;
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>  "lastChecked": "2024-01-16T14:32:18Z"
 <a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9593,13 +9593,13 @@ pre-check after NTP is corrected.</p>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/system/support-bundle
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>{
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  &quot;request_id&quot;: &quot;req-8f4c2b91-7d3e-4a9e-b2f1-c5e8d9a1f6b3&quot;,
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  &quot;status&quot;: &quot;INITIATED&quot;,
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  &quot;bundle_name&quot;: &quot;vxm-support-bundle-20240115-143022.tar.gz&quot;,
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  &quot;estimated_size_mb&quot;: 2847,
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  &quot;location&quot;: &quot;/var/log/vmware/vxm/bundles/vxm-support-bundle-20240115-143022.tar.gz&quot;,
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  &quot;created_at&quot;: &quot;2024-01-15T14:30:22Z&quot;,
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  &quot;message&quot;: &quot;Support bundle generation started. Check status with request_id.&quot;
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  "request_id": "req-8f4c2b91-7d3e-4a9e-b2f1-c5e8d9a1f6b3",
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  "status": "INITIATED",
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  "bundle_name": "vxm-support-bundle-20240115-143022.tar.gz",
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  "estimated_size_mb": 2847,
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  "location": "/var/log/vmware/vxm/bundles/vxm-support-bundle-20240115-143022.tar.gz",
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  "created_at": "2024-01-15T14:30:22Z",
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  "message": "Support bundle generation started. Check status with request_id."
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9632,36 +9632,36 @@ pre-check after NTP is corrected.</p>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>{
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  &quot;hosts&quot;: [
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  "hosts": [
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    {
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>      &quot;id&quot;: &quot;host-42&quot;,
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>      &quot;name&quot;: &quot;esx-prod-01.datacenter.local&quot;,
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>      &quot;ipAddress&quot;: &quot;192.168.1.105&quot;,
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>      &quot;version&quot;: &quot;7.0.3&quot;,
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>      &quot;status&quot;: &quot;ONLINE&quot;,
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>      &quot;cpuCount&quot;: 24,
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>      &quot;memoryGB&quot;: 512
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>      "id": "host-42",
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>      "name": "esx-prod-01.datacenter.local",
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>      "ipAddress": "192.168.1.105",
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>      "version": "7.0.3",
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>      "status": "ONLINE",
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>      "cpuCount": 24,
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>      "memoryGB": 512
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    },
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    {
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>      &quot;id&quot;: &quot;host-43&quot;,
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>      &quot;name&quot;: &quot;esx-prod-02.datacenter.local&quot;,
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>      &quot;ipAddress&quot;: &quot;192.168.1.106&quot;,
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>      &quot;version&quot;: &quot;7.0.3&quot;,
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>      &quot;status&quot;: &quot;ONLINE&quot;,
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>      &quot;cpuCount&quot;: 24,
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>      &quot;memoryGB&quot;: 512
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>      "id": "host-43",
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>      "name": "esx-prod-02.datacenter.local",
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>      "ipAddress": "192.168.1.106",
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>      "version": "7.0.3",
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>      "status": "ONLINE",
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>      "cpuCount": 24,
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>      "memoryGB": 512
 <a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    },
 <a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    {
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>      &quot;id&quot;: &quot;host-44&quot;,
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>      &quot;name&quot;: &quot;esx-prod-03.datacenter.local&quot;,
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>      &quot;ipAddress&quot;: &quot;192.168.1.107&quot;,
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>      &quot;version&quot;: &quot;7.0.2&quot;,
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>      &quot;status&quot;: &quot;MAINTENANCE&quot;,
-<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>      &quot;cpuCount&quot;: 16,
-<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>      &quot;memoryGB&quot;: 256
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>      "id": "host-44",
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>      "name": "esx-prod-03.datacenter.local",
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>      "ipAddress": "192.168.1.107",
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>      "version": "7.0.2",
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>      "status": "MAINTENANCE",
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>      "cpuCount": 16,
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>      "memoryGB": 256
 <a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    }
 <a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>  ],
-<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>  &quot;totalCount&quot;: 3
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>  "totalCount": 3
 <a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>}
 </code></pre></div>
 <div class="admonition warning">

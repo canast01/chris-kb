@@ -8398,16 +8398,16 @@ Azure Monitor is the unified observability platform for Azure. It collects metri
 <p>Data Collection Rules define what data to collect, how to transform it, and where to send it. They replace legacy agents and MMA configurations.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a Data Collection Rule for VM performance counters</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>data-collection<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;vm-perf-dcr&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"vm-perf-dcr"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--location<span class="w"> </span>eastus<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--data-flows<span class="w"> </span><span class="s1">&#39;[{&quot;streams&quot;:[&quot;Microsoft-Perf&quot;],&quot;destinations&quot;:[&quot;myWorkspace&quot;]}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--destinations<span class="w"> </span><span class="s1">&#39;{&quot;logAnalytics&quot;:[{&quot;workspaceResourceId&quot;:&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace&quot;,&quot;name&quot;:&quot;myWorkspace&quot;}]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--performance-counters<span class="w"> </span><span class="s1">&#39;[{&quot;streams&quot;:[&quot;Microsoft-Perf&quot;],&quot;samplingFrequencyInSeconds&quot;:60,&quot;counterSpecifiers&quot;:[&quot;\\Processor(_Total)\\% Processor Time&quot;,&quot;\\Memory\\Available MBytes&quot;],&quot;name&quot;:&quot;perfCounters&quot;}]&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--data-flows<span class="w"> </span><span class="s1">'[{"streams":["Microsoft-Perf"],"destinations":["myWorkspace"]}]'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--destinations<span class="w"> </span><span class="s1">'{"logAnalytics":[{"workspaceResourceId":"/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace","name":"myWorkspace"}]}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--performance-counters<span class="w"> </span><span class="s1">'[{"streams":["Microsoft-Perf"],"samplingFrequencyInSeconds":60,"counterSpecifiers":["\\Processor(_Total)\\% Processor Time","\\Memory\\Available MBytes"],"name":"perfCounters"}]'</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Associate a DCR with a VM</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>az<span class="w"> </span>monitor<span class="w"> </span>data-collection<span class="w"> </span>rule<span class="w"> </span>association<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;vm-dcr-assoc&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"vm-dcr-assoc"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--resource<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--rule-id<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Insights/dataCollectionRules/vm-perf-dcr
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
@@ -8417,50 +8417,50 @@ Azure Monitor is the unified observability platform for Azure. It collects metri
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;dataFlows&quot;: [
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  "dataFlows": [
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    {
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      &quot;destinations&quot;: [
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        &quot;myWorkspace&quot;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      "destinations": [
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        "myWorkspace"
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      ],
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      &quot;streams&quot;: [
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        &quot;Microsoft-Perf&quot;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      "streams": [
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        "Microsoft-Perf"
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>      ]
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    }
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  ],
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;destinations&quot;: {
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &quot;logAnalytics&quot;: [
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  "destinations": {
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    "logAnalytics": [
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      {
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        &quot;name&quot;: &quot;myWorkspace&quot;,
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        &quot;workspaceResourceId&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace&quot;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        "name": "myWorkspace",
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        "workspaceResourceId": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace"
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>      }
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    ]
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  },
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  &quot;etag&quot;: &quot;\&quot;6f00b8e0-0000-0100-0000-65a4c2d10000\&quot;&quot;,
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Insights/dataCollectionRules/vm-perf-dcr&quot;,
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  &quot;location&quot;: &quot;eastus&quot;,
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  &quot;name&quot;: &quot;vm-perf-dcr&quot;,
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  &quot;performanceCounters&quot;: [
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  "etag": "\"6f00b8e0-0000-0100-0000-65a4c2d10000\"",
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Insights/dataCollectionRules/vm-perf-dcr",
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  "location": "eastus",
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  "name": "vm-perf-dcr",
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  "performanceCounters": [
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    {
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>      &quot;counterSpecifiers&quot;: [
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        &quot;\\Processor(_Total)\\% Processor Time&quot;,
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        &quot;\\Memory\\Available MBytes&quot;
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>      "counterSpecifiers": [
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        "\\Processor(_Total)\\% Processor Time",
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        "\\Memory\\Available MBytes"
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>      ],
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>      &quot;name&quot;: &quot;perfCounters&quot;,
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>      &quot;samplingFrequencyInSeconds&quot;: 60,
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>      &quot;streams&quot;: [
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>        &quot;Microsoft-Perf&quot;
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>      "name": "perfCounters",
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>      "samplingFrequencyInSeconds": 60,
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>      "streams": [
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>        "Microsoft-Perf"
 <a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>      ]
 <a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    }
 <a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  ],
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  &quot;resourceGroup&quot;: &quot;myRG&quot;,
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  &quot;type&quot;: &quot;Microsoft.Insights/dataCollectionRules&quot;
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  "resourceGroup": "myRG",
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  "type": "Microsoft.Insights/dataCollectionRules"
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>}
 <a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>{
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>  &quot;etag&quot;: &quot;\&quot;3a00d4f2-0000-0100-0000-65a4c3a80000\&quot;&quot;,
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Insights/dataCollectionRuleAssociations/vm-dcr-assoc&quot;,
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>  &quot;name&quot;: &quot;vm-dcr-assoc&quot;,
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>  &quot;resourceGroup&quot;: &quot;myRG&quot;,
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>  &quot;type&quot;: &quot;Microsoft.Insights/dataCollectionRuleAssociations&quot;
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>  "etag": "\"3a00d4f2-0000-0100-0000-65a4c3a80000\"",
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Insights/dataCollectionRuleAssociations/vm-dcr-assoc",
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>  "name": "vm-dcr-assoc",
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>  "resourceGroup": "myRG",
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>  "type": "Microsoft.Insights/dataCollectionRuleAssociations"
 <a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>}
 <a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>Name          ResourceGroup    Location    ProvisioningState
 <a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>-----------   ---------------  ----------  -------------------
@@ -8520,32 +8520,32 @@ Azure Monitor is the unified observability platform for Azure. It collects metri
 <a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;autoUpgradeMinorVersion&quot;: true,
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;forceUpdateTag&quot;: null,
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b5c-6d7e-8f9g-0h1i-2j3k4l5m6n7o/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM/extensions/AzureMonitorLinuxAgent&quot;,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;instanceView&quot;: null,
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;name&quot;: &quot;AzureMonitorLinuxAgent&quot;,
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;protectedSettings&quot;: null,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  &quot;publisher&quot;: &quot;Microsoft.Azure.Monitor&quot;,
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;resourceGroup&quot;: &quot;myRG&quot;,
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  &quot;settings&quot;: null,
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  &quot;tags&quot;: null,
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  &quot;type&quot;: &quot;Microsoft.Compute/virtualMachines/extensions&quot;,
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  &quot;typeHandlerVersion&quot;: &quot;1.0&quot;,
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  &quot;virtualMachineExtensionType&quot;: &quot;AzureMonitorLinuxAgent&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "autoUpgradeMinorVersion": true,
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  "forceUpdateTag": null,
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  "id": "/subscriptions/12a34b5c-6d7e-8f9g-0h1i-2j3k4l5m6n7o/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM/extensions/AzureMonitorLinuxAgent",
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  "instanceView": null,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  "name": "AzureMonitorLinuxAgent",
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  "protectedSettings": null,
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  "provisioningState": "Succeeded",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  "publisher": "Microsoft.Azure.Monitor",
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  "resourceGroup": "myRG",
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  "settings": null,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  "tags": null,
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  "type": "Microsoft.Compute/virtualMachines/extensions",
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  "typeHandlerVersion": "1.0",
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  "virtualMachineExtensionType": "AzureMonitorLinuxAgent"
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>}
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>{
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;autoUpgradeMinorVersion&quot;: true,
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  &quot;forceUpdateTag&quot;: null,
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b5c-6d7e-8f9g-0h1i-2j3k4l5m6n7o/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myWinVM/extensions/AzureMonitorWindowsAgent&quot;,
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  &quot;instanceView&quot;: null,
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  &quot;name&quot;: &quot;AzureMonitorWindowsAgent&quot;,
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;,
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  &quot;publisher&quot;: &quot;Microsoft.Azure.Monitor&quot;,
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  &quot;resourceGroup&quot;: &quot;myRG&quot;,
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  &quot;typeHandlerVersion&quot;: &quot;1.0&quot;,
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  &quot;virtualMachineExtensionType&quot;: &quot;AzureMonitorWindowsAgent&quot;
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  "autoUpgradeMinorVersion": true,
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  "forceUpdateTag": null,
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  "id": "/subscriptions/12a34b5c-6d7e-8f9g-0h1i-2j3k4l5m6n7o/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myWinVM/extensions/AzureMonitorWindowsAgent",
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  "instanceView": null,
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  "name": "AzureMonitorWindowsAgent",
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  "provisioningState": "Succeeded",
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  "publisher": "Microsoft.Azure.Monitor",
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  "resourceGroup": "myRG",
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  "typeHandlerVersion": "1.0",
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  "virtualMachineExtensionType": "AzureMonitorWindowsAgent"
 <a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>}
 <a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Name                          ResourceGroup    VmName    Publisher              Version    TypeHandlerVersion    ProvisioningState
 <a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>------------------------------  ---------------  --------  ---------------------  ---------  ---------------------  -------------------
@@ -8576,11 +8576,11 @@ Azure Monitor is the unified observability platform for Azure. It collects metri
 <p>Diagnostic settings route resource-level logs and metrics to one or more destinations.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable diagnostic settings for a Storage Account</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;storage-diag&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"storage-diag"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--resource<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--workspace<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--metrics<span class="w"> </span><span class="s1">&#39;[{&quot;category&quot;:&quot;Transaction&quot;,&quot;enabled&quot;:true}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">&#39;[{&quot;category&quot;:&quot;StorageRead&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;StorageWrite&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;StorageDelete&quot;,&quot;enabled&quot;:true}]&#39;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--metrics<span class="w"> </span><span class="s1">'[{"category":"Transaction","enabled":true}]'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">'[{"category":"StorageRead","enabled":true},{"category":"StorageWrite","enabled":true},{"category":"StorageDelete","enabled":true}]'</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># List existing diagnostic settings on a resource</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
@@ -8588,60 +8588,60 @@ Azure Monitor is the unified observability platform for Azure. It collects metri
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Delete a diagnostic setting</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;storage-diag&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">"storage-diag"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>--resource<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/myRG/providers/microsoft.storage/storageaccounts/myStorageAccount/providers/microsoft.insights/diagnosticsettings/storage-diag&quot;,
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;name&quot;: &quot;storage-diag&quot;,
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;resourceGroup&quot;: &quot;myRG&quot;,
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;logs&quot;: [
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/myRG/providers/microsoft.storage/storageaccounts/myStorageAccount/providers/microsoft.insights/diagnosticsettings/storage-diag",
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  "name": "storage-diag",
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  "resourceGroup": "myRG",
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  "logs": [
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    {
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      &quot;category&quot;: &quot;StorageRead&quot;,
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      &quot;categoryGroup&quot;: null,
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      &quot;enabled&quot;: true,
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      &quot;retentionPolicy&quot;: {
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        &quot;days&quot;: 0,
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        &quot;enabled&quot;: false
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      "category": "StorageRead",
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      "categoryGroup": null,
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      "enabled": true,
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      "retentionPolicy": {
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        "days": 0,
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        "enabled": false
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>      }
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    },
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    {
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      &quot;category&quot;: &quot;StorageWrite&quot;,
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>      &quot;enabled&quot;: true,
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>      &quot;retentionPolicy&quot;: {
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        &quot;days&quot;: 0,
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>        &quot;enabled&quot;: false
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      "category": "StorageWrite",
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>      "enabled": true,
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>      "retentionPolicy": {
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        "days": 0,
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>        "enabled": false
 <a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>      }
 <a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    },
 <a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    {
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>      &quot;category&quot;: &quot;StorageDelete&quot;,
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>      &quot;enabled&quot;: true,
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>      &quot;retentionPolicy&quot;: {
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>        &quot;days&quot;: 0,
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>        &quot;enabled&quot;: false
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>      "category": "StorageDelete",
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>      "enabled": true,
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>      "retentionPolicy": {
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>        "days": 0,
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>        "enabled": false
 <a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>      }
 <a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>    }
 <a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>  ],
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>  &quot;metrics&quot;: [
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>  "metrics": [
 <a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>    {
-<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>      &quot;category&quot;: &quot;Transaction&quot;,
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>      &quot;enabled&quot;: true,
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      &quot;retentionPolicy&quot;: {
-<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>        &quot;days&quot;: 0,
-<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>        &quot;enabled&quot;: false
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>      "category": "Transaction",
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>      "enabled": true,
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      "retentionPolicy": {
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>        "days": 0,
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>        "enabled": false
 <a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>      }
 <a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>    }
 <a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>  ],
-<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>  &quot;workspaceId&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/myRG/providers/microsoft.operationalinsights/workspaces/myWorkspace&quot;
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>  "workspaceId": "/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/myRG/providers/microsoft.operationalinsights/workspaces/myWorkspace"
 <a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>}
 <a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>
 <a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>[
 <a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>  {
-<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>    &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/myRG/providers/microsoft.storage/storageaccounts/myStorageAccount/providers/microsoft.insights/diagnosticsettings/storage-diag&quot;,
-<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>    &quot;name&quot;: &quot;storage-diag&quot;,
-<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>    &quot;resourceGroup&quot;: &quot;myRG&quot;,
-<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>    &quot;logs&quot;: [...],
-<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>    &quot;metrics&quot;: [...]
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>    "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/myRG/providers/microsoft.storage/storageaccounts/myStorageAccount/providers/microsoft.insights/diagnosticsettings/storage-diag",
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>    "name": "storage-diag",
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>    "resourceGroup": "myRG",
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>    "logs": [...],
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>    "metrics": [...]
 <a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>  }
 <a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>]
 <a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>
@@ -8719,7 +8719,7 @@ Azure Monitor is the unified observability platform for Azure. It collects metri
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Query CPU percentage metric for a VM</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>metrics<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--resource<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--metric<span class="w"> </span><span class="s2">&quot;Percentage CPU&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--metric<span class="w"> </span><span class="s2">"Percentage CPU"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--interval<span class="w"> </span>PT5M<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="m">2026</span>-05-07T00:00:00Z<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="m">2026</span>-05-07T06:00:00Z<span class="w"> </span><span class="se">\</span>
@@ -8741,12 +8741,12 @@ Azure Monitor is the unified observability platform for Azure. It collects metri
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Name                 Type                 Unit         Dimensions
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>-------------------  -------------------  -----------  -------------------------
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Percentage CPU       Microsoft.Compute    Percent      {&quot;name&quot;:&quot;VMName&quot;}
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Available Memory     Microsoft.Compute    Bytes        {&quot;name&quot;:&quot;VMName&quot;}
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Network In Total     Microsoft.Compute    Bytes        {&quot;name&quot;:&quot;VMName&quot;}
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Network Out Total    Microsoft.Compute    Bytes        {&quot;name&quot;:&quot;VMName&quot;}
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Disk Read Bytes      Microsoft.Compute    Bytes        {&quot;name&quot;:&quot;VMName&quot;}
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Disk Write Bytes     Microsoft.Compute    Bytes        {&quot;name&quot;:&quot;VMName&quot;}
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Percentage CPU       Microsoft.Compute    Percent      {"name":"VMName"}
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Available Memory     Microsoft.Compute    Bytes        {"name":"VMName"}
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Network In Total     Microsoft.Compute    Bytes        {"name":"VMName"}
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Network Out Total    Microsoft.Compute    Bytes        {"name":"VMName"}
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Disk Read Bytes      Microsoft.Compute    Bytes        {"name":"VMName"}
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Disk Write Bytes     Microsoft.Compute    Bytes        {"name":"VMName"}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

@@ -7147,32 +7147,32 @@ Effective usable capacity: approximately <strong>31 TB</strong> from a 92 TB raw
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="na">user_friendly_names  yes</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="na">find_multipaths      yes</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="na">path_grouping_policy multibus</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="na">path_selector        &quot;service-time 0&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="na">path_selector        "service-time 0"</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="na">failback             immediate</span>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="na">no_path_retry        fail</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="na">}</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="na">blacklist {</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="na">devnode &quot;^sda$&quot;   # local OS disk — never multipath</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="na">devnode "^sda$"   # local OS disk — never multipath</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="na">}</span>
 </code></pre></div>
 <p>Verify after mapping a new LUN:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>multipath<span class="w"> </span>-v3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;wsql01&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>multipath<span class="w"> </span>-v3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"wsql01"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>lsblk<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dm-
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mpatha (360060e8005600000001600065d82e11) dm-0 NETAPP,LUN
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>size=500G features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>size=500G features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>|-+- policy='service-time 0' prio=50 status=active
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>| |- 2:0:0:0 sda 8:0  active ready running
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>| `- 3:0:0:0 sdb 8:16 active ready running
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>`-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>`-+- policy='service-time 0' prio=10 status=enabled
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  |- 4:0:0:0 sdc 8:32 active ready running
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  `- 5:0:0:0 sdd 8:48 active ready running
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>mpathb (360060e8005600000001600065d82e12) dm-1 NETAPP,LUN
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>size=1T features=&#39;3 queue_if_no_path pg_init_retries 50&#39; hwhandler=&#39;1 alua&#39; wp=rw
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>|-+- policy=&#39;service-time 0&#39; prio=50 status=active
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>size=1T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>|-+- policy='service-time 0' prio=50 status=active
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>| |- 2:0:1:0 sde 8:64  active ready running
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>| `- 3:0:1:0 sdf 8:80  active ready running
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
@@ -7265,13 +7265,13 @@ Effective usable capacity: approximately <strong>31 TB</strong> from a 92 TB raw
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>mkfs.xfs<span class="w"> </span>-L<span class="w"> </span>mssql_data_01<span class="w"> </span>/dev/mapper/wsql01_mssql_data_01
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Mount by label</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LABEL=mssql_data_01  /mssql/data  xfs  defaults,nodev,nosuid  0 0&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/fstab
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"LABEL=mssql_data_01  /mssql/data  xfs  defaults,nodev,nosuid  0 0"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/fstab
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>mount<span class="w"> </span>-a<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>df<span class="w"> </span>-hT<span class="w"> </span>/mssql/data
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>meta-data=/dev/mapper/wsql01_mssql_data_01 inode-size=512   sectsz=4096   ascii ci=0 ftype=1
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>data     =                       bsize=4096   blocks=2621440, imsize=16384, &quot;logbsize=32k&quot;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>data     =                       bsize=4096   blocks=2621440, imsize=16384, "logbsize=32k"
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>log      =internal log           bsize=4096   blocks=2560, version=2
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>         =                       sectsz=4096  sunit=0 blks

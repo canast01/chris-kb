@@ -9260,38 +9260,38 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 <hr />
 <h3 id="review-deployment-event-log">Review Deployment Event Log<a class="headerlink" href="#review-deployment-event-log" title="Permanent link">&para;</a></h3>
 <p><img alt="Review Deployment Event Log" src="../../../../../../assets/virtualization-vmware-aria-automation-hc-review-deployment-event-log.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Deployments → All Deployments → filter by &quot;Failed&quot; status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Deployments → All Deployments → filter by "Failed" status
 </code></pre></div>
 <p>Failed deployments should be investigated, even if they are not actively blocking users. Persistent failures in a specific cloud zone may indicate a resource, network, or credential issue.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># API — list recent failed deployments</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?status=FAILED&amp;size=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, status: .status, reason: .reason}&#39;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">"https://vra-prod-01.example.local/deployment/api/deployments?status=FAILED&amp;size=20"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.content[] | {name: .name, status: .status, reason: .reason}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>{
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  &quot;name&quot;: &quot;web-app-prod-deploy-2024-01-15&quot;,
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  &quot;status&quot;: &quot;FAILED&quot;,
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  &quot;reason&quot;: &quot;Insufficient vSphere cluster resources&quot;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  "name": "web-app-prod-deploy-2024-01-15",
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  "status": "FAILED",
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  "reason": "Insufficient vSphere cluster resources"
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>}
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>{
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  &quot;name&quot;: &quot;db-migration-v3.2.1&quot;,
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  &quot;status&quot;: &quot;FAILED&quot;,
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  &quot;reason&quot;: &quot;Blueprint validation error: missing required input &#39;environment&#39;&quot;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  "name": "db-migration-v3.2.1",
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  "status": "FAILED",
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  "reason": "Blueprint validation error: missing required input 'environment'"
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>}
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>{
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  &quot;name&quot;: &quot;kubernetes-upgrade-jan&quot;,
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  &quot;status&quot;: &quot;FAILED&quot;,
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  &quot;reason&quot;: &quot;vRealize Orchestrator workflow timeout after 1800 seconds&quot;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  "name": "kubernetes-upgrade-jan",
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  "status": "FAILED",
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  "reason": "vRealize Orchestrator workflow timeout after 1800 seconds"
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>}
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>{
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  &quot;name&quot;: &quot;storage-expansion-dc2&quot;,
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>  &quot;status&quot;: &quot;FAILED&quot;,
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  &quot;reason&quot;: &quot;Network connectivity lost to vSAN cluster&quot;
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  "name": "storage-expansion-dc2",
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>  "status": "FAILED",
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  "reason": "Network connectivity lost to vSAN cluster"
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>}
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>{
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>  &quot;name&quot;: &quot;app-tier-scale-out&quot;,
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>  &quot;status&quot;: &quot;FAILED&quot;,
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>  &quot;reason&quot;: &quot;Cloud account credentials expired&quot;
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>  "name": "app-tier-scale-out",
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>  "status": "FAILED",
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>  "reason": "Cloud account credentials expired"
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9412,7 +9412,7 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># View recent events in the prelude namespace (useful for deployment failures)</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.metadata.creationTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.metadata.creationTimestamp'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>root@vra-prod-01:~# vracli status
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Service Status Report
@@ -9438,10 +9438,10 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 <a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>root@vra-prod-01:~# kubectl rollout restart deployment/vra-api -n prelude
 <a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>deployment.apps/vra-api restarted
 <a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>root@vra-prod-01:~# kubectl get events -n prelude --sort-by=&#39;.metadata.creationTimestamp&#39; | tail -30
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>root@vra-prod-01:~# kubectl get events -n prelude --sort-by='.metadata.creationTimestamp' | tail -30
 <a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>NAMESPACE   LAST SEEN   TYPE      REASON             OBJECT                    MESSAGE
 <a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>prelude     2m42s       Normal    Scheduled          pod/vra-api-7d8c9f2k1    Successfully assigned prelude/vra-api-7d8c9f2k1 to vra-prod-02
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>prelude     2m38s       Normal    Pulling            pod/vra-api-7d8c9f2k1    Pulling image &quot;vra-api:8.14.2&quot;
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>prelude     2m38s       Normal    Pulling            pod/vra-api-7d8c9f2k1    Pulling image "vra-api:8.14.2"
 <a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>prelude     2m15s       Normal    Pulled             pod/vra-api-7d8c9f2k1    Successfully pulled image
 <a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>prelude     2m12s       Normal    Created            pod/vra-api-7d8c9f2k1    Created container vra-api
 <a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>prelude     2m11s       Normal    Started            pod/vra-api-7d8c9f2k1    Started container vra-api

@@ -7312,7 +7312,7 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">vsphere</span><span class="p">:</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">vcenter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vcenter.example.com</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ocp-install@vsphere.local</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;password&gt;&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">"&lt;password&gt;"</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">datacenter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC1</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">defaultDatastore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsanDatastore</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">folder</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/DC1/vm/openshift</span>
@@ -7388,18 +7388,18 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-cloud-controller-manager
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify topology labels on a node</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>oc<span class="w"> </span>get<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.metadata.labels}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;with_entries(select(.key | startswith(&quot;topology&quot;)))&#39;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>oc<span class="w"> </span>get<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.metadata.labels}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'with_entries(select(.key | startswith("topology")))'</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># StorageClass using topology (zone-aware volume placement)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>cat<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>cat<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">apiVersion: storage.k8s.io/v1</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">kind: StorageClass</span>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s">metadata:</span>
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s">  name: thin-csi-zonal</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s">provisioner: csi.vsphere.volume.vmware.com</span>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s">parameters:</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">  storagePolicyName: &quot;vSAN Default Storage Policy&quot;</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s">  datastoreURL: &quot;ds:///vmfs/volumes/&lt;uuid&gt;/&quot;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">  storagePolicyName: "vSAN Default Storage Policy"</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s">  datastoreURL: "ds:///vmfs/volumes/&lt;uuid&gt;/"</span>
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s">volumeBindingMode: WaitForFirstConsumer   # Waits for pod scheduling to pick zone</span>
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s">allowVolumeExpansion: true</span>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s">EOF</span>
@@ -7409,7 +7409,7 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vsphere-cloud-controller-manager-j2m9l           1/1     Running   0          12d
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vsphere-cloud-controller-manager-qr5xn           1/1     Running   0          12d
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>{&quot;topology.kubernetes.io/region&quot;:&quot;us-east-1&quot;,&quot;topology.kubernetes.io/zone&quot;:&quot;us-east-1a&quot;,&quot;topology.vmware.com/failure-domain&quot;:&quot;fd-1&quot;,&quot;topology.vmware.com/rack&quot;:&quot;rack-02&quot;}
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>{"topology.kubernetes.io/region":"us-east-1","topology.kubernetes.io/zone":"us-east-1a","topology.vmware.com/failure-domain":"fd-1","topology.vmware.com/rack":"rack-02"}
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>apiVersion: storage.k8s.io/v1
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>kind: StorageClass
@@ -7417,8 +7417,8 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  name: thin-csi-zonal
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>provisioner: csi.vsphere.volume.vmware.com
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>parameters:
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  storagePolicyName: &quot;vSAN Default Storage Policy&quot;
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  datastoreURL: &quot;ds:///vmfs/volumes/5a3e8c2f-7b1d-4e9a-b6c3-2f8e1a9d7c4b/&quot;
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  storagePolicyName: "vSAN Default Storage Policy"
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  datastoreURL: "ds:///vmfs/volumes/5a3e8c2f-7b1d-4e9a-b6c3-2f8e1a9d7c4b/"
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>volumeBindingMode: WaitForFirstConsumer
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>allowVolumeExpansion: true
 </code></pre></div>
@@ -7459,22 +7459,22 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LDAP</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">mappingMethod</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claim</span>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="nt">ldap</span><span class="p">:</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ldap://ad.example.com/CN=Users,DC=example,DC=com?sAMAccountName&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="nt">bindDN</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CN=svc-ocp,OU=ServiceAccounts,DC=example,DC=com&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"ldap://ad.example.com/CN=Users,DC=example,DC=com?sAMAccountName"</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="nt">bindDN</span><span class="p">:</span><span class="w"> </span><span class="s">"CN=svc-ocp,OU=ServiceAccounts,DC=example,DC=com"</span>
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">      </span><span class="nt">bindPassword</span><span class="p">:</span>
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ldap-bind-password</span><span class="w">    </span><span class="c1"># Secret in openshift-config namespace</span>
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">      </span><span class="nt">insecure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">      </span><span class="nt">ca</span><span class="p">:</span>
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ldap-ca-cert</span><span class="w">          </span><span class="c1"># ConfigMap with CA bundle in openshift-config</span>
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">      </span><span class="nt">attributes</span><span class="p">:</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;dn&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">        </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;mail&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cn&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">        </span><span class="nt">preferredUsername</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;sAMAccountName&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"dn"</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">        </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"mail"</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"cn"</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">        </span><span class="nt">preferredUsername</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"sAMAccountName"</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create bindPassword secret</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>ldap-bind-password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">bindPassword</span><span class="o">=</span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">bindPassword</span><span class="o">=</span><span class="s1">'&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-n<span class="w"> </span>openshift-config
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Create CA ConfigMap (if LDAPS / AD certificate)</span>
@@ -7497,7 +7497,7 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>group.user.openshift.io/ocp-developers created
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>group.user.openshift.io/ocp-viewers created
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>clusterrolebinding.rbac.authorization.k8s.io/cluster-admin-ocp-admins created
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>secret &quot;kubeadmin&quot; deleted
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>secret "kubeadmin" deleted
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7529,23 +7529,23 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <h3 id="built-in-openshift-registry">Built-in OpenShift Registry<a class="headerlink" href="#built-in-openshift-registry" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable managed image registry with PVC backend</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>configs.imageregistry.operator.openshift.io<span class="w"> </span>cluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;managementState&quot;:&quot;Managed&quot;,&quot;storage&quot;:{&quot;pvc&quot;:{&quot;claim&quot;:&quot;&quot;}}}}&#39;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">'{"spec":{"managementState":"Managed","storage":{"pvc":{"claim":""}}}}'</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Enable with S3 backend (air-gap / on-prem MinIO)</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>configs.imageregistry.operator.openshift.io<span class="w"> </span>cluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">    &quot;spec&quot;:{</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">      &quot;managementState&quot;:&quot;Managed&quot;,</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s1">      &quot;storage&quot;:{</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s1">        &quot;s3&quot;:{</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s1">          &quot;bucket&quot;:&quot;openshift-registry&quot;,</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s1">          &quot;region&quot;:&quot;us-east-1&quot;,</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s1">          &quot;regionEndpoint&quot;:&quot;https://minio.example.com&quot;,</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="s1">          &quot;encrypt&quot;:false</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">    "spec":{</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">      "managementState":"Managed",</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s1">      "storage":{</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s1">        "s3":{</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s1">          "bucket":"openshift-registry",</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s1">          "region":"us-east-1",</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s1">          "regionEndpoint":"https://minio.example.com",</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="s1">          "encrypt":false</span>
 <a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="s1">        }</span>
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s1">      }</span>
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s1">    }</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s1">  }'</span>
 <a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
 <a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Check registry operator status</span>
 <a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>oc<span class="w"> </span>get<span class="w"> </span>configs.imageregistry.operator.openshift.io<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span>status
@@ -7554,15 +7554,15 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>config.imageregistry.operator.openshift.io/cluster patched
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  status:
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    conditions:
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    - lastTransitionTime: &quot;2024-01-15T09:42:31Z&quot;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    - lastTransitionTime: "2024-01-15T09:42:31Z"
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      message: The registry is ready
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>      reason: Ready
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>      status: &quot;True&quot;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>      status: "True"
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>      type: Available
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    - lastTransitionTime: &quot;2024-01-15T09:42:28Z&quot;
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      message: &quot;&quot;
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    - lastTransitionTime: "2024-01-15T09:42:28Z"
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      message: ""
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      reason: ConfigurationValid
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      status: &quot;True&quot;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      status: "True"
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>      type: Progressing
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    observedGeneration: 3
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    readyReplicas: 2
@@ -7638,7 +7638,7 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </div>
 <h2 id="cert-manager-integration">cert-manager Integration<a class="headerlink" href="#cert-manager-integration" title="Permanent link">&para;</a></h2>
 <p>cert-manager automates TLS certificate lifecycle. Install via OperatorHub (<code>cert-manager</code> operator in <code>cert-manager</code> namespace).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># ClusterIssuer for internal CA (ACME/Let&#39;s Encrypt alternative)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># ClusterIssuer for internal CA (ACME/Let's Encrypt alternative)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cert-manager.io/v1</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIssuer</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nt">metadata</span><span class="p">:</span>
@@ -7660,19 +7660,19 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal-ca</span>
 <a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIssuer</span>
 <a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">  </span><span class="nt">dnsNames</span><span class="p">:</span>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;*.apps.cluster.example.com&quot;</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"*.apps.cluster.example.com"</span>
 <a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="w">  </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8760h</span><span class="w">    </span><span class="c1"># 1 year</span>
 <a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">  </span><span class="nt">renewBefore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">720h</span><span class="w">  </span><span class="c1"># Renew 30 days before expiry</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Patch ingress controller to use custom wildcard cert</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>ingresscontroller<span class="w"> </span>default<span class="w"> </span>-n<span class="w"> </span>openshift-ingress-operator<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="s1">    &quot;spec&quot;:{</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="s1">      &quot;defaultCertificate&quot;:{</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="s1">        &quot;name&quot;:&quot;apps-wildcard-tls&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="s1">    "spec":{</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="s1">      "defaultCertificate":{</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="s1">        "name":"apps-wildcard-tls"</span>
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="s1">      }</span>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="s1">    }</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="s1">  }'</span>
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
 <a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># Check cert-manager certificate status</span>
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>oc<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-A
@@ -7722,11 +7722,11 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="nt">sourceRepos</span><span class="p">:</span>
 <a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://gitlab.example.com/platform/*</span>
 <a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span><span class="nt">destinations</span><span class="p">:</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">"*"</span>
 <a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
 <a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">  </span><span class="nt">clusterResourceWhitelist</span><span class="p">:</span>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">"*"</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">"*"</span>
 <a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
 <a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="nn">---</span>
 <a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="c1"># Application CR — syncs a Git repo path to a namespace</span>
@@ -7760,26 +7760,26 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span>argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>cluster-config<span class="w"> </span>--auth-token<span class="w"> </span>&lt;token&gt;
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
 <a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># Get ArgoCD admin password</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-gitops<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>openshift-gitops-cluster<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.admin\.password}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-gitops<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>openshift-gitops-cluster<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.admin\.password}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>NAME            SYNC STATUS   HEALTH STATUS   REPO                                    PATH
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>cluster-config  Synced        Healthy         https://github.com/acme/gitops-repo     clusters/prod
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>ingress-config  OutOfSync     Progressing     https://github.com/acme/gitops-repo     clusters/ingress
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>status:
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  conditions:
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  - lastTransitionTime: &quot;2024-01-15T09:42:33Z&quot;
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    message: &quot;successfully synced (revision: abc123def456)&quot;
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    reason: &quot;SyncOperationSucceeded&quot;
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    status: &quot;True&quot;
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    type: &quot;Synced&quot;
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  - lastTransitionTime: "2024-01-15T09:42:33Z"
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    message: "successfully synced (revision: abc123def456)"
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    reason: "SyncOperationSucceeded"
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    status: "True"
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    type: "Synced"
 <a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  health:
 <a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>    status: Healthy
 <a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>  syncResult:
 <a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>    resources: 47
 <a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>    revision: abc123def456
 <a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>    syncPhase: Succeeded
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>    syncTimestamp: &quot;2024-01-15T09:42:33Z&quot;
-<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>Application &#39;cluster-config&#39; synced and healthy
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>    syncTimestamp: "2024-01-15T09:42:33Z"
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>Application 'cluster-config' synced and healthy
 <a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>admin@argocd.example.com:p@ssw0rd_2024
 </code></pre></div>
 <div class="admonition warning">

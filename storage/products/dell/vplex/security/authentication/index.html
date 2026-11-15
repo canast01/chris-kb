@@ -9094,13 +9094,13 @@ Authentication for VPLEX management is split across two interfaces: SSH-based `v
 <h3 id="ssh-key-authentication">SSH Key Authentication<a class="headerlink" href="#ssh-key-authentication" title="Permanent link">&para;</a></h3>
 <p>Configure SSH key authentication for the <code>service</code> account and any automation accounts:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On the operator/automation host: generate an SSH key pair (if not already done)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;vplex-automation@example.com&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/vplex_ed25519
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">"vplex-automation@example.com"</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/vplex_ed25519
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Copy the public key to the VMS (first-time setup requires password authentication)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519.pub<span class="w"> </span>service@&lt;VMS_IP&gt;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify key-based login works</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519<span class="w"> </span>service@&lt;VMS_IP&gt;<span class="w"> </span><span class="s2">&quot;vplexcli -q -e &#39;health-check&#39;&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519<span class="w"> </span>service@&lt;VMS_IP&gt;<span class="w"> </span><span class="s2">"vplexcli -q -e 'health-check'"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Generating public/private ed25519 key pair.
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Enter passphrase (empty for no passphrase): 
@@ -9109,7 +9109,7 @@ Authentication for VPLEX management is split across two interfaces: SSH-based `v
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Your public key has been saved in /home/automation/.ssh/vplex_ed25519.pub
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>The key fingerprint is:
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>SHA256:kR9mL2pQxZ7vN4jH8sT1wY3aB5cD6eF9gH0iJ2kL3mN vplex-automation@example.com
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>The key&#39;s randomart image is:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>The key's randomart image is:
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>+--[ED25519 256]--+
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|        .o+o.    |
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|       o.o.o .   |
@@ -9118,7 +9118,7 @@ Authentication for VPLEX management is split across two interfaces: SSH-based `v
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>/home/automation/.ssh/vplex_ed25519.pub)
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Number of key(s) added: 1
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Now try logging in with:    &quot;ssh -i &#39;/home/automation/.ssh/vplex_ed25519&#39; &#39;service@192.168.50.42&#39;&quot;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Now try logging in with:    "ssh -i '/home/automation/.ssh/vplex_ed25519' 'service@192.168.50.42'"
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>CLUSTER_STATUS: HEALTHY
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>COMPONENT_STATUS: OK
@@ -9331,8 +9331,8 @@ Authentication for VPLEX management is split across two interfaces: SSH-based `v
 <p>Configure syslog forwarding from VMS to the centralised SIEM immediately after deployment:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On VMS (as admin), create /etc/rsyslog.d/vplex-siem.conf:</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Forward all VPLEX logs to the SIEM</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;vplexcli&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;vplexmanagement&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">'vplexcli'</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">'vplexmanagement'</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>*.*<span class="w"> </span>@&lt;SIEM_IP&gt;:514
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Apply the configuration</span>

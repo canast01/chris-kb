@@ -7210,111 +7210,111 @@ Top-10 Aria Networks (vRNI) REST API calls for network entity queries, path anal
 </div>
 <p><img alt="Aria Networks Cheat Sheet" src="../../../assets/reference-cheat-sheets-aria-networks.svg" /></p>
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://vrni/api/ni&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">"https://vrni/api/ni"</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Authenticate (get token)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="nv">$BASE</span>/auth/token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;VMware1!&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">HDR</span><span class="o">=</span><span class="s2">&quot;-H \&quot;Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">\&quot; -H \&quot;Content-Type: application/json\&quot;&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"username":"admin@local","password":"VMware1!","domain":{"domain_type":"LOCAL"}}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; print(json.load(sys.stdin)['token'])"</span><span class="k">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">HDR</span><span class="o">=</span><span class="s2">"-H \"Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">\" -H \"Content-Type: application/json\""</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Entity queries</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/entities/problems&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">             </span><span class="c1"># active problems</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;:&quot;vm where name = myvm&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">             </span><span class="c1"># entity search</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/entities/problems"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">             </span><span class="c1"># active problems</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/search"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"query":"vm where name = myvm"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">             </span><span class="c1"># entity search</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Path analysis</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/micro-seg/paths&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;source&quot;:{&quot;entity&quot;:{&quot;entity_id&quot;:&quot;&lt;src-id&gt;&quot;}},&quot;destination&quot;:{&quot;entity&quot;:{&quot;entity_id&quot;:&quot;&lt;dst-id&gt;&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/micro-seg/paths"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"source":{"entity":{"entity_id":"&lt;src-id&gt;"}},"destination":{"entity":{"entity_id":"&lt;dst-id&gt;"}}}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Flows</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/groups/flows&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;time_range&quot;:{&quot;start_time&quot;:1700000000,&quot;end_time&quot;:1700003600}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/groups/flows"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"time_range":{"start_time":1700000000,"end_time":1700003600}}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Data sources</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/data-sources/vcenters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">         </span><span class="c1"># vCenter sources</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/data-sources/nsxv-managers&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">    </span><span class="c1"># NSX sources</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/data-sources/vcenters"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">         </span><span class="c1"># vCenter sources</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/data-sources/nsxv-managers"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">    </span><span class="c1"># NSX sources</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;problems&quot;: [
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  "problems": [
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    {
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      &quot;id&quot;: &quot;problem-42&quot;,
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>      &quot;severity&quot;: &quot;CRITICAL&quot;,
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      &quot;name&quot;: &quot;Unprotected VM detected&quot;,
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      &quot;entity_id&quot;: &quot;vm-156&quot;,
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      &quot;timestamp&quot;: 1700001234
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      "id": "problem-42",
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>      "severity": "CRITICAL",
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      "name": "Unprotected VM detected",
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      "entity_id": "vm-156",
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      "timestamp": 1700001234
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    },
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    {
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>      &quot;id&quot;: &quot;problem-41&quot;,
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      &quot;severity&quot;: &quot;WARNING&quot;,
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      &quot;name&quot;: &quot;Asymmetric flow detected&quot;,
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      &quot;entity_id&quot;: &quot;flow-89&quot;,
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>      &quot;timestamp&quot;: 1699998765
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>      "id": "problem-41",
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      "severity": "WARNING",
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      "name": "Asymmetric flow detected",
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      "entity_id": "flow-89",
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>      "timestamp": 1699998765
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    }
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  ],
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;total_count&quot;: 2
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  "total_count": 2
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>}
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>{
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;results&quot;: [
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  "results": [
 <a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    {
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>      &quot;entity_id&quot;: &quot;vm-2048&quot;,
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>      &quot;name&quot;: &quot;myvm&quot;,
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>      &quot;entity_type&quot;: &quot;VirtualMachine&quot;,
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>      &quot;ipv4_address&quot;: &quot;192.168.1.105&quot;
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>      "entity_id": "vm-2048",
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>      "name": "myvm",
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>      "entity_type": "VirtualMachine",
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>      "ipv4_address": "192.168.1.105"
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    }
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  ]
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>}
 <a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>{
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  &quot;paths&quot;: [
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  "paths": [
 <a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    {
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>      &quot;path_id&quot;: &quot;path-7821&quot;,
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>      &quot;source_id&quot;: &quot;vm-2048&quot;,
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>      &quot;destination_id&quot;: &quot;vm-3091&quot;,
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>      &quot;allowed&quot;: true,
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>      &quot;hops&quot;: 3
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>      "path_id": "path-7821",
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>      "source_id": "vm-2048",
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>      "destination_id": "vm-3091",
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>      "allowed": true,
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>      "hops": 3
 <a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    }
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  ]
 <a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>}
 <a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>{
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>  &quot;flows&quot;: [
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>  "flows": [
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>    {
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>      &quot;flow_id&quot;: &quot;flow-12847&quot;,
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>      &quot;source_ip&quot;: &quot;10.0.1.50&quot;,
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>      &quot;destination_ip&quot;: &quot;10.0.2.75&quot;,
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>      &quot;protocol&quot;: &quot;TCP&quot;,
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>      &quot;port&quot;: 443,
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>      &quot;packets&quot;: 1247
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>      "flow_id": "flow-12847",
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>      "source_ip": "10.0.1.50",
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>      "destination_ip": "10.0.2.75",
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>      "protocol": "TCP",
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>      "port": 443,
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>      "packets": 1247
 <a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>    },
 <a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>    {
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>      &quot;flow_id&quot;: &quot;flow-12848&quot;,
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>      &quot;source_ip&quot;: &quot;10.0.1.51&quot;,
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>      &quot;destination_ip&quot;: &quot;10.0.3.100&quot;,
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>      &quot;protocol&quot;: &quot;TCP&quot;,
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>      &quot;port&quot;: 22,
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>      &quot;packets&quot;: 89
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>      "flow_id": "flow-12848",
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>      "source_ip": "10.0.1.51",
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>      "destination_ip": "10.0.3.100",
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>      "protocol": "TCP",
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>      "port": 22,
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>      "packets": 89
 <a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>    }
 <a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>  ]
 <a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>}
 <a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>{
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>  &quot;vcenter_sources&quot;: [
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>  "vcenter_sources": [
 <a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>    {
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>      &quot;id&quot;: &quot;ds-vc-001&quot;,
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>      &quot;name&quot;: &quot;prod-vcenter-01.corp.local&quot;,
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>      &quot;status&quot;: &quot;CONNECTED&quot;,
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>      &quot;version&quot;: &quot;7.0.3&quot;
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>      "id": "ds-vc-001",
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>      "name": "prod-vcenter-01.corp.local",
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>      "status": "CONNECTED",
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>      "version": "7.0.3"
 <a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>    }
 <a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>  ]
 <a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>}
 <a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>{
-<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>  &quot;nsxv_managers&quot;: [
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>  "nsxv_managers": [
 <a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>    {
-<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>      &quot;id&quot;: &quot;ds-nsxv-001&quot;,
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>      &quot;name&quot;: &quot;nsx-manager-01.corp.local&quot;,
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>      &quot;status&quot;: &quot;CONNECTED&quot;,
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>      &quot;version&quot;: &quot;6.4.10&quot;
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>      "id": "ds-nsxv-001",
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>      "name": "nsx-manager-01.corp.local",
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>      "status": "CONNECTED",
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>      "version": "6.4.10"
 <a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>    }
 <a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>  ]
 <a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>}

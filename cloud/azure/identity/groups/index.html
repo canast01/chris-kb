@@ -8301,7 +8301,7 @@ Entra ID (Azure AD) groups are the primary mechanism for managing access at scal
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-AzADGroup</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">SecurityEnabled</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Create group</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">New-AzADGroup</span> <span class="n">-DisplayName</span> <span class="s2">&quot;storage-prod-readers&quot;</span> <span class="n">-MailNickname</span> <span class="s2">&quot;storage-prod-readers&quot;</span> <span class="n">-SecurityEnabled</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">New-AzADGroup</span> <span class="n">-DisplayName</span> <span class="s2">"storage-prod-readers"</span> <span class="n">-MailNickname</span> <span class="s2">"storage-prod-readers"</span> <span class="n">-SecurityEnabled</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Add member</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Add-AzADGroupMember</span> <span class="n">-TargetGroupObjectId</span> <span class="p">&lt;</span><span class="nb">group-id</span><span class="p">&gt;</span> <span class="n">-MemberObjectId</span> <span class="p">&lt;</span><span class="n">user-id</span><span class="p">&gt;</span>
@@ -8312,19 +8312,19 @@ Entra ID (Azure AD) groups are the primary mechanism for managing access at scal
 <h2 id="dynamic-membership-rules">Dynamic Membership Rules<a class="headerlink" href="#dynamic-membership-rules" title="Permanent link">&para;</a></h2>
 <p>Dynamic groups evaluate rules against user attributes and update membership automatically.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># All users in a department</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">(</span>user.department<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;Engineering&quot;</span><span class="o">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">(</span>user.department<span class="w"> </span>-eq<span class="w"> </span><span class="s2">"Engineering"</span><span class="o">)</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Users by job title</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">(</span>user.jobTitle<span class="w"> </span>-contains<span class="w"> </span><span class="s2">&quot;Engineer&quot;</span><span class="o">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">(</span>user.jobTitle<span class="w"> </span>-contains<span class="w"> </span><span class="s2">"Engineer"</span><span class="o">)</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Country + company</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="o">(</span>user.country<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;AU&quot;</span><span class="o">)</span><span class="w"> </span>and<span class="w"> </span><span class="o">(</span>user.companyName<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;Contoso&quot;</span><span class="o">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="o">(</span>user.country<span class="w"> </span>-eq<span class="w"> </span><span class="s2">"AU"</span><span class="o">)</span><span class="w"> </span>and<span class="w"> </span><span class="o">(</span>user.companyName<span class="w"> </span>-eq<span class="w"> </span><span class="s2">"Contoso"</span><span class="o">)</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Custom extension attribute</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="o">(</span>user.extensionAttribute1<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;prod-access&quot;</span><span class="o">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="o">(</span>user.extensionAttribute1<span class="w"> </span>-eq<span class="w"> </span><span class="s2">"prod-access"</span><span class="o">)</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># All guest users</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="o">(</span>user.userType<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;Guest&quot;</span><span class="o">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="o">(</span>user.userType<span class="w"> </span>-eq<span class="w"> </span><span class="s2">"Guest"</span><span class="o">)</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>(no output — these are Azure AD dynamic group membership rule expressions, not executable commands)
 </code></pre></div>
@@ -8355,24 +8355,24 @@ Entra ID (Azure AD) groups are the primary mechanism for managing access at scal
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create dynamic group</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>ad<span class="w"> </span>group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;dynamic-engineers&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--mail-nickname<span class="w"> </span><span class="s2">&quot;dynamic-engineers&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--group-types<span class="w"> </span><span class="s2">&quot;DynamicMembership&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--membership-rule<span class="w"> </span><span class="s1">&#39;(user.department -eq &quot;Engineering&quot;)&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--membership-rule-processing-state<span class="w"> </span><span class="s2">&quot;On&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">"dynamic-engineers"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--mail-nickname<span class="w"> </span><span class="s2">"dynamic-engineers"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--group-types<span class="w"> </span><span class="s2">"DynamicMembership"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--membership-rule<span class="w"> </span><span class="s1">'(user.department -eq "Engineering")'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--membership-rule-processing-state<span class="w"> </span><span class="s2">"On"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;displayName&quot;: &quot;dynamic-engineers&quot;,
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;id&quot;: &quot;a7c2f891-4e3a-4b9c-8d1f-2e5a9c3b7f4a&quot;,
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;mailNickname&quot;: &quot;dynamic-engineers&quot;,
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;mailEnabled&quot;: false,
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  &quot;securityEnabled&quot;: true,
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  &quot;groupTypes&quot;: [
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    &quot;DynamicMembership&quot;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  "displayName": "dynamic-engineers",
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  "id": "a7c2f891-4e3a-4b9c-8d1f-2e5a9c3b7f4a",
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  "mailNickname": "dynamic-engineers",
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  "mailEnabled": false,
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  "securityEnabled": true,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  "groupTypes": [
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    "DynamicMembership"
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  ],
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  &quot;membershipRule&quot;: &quot;(user.department -eq \&quot;Engineering\&quot;)&quot;,
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  &quot;membershipRuleProcessingState&quot;: &quot;On&quot;,
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  &quot;createdDateTime&quot;: &quot;2024-01-15T10:32:47.123Z&quot;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  "membershipRule": "(user.department -eq \"Engineering\")",
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  "membershipRuleProcessingState": "On",
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  "createdDateTime": "2024-01-15T10:32:47.123Z"
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>}
 </code></pre></div>
 <div class="admonition warning">

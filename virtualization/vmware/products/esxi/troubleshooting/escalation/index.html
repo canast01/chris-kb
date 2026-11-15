@@ -9240,7 +9240,7 @@ How to escalate ESXi host issues to Broadcom support: what data to collect, how 
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">#   Build: Releasebuild-23305546</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Also get hardware info for the SR description</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;CPU Packages|CPU Cores|Hyperthreading&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"CPU Packages|CPU Cores|Hyperthreading"</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Product: VMware ESXi
@@ -9325,10 +9325,10 @@ How to escalate ESXi host issues to Broadcom support: what data to collect, how 
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Look for a .dumpfile or .zdumpfile with the timestamp of the crash</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Also check the vmkernel log for the panic line</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;PSOD\|BUG\|panic\|backtrace&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"PSOD\|BUG\|panic\|backtrace"</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Get the vmkernel log from the time of the crash (system log is persistent)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>grep<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;yesterday&#39;</span><span class="w"> </span><span class="s1">&#39;+%Y-%m-%d&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|panic&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>grep<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">'yesterday'</span><span class="w"> </span><span class="s1">'+%Y-%m-%d'</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fail\|panic"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>total 2.8G
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>-rw-------  1 root root 2.8G Nov 14 10:23 vmkdump-2024-11-14-10-15-42.zdumpfile
@@ -9416,14 +9416,14 @@ How to escalate ESXi host issues to Broadcom support: what data to collect, how 
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Devices in APD or PDL</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;state\|dead\|error&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"state\|dead\|error"</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># HBA port status</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list<span class="w">        </span><span class="c1"># Fibre Channel</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span>iscsi<span class="w"> </span>list<span class="w">     </span><span class="c1"># iSCSI</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Datastore accessibility</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^[[:space:]]*</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^[[:space:]]*</span>$<span class="s2">"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Name: vmhba0:C0:T0:L0
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>State: active
@@ -9569,8 +9569,8 @@ How to escalate ESXi host issues to Broadcom support: what data to collect, how 
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Step 2 — T1 support acknowledges and confirms bundle received (typically 30 min–4 hr)
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>         ↓
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Step 3 — If no meaningful progress in 4 hours for S1 or 1 business day for S2:
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>         → Reply in the case: &quot;Requesting T2 ESXi Senior Engineer assignment&quot;
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>         → State impact: &quot;[X] VMs inaccessible / host offline / storage degraded&quot;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>         → Reply in the case: "Requesting T2 ESXi Senior Engineer assignment"
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>         → State impact: "[X] VMs inaccessible / host offline / storage degraded"
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>         ↓
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Step 4 — T2 Senior Engineer is assigned; they will schedule a live Zoom/Webex session
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>         → Have SSH access to ESXi host and vSphere Client ready for the call
@@ -9580,7 +9580,7 @@ How to escalate ESXi host issues to Broadcom support: what data to collect, how 
 <a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>         ↓
 <a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>Step 6 — For data loss risk, PSOD in production, or 24h+ with no resolution:
 <a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>         → Request a Critical Situation (CritSit) engagement
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>         → Add to case: &quot;Requesting CritSit — [reason: PSOD in prod / data at risk / 24h outage]&quot;
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>         → Add to case: "Requesting CritSit — [reason: PSOD in prod / data at risk / 24h outage]"
 </code></pre></div>
 <hr />
 <h2 id="what-not-to-do">What NOT to Do<a class="headerlink" href="#what-not-to-do" title="Permanent link">&para;</a></h2>
@@ -9637,7 +9637,7 @@ How to escalate ESXi host issues to Broadcom support: what data to collect, how 
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmkernel.log
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Storage path count (paste full output)</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Runtime Name|State&quot;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Runtime Name|State"</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># vSAN health (if applicable)</span>
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list

@@ -7860,24 +7860,24 @@ How to escalate Cisco Nexus Dashboard (ND) issues to Cisco TAC: what data to col
 </div>
 <h3 id="3-capture-etcd-and-kubernetes-state">3. Capture etcd and Kubernetes state<a class="headerlink" href="#3-capture-etcd-and-kubernetes-state" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Kubernetes events (all namespaces, sorted by time)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/nd-k8s-events-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/nd-k8s-events-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Pod states (all namespaces)</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span>wide<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/nd-k8s-pods-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check for any pods in CrashLoopBackOff or Evicted state</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-vE<span class="w"> </span><span class="s2">&quot;Running|Completed&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-vE<span class="w"> </span><span class="s2">"Running|Completed"</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># etcd cluster health (collect from each node)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>acs<span class="w"> </span>nodes<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/nd-/ {print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== etcd on </span><span class="si">${</span><span class="nv">node</span><span class="si">}</span><span class="s2"> ===&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/nd-etcd-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>acs<span class="w"> </span>nodes<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'/nd-/ {print $2}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== etcd on </span><span class="si">${</span><span class="nv">node</span><span class="si">}</span><span class="s2"> ==="</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/nd-etcd-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>ssh<span class="w"> </span>ndadmin@<span class="si">${</span><span class="nv">node</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="s2">&quot;ETCDCTL_API=3 etcdctl \</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="s2">"ETCDCTL_API=3 etcdctl \</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">     --endpoints=https://127.0.0.1:2379 \</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">     --cacert=/etc/kubernetes/pki/etcd/ca.crt \</span>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">     --cert=/etc/kubernetes/pki/etcd/server.crt \</span>
 <a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s2">     --key=/etc/kubernetes/pki/etcd/server.key \</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s2">     endpoint status --write-out=table 2&gt;&amp;1&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/nd-etcd-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s2">     endpoint status --write-out=table 2&gt;&amp;1"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/nd-etcd-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="k">done</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NAMESPACE                NAME                                                READY   STATUS    RESTARTS   AGE
@@ -7948,7 +7948,7 @@ How to escalate Cisco Nexus Dashboard (ND) issues to Cisco TAC: what data to col
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Collecting application state...
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Bundle creation completed successfully.
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>-rw-r--r-- 1 root root 2.3G Nov 15 14:32 /tmp/nd-support-20241115143215.tar.gz
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ndadmin@10.48.92.15&#39;s password: 
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ndadmin@10.48.92.15's password: 
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>nd-support-20241115143215.tar.gz                          2.3GB  45.2MB/s   00:51
 </code></pre></div>
 <div class="admonition warning">
@@ -7992,7 +7992,7 @@ How to escalate Cisco Nexus Dashboard (ND) issues to Cisco TAC: what data to col
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Output: /tmp/ndfc-support-202401151430.tar.gz
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Bundle size: 487.2 MB
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>ndadmin@192.168.100.45&#39;s password:
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>ndadmin@192.168.100.45's password:
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>ndfc-support-202401151430.tar.gz                100%  487.2MB   8.5MB/s   00:57
 </code></pre></div>
 <div class="admonition warning">
@@ -8077,9 +8077,9 @@ How to escalate Cisco Nexus Dashboard (ND) issues to Cisco TAC: what data to col
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>Changes in 24h before the issue:
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>  - 11:00: ND platform upgraded from 3.1.0 to 3.1.1d
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  - 12:00: ND appeared healthy post-upgrade; all apps Running
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  - 15:00: acs health: &quot;Cluster health: Degraded — 1 of 3 nodes not responding&quot;
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  - 15:00: acs health: "Cluster health: Degraded — 1 of 3 nodes not responding"
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>  - 15:05: kubectl get nodes: nd-dc1-2 shows NotReady; pods scheduled on nd-dc1-2 evicted
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>  - 15:10: NDFC app status transitions to &quot;Unavailable&quot;; SAN fabric management stops
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>  - 15:10: NDFC app status transitions to "Unavailable"; SAN fabric management stops
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>  - 15:20: etcd check on nd-dc1-2 times out; etcd quorum still held by nd-dc1-1 and nd-dc1-3
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>Steps already taken:
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>  - Ran acs techsupport BEFORE any restart attempt (bundle at /tmp/nd-support-*)
@@ -8203,10 +8203,10 @@ How to escalate Cisco Nexus Dashboard (ND) issues to Cisco TAC: what data to col
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>acs<span class="w"> </span>nodes<span class="w"> </span>list
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
 <a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># Pod states (look for non-Running pods)</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-vE<span class="w"> </span><span class="s2">&quot;Running|Completed&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-vE<span class="w"> </span><span class="s2">"Running|Completed"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 <a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
 <a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="c1"># Recent Kubernetes events</span>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Cisco ACS Version 3.2.1.0 Build 20231215
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>App Name                    Version         Status

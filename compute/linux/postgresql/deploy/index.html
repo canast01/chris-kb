@@ -7855,7 +7855,7 @@ PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf b
 </table>
 </div>
 <h2 id="initial-configuration-postgresqlconf">Initial Configuration (<code>postgresql.conf</code>)<a class="headerlink" href="#initial-configuration-postgresqlconf" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">listen_addresses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;localhost&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">listen_addresses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'localhost'</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="na">max_connections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="na">shared_buffers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2GB</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="na">effective_cache_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6GB</span>
@@ -7863,7 +7863,7 @@ PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf b
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="na">work_mem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16MB</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="na">wal_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">replica</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="na">archive_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">on</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="na">archive_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;cp %p /backup/wal/%f&#39;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="na">archive_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'cp %p /backup/wal/%f'</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="na">log_min_duration_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
 </code></pre></div>
 <h2 id="pg_hbaconf-access-control"><code>pg_hba.conf</code> Access Control<a class="headerlink" href="#pg_hbaconf-access-control" title="Permanent link">&para;</a></h2>
@@ -7874,7 +7874,7 @@ PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf b
 </code></pre></div>
 <p>After editing: <code>sudo systemctl reload postgresql-16</code></p>
 <h2 id="firewall">Firewall<a class="headerlink" href="#firewall" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=ipv4 source address=10.0.1.0/24 port port=5432 protocol=tcp accept&#39;</span><span class="w"> </span>--permanent
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">'rule family=ipv4 source address=10.0.1.0/24 port port=5432 protocol=tcp accept'</span><span class="w"> </span>--permanent
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>success
@@ -7902,13 +7902,13 @@ PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf b
 </table>
 </div>
 <h2 id="create-application-user-and-database">Create Application User and Database<a class="headerlink" href="#create-application-user-and-database" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;StrongPass1!&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">'StrongPass1!'</span><span class="p">;</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">app_prod</span><span class="w"> </span><span class="k">OWNER</span><span class="w"> </span><span class="n">appuser</span><span class="p">;</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">app_prod</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">appuser</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version(); SHOW shared_buffers;&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-h<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-d<span class="w"> </span>app_prod<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1 AS alive;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT version(); SHOW shared_buffers;"</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-h<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-d<span class="w"> </span>app_prod<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT 1 AS alive;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>version                                                  
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>────────────────────────────────────────────────────────────────────────────────────────────────────────

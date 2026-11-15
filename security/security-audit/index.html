@@ -6749,11 +6749,11 @@ Security Audit Procedure reference covering Audit Types, Scope Definition, Confi
 <h2 id="configuration-audit-checks">Configuration Audit Checks<a class="headerlink" href="#configuration-audit-checks" title="Permanent link">&para;</a></h2>
 <p><strong>Linux server hardening:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH hardening</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^PermitRootLogin|^PasswordAuthentication|^Protocol|^MaxAuthTries&quot;</span><span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"^PermitRootLogin|^PasswordAuthentication|^Protocol|^MaxAuthTries"</span><span class="w"> </span>/etc/ssh/sshd_config
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Password policy</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cat<span class="w"> </span>/etc/security/pwquality.conf
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^PASS_MAX_DAYS|^PASS_MIN_DAYS|^PASS_MIN_LEN&quot;</span><span class="w"> </span>/etc/login.defs
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"^PASS_MAX_DAYS|^PASS_MIN_DAYS|^PASS_MIN_LEN"</span><span class="w"> </span>/etc/login.defs
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Firewall active</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>firewalld<span class="w"> </span><span class="o">||</span><span class="w"> </span>systemctl<span class="w"> </span>is-active<span class="w"> </span>ufw
@@ -6762,7 +6762,7 @@ Security Audit Procedure reference covering Audit Types, Scope Definition, Confi
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>auditd
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># SUID/SGID files (unexpected ones are a finding)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>find<span class="w"> </span>/<span class="w"> </span>-perm<span class="w"> </span>/6000<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/proc/*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>find<span class="w"> </span>/<span class="w"> </span>-perm<span class="w"> </span>/6000<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">"/proc/*"</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PermitRootLogin no
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>PasswordAuthentication no
@@ -6824,14 +6824,14 @@ Security Audit Procedure reference covering Audit Types, Scope Definition, Confi
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">EnableSMB1Protocol</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># RDP settings</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s1">&#39;HKLM:\System\CurrentControlSet\Control\Terminal Server&#39;</span> <span class="n">-Name</span> <span class="n">fDenyTSConnections</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s1">'HKLM:\System\CurrentControlSet\Control\Terminal Server'</span> <span class="n">-Name</span> <span class="n">fDenyTSConnections</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Local administrators group membership</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">"Administrators"</span>
 </code></pre></div></p>
 <h2 id="patch-compliance-check">Patch Compliance Check<a class="headerlink" href="#patch-compliance-check" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># RHEL/CentOS — list available security updates</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>yum<span class="w"> </span>check-update<span class="w"> </span>--security<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>yum<span class="w"> </span>check-update<span class="w"> </span>--security<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^</span>$<span class="s2">"</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Ubuntu/Debian</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>security
@@ -6840,37 +6840,37 @@ Security Audit Procedure reference covering Audit Types, Scope Definition, Confi
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Or query WSUS/Windows Update</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">(</span><span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span><span class="p">).</span><span class="n">CreateUpdateSearcher</span><span class="p">().</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0 and Type=&#39;Software&#39; and IsHidden=0&quot;</span><span class="p">).</span><span class="n">Updates</span> <span class="p">|</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">(</span><span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span><span class="p">).</span><span class="n">CreateUpdateSearcher</span><span class="p">().</span><span class="n">Search</span><span class="p">(</span><span class="s2">"IsInstalled=0 and Type='Software' and IsHidden=0"</span><span class="p">).</span><span class="n">Updates</span> <span class="p">|</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span>
 </code></pre></div>
 <h2 id="vulnerability-scan-review">Vulnerability Scan Review<a class="headerlink" href="#vulnerability-scan-review" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Example: pull Nessus / Tenable findings via API (requires API key)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;scanner&gt;/scans/&lt;scan_id&gt;/hosts&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-ApiKey: accessKey=&lt;ak&gt;;secretKey=&lt;sk&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.hosts[] | {hostname,score,critical,high}&#39;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">"https://&lt;scanner&gt;/scans/&lt;scan_id&gt;/hosts"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"X-ApiKey: accessKey=&lt;ak&gt;;secretKey=&lt;sk&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.hosts[] | {hostname,score,critical,high}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &quot;hostname&quot;: &quot;web-prod-01.internal&quot;,
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  &quot;score&quot;: 8.9,
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  &quot;critical&quot;: 2,
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  &quot;high&quot;: 5
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  "hostname": "web-prod-01.internal",
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  "score": 8.9,
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  "critical": 2,
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  "high": 5
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>}
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>{
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  &quot;hostname&quot;: &quot;db-primary-02.internal&quot;,
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  &quot;score&quot;: 7.2,
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  &quot;critical&quot;: 0,
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  &quot;high&quot;: 3
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  "hostname": "db-primary-02.internal",
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  "score": 7.2,
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  "critical": 0,
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  "high": 3
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>}
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>{
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  &quot;hostname&quot;: &quot;app-cache-03.internal&quot;,
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  &quot;score&quot;: 9.1,
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  &quot;critical&quot;: 3,
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  &quot;high&quot;: 8
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  "hostname": "app-cache-03.internal",
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  "score": 9.1,
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  "critical": 3,
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  "high": 8
 <a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>}
 <a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>{
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>  &quot;hostname&quot;: &quot;lb-edge-01.internal&quot;,
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>  &quot;score&quot;: 5.4,
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>  &quot;critical&quot;: 0,
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>  &quot;high&quot;: 1
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>  "hostname": "lb-edge-01.internal",
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>  "score": 5.4,
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>  "critical": 0,
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>  "high": 1
 <a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>}
 </code></pre></div>
 <div class="admonition warning">

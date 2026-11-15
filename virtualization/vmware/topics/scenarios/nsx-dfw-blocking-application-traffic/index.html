@@ -9383,33 +9383,33 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Group membership types and how to check:
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Static members    → look for the specific VM in the member list
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Dynamic criteria  → check if the VM satisfies the criteria (name pattern, OS, tag)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  IP set            → confirm the VM&#39;s IP is in the set; check for IP change
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  IP set            → confirm the VM's IP is in the set; check for IP change
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  VM tag            → confirm the correct NSX tag is applied to the VM
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check NSX tags on a VM via NSX Manager API</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?display_name=&lt;vm-name&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;tags&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?display_name=&lt;vm-name&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">"tags"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    &quot;results&quot;: [
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    "results": [
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        {
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>            &quot;external_id&quot;: &quot;vm-42&quot;,
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>            &quot;display_name&quot;: &quot;web-server-01&quot;,
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            &quot;tags&quot;: [
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>            "external_id": "vm-42",
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>            "display_name": "web-server-01",
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            "tags": [
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                {
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                    &quot;scope&quot;: &quot;environment&quot;,
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                    &quot;tag&quot;: &quot;production&quot;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                    "scope": "environment",
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                    "tag": "production"
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                },
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                {
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                    &quot;scope&quot;: &quot;team&quot;,
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                    &quot;tag&quot;: &quot;platform-eng&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                    "scope": "team",
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                    "tag": "platform-eng"
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                }
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>            ],
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            &quot;resource_type&quot;: &quot;VirtualMachine&quot;
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            "resource_type": "VirtualMachine"
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        }
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    ],
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    &quot;result_count&quot;: 1
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    "result_count": 1
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9452,27 +9452,27 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 <p><strong>Option B — Fix group membership:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>For static groups: add the VM directly to the group via NSX Manager UI
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>For dynamic groups: apply the correct NSX tag to the VM
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>For IP-set groups: update the IP set with the VM&#39;s current IP address
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>For IP-set groups: update the IP set with the VM's current IP address
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Apply an NSX tag to a VM via API</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;external_id&quot;:&quot;&lt;vm-moid&gt;&quot;,&quot;tags&quot;:[{&quot;scope&quot;:&quot;app&quot;,&quot;tag&quot;:&quot;web-tier&quot;}]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?action=update_tags&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"external_id":"&lt;vm-moid&gt;","tags":[{"scope":"app","tag":"web-tier"}]}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?action=update_tags"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;result_count&quot;: 1,
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;results&quot;: [
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "result_count": 1,
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  "results": [
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    {
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      &quot;external_id&quot;: &quot;vm-42&quot;,
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      &quot;tags&quot;: [
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      "external_id": "vm-42",
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      "tags": [
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        {
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>          &quot;scope&quot;: &quot;app&quot;,
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>          &quot;tag&quot;: &quot;web-tier&quot;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>          "scope": "app",
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>          "tag": "web-tier"
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        }
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      ],
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      &quot;display_name&quot;: &quot;web-server-01&quot;,
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      &quot;resource_type&quot;: &quot;VirtualMachine&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      "display_name": "web-server-01",
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      "resource_type": "VirtualMachine"
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    }
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>  ]
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>}

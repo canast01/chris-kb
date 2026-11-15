@@ -8560,7 +8560,7 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 <p><strong>Cannot ping gateway</strong> → Step 2 (L2/VLAN issue)
 <strong>Can ping gateway, not destination</strong> → Step 4 (routing/firewall issue)</p>
 <h2 id="step-2-vlan-segment-issue">Step 2 — VLAN / Segment Issue<a class="headerlink" href="#step-2-vlan-segment-issue" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check VM&#39;s port group assignment</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check VM's port group assignment</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">vm_name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NetworkName</span><span class="p">,</span> <span class="n">ConnectionState</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Check port group VLAN ID (for standard/distributed vSwitch)</span>
@@ -8572,24 +8572,24 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Verify attached to correct tier-1 gateway</span>
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;results&quot;: [
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  "results": [
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    {
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>      &quot;id&quot;: &quot;logical-switch-001&quot;,
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      &quot;display_name&quot;: &quot;prod-segment-web&quot;,
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      &quot;state&quot;: &quot;SUCCESS&quot;,
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      &quot;realization_state&quot;: &quot;REALIZED&quot;,
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      &quot;transport_zone_display_name&quot;: &quot;TZ-VLAN-100&quot;,
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      &quot;connectivity&quot;: &quot;ON&quot;,
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      &quot;admin_state&quot;: &quot;UP&quot;,
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      &quot;tier_1_gateways&quot;: [
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>      "id": "logical-switch-001",
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      "display_name": "prod-segment-web",
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      "state": "SUCCESS",
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      "realization_state": "REALIZED",
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      "transport_zone_display_name": "TZ-VLAN-100",
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      "connectivity": "ON",
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      "admin_state": "UP",
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      "tier_1_gateways": [
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        {
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>          &quot;target_id&quot;: &quot;tier1-gw-prod-01&quot;,
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>          &quot;target_display_name&quot;: &quot;tier1-gw-prod-01&quot;
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>          "target_id": "tier1-gw-prod-01",
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>          "target_display_name": "tier1-gw-prod-01"
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        }
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>      ]
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    }
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  ],
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  &quot;result_count&quot;: 1
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  "result_count": 1
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -8625,7 +8625,7 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">      </span><span class="c1"># Windows (1472 + 28 headers = 1500 bytes)</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># On ESXi host — check vmnic MTU</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxcfg-nics<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxcfg-nics<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Name|MTU"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PING 10.20.1.1 (10.20.1.1) 1500(1528) bytes of data.
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>1508 bytes from 10.20.1.1: icmp_seq=1 ttl=64 time=2.341 ms
@@ -8734,9 +8734,9 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 <h2 id="step-5-nsx-distributed-firewall-dfw">Step 5 — NSX Distributed Firewall (DFW)<a class="headerlink" href="#step-5-nsx-distributed-firewall-dfw" title="Permanent link">&para;</a></h2>
 <p>If L2 and routing are confirmed working:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check DFW rules applied to the VM — from ESXi host where VM runs</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">   </span><span class="c1"># Get filter name from VM&#39;s vmx file</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">   </span><span class="c1"># Get filter name from VM's vmx file</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Get VM&#39;s DFW filter name</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Get VM's DFW filter name</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Filter: vShield-vm-12345678-abcd-1234-5678-1234567890ab
@@ -8789,7 +8789,7 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
   NSX Manager → Plan &amp; Troubleshoot → Traffic Analysis</p>
 <h2 id="step-6-packet-capture">Step 6 — Packet Capture<a class="headerlink" href="#step-6-packet-capture" title="Permanent link">&para;</a></h2>
 <p>If still unresolved, capture on the relevant interface:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Capture on VM&#39;s vNIC from ESXi host</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Capture on VM's vNIC from ESXi host</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;port-id&gt;<span class="w"> </span>--proto<span class="w"> </span>0x0800<span class="w"> </span>-o<span class="w"> </span>/tmp/capture.pcap
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Get port ID</span>

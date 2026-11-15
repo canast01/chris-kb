@@ -7222,12 +7222,12 @@ Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined 
 <p><strong>Configure the Root CA:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Install-AdcsCertificationAuthority</span> <span class="p">`</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">-CAType</span> <span class="n">StandaloneRootCA</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">-CryptoProviderName</span> <span class="s2">&quot;RSA#Microsoft Software Key Storage Provider&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">-CryptoProviderName</span> <span class="s2">"RSA#Microsoft Software Key Storage Provider"</span> <span class="p">`</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">-KeyLength</span> <span class="n">4096</span> <span class="p">`</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">-HashAlgorithmName</span> <span class="n">SHA256</span> <span class="p">`</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">-ValidityPeriod</span> <span class="n">Years</span> <span class="p">`</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">-ValidityPeriodUnits</span> <span class="n">20</span> <span class="p">`</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">-CACommonName</span> <span class="s2">&quot;Corp Root CA&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">-CACommonName</span> <span class="s2">"Corp Root CA"</span> <span class="p">`</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">-Force</span>
 </code></pre></div>
 <p>The Root CA certificate is valid for 20 years. Certificates issued by this CA (to the Issuing CA) should be set to 10 years maximum.</p>
@@ -7236,12 +7236,12 @@ Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined 
 <p>CDP and AIA URLs tell certificate consumers where to retrieve the CRL and the CA certificate. Configure them to point to an HTTP server that will remain available.</p>
 <p>Open an elevated command prompt on the Root CA:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Remove LDAP and default file paths — only keep HTTP
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>certutil -setreg CA\CRLPublicationURLs &quot;1:C:\Windows\system32\CertSrv\CertEnroll\%%3%%8%%9.crl\n2:http://pki.corp.local/CertEnroll/%%3%%8%%9.crl&quot;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>certutil -setreg CA\CACertPublicationURLs &quot;2:http://pki.corp.local/CertEnroll/%%1_%%3%%4.crt&quot;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>certutil -setreg CA\CRLPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%%3%%8%%9.crl\n2:http://pki.corp.local/CertEnroll/%%3%%8%%9.crl"
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>certutil -setreg CA\CACertPublicationURLs "2:http://pki.corp.local/CertEnroll/%%1_%%3%%4.crt"
 </code></pre></div>
 <p>Set the CRL validity period:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>certutil -setreg CA\CRLPeriodUnits 52
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>certutil -setreg CA\CRLPeriod &quot;Weeks&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>certutil -setreg CA\CRLPeriod "Weeks"
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>certutil -setreg CA\CRLDeltaPeriodUnits 0
 </code></pre></div>
 <p>Restart the CA service and publish the CRL:</p>
@@ -7262,10 +7262,10 @@ Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined 
 <p><strong>Configure as Enterprise Subordinate CA:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Install-AdcsCertificationAuthority</span> <span class="p">`</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">-CAType</span> <span class="n">EnterpriseSubordinateCA</span> <span class="p">`</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">-CryptoProviderName</span> <span class="s2">&quot;RSA#Microsoft Software Key Storage Provider&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">-CryptoProviderName</span> <span class="s2">"RSA#Microsoft Software Key Storage Provider"</span> <span class="p">`</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">-KeyLength</span> <span class="n">2048</span> <span class="p">`</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">-HashAlgorithmName</span> <span class="n">SHA256</span> <span class="p">`</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">-CACommonName</span> <span class="s2">&quot;Corp Issuing CA&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">-CACommonName</span> <span class="s2">"Corp Issuing CA"</span> <span class="p">`</span>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">-Force</span>
 </code></pre></div>
 <p>This generates a CSR at <code>C:\Corp Issuing CA.req</code>.</p>
@@ -7275,13 +7275,13 @@ Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined 
 <li>Copy the CSR to the Root CA.</li>
 <li>Submit and sign:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>certreq -submit -config &quot;.\Corp Root CA&quot; &quot;Corp Issuing CA.req&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>certreq -submit -config ".\Corp Root CA" "Corp Issuing CA.req"
 </code></pre></div>
 <ol>
 <li>Retrieve the signed certificate and copy it back to the Issuing CA.</li>
 </ol>
 <p><strong>Install the signed certificate on the Issuing CA:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">certutil</span> <span class="n">-installcert</span> <span class="s2">&quot;C:\Corp Issuing CA.crt&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">certutil</span> <span class="n">-installcert</span> <span class="s2">"C:\Corp Issuing CA.crt"</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Start-Service</span> <span class="n">certsvc</span>
 </code></pre></div>
 <hr />
@@ -7336,9 +7336,9 @@ Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined 
 - On the <strong>Security</strong> tab, grant <code>Enroll</code> permission to the appropriate group (e.g., <code>Domain Computers</code> for Workstation Auth).
 - On the <strong>Request Handling</strong> tab, set the minimum key size.</p>
 <p><strong>Publish templates to the CA:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">Add-CATemplate</span> <span class="n">-Name</span> <span class="s2">&quot;Corp Workstation Auth&quot;</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Add-CATemplate</span> <span class="n">-Name</span> <span class="s2">&quot;Corp Web Server&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">Add-CATemplate</span> <span class="n">-Name</span> <span class="s2">&quot;Corp User&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">Add-CATemplate</span> <span class="n">-Name</span> <span class="s2">"Corp Workstation Auth"</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Add-CATemplate</span> <span class="n">-Name</span> <span class="s2">"Corp Web Server"</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">Add-CATemplate</span> <span class="n">-Name</span> <span class="s2">"Corp User"</span>
 </code></pre></div>
 <hr />
 <h2 id="enable-auto-enrolment">Enable Auto-Enrolment<a class="headerlink" href="#enable-auto-enrolment" title="Permanent link">&para;</a></h2>
@@ -7376,7 +7376,7 @@ Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined 
 </code></pre></div>
 <p>Check <code>Personal → Certificates</code> — a certificate issued by <code>Corp Issuing CA</code> should be present.</p>
 <p><strong>Verify CDP and AIA URLs are accessible:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;http://pki.corp.local/CertEnroll/&lt;RootCA&gt;.crl&quot;</span> <span class="n">-UseBasicParsing</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">"http://pki.corp.local/CertEnroll/&lt;RootCA&gt;.crl"</span> <span class="n">-UseBasicParsing</span>
 </code></pre></div>
 <p>HTTP 200 response confirms the CRL is reachable.</p>
 <p><strong>Check CA health:</strong></p>

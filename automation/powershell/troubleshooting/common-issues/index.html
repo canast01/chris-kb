@@ -7332,9 +7332,9 @@ PowerShell troubleshooting: execution policy blocks, module import failures, rem
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Set strict mode to catch undefined variables and functions</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Set-StrictMode</span> <span class="n">-Version</span> <span class="n">Latest</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Use Write-Debug statements (only show when $DebugPreference = &#39;Continue&#39;)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$DebugPreference</span> <span class="p">=</span> <span class="s1">&#39;Continue&#39;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Write-Debug</span> <span class="s2">&quot;Variable value: $myVar&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Use Write-Debug statements (only show when $DebugPreference = 'Continue')</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$DebugPreference</span> <span class="p">=</span> <span class="s1">'Continue'</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Write-Debug</span> <span class="s2">"Variable value: $myVar"</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Breakpoints for interactive debugging</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Set-PSBreakpoint</span> <span class="n">-Script</span> <span class="n">C</span><span class="p">:\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">deploy</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Line</span> <span class="n">42</span>
@@ -7349,13 +7349,13 @@ PowerShell troubleshooting: execution policy blocks, module import failures, rem
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># Error handling pattern</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="k">try</span> <span class="p">{</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="nb">Get-Content</span> <span class="n">-Path</span> <span class="s1">&#39;nonexistent.txt&#39;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="nb">Get-Content</span> <span class="n">-Path</span> <span class="s1">'nonexistent.txt'</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="p">}</span> <span class="k">catch</span> <span class="no">[System.IO.FileNotFoundException]</span> <span class="p">{</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;File not found: $_&quot;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="nb">Write-Error</span> <span class="s2">"File not found: $_"</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;Unexpected error: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="nb">Write-Error</span> <span class="s2">"Unexpected error: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">"</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="nb">Write-Verbose</span> <span class="s2">&quot;Cleanup complete&quot;</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="nb">Write-Verbose</span> <span class="s2">"Cleanup complete"</span>
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="common-error-reference">Common Error Reference<a class="headerlink" href="#common-error-reference" title="Permanent link">&para;</a></h2>

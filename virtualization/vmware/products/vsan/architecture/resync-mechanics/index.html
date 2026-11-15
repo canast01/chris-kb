@@ -9399,10 +9399,10 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 </tbody>
 </table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check cluster-wide capacity</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Used Capacity|Total Capacity&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Used Capacity|Total Capacity"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI capacity check with percentage</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$u</span> <span class="p">=</span> <span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$u</span> <span class="p">=</span> <span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$u</span><span class="p">.</span><span class="n">UsedCapacityGB</span> <span class="p">/</span> <span class="nv">$u</span><span class="p">.</span><span class="n">TotalCapacityGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
 </code></pre></div>
 <hr />
@@ -9532,7 +9532,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 <p><strong>How vSAN tracks what changed:</strong> When a write is committed to a RAID-1 object, a per-block dirty bitmap is maintained for each component. When a host reconnects, CLOM uses the dirty bitmap to send only the changed blocks.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Resync list shows operation type</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Look for &quot;type&quot; field: DELTA vs FULL</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Look for "type" field: DELTA vs FULL</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Resync UUID                          Object UUID                      Type  Progress
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>52a4c8f1-7e3a-4d2b-9f1c-3b8a2c5d9e1f 6f2d1a4c-8b3e-5f9c-2a7d-1e4b3c8f5a9d DELTA 45%
@@ -9573,7 +9573,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 - When the partition resolves, CLOM must re-synchronise the isolated site back</p>
 <p>This can trigger large resync volumes after a site partition event. Monitor inter-site bandwidth carefully — the vSAN stretched cluster replication link carries both VM write traffic and resync traffic.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check inter-site resync specifically (stretched cluster)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;remote\|site&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"remote\|site"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>RemoteSyncProgress: 98.5%
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>RemoteSiteLatency: 12.3ms

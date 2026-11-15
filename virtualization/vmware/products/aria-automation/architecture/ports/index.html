@@ -9325,7 +9325,7 @@ Firewall port reference for VMware Aria Automation (formerly vRealize Automation
 <tr>
 <td>443</td>
 <td>TCP</td>
-<td><em>.vmware.com, </em>.broadcom.com</td>
+<td>*.vmware.com, *.broadcom.com</td>
 <td>License check, plugin downloads</td>
 </tr>
 <tr>
@@ -9448,13 +9448,13 @@ Firewall port reference for VMware Aria Automation (formerly vRealize Automation
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From admin workstation — test Aria Automation API</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;aria-automation-fqdn&gt;/csp/gateway/am/api/auth/discovery
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>https://&lt;aria-automation-fqdn&gt;/csp/gateway/am/api/auth/discovery
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From Aria Automation appliance SSH — test vCenter reachability</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vcenter-fqdn&gt;/rest/com/vmware/cis/session
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>https://&lt;vcenter-fqdn&gt;/rest/com/vmware/cis/session
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From Aria Automation appliance SSH — test NSX Manager reachability</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;nsx-manager-ip&gt;/api/v1/cluster/status
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>https://&lt;nsx-manager-ip&gt;/api/v1/cluster/status
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From Aria Automation appliance SSH — test AD LDAP</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;dc-ip&gt;<span class="w"> </span><span class="m">636</span>
@@ -9464,8 +9464,8 @@ Firewall port reference for VMware Aria Automation (formerly vRealize Automation
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Test API token generation (quick functional check)</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;aria-automation-fqdn&gt;/csp/gateway/am/api/login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;&lt;user&gt;&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;&lt;domain&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;&quot;token&quot;&#39;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"username":"&lt;user&gt;","password":"&lt;pass&gt;","domain":"&lt;domain&gt;"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'"token"'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>200
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>200
@@ -9477,7 +9477,7 @@ Firewall port reference for VMware Aria Automation (formerly vRealize Automation
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>*time.google.com     131.188.3.221    2 u   52   64  377   18.432   -2.104   1.847
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>+ntp.ubuntu.com      129.6.15.28      2 u   48   64  377   22.156    1.203   2.341
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>-tick.ucla.edu       132.163.96.1     2 u   51   64  377   85.643   -8.921   3.104
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwOTMxNDU2MH0.K2x9mK8pL1q3r5s7t9u1v3w5x7y9z1a3b5c7d9e1f&quot;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwOTMxNDU2MH0.K2x9mK8pL1q3r5s7t9u1v3w5x7y9z1a3b5c7d9e1f"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

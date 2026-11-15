@@ -6985,7 +6985,7 @@ Security operational runbooks — certificate renewal, PAM credential rotation, 
 <h2 id="certificate-renewal-runbook">Certificate Renewal Runbook<a class="headerlink" href="#certificate-renewal-runbook" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Check expiry of all monitored certs (30-day advance warning)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>host1.corp<span class="w"> </span>host2.corp<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">: &quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$host</span><span class="s2">: "</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$host</span>:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">done</span>
@@ -6993,7 +6993,7 @@ Security operational runbooks — certificate renewal, PAM credential rotation, 
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 2. Generate new CSR</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>/etc/ssl/private/server.key<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-out<span class="w"> </span>/etc/ssl/certs/server.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=host.corp.local/O=Corp/C=AU&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">"/CN=host.corp.local/O=Corp/C=AU"</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 3. Submit to CA (internal PKI or public CA)</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
@@ -7066,7 +7066,7 @@ Security operational runbooks — certificate renewal, PAM credential rotation, 
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Oracle is a registered trademark of the Oracle Corporation and/or its
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>affiliates. Other trademarks are the property of their respective owners.
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current connection.
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Type 'help;' or '\h' for help. Type '\c' to clear the current connection.
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>mysql&gt;
 </code></pre></div>
@@ -7104,9 +7104,9 @@ Security operational runbooks — certificate renewal, PAM credential rotation, 
 </ol>
 <h2 id="weekly-firewall-rule-review">Weekly Firewall Rule Review<a class="headerlink" href="#weekly-firewall-rule-review" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Review recently added rules (last 7 days from change log)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Check for any &quot;any any&quot; or overly broad rules</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;state RELATED,ESTABLISHED&quot;</span><span class="w">  </span><span class="c1"># Linux</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Get-NetFirewallRule<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Enabled<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;True&#39;</span><span class="w"> </span>-and<span class="w"> </span><span class="nv">$_</span>.Direction<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;Inbound&#39;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Check for any "any any" or overly broad rules</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"state RELATED,ESTABLISHED"</span><span class="w">  </span><span class="c1"># Linux</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Get-NetFirewallRule<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Enabled<span class="w"> </span>-eq<span class="w"> </span><span class="s1">'True'</span><span class="w"> </span>-and<span class="w"> </span><span class="nv">$_</span>.Direction<span class="w"> </span>-eq<span class="w"> </span><span class="s1">'Inbound'</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a> pkts bytes target     prot opt in     out     source               destination

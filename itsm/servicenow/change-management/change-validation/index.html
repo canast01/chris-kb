@@ -8333,10 +8333,10 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Recent errors in logs</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;10 minutes ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">"10 minutes ago"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># HTTP endpoint health</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://localhost:&lt;port&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://localhost:&lt;port&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"OK"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>● nginx.service - The NGINX HTTP and reverse proxy server
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
@@ -8348,8 +8348,8 @@
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>8742 /usr/sbin/nginx -g daemon off;
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>LISTEN    0.0.0.0:80                 0.0.0.0:*                users:((&quot;nginx&quot;,pid=8751,fd=6))
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>LISTEN    [::]:80                    [::]:*                   users:((&quot;nginx&quot;,pid=8751,fd=7))
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>LISTEN    0.0.0.0:80                 0.0.0.0:*                users:(("nginx",pid=8751,fd=6))
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>LISTEN    [::]:80                    [::]:*                   users:(("nginx",pid=8751,fd=7))
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Jan 15 14:35:42 prod-web-01 nginx[8751]: 2024/01/15 14:35:42 [error] 8751#8751: *1024 connect() failed (111: Connection refused)
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Jan 15 14:36:15 prod-web-01 nginx[8751]: 2024/01/15 14:36:15 [error] 8751#8751: *1025 upstream timed out (110: Connection timed out)
@@ -8386,7 +8386,7 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check no active alerts after change</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># In Prometheus / Alertmanager:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://alertmanager:9093/api/v2/alerts<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;[.[] | select(.status.state==&quot;firing&quot;)]&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://alertmanager:9093/api/v2/alerts<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'[.[] | select(.status.state=="firing")]'</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check dashboard shows no anomalies — look for:</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># - Error rate spike</span>

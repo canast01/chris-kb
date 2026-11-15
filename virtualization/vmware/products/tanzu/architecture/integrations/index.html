@@ -9330,52 +9330,52 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 <h3 id="enable-via-vcenter-api">Enable via vCenter API<a class="headerlink" href="#enable-via-vcenter-api" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Get the cluster MoRef</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:VMware1!<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.example.com/rest/vcenter/cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.value[] | {name,cluster}&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">"https://vcenter.example.com/rest/vcenter/cluster"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.value[] | {name,cluster}'</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Enable Workload Management (REST API)</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:VMware1!<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.example.com/api/vcenter/namespace-management/clusters/domain-c8:action=enable&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="s2">"https://vcenter.example.com/api/vcenter/namespace-management/clusters/domain-c8:action=enable"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-d<span class="w"> </span>@enable-wm-payload.json
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;size_hint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MEDIUM&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;network_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NSXT_CONTAINER_PLUGIN&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;ncp_cluster_network_spec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&quot;pod_cidrs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100.64.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">}],</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;ingress_cidrs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.50.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">}],</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">&quot;egress_cidrs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.51.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">}],</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">&quot;cluster_distributed_switch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dvs-1&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">&quot;nsx_edge_cluster&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;edge-cluster-1&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">"size_hint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEDIUM"</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">"network_provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NSXT_CONTAINER_PLUGIN"</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">"ncp_cluster_network_spec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">"pod_cidrs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100.64.0.0"</span><span class="p">,</span><span class="w"> </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">}],</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">"ingress_cidrs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.50.0.0"</span><span class="p">,</span><span class="w"> </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">}],</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">"egress_cidrs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.51.0.0"</span><span class="p">,</span><span class="w"> </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">}],</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">"cluster_distributed_switch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dvs-1"</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">"nsx_edge_cluster"</span><span class="p">:</span><span class="w"> </span><span class="s2">"edge-cluster-1"</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="nt">&quot;workload_networks_spec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nt">&quot;supervisor_primary_workload_network&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">&quot;network_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NSXT_CONTAINER_PLUGIN&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">&quot;nsx_network_spec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="nt">&quot;vsphere_portgroup_gateways&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="nt">"workload_networks_spec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nt">"supervisor_primary_workload_network"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">"network_provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NSXT_CONTAINER_PLUGIN"</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">"nsx_network_spec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="nt">"vsphere_portgroup_gateways"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">      </span><span class="p">}</span>
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="nt">&quot;service_cidr&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.96.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">},</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nt">&quot;master_management_network&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;STATICRANGE&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span><span class="nt">&quot;address_range&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">      </span><span class="nt">&quot;starting_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.20&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">      </span><span class="nt">&quot;gateway&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.10.10.1&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">      </span><span class="nt">&quot;subnet_mask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;255.255.255.0&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">      </span><span class="nt">&quot;address_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="nt">&quot;dns_search_domains&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;example.com&quot;</span><span class="p">],</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="nt">&quot;dns_servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.10.10.5&quot;</span><span class="p">]</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="nt">"service_cidr"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.96.0.0"</span><span class="p">,</span><span class="w"> </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">},</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nt">"master_management_network"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STATICRANGE"</span><span class="p">,</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span><span class="nt">"address_range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">      </span><span class="nt">"starting_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.20"</span><span class="p">,</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">      </span><span class="nt">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.1"</span><span class="p">,</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">      </span><span class="nt">"subnet_mask"</span><span class="p">:</span><span class="w"> </span><span class="s2">"255.255.255.0"</span><span class="p">,</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">      </span><span class="nt">"address_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="nt">"dns_search_domains"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"example.com"</span><span class="p">],</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="nt">"dns_servers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.10.10.5"</span><span class="p">]</span>
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="nt">&quot;network&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dvportgroup-management&quot;</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="nt">"network"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dvportgroup-management"</span>
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">  </span><span class="nt">&quot;master_ntp_servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.10.10.5&quot;</span><span class="p">],</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span><span class="nt">&quot;master_storage_policy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vSAN Default Storage Policy&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span><span class="nt">&quot;ephemeral_storage_policy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vSAN Default Storage Policy&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">  </span><span class="nt">&quot;login_banner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Authorized use only&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">  </span><span class="nt">&quot;master_dns_servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.10.10.5&quot;</span><span class="p">],</span>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span><span class="nt">&quot;master_dns_search_domains&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;example.com&quot;</span><span class="p">]</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">  </span><span class="nt">"master_ntp_servers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.10.10.5"</span><span class="p">],</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span><span class="nt">"master_storage_policy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vSAN Default Storage Policy"</span><span class="p">,</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span><span class="nt">"ephemeral_storage_policy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vSAN Default Storage Policy"</span><span class="p">,</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">  </span><span class="nt">"login_banner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Authorized use only"</span><span class="p">,</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">  </span><span class="nt">"master_dns_servers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.10.10.5"</span><span class="p">],</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span><span class="nt">"master_dns_search_domains"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"example.com"</span><span class="p">]</span>
 <a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -9554,15 +9554,15 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  name: avi-k8s-config
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  namespace: avi-system
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>data:
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  avi_controller: &quot;10.50.100.50&quot;
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  avi_username: &quot;admin&quot;
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  avi_password: &quot;***&quot;
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  cluster_name: &quot;tanzu-prod-01&quot;
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  service_engine_group: &quot;Default-Group&quot;
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>  network_name: &quot;k8s-vip-network&quot;
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>  subnet_ip: &quot;10.60.0.0&quot;
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  subnet_prefix: &quot;24&quot;
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>  log_level: &quot;INFO&quot;
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  avi_controller: "10.50.100.50"
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  avi_username: "admin"
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  avi_password: "***"
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  cluster_name: "tanzu-prod-01"
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  service_engine_group: "Default-Group"
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>  network_name: "k8s-vip-network"
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>  subnet_ip: "10.60.0.0"
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  subnet_prefix: "24"
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>  log_level: "INFO"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9587,19 +9587,19 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 </div>
 <p>Key AKO settings:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># avi-k8s-config ConfigMap excerpt</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">controllerIP</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;avi-controller.example.com&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nt">serviceEngineGroupName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Default-Group&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">cloudName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Default-Cloud&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nt">clusterName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;prod-k8s&quot;</span><span class="w">               </span><span class="c1"># prefix for AVI object names</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nt">defaultIngClassAVI</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w">             </span><span class="c1"># AVI handles default IngressClass</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">controllerIP</span><span class="p">:</span><span class="w"> </span><span class="s">"avi-controller.example.com"</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nt">serviceEngineGroupName</span><span class="p">:</span><span class="w"> </span><span class="s">"Default-Group"</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">cloudName</span><span class="p">:</span><span class="w"> </span><span class="s">"Default-Cloud"</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nt">clusterName</span><span class="p">:</span><span class="w"> </span><span class="s">"prod-k8s"</span><span class="w">               </span><span class="c1"># prefix for AVI object names</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nt">defaultIngClassAVI</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span><span class="w">             </span><span class="c1"># AVI handles default IngressClass</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nt">l7Settings</span><span class="p">:</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">defaultIngController</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">serviceType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NodePortLocal</span><span class="w">           </span><span class="c1"># or ClusterIP with IPVS</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nt">networkSettings</span><span class="p">:</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nt">nodeNetworkList</span><span class="p">:</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">networkName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;K8s-Nodes-Network&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">networkName</span><span class="p">:</span><span class="w"> </span><span class="s">"K8s-Nodes-Network"</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="nt">cidrs</span><span class="p">:</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;10.20.0.0/24&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"10.20.0.0/24"</span>
 </code></pre></div>
 <h3 id="avi-service-engine-placement">AVI Service Engine Placement<a class="headerlink" href="#avi-service-engine-placement" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>AVI Controller (VM — 3 nodes for HA)
@@ -9621,7 +9621,7 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan-raid1-encrypted</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csi.vsphere.vmware.com</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nt">parameters</span><span class="p">:</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nt">storagepolicyname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vSAN</span><span class="nv"> </span><span class="s">RAID-1</span><span class="nv"> </span><span class="s">Encrypted&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nt">storagepolicyname</span><span class="p">:</span><span class="w"> </span><span class="s">"vSAN</span><span class="nv"> </span><span class="s">RAID-1</span><span class="nv"> </span><span class="s">Encrypted"</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nt">csi.storage.k8s.io/fstype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext4</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retain</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span>
@@ -9680,7 +9680,7 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>vmware-system-csi<span class="w"> </span>vsphere-csi-controller-&lt;hash&gt;<span class="w"> </span>-c<span class="w"> </span>vsphere-csi-controller
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Check CSI driver version</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>kubectl<span class="w"> </span>get<span class="w"> </span>csidriver<span class="w"> </span>csi.vsphere.vmware.com<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.metadata.annotations}&#39;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>kubectl<span class="w"> </span>get<span class="w"> </span>csidriver<span class="w"> </span>csi.vsphere.vmware.com<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.metadata.annotations}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>NAME                                       READY   STATUS    RESTARTS   AGE
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vsphere-csi-controller-0                   6/6     Running   0          14d
@@ -9699,7 +9699,7 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>I1215 09:41:30.987654       1 provisioner.go:445] Volume provisioning request received: size=50Gi, storageClass=vsphere-sc-default
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>I1215 09:41:35.345678       1 attacher.go:312] Attach operation queued for node: vm-worker-01.corp.local
 <a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>{&quot;csi.vsphere.vmware.com/version&quot;:&quot;v2.7.1&quot;,&quot;csi.vsphere.vmware.com/build&quot;:&quot;20231201.001&quot;}
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>{"csi.vsphere.vmware.com/version":"v2.7.1","csi.vsphere.vmware.com/build":"20231201.001"}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9786,12 +9786,12 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Logged in successfully.
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Context &quot;supervisor-vip.example.com&quot; created.
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Context "supervisor-vip.example.com" created.
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>You have access to the following contexts:
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>   supervisor-vip.example.com
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Current context is now &quot;supervisor-vip.example.com&quot;.
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Current context is now "supervisor-vip.example.com".
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9837,41 +9837,41 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 3. Project name becomes the pull path prefix (e.g., <code>dockerhub-proxy</code>)</p>
 <h3 id="vulnerability-scanning-with-trivy">Vulnerability Scanning with Trivy<a class="headerlink" href="#vulnerability-scanning-with-trivy" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Harbor 2.x uses Trivy by default</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Enable auto-scan on push: Project → Configuration → &quot;Automatically scan images on push&quot;</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Enable auto-scan on push: Project → Configuration → "Automatically scan images on push"</span>
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Manual scan trigger via API</span>
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:Harbor12345<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="s2">&quot;https://harbor.example.com/api/v2.0/projects/myproject/repositories/myapp/artifacts/sha256:abc123/scan&quot;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="s2">"https://harbor.example.com/api/v2.0/projects/myproject/repositories/myapp/artifacts/sha256:abc123/scan"</span>
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1"># Get scan report</span>
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:Harbor12345<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span><span class="s2">&quot;https://harbor.example.com/api/v2.0/projects/myproject/repositories/myapp/artifacts/sha256:abc123/additions/vulnerabilities&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[&quot;application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0&quot;].vulnerabilities[] | select(.severity==&quot;Critical&quot;)&#39;</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span><span class="s2">"https://harbor.example.com/api/v2.0/projects/myproject/repositories/myapp/artifacts/sha256:abc123/additions/vulnerabilities"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.["application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0"].vulnerabilities[] | select(.severity=="Critical")'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>{
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  &quot;id&quot;: &quot;sha256:abc123&quot;,
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>  &quot;scan_status&quot;: &quot;Success&quot;,
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>  &quot;scan_status_code&quot;: 200,
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>  &quot;scan_status_description&quot;: &quot;The artifact has been scanned&quot;,
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>  &quot;scan_status_revision&quot;: 1
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  "id": "sha256:abc123",
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>  "scan_status": "Success",
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>  "scan_status_code": 200,
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>  "scan_status_description": "The artifact has been scanned",
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>  "scan_status_revision": 1
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>}
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>{
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>  &quot;id&quot;: &quot;CVE-2024-1234&quot;,
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>  &quot;package&quot;: &quot;openssl&quot;,
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>  &quot;package_version&quot;: &quot;1.1.1k-1&quot;,
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>  &quot;vulnerability_id&quot;: &quot;CVE-2024-1234&quot;,
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>  &quot;severity&quot;: &quot;Critical&quot;,
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>  &quot;fixed_version&quot;: &quot;1.1.1m-1&quot;,
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>  &quot;description&quot;: &quot;Buffer overflow in X.509 certificate parsing&quot;
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>  "id": "CVE-2024-1234",
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>  "package": "openssl",
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>  "package_version": "1.1.1k-1",
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>  "vulnerability_id": "CVE-2024-1234",
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>  "severity": "Critical",
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>  "fixed_version": "1.1.1m-1",
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>  "description": "Buffer overflow in X.509 certificate parsing"
 <a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>}
 <a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>{
-<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>  &quot;id&quot;: &quot;CVE-2024-5678&quot;,
-<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>  &quot;package&quot;: &quot;glibc&quot;,
-<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>  &quot;package_version&quot;: &quot;2.31-13&quot;,
-<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>  &quot;vulnerability_id&quot;: &quot;CVE-2024-5678&quot;,
-<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>  &quot;severity&quot;: &quot;Critical&quot;,
-<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>  &quot;fixed_version&quot;: &quot;2.31-14&quot;,
-<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>  &quot;description&quot;: &quot;Heap corruption in malloc implementation&quot;
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>  "id": "CVE-2024-5678",
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>  "package": "glibc",
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>  "package_version": "2.31-13",
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>  "vulnerability_id": "CVE-2024-5678",
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>  "severity": "Critical",
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>  "fixed_version": "2.31-14",
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>  "description": "Heap corruption in malloc implementation"
 <a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9973,7 +9973,7 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 <a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256Mi</span>
 <a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">  </span><span class="nt">discovery</span><span class="p">:</span>
 <a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">    </span><span class="nt">annotationPrefix</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;prometheus.io&quot;</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">    </span><span class="nt">annotationPrefix</span><span class="p">:</span><span class="w"> </span><span class="s">"prometheus.io"</span>
 <a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">    </span><span class="nt">enableRuntimeConfigs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="nt">proxy</span><span class="p">:</span>
 <a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>

@@ -8994,7 +8994,7 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>li-admin<span class="w"> </span>cluster<span class="w">         </span><span class="c1"># single node: Active</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/core<span class="w">      </span><span class="c1"># confirm disk mounted</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>root@vrli-master.example.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>root@vrli-master.example.local's password: 
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Welcome to vRealize Log Insight
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vrli-master:~# li-admin status
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Cluster Status: MASTER
@@ -9039,30 +9039,30 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>→ Worker joins and synchronises from master automatically
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From master — confirm all nodes joined and active</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-master.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {hostname: .hostname, state: .state, role: .role}&#39;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">"https://vrli-master.example.local/api/v2/cluster/nodes"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.nodes[] | {hostname: .hostname, state: .state, role: .role}'</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Expected: all nodes state: ACTIVE</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;hostname&quot;: &quot;vrli-master.example.local&quot;,
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  &quot;role&quot;: &quot;MASTER&quot;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "hostname": "vrli-master.example.local",
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  "state": "ACTIVE",
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  "role": "MASTER"
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>}
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>{
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;hostname&quot;: &quot;vrli-worker-01.example.local&quot;,
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  &quot;role&quot;: &quot;WORKER&quot;
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  "hostname": "vrli-worker-01.example.local",
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  "state": "ACTIVE",
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  "role": "WORKER"
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>}
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>{
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  &quot;hostname&quot;: &quot;vrli-worker-02.example.local&quot;,
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  &quot;role&quot;: &quot;WORKER&quot;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  "hostname": "vrli-worker-02.example.local",
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  "state": "ACTIVE",
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  "role": "WORKER"
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>}
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>{
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  &quot;hostname&quot;: &quot;vrli-worker-03.example.local&quot;,
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  &quot;role&quot;: &quot;WORKER&quot;
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  "hostname": "vrli-worker-03.example.local",
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  "state": "ACTIVE",
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  "role": "WORKER"
 <a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9151,7 +9151,7 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Extracting files...
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Installing VMware Log Insight Agent version 8.8.1.21057892
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Configuring agent for host: vrli-master.example.local:9543 (SSL enabled)
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Creating user account &#39;liagent&#39;...
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Creating user account 'liagent'...
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Setting up log collectors...
 <a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Starting VMware Log Insight Agent service...
 <a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>vmware-log-insight-agent is running (PID: 4827)
@@ -9195,15 +9195,15 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 <p>Configure alert queries:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Alerts → Alert Definitions → New Alert
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>→ Name: ESXi-NFS-Latency
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>→ Query: text CONTAINS &quot;NFS: Waiting too long for response&quot;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>→ Query: text CONTAINS "NFS: Waiting too long for response"
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>→ Condition: Count &gt; 5 per 5 minutes  ·  Severity: Warning
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>→ Name: vCenter-Auth-Failure
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>→ Query: appname = vpxd AND text CONTAINS &quot;Login failure&quot;
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>→ Query: appname = vpxd AND text CONTAINS "Login failure"
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>→ Condition: Count &gt; 10 per 1 minute  ·  Severity: Critical
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
 <a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Notifications → Add: Email smtp.example.local:25 · Webhook Slack/PagerDuty
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Forwarding → splunk-hf.example.local:514 · filter: tags CONTAINS &quot;security&quot;
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Forwarding → splunk-hf.example.local:514 · filter: tags CONTAINS "security"
 <a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>Archiving → Active retention: 30 days · NFS archive for 90-day compliance tier
 </code></pre></div>
 <hr />
@@ -9214,7 +9214,7 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>li-admin<span class="w"> </span>stats<span class="w">     </span><span class="c1"># eventsPerSecond: &gt; 0</span>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>li-admin<span class="w"> </span>disk<span class="w">      </span><span class="c1"># /storage/core usage: &lt; 80%</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>root@vrli-master.example.local&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>root@vrli-master.example.local's password: 
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Welcome to vRealize Log Insight 8.14.0
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>vrli-master:~# li-admin cluster
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Node Name                Status          Shards
@@ -9259,25 +9259,25 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Confirm version and node health via API</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-master.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {hostname: .hostname, state: .state, version: .version}&#39;</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">"https://vrli-master.example.local/api/v2/cluster/nodes"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">'.nodes[] | {hostname: .hostname, state: .state, version: .version}'</span>
 <a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># Expected: all nodes state ACTIVE, versions identical</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  &quot;hostname&quot;: &quot;vrli-master.example.local&quot;,
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  &quot;version&quot;: &quot;8.14.0.21567890&quot;
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  "hostname": "vrli-master.example.local",
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  "state": "ACTIVE",
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  "version": "8.14.0.21567890"
 <a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>}
 <a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>{
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  &quot;hostname&quot;: &quot;vrli-worker-01.example.local&quot;,
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>  &quot;version&quot;: &quot;8.14.0.21567890&quot;
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  "hostname": "vrli-worker-01.example.local",
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  "state": "ACTIVE",
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>  "version": "8.14.0.21567890"
 <a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>}
 <a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>{
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>  &quot;hostname&quot;: &quot;vrli-worker-02.example.local&quot;,
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>  &quot;state&quot;: &quot;ACTIVE&quot;,
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  &quot;version&quot;: &quot;8.14.0.21567890&quot;
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>  "hostname": "vrli-worker-02.example.local",
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>  "state": "ACTIVE",
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  "version": "8.14.0.21567890"
 <a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>}
 </code></pre></div>
 <div class="admonition warning">

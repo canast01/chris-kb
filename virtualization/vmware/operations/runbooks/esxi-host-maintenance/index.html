@@ -8092,7 +8092,7 @@
 <li>
 <p><strong>Check cluster capacity</strong> — confirm the remaining hosts can absorb the host's workload:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;Production&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">CpuUsageMhz</span><span class="p">,</span> <span class="n">MemoryUsageMB</span><span class="p">,</span> <span class="n">ConnectionState</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Cluster</span> <span class="s2">"Production"</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">CpuUsageMhz</span><span class="p">,</span> <span class="n">MemoryUsageMB</span><span class="p">,</span> <span class="n">ConnectionState</span>
 </code></pre></div>
    Rule of thumb: cluster CPU and RAM usage must be below 70% before removing a host.</p>
 </li>
@@ -8108,7 +8108,7 @@
 </li>
 <li>
 <p><strong>Check for VMs with DRS override set to Manual or Disabled</strong> — these will not auto-migrate:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">DrsAutomationLevel</span> <span class="o">-ne</span> <span class="s2">&quot;FullyAutomated&quot;</span> <span class="p">}</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">DrsAutomationLevel</span> <span class="o">-ne</span> <span class="s2">"FullyAutomated"</span> <span class="p">}</span>
 </code></pre></div>
    Manually vMotion any VMs that DRS will not migrate.</p>
 </li>
@@ -8117,18 +8117,18 @@
 </li>
 </ol>
 <p>Or via PowerCLI:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Maintenance</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-VMHost</span> <span class="s2">"esxi-01.example.local"</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Maintenance</span>
 </code></pre></div></p>
 <ol>
 <li>
 <p><strong>Monitor DRS migration</strong> — vCenter Events tab or:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VMHost</span> <span class="s2">"esxi-01.example.local"</span> <span class="p">|</span> <span class="nb">Get-VM</span>
 </code></pre></div>
    Wait until no VMs remain on the host. Duration depends on VM count and network bandwidth.</p>
 </li>
 <li>
 <p><strong>Confirm maintenance mode state</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-VMHost</span> <span class="s2">"esxi-01.example.local"</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
 </code></pre></div>
    Expected: <code>ConnectionState = Connected</code>, <code>PowerState = PoweredOn</code>, state = Maintenance.</p>
 </li>
@@ -8140,7 +8140,7 @@
 </li>
 </ol>
 <p>Or via PowerCLI:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-VMHost</span> <span class="s2">"esxi-01.example.local"</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
 </code></pre></div></p>
 <ol>
 <li><strong>Verify host rejoins cluster</strong> — confirm host shows Connected and DRS re-balances VMs within a few minutes.</li>

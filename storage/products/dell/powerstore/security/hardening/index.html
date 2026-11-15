@@ -9136,10 +9136,10 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <h2 id="management-plane-hardening">Management Plane Hardening<a class="headerlink" href="#management-plane-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="authentication-hardening">Authentication Hardening<a class="headerlink" href="#authentication-hardening" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1: Change the default admin password immediately after initial configuration</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/user/local/admin&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;current_password&quot;: &quot;Password123!&quot;, &quot;password&quot;: &quot;&lt;strong-new-password&gt;&quot;}&#39;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/user/local/admin"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"current_password": "Password123!", "password": "&lt;strong-new-password&gt;"}'</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Step 2: Configure LDAP/AD authentication before disabling local accounts</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># See Authentication page for LDAP configuration commands</span>
@@ -9148,19 +9148,19 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># before proceeding</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Step 4: Verify the admin account is the only local account active</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/user/local?select=name,role_name&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/user/local?select=name,role_name"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Step 5: Store the local admin password in a PAM vault (CyberArk, Thycotic, etc.)</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># The local admin account is now the break-glass account — treat it accordingly</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{&quot;id&quot;:&quot;user_local_admin_001&quot;,&quot;name&quot;:&quot;admin&quot;,&quot;role_name&quot;:&quot;administrator&quot;,&quot;password_change_required&quot;:false}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{"id":"user_local_admin_001","name":"admin","role_name":"administrator","password_change_required":false}
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>[
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  {
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    &quot;id&quot;: &quot;user_local_admin_001&quot;,
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;name&quot;: &quot;admin&quot;,
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    &quot;role_name&quot;: &quot;administrator&quot;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    "id": "user_local_admin_001",
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    "name": "admin",
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    "role_name": "administrator"
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  }
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>]
 </code></pre></div>
@@ -9187,12 +9187,12 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </div>
 <h3 id="tls-hardening">TLS Hardening<a class="headerlink" href="#tls-hardening" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify TLS 1.0 and 1.1 are disabled</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1<span class="w">   </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;failure|error|alert&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;failure|error|alert&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1<span class="w">   </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"failure|error|alert"</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"failure|error|alert"</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Verify TLS 1.2 and 1.3 are operational</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Protocol"</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Protocol"</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Enumerate active cipher suites</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>&lt;mgmt-ip&gt;
@@ -9280,21 +9280,21 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-keyout<span class="w"> </span>powerstore.key<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-out<span class="w"> </span>powerstore.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/C=GB/O=Example Corp/CN=lon01-pstore-001.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:lon01-pstore-001.corp.example.com,IP:192.168.10.50&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">"/C=GB/O=Example Corp/CN=lon01-pstore-001.corp.example.com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">"subjectAltName=DNS:lon01-pstore-001.corp.example.com,IP:192.168.10.50"</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Submit CSR to internal CA; receive signed certificate and CA chain</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Import via REST API</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/x509_certificate&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">    &quot;service&quot;: &quot;Manager&quot;,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">    &quot;certificate&quot;: &quot;&lt;base64-PEM-cert+chain&gt;&quot;,</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">    &quot;private_key&quot;: &quot;&lt;base64-PEM-key&gt;&quot;,</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">    &quot;passphrase&quot;: &quot;&quot;</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/x509_certificate"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">    "service": "Manager",</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">    "certificate": "&lt;base64-PEM-cert+chain&gt;",</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">    "private_key": "&lt;base64-PEM-key&gt;",</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">    "passphrase": ""</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">  }'</span>
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
 <a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Verify new certificate</span>
 <a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
@@ -9311,7 +9311,7 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2x8vK9pL...
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>-----END CERTIFICATE REQUEST-----
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>{&quot;id&quot;:&quot;5f8c3a2b-9e1d-4f7a-b2c1-8d5e9f3a7c2b&quot;,&quot;service&quot;:&quot;Manager&quot;,&quot;issuer&quot;:&quot;CN=Example Corp Internal CA,O=Example Corp,C=GB&quot;,&quot;subject&quot;:&quot;CN=lon01-pstore-001.corp.example.com,O=Example Corp,C=GB&quot;,&quot;valid_from&quot;:&quot;2024-01-15T10:22:33Z&quot;,&quot;valid_until&quot;:&quot;2026-01-15T10:22:33Z&quot;,&quot;thumbprint&quot;:&quot;A7F2E8C1D9B3F5A2E8C7D1B9F3A5E2C8D7B1F9A3&quot;}
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>{"id":"5f8c3a2b-9e1d-4f7a-b2c1-8d5e9f3a7c2b","service":"Manager","issuer":"CN=Example Corp Internal CA,O=Example Corp,C=GB","subject":"CN=lon01-pstore-001.corp.example.com,O=Example Corp,C=GB","valid_from":"2024-01-15T10:22:33Z","valid_until":"2026-01-15T10:22:33Z","thumbprint":"A7F2E8C1D9B3F5A2E8C7D1B9F3A5E2C8D7B1F9A3"}
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>subject=CN = lon01-pstore-001.corp.example.com, O = Example Corp, C = GB
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>issuer=CN=Example Corp Internal CA, O=Example Corp, C=GB
@@ -9349,9 +9349,9 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Firewall rule: limit HTTPS management access to the storage management subnet only</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Example: Linux firewalld on the jump host gateway</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>management<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;192.168.50.0/24&quot; port protocol=&quot;tcp&quot; port=&quot;443&quot; accept&#39;</span><span class="w"> </span>--permanent
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s1">'rule family="ipv4" source address="192.168.50.0/24" port protocol="tcp" port="443" accept'</span><span class="w"> </span>--permanent
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s1">&#39;rule family=&quot;ipv4&quot; port protocol=&quot;tcp&quot; port=&quot;443&quot; drop&#39;</span><span class="w"> </span>--permanent
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s1">'rule family="ipv4" port protocol="tcp" port="443" drop'</span><span class="w"> </span>--permanent
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>firewall-cmd<span class="w"> </span>--reload
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Verify that access from outside the management subnet is blocked</span>
@@ -9430,39 +9430,39 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># switch:admin&gt; cfgshow    # Show active zone configuration</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Verify each host zone contains:</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># - The host&#39;s initiator WWN(s)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># - Only the PowerStore target port WWNs for that host&#39;s fabric</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># - No other hosts&#39; initiators</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># - The host's initiator WWN(s)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># - Only the PowerStore target port WWNs for that host's fabric</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># - No other hosts' initiators</span>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># PowerStore FC port WWNs</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/fc_port?select=name,wwn,node_id&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/fc_port?select=name,wwn,node_id"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;entries&quot;: [
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "entries": [
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    {
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      &quot;id&quot;: &quot;fc_port_1&quot;,
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      &quot;name&quot;: &quot;FC0&quot;,
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      &quot;wwn&quot;: &quot;50:00:14:40:5a:2c:b1:01&quot;,
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>      &quot;node_id&quot;: &quot;node_0&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      "id": "fc_port_1",
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      "name": "FC0",
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      "wwn": "50:00:14:40:5a:2c:b1:01",
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>      "node_id": "node_0"
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    },
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    {
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>      &quot;id&quot;: &quot;fc_port_2&quot;,
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      &quot;name&quot;: &quot;FC1&quot;,
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      &quot;wwn&quot;: &quot;50:00:14:40:5a:2c:b1:02&quot;,
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      &quot;node_id&quot;: &quot;node_0&quot;
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>      "id": "fc_port_2",
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>      "name": "FC1",
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      "wwn": "50:00:14:40:5a:2c:b1:02",
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      "node_id": "node_0"
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    },
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    {
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>      &quot;id&quot;: &quot;fc_port_3&quot;,
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>      &quot;name&quot;: &quot;FC2&quot;,
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>      &quot;wwn&quot;: &quot;50:00:14:40:5a:2c:b1:03&quot;,
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>      &quot;node_id&quot;: &quot;node_1&quot;
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>      "id": "fc_port_3",
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>      "name": "FC2",
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>      "wwn": "50:00:14:40:5a:2c:b1:03",
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>      "node_id": "node_1"
 <a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    },
 <a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    {
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>      &quot;id&quot;: &quot;fc_port_4&quot;,
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>      &quot;name&quot;: &quot;FC3&quot;,
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>      &quot;wwn&quot;: &quot;50:00:14:40:5a:2c:b1:04&quot;,
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>      &quot;node_id&quot;: &quot;node_1&quot;
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>      "id": "fc_port_4",
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>      "name": "FC3",
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>      "wwn": "50:00:14:40:5a:2c:b1:04",
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>      "node_id": "node_1"
 <a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>    }
 <a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>  ]
 <a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>}
@@ -9495,13 +9495,13 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <h3 id="iscsi-security">iSCSI Security<a class="headerlink" href="#iscsi-security" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Enforce CHAP on all iSCSI hosts</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># 1. Configure CHAP credentials in PowerStore for each iSCSI initiator</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/host_initiator/&lt;initiator-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s1">    &quot;chap_mutual_username&quot;: &quot;&lt;host-chap-user&gt;&quot;,</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s1">    &quot;chap_mutual_password&quot;: &quot;&lt;chap-password-min-12&gt;&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/host_initiator/&lt;initiator-id&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s1">    "chap_mutual_username": "&lt;host-chap-user&gt;",</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s1">    "chap_mutual_password": "&lt;chap-password-min-12&gt;"</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s1">  }'</span>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># 2. Isolate iSCSI traffic on dedicated VLANs</span>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># - Never allow iSCSI traffic on the general data or management VLANs</span>
@@ -9509,14 +9509,14 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># - Enable jumbo frames (MTU 9000) end-to-end on iSCSI VLANs</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  &quot;id&quot;: &quot;host_initiator_5f8c9a2e-1b4d-47e9-8f3c-2a91d5c8e7f1&quot;,
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  &quot;name&quot;: &quot;iqn.1991-05.com.example:storage.disk1.sys1.xyz&quot;,
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  &quot;chap_mutual_username&quot;: &quot;host-chap-user&quot;,
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  &quot;chap_mutual_password&quot;: &quot;***&quot;,
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  &quot;chap_mode&quot;: &quot;Mutual&quot;,
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  &quot;initiator_type&quot;: &quot;iSCSI&quot;,
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  &quot;state&quot;: &quot;logged_in&quot;,
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  &quot;last_login_time&quot;: &quot;2024-01-15T09:42:33Z&quot;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  "id": "host_initiator_5f8c9a2e-1b4d-47e9-8f3c-2a91d5c8e7f1",
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  "name": "iqn.1991-05.com.example:storage.disk1.sys1.xyz",
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  "chap_mutual_username": "host-chap-user",
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  "chap_mutual_password": "***",
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  "chap_mode": "Mutual",
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  "initiator_type": "iSCSI",
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  "state": "logged_in",
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  "last_login_time": "2024-01-15T09:42:33Z"
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9546,35 +9546,35 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </div>
 <h3 id="nfs-security">NFS Security<a class="headerlink" href="#nfs-security" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Harden NFS exports: restrict access to specific subnets</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/nfs_export/&lt;export-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    &quot;rw_hosts&quot;: [{&quot;ip&quot;: &quot;192.168.20.0&quot;, &quot;prefix_length&quot;: 24}],</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">    &quot;no_access_hosts&quot;: [],</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">    &quot;min_security&quot;: &quot;sys&quot;,</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s1">    &quot;no_suid&quot;: true</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/nfs_export/&lt;export-id&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    "rw_hosts": [{"ip": "192.168.20.0", "prefix_length": 24}],</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">    "no_access_hosts": [],</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">    "min_security": "sys",</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s1">    "no_suid": true</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">  }'</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Audit all NFS exports for overly permissive access</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/nfs_export?select=name,rw_hosts,ro_hosts,min_security&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/nfs_export?select=name,rw_hosts,ro_hosts,min_security"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="s2">import sys, json</span>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="s2">data = json.load(sys.stdin)</span>
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="s2">for e in data:</span>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="s2">    rw = e.get(&#39;rw_hosts&#39;, [])</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="s2">    rw = e.get('rw_hosts', [])</span>
 <a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="s2">    for h in rw:</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="s2">        ip = h.get(&#39;ip&#39;, &#39;&#39;)</span>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="s2">        prefix = h.get(&#39;prefix_length&#39;, 32)</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="s2">        ip = h.get('ip', '')</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="s2">        prefix = h.get('prefix_length', 32)</span>
 <a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="s2">        # Flag any /8 or broader subnet</span>
 <a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="s2">        if prefix &lt;= 8:</span>
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="s2">            print(f&#39;WARNING: Export {e[\&quot;name\&quot;]} has broad RW access: {ip}/{prefix}&#39;)</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="s2">&quot;</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="s2">            print(f'WARNING: Export {e[\"name\"]} has broad RW access: {ip}/{prefix}')</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="s2">"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{&quot;id&quot;:&quot;nfs_export_12847&quot;,&quot;name&quot;:&quot;data_vol_prod&quot;,&quot;rw_hosts&quot;:[{&quot;ip&quot;:&quot;192.168.20.0&quot;,&quot;prefix_length&quot;:24}],&quot;no_access_hosts&quot;:[],&quot;min_security&quot;:&quot;sys&quot;,&quot;no_suid&quot;:true}
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>{&quot;id&quot;:&quot;nfs_export_12848&quot;,&quot;name&quot;:&quot;backup_vol&quot;,&quot;rw_hosts&quot;:[{&quot;ip&quot;:&quot;10.0.0.0&quot;,&quot;prefix_length&quot;:8}],&quot;ro_hosts&quot;:[],&quot;min_security&quot;:&quot;sys&quot;}
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>{&quot;id&quot;:&quot;nfs_export_12849&quot;,&quot;name&quot;:&quot;archive_vol&quot;,&quot;rw_hosts&quot;:[{&quot;ip&quot;:&quot;172.16.0.0&quot;,&quot;prefix_length&quot;:12}],&quot;ro_hosts&quot;:[],&quot;min_security&quot;:&quot;sys&quot;}
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>{&quot;id&quot;:&quot;nfs_export_12850&quot;,&quot;name&quot;:&quot;shared_data&quot;,&quot;rw_hosts&quot;:[{&quot;ip&quot;:&quot;0.0.0.0&quot;,&quot;prefix_length&quot;:0}],&quot;ro_hosts&quot;:[],&quot;min_security&quot;:&quot;none&quot;}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{"id":"nfs_export_12847","name":"data_vol_prod","rw_hosts":[{"ip":"192.168.20.0","prefix_length":24}],"no_access_hosts":[],"min_security":"sys","no_suid":true}
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>{"id":"nfs_export_12848","name":"backup_vol","rw_hosts":[{"ip":"10.0.0.0","prefix_length":8}],"ro_hosts":[],"min_security":"sys"}
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>{"id":"nfs_export_12849","name":"archive_vol","rw_hosts":[{"ip":"172.16.0.0","prefix_length":12}],"ro_hosts":[],"min_security":"sys"}
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>{"id":"nfs_export_12850","name":"shared_data","rw_hosts":[{"ip":"0.0.0.0","prefix_length":0}],"ro_hosts":[],"min_security":"none"}
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>WARNING: Export backup_vol has broad RW access: 10.0.0.0/8
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>WARNING: Export archive_vol has broad RW access: 172.16.0.0/12
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>WARNING: Export shared_data has broad RW access: 0.0.0.0/0
@@ -9643,38 +9643,38 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>PowerStore logs all management operations (user logins, provisioning actions, configuration changes) to an internal audit log. Forward these to a SIEM:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Configure syslog forwarding for audit events</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/remote_syslog&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="s1">    &quot;address&quot;: &quot;192.168.10.200&quot;,</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="s1">    &quot;port&quot;: 514,</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="s1">    &quot;transport&quot;: &quot;UDP&quot;,</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="s1">    &quot;enabled&quot;: true</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/remote_syslog"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="s1">    "address": "192.168.10.200",</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="s1">    "port": 514,</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="s1">    "transport": "UDP",</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="s1">    "enabled": true</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="s1">  }'</span>
 <a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
 <a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Verify syslog is forwarding (check the SIEM for incoming events)</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/remote_syslog&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">"https://&lt;mgmt-ip&gt;/api/rest/remote_syslog"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"DELL-EMC-TOKEN: &lt;token&gt;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>{
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  &quot;id&quot;: &quot;remote_syslog_1&quot;,
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  &quot;address&quot;: &quot;192.168.10.200&quot;,
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  &quot;port&quot;: 514,
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  &quot;transport&quot;: &quot;UDP&quot;,
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  &quot;enabled&quot;: true,
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  &quot;created_at&quot;: &quot;2024-01-15T09:42:33Z&quot;,
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  &quot;updated_at&quot;: &quot;2024-01-15T09:42:33Z&quot;
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  "id": "remote_syslog_1",
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  "address": "192.168.10.200",
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  "port": 514,
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  "transport": "UDP",
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  "enabled": true,
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  "created_at": "2024-01-15T09:42:33Z",
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  "updated_at": "2024-01-15T09:42:33Z"
 <a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>}
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>{
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>  &quot;id&quot;: &quot;remote_syslog_1&quot;,
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>  &quot;address&quot;: &quot;192.168.10.200&quot;,
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  &quot;port&quot;: 514,
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  &quot;transport&quot;: &quot;UDP&quot;,
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>  &quot;enabled&quot;: true,
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>  &quot;created_at&quot;: &quot;2024-01-15T09:42:33Z&quot;,
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>  &quot;updated_at&quot;: &quot;2024-01-15T09:42:33Z&quot;,
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>  &quot;status&quot;: &quot;connected&quot;
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>  "id": "remote_syslog_1",
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>  "address": "192.168.10.200",
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  "port": 514,
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  "transport": "UDP",
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>  "enabled": true,
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>  "created_at": "2024-01-15T09:42:33Z",
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>  "updated_at": "2024-01-15T09:42:33Z",
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>  "status": "connected"
 <a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>}
 </code></pre></div>
 <div class="admonition warning">

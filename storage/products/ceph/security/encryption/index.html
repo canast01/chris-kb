@@ -7833,7 +7833,7 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ls<span class="w"> </span>--service-type<span class="w"> </span>osd<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>encrypted
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># On OSD host: verify LUKS header present on device</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cryptsetup<span class="w"> </span>isLuks<span class="w"> </span>/dev/sdb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LUKS encrypted&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not encrypted&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cryptsetup<span class="w"> </span>isLuks<span class="w"> </span>/dev/sdb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"LUKS encrypted"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Not encrypted"</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List all LUKS-encrypted mapper devices on a node</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>dmsetup<span class="w"> </span>ls<span class="w"> </span>--target<span class="w"> </span>crypt
@@ -8191,14 +8191,14 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 <li><strong>Backup encryption</strong>: if backing up with Ceph snapshots, ensure backup destination also uses encryption at rest.</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Verify Vault connectivity for RGW SSE-KMS</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-Vault-Token: </span><span class="k">$(</span>cat<span class="w"> </span>/etc/ceph/vault-token<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">"X-Vault-Token: </span><span class="k">$(</span>cat<span class="w"> </span>/etc/ceph/vault-token<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>https://vault.example.com:8200/v1/sys/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>initialized
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Check RGW encryption config</span>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>client.rgw<span class="w"> </span>rgw_crypt_vault_addr
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>client.rgw<span class="w"> </span>rgw_crypt_s3_kms_backend
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>&quot;initialized&quot;: true
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>"initialized": true
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>rgw_crypt_vault_addr = https://vault.example.com:8200
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>rgw_crypt_s3_kms_backend = vault
 </code></pre></div>

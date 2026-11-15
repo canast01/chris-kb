@@ -9287,7 +9287,7 @@ CloudIQ support escalation: how to collect the SCG log bundle and API traces, op
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/scg-applogs-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.tar.gz<span class="w"> </span>/var/log/dsagw/*.log<span class="w"> </span>/var/log/dsagw/*.log.*
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check for specific error patterns</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|connection refused\|timeout&quot;</span><span class="w"> </span>/var/log/dsagw/application.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|exception\|connection refused\|timeout"</span><span class="w"> </span>/var/log/dsagw/application.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check system registration</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>scg<span class="w"> </span>system<span class="w"> </span>list
@@ -9351,55 +9351,55 @@ CloudIQ support escalation: how to collect the SCG log bundle and API traces, op
 </div>
 <h3 id="4-collect-cloudiq-api-diagnostics">4. Collect CloudIQ API diagnostics<a class="headerlink" href="#4-collect-cloudiq-api-diagnostics" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get CloudIQ OAuth token (from CloudIQ Settings → API Keys)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-api-key&gt;&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">"&lt;your-api-key&gt;"</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List all systems in CloudIQ</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://cloudiq.dell.com/cloudiq/api/v1/systems&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;<span class="w"> </span>/tmp/cloudiq-systems.json
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"https://cloudiq.dell.com/cloudiq/api/v1/systems"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Accept: application/json"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;<span class="w"> </span>/tmp/cloudiq-systems.json
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Get last ingestion time for a specific system</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">SYSTEM_ID</span><span class="o">=</span><span class="s2">&quot;&lt;system-id-from-cloudiq-ui&gt;&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://cloudiq.dell.com/cloudiq/api/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">SYSTEM_ID</span><span class="o">=</span><span class="s2">"&lt;system-id-from-cloudiq-ui&gt;"</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"https://cloudiq.dell.com/cloudiq/api/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s2">import sys, json</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s2">print(f&#39;System: {data.get(\&quot;system_name\&quot;)}&#39;)</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s2">print(f&#39;Type: {data.get(\&quot;system_type\&quot;)}&#39;)</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s2">print(f&#39;Last telemetry: {data.get(\&quot;last_seen_timestamp\&quot;)}&#39;)</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="s2">print(f&#39;Health: {data.get(\&quot;system_health_score\&quot;)}&#39;)</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="s2">&quot;</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s2">print(f'System: {data.get(\"system_name\")}')</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s2">print(f'Type: {data.get(\"system_type\")}')</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s2">print(f'Last telemetry: {data.get(\"last_seen_timestamp\")}')</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="s2">print(f'Health: {data.get(\"system_health_score\")}')</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="s2">"</span>
 <a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
 <a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># If UI issue — browser console errors</span>
 <a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># F12 → Console tab → reload the page → Export Console as file</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;systems&quot;: [
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  "systems": [
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    {
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>      &quot;system_id&quot;: &quot;sys-a1b2c3d4e5f6&quot;,
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>      &quot;system_name&quot;: &quot;VMAX-Production-01&quot;,
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      &quot;system_type&quot;: &quot;VMAX&quot;,
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      &quot;last_seen_timestamp&quot;: &quot;2024-01-15T14:32:18Z&quot;,
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      &quot;system_health_score&quot;: 92
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>      "system_id": "sys-a1b2c3d4e5f6",
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>      "system_name": "VMAX-Production-01",
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      "system_type": "VMAX",
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      "last_seen_timestamp": "2024-01-15T14:32:18Z",
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      "system_health_score": 92
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    },
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    {
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>      &quot;system_id&quot;: &quot;sys-f6e5d4c3b2a1&quot;,
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>      &quot;system_name&quot;: &quot;PowerFlex-Cluster-West&quot;,
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>      &quot;system_type&quot;: &quot;PowerFlex&quot;,
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>      &quot;last_seen_timestamp&quot;: &quot;2024-01-15T14:28:45Z&quot;,
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>      &quot;system_health_score&quot;: 87
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>      "system_id": "sys-f6e5d4c3b2a1",
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>      "system_name": "PowerFlex-Cluster-West",
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>      "system_type": "PowerFlex",
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>      "last_seen_timestamp": "2024-01-15T14:28:45Z",
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>      "system_health_score": 87
 <a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    },
 <a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    {
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>      &quot;system_id&quot;: &quot;sys-9x8y7z6w5v4u&quot;,
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>      &quot;system_name&quot;: &quot;Unity-XT-DC2&quot;,
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>      &quot;system_type&quot;: &quot;Unity&quot;,
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>      &quot;last_seen_timestamp&quot;: &quot;2024-01-15T14:15:22Z&quot;,
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>      &quot;system_health_score&quot;: 95
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>      "system_id": "sys-9x8y7z6w5v4u",
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>      "system_name": "Unity-XT-DC2",
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>      "system_type": "Unity",
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>      "last_seen_timestamp": "2024-01-15T14:15:22Z",
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>      "system_health_score": 95
 <a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    }
 <a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  ],
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  &quot;page_info&quot;: {
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    &quot;total_systems&quot;: 12,
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    &quot;returned&quot;: 3
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  "page_info": {
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    "total_systems": 12,
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    "returned": 3
 <a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>  }
 <a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>}
 <a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>System: VMAX-Production-01
@@ -9444,7 +9444,7 @@ CloudIQ support escalation: how to collect the SCG log bundle and API traces, op
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Error observed:
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  - CloudIQ dashboard shows system offline for 12 hours
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  - SCG connectivity test: PASS to CloudIQ; FAIL to PowerStore-1000T
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  - SCG log: &quot;Connection timeout to 10.10.10.50 (PowerStore Management IP)&quot;
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  - SCG log: "Connection timeout to 10.10.10.50 (PowerStore Management IP)"
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>Steps already taken:
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  - Verified SCG service is running
@@ -9551,20 +9551,20 @@ CloudIQ support escalation: how to collect the SCG log bundle and API traces, op
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>scg<span class="w"> </span>version
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>scg<span class="w"> </span>status
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>scg<span class="w"> </span>connectivity<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>scg<span class="w"> </span>system<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;System Name|Status|Last Contact&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>scg<span class="w"> </span>system<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"System Name|Status|Last Contact"</span>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check SCG disk space (low disk causes log collection failures)</span>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Test CloudIQ API endpoint reachability from SCG</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code} %{time_total}s\n&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code} %{time_total}s\n"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>https://cloudiq.dell.com/cloudiq/api/v1/systems
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Count recent errors in SCG application log</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span>/var/log/dsagw/application.log
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ERROR"</span><span class="w"> </span>/var/log/dsagw/application.log
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
 <a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># Show last 50 errors in SCG log</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>grep<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span>/var/log/dsagw/application.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>grep<span class="w"> </span><span class="s2">"ERROR"</span><span class="w"> </span>/var/log/dsagw/application.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>SCG Version: 5.2.1.0 (Build 2024.01.15)
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>SCG Status: Running

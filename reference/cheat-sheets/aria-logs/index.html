@@ -7285,87 +7285,87 @@ Top-10 Aria Logs (Log Insight) commands for agent control, syslog configuration,
 </table>
 </div>
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://loginsight/api/v1&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">"https://loginsight/api/v1"</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Authenticate</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">SESSION</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="nv">$BASE</span>/sessions<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;VMware1!&quot;,&quot;provider&quot;:&quot;Local&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;sessionId&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">HDR</span><span class="o">=</span><span class="s2">&quot;-H \&quot;Authorization: Bearer </span><span class="nv">$SESSION</span><span class="s2">\&quot;&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"username":"admin","password":"VMware1!","provider":"Local"}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; print(json.load(sys.stdin)['sessionId'])"</span><span class="k">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">HDR</span><span class="o">=</span><span class="s2">"-H \"Authorization: Bearer </span><span class="nv">$SESSION</span><span class="s2">\""</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Queries</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/events/text/CONTAINS+error?limit=100&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/events/text/CONTAINS+error?limit=100"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Ingestion status</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/cluster/vips&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">                </span><span class="c1"># VIP config</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">                     </span><span class="c1"># cluster node health</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/cluster/vips"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">                </span><span class="c1"># VIP config</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/cluster"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">                     </span><span class="c1"># cluster node health</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Alerts</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">                      </span><span class="c1"># configured alerts</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$HDR</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BASE</span><span class="s2">/alerts"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w">                      </span><span class="c1"># configured alerts</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;events&quot;: [
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "events": [
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    {
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      &quot;text&quot;: &quot;Connection error: timeout on host db-node-03&quot;,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;timestamp&quot;: 1704067234000,
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      &quot;source&quot;: &quot;vcenter-01.lab.local&quot;,
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;severity&quot;: &quot;ERROR&quot;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      "text": "Connection error: timeout on host db-node-03",
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      "timestamp": 1704067234000,
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      "source": "vcenter-01.lab.local",
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      "severity": "ERROR"
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    },
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    {
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      &quot;text&quot;: &quot;Authentication error: invalid credentials for user root&quot;,
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      &quot;timestamp&quot;: 1704067198000,
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      &quot;source&quot;: &quot;esx-host-12.lab.local&quot;,
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;severity&quot;: &quot;ERROR&quot;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      "text": "Authentication error: invalid credentials for user root",
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      "timestamp": 1704067198000,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      "source": "esx-host-12.lab.local",
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      "severity": "ERROR"
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    }
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  ],
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  &quot;eventCount&quot;: 847,
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  &quot;pageNumber&quot;: 1
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  "eventCount": 847,
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  "pageNumber": 1
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>}
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>{
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  &quot;vips&quot;: [
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  "vips": [
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    {
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      &quot;ip&quot;: &quot;192.168.1.45&quot;,
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      &quot;hostname&quot;: &quot;loginsight-vip.lab.local&quot;,
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      &quot;role&quot;: &quot;primary&quot;,
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      &quot;status&quot;: &quot;ACTIVE&quot;
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      "ip": "192.168.1.45",
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      "hostname": "loginsight-vip.lab.local",
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      "role": "primary",
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      "status": "ACTIVE"
 <a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    }
 <a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  ]
 <a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>}
 <a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>{
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  &quot;nodes&quot;: [
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  "nodes": [
 <a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>    {
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>      &quot;nodeId&quot;: &quot;node-1&quot;,
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>      &quot;hostname&quot;: &quot;loginsight-node-01&quot;,
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>      &quot;ip&quot;: &quot;192.168.1.41&quot;,
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>      &quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>      &quot;diskUsage&quot;: 67
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>      "nodeId": "node-1",
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>      "hostname": "loginsight-node-01",
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>      "ip": "192.168.1.41",
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>      "status": "HEALTHY",
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>      "diskUsage": 67
 <a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>    },
 <a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>    {
-<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>      &quot;nodeId&quot;: &quot;node-2&quot;,
-<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>      &quot;hostname&quot;: &quot;loginsight-node-02&quot;,
-<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>      &quot;ip&quot;: &quot;192.168.1.42&quot;,
-<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>      &quot;status&quot;: &quot;HEALTHY&quot;,
-<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>      &quot;diskUsage&quot;: 71
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>      "nodeId": "node-2",
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>      "hostname": "loginsight-node-02",
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>      "ip": "192.168.1.42",
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>      "status": "HEALTHY",
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>      "diskUsage": 71
 <a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>    }
 <a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>  ]
 <a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>}
 <a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>{
-<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>  &quot;alerts&quot;: [
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>  "alerts": [
 <a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>    {
-<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>      &quot;alertId&quot;: &quot;alert-uuid-8f2c4a1b&quot;,
-<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>      &quot;name&quot;: &quot;High Memory Usage&quot;,
-<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>      &quot;enabled&quot;: true,
-<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>      &quot;threshold&quot;: 85
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>      "alertId": "alert-uuid-8f2c4a1b",
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>      "name": "High Memory Usage",
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>      "enabled": true,
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>      "threshold": 85
 <a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>    },
 <a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>    {
-<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>      &quot;alertId&quot;: &quot;alert-uuid-3d9e7f5c&quot;,
-<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>      &quot;name&quot;: &quot;Disk Space Critical&quot;,
-<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>      &quot;enabled&quot;: true,
-<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>      &quot;threshold&quot;: 90
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>      "alertId": "alert-uuid-3d9e7f5c",
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>      "name": "Disk Space Critical",
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>      "enabled": true,
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>      "threshold": 90
 <a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a>    }
 <a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a>  ],
-<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>  &quot;totalAlerts&quot;: 12
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>  "totalAlerts": 12
 <a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>}
 </code></pre></div>
 <div class="admonition warning">

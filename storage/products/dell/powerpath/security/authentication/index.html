@@ -9060,7 +9060,7 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>CLAROpt<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>save
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@db-prod-01&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>root@db-prod-01's password: 
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Symmetrix ID: 000297900001
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Logical device name: emcpowera
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Symmetrix address: 5000097900001234
@@ -9259,16 +9259,16 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 <p>On Windows Server, PowerPath installs as a system service and filter driver. The <code>powermt</code> command requires Local Administrator rights. There is no finer-grained Windows permission model for PowerPath — it is binary: Local Administrator or no access.</p>
 <h3 id="local-administrator-groups">Local Administrator Groups<a class="headerlink" href="#local-administrator-groups" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Confirm account is in the local Administrators group</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">"Administrators"</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Add a service account to local Administrators (requires existing admin rights)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Add-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span> <span class="n">-Member</span> <span class="s2">&quot;DOMAIN\svc-storage&quot;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Add-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">"Administrators"</span> <span class="n">-Member</span> <span class="s2">"DOMAIN\svc-storage"</span>
 </code></pre></div>
 <h3 id="windows-remote-management-winrm">Windows Remote Management (WinRM)<a class="headerlink" href="#windows-remote-management-winrm" title="Permanent link">&para;</a></h3>
 <p>For remote PowerPath management on Windows, WinRM with constrained language mode or PowerShell JEA (Just Enough Administration) can be configured to restrict which <code>powermt</code> commands a delegated account can run remotely:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Example JEA configuration — restrict to display commands only</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c"># In a JEA role capability file (.psrc):</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">VisibleExternalCommands</span> <span class="p">=</span> <span class="s1">&#39;powermt display dev=all&#39;</span><span class="p">,</span> <span class="s1">&#39;powermt check_registration&#39;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">VisibleExternalCommands</span> <span class="p">=</span> <span class="s1">'powermt display dev=all'</span><span class="p">,</span> <span class="s1">'powermt check_registration'</span>
 </code></pre></div>
 <h3 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h3>
 <p>Windows Server hosts joined to Active Directory authenticate via Kerberos. Grant the relevant AD security group Local Administrator membership on PowerPath hosts via Group Policy:</p>

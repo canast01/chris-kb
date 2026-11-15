@@ -8024,42 +8024,42 @@ Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication 
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UE1LAzEQve-vGHqXFksveygU9CCCFPcHhCEZ1-BuJmTSlSr97yYNrFpjb-F9Td4zNpCOll0Lht9d08hx9JHHFh4MuWhfjtAVBD7lFT0lncWRnTk1-HEIpCRywJ4Uak0iKrksmRYWu8xCV1jYnVm4O7OLOSsfR9cPlNLeRHk2ynFMmRiidX2OeexgzwaeOKawAtf93iuhMFlNarO63azW2e09dAWEBC4TWjUHEh4OZYfn_J4IOMC9aBww0mzhCYfTPBLcbOHqCNZNJNH2KeKXp1r1P3Gl10_plQ9k-3ez6sKXkj_HLgRfwPvLQg==?" /></p>
 <h2 id="azure-storage-access-denied">Azure Storage Access Denied<a class="headerlink" href="#azure-storage-access-denied" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check storage firewall rules</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">'networkRuleSet'</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check role assignments on storage account</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--scope<span class="w"> </span>&lt;storage-account-resource-id&gt;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Test access via SAS token</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>download<span class="w"> </span>--account-name<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span>--name<span class="w"> </span>&lt;blob&gt;<span class="w"> </span>--file<span class="w"> </span>/tmp/test<span class="w"> </span>--sas-token<span class="w"> </span><span class="s2">&quot;&lt;sas&gt;&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span>--name<span class="w"> </span>&lt;blob&gt;<span class="w"> </span>--file<span class="w"> </span>/tmp/test<span class="w"> </span>--sas-token<span class="w"> </span><span class="s2">"&lt;sas&gt;"</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check if data plane access uses Entra ID or key-based auth</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Key-based access can be disabled in Shared Key authorization:</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;allowSharedKeyAccess&#39;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">'allowSharedKeyAccess'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;bypass&quot;: &quot;AzureServices&quot;,
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;defaultAction&quot;: &quot;Deny&quot;,
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  &quot;ipRules&quot;: [
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  "bypass": "AzureServices",
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  "defaultAction": "Deny",
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  "ipRules": [
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    {
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      &quot;action&quot;: &quot;Allow&quot;,
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      &quot;value&quot;: &quot;203.0.113.45&quot;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      "action": "Allow",
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      "value": "203.0.113.45"
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    }
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  ],
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;virtualNetworkRules&quot;: [
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  "virtualNetworkRules": [
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    {
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      &quot;action&quot;: &quot;Allow&quot;,
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Network/virtualNetworks/prod-vnet/subnets/app-subnet&quot;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      "action": "Allow",
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Network/virtualNetworks/prod-vnet/subnets/app-subnet"
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    }
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  ]
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>}
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>[
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  {
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    &quot;id&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Authorization/roleAssignments/a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    &quot;principalId&quot;: &quot;98765432-0987-6543-2109-876543210987&quot;,
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    &quot;roleDefinitionId&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1&quot;,
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    &quot;roleDefinitionName&quot;: &quot;Storage Blob Data Contributor&quot;,
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    &quot;scope&quot;: &quot;/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/prodstg001&quot;
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Authorization/roleAssignments/a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    "principalId": "98765432-0987-6543-2109-876543210987",
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    "roleDefinitionId": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1",
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    "roleDefinitionName": "Storage Blob Data Contributor",
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    "scope": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/prodstg001"
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  }
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>]
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Finished[#############################################] 100.0000%
@@ -8094,16 +8094,16 @@ Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication 
 <h2 id="aks-pod-not-starting">AKS Pod Not Starting<a class="headerlink" href="#aks-pod-not-starting" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get pod description and events</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check node resource pressure</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">"Conditions:"</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Image pull error</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed to pull&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Failed to pull"</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check Azure Container Registry firewall if using private ACR:</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>az<span class="w"> </span>acr<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;acr-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>az<span class="w"> </span>acr<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;acr-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">'networkRuleSet'</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># DNS resolution in pod (network policy blocking?)</span>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>kubectl<span class="w"> </span>run<span class="w"> </span>test-pod<span class="w"> </span>--rm<span class="w"> </span>-i<span class="w"> </span>--image<span class="o">=</span>busybox<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default
@@ -8121,8 +8121,8 @@ Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication 
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Normal  Scheduled  5m    default-scheduler  Successfully assigned default/nginx-deployment-5d59d4b4f6-7kx2m to aks-nodepool1-12345678-vmss000001
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>LAST SEEN   TYPE     REASON              OBJECT                                    MESSAGE
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2m18s       Normal   Pulling             pod/nginx-deployment-5d59d4b4f6-7kx2m     Pulling image &quot;nginx:1.21&quot;
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>2m10s       Normal   Pulled              pod/nginx-deployment-5d59d4b4f6-7kx2m     Successfully pulled image &quot;nginx:1.21&quot; in 8.2s
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>2m18s       Normal   Pulling             pod/nginx-deployment-5d59d4b4f6-7kx2m     Pulling image "nginx:1.21"
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>2m10s       Normal   Pulled              pod/nginx-deployment-5d59d4b4f6-7kx2m     Successfully pulled image "nginx:1.21" in 8.2s
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>2m8s        Normal   Created             pod/nginx-deployment-5d59d4b4f6-7kx2m     Created container nginx
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>2m7s        Normal   Started             pod/nginx-deployment-5d59d4b4f6-7kx2m     Started container nginx
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
@@ -8138,9 +8138,9 @@ Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication 
 <a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>aks-nodepool1-12345678-vmss000002       312m         1847Mi
 <a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
 <a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>{
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  &quot;defaultAction&quot;: &quot;Allow&quot;,
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>  &quot;virtualNetworkRules&quot;: [],
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>  &quot;ipRules&quot;: []
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  "defaultAction": "Allow",
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>  "virtualNetworkRules": [],
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>  "ipRules": []
 <a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>}
 <a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
 <a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>pod/test-pod created
@@ -8150,7 +8150,7 @@ Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication 
 <a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>Name:      kubernetes.default
 <a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>Address:   10.0.0.1
 <a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>
-<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>pod &quot;test-pod&quot; deleted
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>pod "test-pod" deleted
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8179,7 +8179,7 @@ Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication 
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check App Service Plan scale out status</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;properties.numberOfWorkers&#39;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'properties.numberOfWorkers'</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Manual scale up (if throttled)</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--sku<span class="w"> </span>P2V3

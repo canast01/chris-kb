@@ -7671,13 +7671,13 @@ Operations Common Issues reference covering Overview, Switch Not Appearing After
 <p><strong>Checklist:</strong></p>
 <ol>
 <li><strong>HTTPS reachable?</strong> — From the SANnav appliance, test:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;switch-ip&gt;/rest/loginresult
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>https://&lt;switch-ip&gt;/rest/loginresult
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Expected: 200 or 401; anything else = network/firewall issue</span>
 </code></pre></div></li>
 <li><strong>Credentials correct?</strong> — Navigate to <strong>Discovery &gt; Switches</strong>, select the switch, and click <strong>Test Connection</strong>. Both HTTPS and SNMP tests must pass.</li>
 <li><strong>Switch in correct resource group?</strong> — Switches left in the default resource group may not be visible to role-scoped users. Assign it to the correct fabric under <strong>Discovery &gt; Switches &gt; Assign to Fabric</strong>.</li>
 <li><strong>Discovery engine running?</strong> — Check:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>grep<span class="w"> </span><span class="s2">&quot;unreachable\|refused\|timeout&quot;</span><span class="w"> </span>/opt/sannav/logs/discovery.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>grep<span class="w"> </span><span class="s2">"unreachable\|refused\|timeout"</span><span class="w"> </span>/opt/sannav/logs/discovery.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div></li>
 </ol>
 <hr />
@@ -7708,11 +7708,11 @@ Operations Common Issues reference covering Overview, Switch Not Appearing After
 <li>If activation already completed but SANnav still shows the old version: force an inventory refresh:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># REST API — trigger switch re-poll</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentials&quot;:{&quot;loginName&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;authToken&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches/&lt;switchId&gt;/rediscover&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"credentials":{"loginName":"admin","password":"&lt;pass&gt;"}}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; print(json.load(sys.stdin)['authToken'])"</span><span class="k">)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches/&lt;switchId&gt;/rediscover"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span>
 </code></pre></div></li>
 <li>Verify on the switch directly: <code>firmwareshow</code> — if the active partition shows the new version, the upgrade was successful and SANnav will catch up on next poll.</li>
 </ol>
@@ -7739,7 +7739,7 @@ Operations Common Issues reference covering Overview, Switch Not Appearing After
 </li>
 <li>
 <p>Check SANnav event engine log for mail delivery errors:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;smtp\|mail\|email&quot;</span><span class="w"> </span>/opt/sannav/logs/event-engine.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"smtp\|mail\|email"</span><span class="w"> </span>/opt/sannav/logs/event-engine.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div></p>
 </li>
 </ol>
@@ -7758,7 +7758,7 @@ Operations Common Issues reference covering Overview, Switch Not Appearing After
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># If &gt; 90% full, the backup process cannot write the temporary archive</span>
 </code></pre></div></li>
 <li>Check the backup log:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;backup\|error\|failed&quot;</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"backup\|error\|failed"</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div></li>
 <li>Run a manual backup to confirm the issue: <strong>Administration &gt; Backup &gt; Backup Now</strong>.</li>
 </ol>

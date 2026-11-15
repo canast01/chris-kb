@@ -7696,7 +7696,7 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check disk health</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>smartctl<span class="w"> </span>-a<span class="w"> </span>/dev/sdb<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Reallocated|Pending|Offline|Error&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>smartctl<span class="w"> </span>-a<span class="w"> </span>/dev/sdb<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Reallocated|Pending|Offline|Error"</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># If disk is healthy but OSD crashed: restart OSD</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>restart<span class="w"> </span>osd.5
@@ -7756,7 +7756,7 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <h2 id="health_err-osd-full">HEALTH_ERR: OSD Full<a class="headerlink" href="#health_err-osd-full" title="Permanent link">&para;</a></h2>
 <p>When the cluster hits the <code>full ratio</code> (default 95%), all writes are blocked including replication and recovery.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm full state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;OSD_FULL|FULL&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"OSD_FULL|FULL"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k8<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">  </span><span class="c1"># find highest-utilisation OSDs</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Immediate override — allows writes past 100% temporarily (DANGEROUS)</span>
@@ -7772,8 +7772,8 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Find large RBD images</span>
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>rbd<span class="w"> </span>ls<span class="w"> </span>rbd<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>img<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="nv">SIZE</span><span class="o">=</span><span class="k">$(</span>rbd<span class="w"> </span>info<span class="w"> </span>rbd/<span class="nv">$img</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>disk_usage<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SIZE</span><span class="s2"> </span><span class="nv">$img</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="nv">SIZE</span><span class="o">=</span><span class="k">$(</span>rbd<span class="w"> </span>info<span class="w"> </span>rbd/<span class="nv">$img</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>disk_usage<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $2}'</span><span class="k">)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$SIZE</span><span class="s2"> </span><span class="nv">$img</span><span class="s2">"</span>
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span>-r<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
 <a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Permanent fix options:</span>
@@ -7845,18 +7845,18 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 </table>
 </div>
 <h2 id="slow-ops-high-latency">Slow Ops / High Latency<a class="headerlink" href="#slow-ops-high-latency" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Symptoms: HEALTH_WARN &quot;X requests are blocked&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Symptoms: HEALTH_WARN "X requests are blocked"</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>SLOW_OPS
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>perf<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">  </span><span class="c1"># sort by commit_latency; high value = disk issue</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check disk I/O on OSD host (await &gt; 50 ms = disk saturated)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>iostat<span class="w"> </span>-dx<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^sd|Device&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>iostat<span class="w"> </span>-dx<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"^sd|Device"</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Test cluster network bandwidth (expect ≥ 10 Gbps on 10 GbE)</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>iperf3<span class="w"> </span>-c<span class="w"> </span>ceph-node2<span class="w"> </span>-t<span class="w"> </span><span class="m">10</span><span class="w"> </span>-P<span class="w"> </span><span class="m">4</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check BlueStore WAL/DB usage</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.5<span class="w"> </span>perf<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;wal|db|commit&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.5<span class="w"> </span>perf<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"wal|db|commit"</span>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Temporarily disable scrubbing if it is contributing to latency</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noscrub
@@ -7889,11 +7889,11 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>[  5]   0.00-10.00  sec  12.7 GBytes  10.9 Gbps                  receiver
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>{
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  &quot;bluestore_wal_total_bytes&quot;: 2147483648,
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  &quot;bluestore_wal_used_bytes&quot;: 1678901248,
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  &quot;bluestore_db_total_bytes&quot;: 10737418240,
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  &quot;bluestore_db_used_bytes&quot;: 8589934592,
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  &quot;commit_latency_ms&quot;: 245
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  "bluestore_wal_total_bytes": 2147483648,
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  "bluestore_wal_used_bytes": 1678901248,
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  "bluestore_db_total_bytes": 10737418240,
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  "bluestore_db_used_bytes": 8589934592,
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  "commit_latency_ms": 245
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>}
 <a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
 <a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>noscrub,nodeep-scrub set
@@ -7901,12 +7901,12 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>set osd_recovery_max_active_hdd to 2
 <a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
 <a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>{
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>  &quot;ops&quot;: [
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>  "ops": [
 <a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>    {
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>      &quot;description&quot;: &quot;osd_op(client.12345.0:1 rbd_data.1a2b3c4d5e6f7g8h9i0j_0000000000000001 [write 0~4194304] 0x1, snapid=0, op_flags=0, mtime=2024-01-15T10:23:45.123456+0000)&quot;,
-<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>      &quot;initiated_at&quot;: &quot;2024-01-15T10:23:42.987654+0000&quot;,
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>      &quot;age&quot;: 2.135802,
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      &quot;duration&quot;: 2.135802
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>      "description": "osd_op(client.12345.0:1 rbd_data.1a2b3c4d5e6f7g8h9i0j_0000000000000001 [write 0~4194304] 0x1, snapid=0, op_flags=0, mtime=2024-01-15T10:23:45.123456+0000)",
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>      "initiated_at": "2024-01-15T10:23:42.987654+0000",
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>      "age": 2.135802,
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>      "duration": 2.135802
 <a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>    }
 <a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>  ]
 <a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>}
@@ -7923,7 +7923,7 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># PG states requiring action:</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># active+degraded   = Some replicas missing; cluster recovering; usually self-resolves</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># inactive          = No primary OSD; I/O blocked; urgent — check which OSD is down</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># stale             = Primary OSD hasn&#39;t reported in; check MON-OSD connectivity</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># stale             = Primary OSD hasn't reported in; check MON-OSD connectivity</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># incomplete        = Not enough OSDs to form a quorum for the PG; data at risk</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># active+undersized = Replica count below min_size (one or more OSDs down)</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
@@ -7934,7 +7934,7 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>ceph<span class="w"> </span>pg<span class="w"> </span>repair<span class="w"> </span><span class="m">1</span>.5a
 <a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
 <a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Identify which OSDs are down causing undersized PGs</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;down|out&quot;</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"down|out"</span>
 <a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
 <a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># If one OSD is permanently lost: reweight to 0 and let cluster rebalance</span>
 <a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>ceph<span class="w"> </span>osd<span class="w"> </span>reweight<span class="w"> </span>osd.5<span class="w"> </span><span class="m">0</span>
@@ -8013,12 +8013,12 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Check clock difference between MON nodes</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ceph<span class="w"> </span>mon<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/^[0-9]/{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d:<span class="w"> </span>-f1<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">: &quot;</span><span class="p">;</span><span class="w"> </span>ssh<span class="w"> </span><span class="nv">$host</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>+%T
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ceph<span class="w"> </span>mon<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'/^[0-9]/{print $3}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d:<span class="w"> </span>-f1<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$host</span><span class="s2">: "</span><span class="p">;</span><span class="w"> </span>ssh<span class="w"> </span><span class="nv">$host</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>+%T
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="k">done</span>
 <a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
 <a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Verify MON clock skew after fix</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;CLOCK|TIME&quot;</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"CLOCK|TIME"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>HEALTH_WARN Monitors are allowing insecure connections
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    CLOCK_SKEW clock skew detected on mon.ceph-mon-02
@@ -8104,15 +8104,15 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># 3. Verify quorum restored</span>
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>ceph<span class="w"> </span>quorum_status
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Output shows: &quot;quorum_names&quot; containing all expected MON hostnames</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Output shows: "quorum_names" containing all expected MON hostnames</span>
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># 4. If one MON host permanently failed:</span>
 <a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>ceph<span class="w"> </span>mon<span class="w"> </span>rm<span class="w"> </span>&lt;id&gt;<span class="w">    </span><span class="c1"># run from a healthy MON host</span>
 <a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Then deploy a replacement MON:</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mon<span class="w"> </span>--placement<span class="o">=</span><span class="s2">&quot;host1,host2,host3-new&quot;</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mon<span class="w"> </span>--placement<span class="o">=</span><span class="s2">"host1,host2,host3-new"</span>
 <a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
 <a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># 5. Check MON log for split-brain or election issues</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ceph-mon@&lt;id&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;election|quorum|paxos&quot;</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ceph-mon@&lt;id&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"election|quorum|paxos"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>● ceph-mon@mon0.service - Ceph monitor daemon
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>     Loaded: loaded (/lib/systemd/ceph-mon@.service; enabled; vendor preset: enabled)
@@ -8122,36 +8122,36 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Jan 18 14:32:15 ceph-mon1 systemd[1]: ceph-mon@mon0.service: Main process exited, code=exited, status=1/FAILURE
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>{
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  &quot;election_epoch&quot;: 156,
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  &quot;quorum&quot;: [
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  "election_epoch": 156,
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  "quorum": [
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    1,
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    2
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  ],
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  &quot;quorum_names&quot;: [
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    &quot;mon1&quot;,
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    &quot;mon2&quot;
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  "quorum_names": [
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    "mon1",
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    "mon2"
 <a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  ],
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  &quot;quorum_leader_name&quot;: &quot;mon1&quot;,
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  &quot;monmap&quot;: {
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    &quot;epoch&quot;: 3,
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    &quot;fsid&quot;: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    &quot;modified&quot;: &quot;2024-01-18T14:15:22.123456+0000&quot;,
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    &quot;created&quot;: &quot;2024-01-17T09:42:10.987654+0000&quot;,
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    &quot;mons&quot;: [
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  "quorum_leader_name": "mon1",
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  "monmap": {
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    "epoch": 3,
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    "fsid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    "modified": "2024-01-18T14:15:22.123456+0000",
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    "created": "2024-01-17T09:42:10.987654+0000",
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    "mons": [
 <a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>      {
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>        &quot;rank&quot;: 0,
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>        &quot;name&quot;: &quot;mon0&quot;,
-<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>        &quot;public_addr&quot;: &quot;10.20.30.41:6789/0&quot;
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>        "rank": 0,
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>        "name": "mon0",
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>        "public_addr": "10.20.30.41:6789/0"
 <a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>      },
 <a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>      {
-<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>        &quot;rank&quot;: 1,
-<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>        &quot;name&quot;: &quot;mon1&quot;,
-<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>        &quot;public_addr&quot;: &quot;10.20.30.42:6789/0&quot;
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>        "rank": 1,
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>        "name": "mon1",
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>        "public_addr": "10.20.30.42:6789/0"
 <a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>      },
 <a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>      {
-<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>        &quot;rank&quot;: 2,
-<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>        &quot;name&quot;: &quot;mon2&quot;,
-<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>        &quot;public_addr&quot;: &quot;10.20.30.43:6789/0&quot;
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>        "rank": 2,
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>        "name": "mon2",
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>        "public_addr": "10.20.30.43:6789/0"
 <a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>      }
 <a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>    ]
 <a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>  }

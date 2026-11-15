@@ -8026,7 +8026,7 @@ TLS troubleshooting — certificate chain validation failures, handshake timeout
 <h2 id="quick-diagnosis">Quick Diagnosis<a class="headerlink" href="#quick-diagnosis" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test TLS handshake and show certificate chain</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:443<span class="w"> </span>-servername<span class="w"> </span>host.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;subject|issuer|verify|SSL-Session|Protocol|Cipher&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'subject|issuer|verify|SSL-Session|Protocol|Cipher'</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check certificate expiry</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:443<span class="w"> </span>-servername<span class="w"> </span>host.example.com<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
@@ -8034,8 +8034,8 @@ TLS troubleshooting — certificate chain validation failures, handshake timeout
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check which TLS versions are accepted</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">for</span><span class="w"> </span>ver<span class="w"> </span><span class="k">in</span><span class="w"> </span>tls1<span class="w"> </span>tls1_1<span class="w"> </span>tls1_2<span class="w"> </span>tls1_3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ver</span><span class="s2">: &quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:443<span class="w"> </span>-<span class="s2">&quot;</span><span class="nv">$ver</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;Protocol|connect: Connection refused|alert&#39;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$ver</span><span class="s2">: "</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:443<span class="w"> </span>-<span class="s2">"</span><span class="nv">$ver</span><span class="s2">"</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'Protocol|connect: Connection refused|alert'</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">done</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>subject=CN = host.example.com, O = Example Corp, C = US
@@ -8172,14 +8172,14 @@ TLS troubleshooting — certificate chain validation failures, handshake timeout
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>---
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Certificate chain
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a> 0 s:/CN=*.cdn.example.com
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   i:/C=US/O=Let&#39;s Encrypt/CN=R3
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   i:/C=US/O=Let's Encrypt/CN=R3
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>-----BEGIN CERTIFICATE-----
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>MIIFXzCCBEegAwIBAgISA7k8z1...
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>-----END CERTIFICATE-----
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>---
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Server certificate
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>subject=/CN=*.cdn.example.com
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>issuer=/C=US/O=Let&#39;s Encrypt/CN=R3
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>issuer=/C=US/O=Let's Encrypt/CN=R3
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>---
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a># With SNI (required for virtual hosting / CDN)
@@ -8189,14 +8189,14 @@ TLS troubleshooting — certificate chain validation failures, handshake timeout
 <a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>---
 <a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Certificate chain
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a> 0 s:/CN=api.example.com
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>   i:/C=US/O=Let&#39;s Encrypt/CN=R3
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>   i:/C=US/O=Let's Encrypt/CN=R3
 <a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>-----BEGIN CERTIFICATE-----
 <a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>MIIFYzCCBEugAwIBAgISBnK9p2...
 <a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>-----END CERTIFICATE-----
 <a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>---
 <a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Server certificate
 <a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>subject=/CN=api.example.com
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>issuer=/C=US/O=Let&#39;s Encrypt/CN=R3
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>issuer=/C=US/O=Let's Encrypt/CN=R3
 <a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>---
 </code></pre></div>
 <div class="admonition warning">
@@ -8230,8 +8230,8 @@ TLS troubleshooting — certificate chain validation failures, handshake timeout
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-cert<span class="w"> </span>client.crt<span class="w"> </span>-key<span class="w"> </span>client.key<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-CAfile<span class="w"> </span>ca.crt
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Error: &#39;no certificate returned&#39; → server not configured for mTLS</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Error: &#39;alert certificate required&#39; → server requires mTLS but no cert presented</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Error: 'no certificate returned' → server not configured for mTLS</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Error: 'alert certificate required' → server requires mTLS but no cert presented</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>CONNECTED(00000000)
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>depth=0 /C=US/ST=California/L=San Francisco/O=Example Corp/CN=host.example.com

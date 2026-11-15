@@ -8582,27 +8582,27 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <p>After AD integration, individual named local accounts can be removed for human admin access — role assignment comes from AD group membership.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Join to Active Directory</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>puredirectoryservice<span class="w"> </span>setattr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;svc-pure-bind&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--domain<span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://dc01.example.com&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">"DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">"svc-pure-bind"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">"&lt;password&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--domain<span class="w"> </span><span class="s2">"example.com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">"ldaps://dc01.example.com"</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test the connection</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pureds<span class="w"> </span>check
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Map AD groups to Purity roles</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-array-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">"CN=pure-array-admins,OU=Groups,DC=example,DC=com"</span>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-storage-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">"CN=pure-storage-admins,OU=Groups,DC=example,DC=com"</span>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-ops,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">"CN=pure-ops,OU=Groups,DC=example,DC=com"</span>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
 <a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">"CN=pure-readonly,OU=Groups,DC=example,DC=com"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Directory Service configured.
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Base DN: DC=example,DC=com
@@ -8875,9 +8875,9 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>puresnmp<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">"&lt;auth_pass_20_chars&gt;"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">"&lt;priv_pass_20_chars&gt;"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span>--user<span class="w"> </span>svc-snmp-monitor<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span>monitoring-v3
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
@@ -8885,9 +8885,9 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>puresnmptrap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">"&lt;auth_pass_20_chars&gt;"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">"&lt;priv_pass_20_chars&gt;"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">    </span>--user<span class="w"> </span>svc-snmp-monitor<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">    </span>--host<span class="w"> </span>&lt;nms_ip&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">    </span>nms-trap-v3
@@ -8896,13 +8896,13 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>puresnmp<span class="w"> </span>list
 <a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>puresnmptrap<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>SNMPv3 user &#39;svc-snmp-monitor&#39; created successfully
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>SNMPv3 user 'svc-snmp-monitor' created successfully
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Name: svc-snmp-monitor
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Auth Protocol: SHA
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Privacy Protocol: AES
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Status: Enabled
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>SNMPv3 trap destination &#39;nms-trap-v3&#39; created successfully
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>SNMPv3 trap destination 'nms-trap-v3' created successfully
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Host: 10.45.120.88
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>User: svc-snmp-monitor
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Version: v3
@@ -8987,7 +8987,7 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Verify all drives are SEDs (self-encrypting drives)</span>
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--spec
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Look for &#39;encryption_enabled: true&#39; or equivalent in the output</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Look for 'encryption_enabled: true' or equivalent in the output</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Name                          Encryption  Status
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>flasharray-prod-01            enabled     active
@@ -9188,7 +9188,7 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
 <a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Identify the last-used timestamp for each token</span>
 <a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>--expose
-<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="c1"># Compare &#39;last_used&#39; timestamp against expected usage pattern</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="c1"># Compare 'last_used' timestamp against expected usage pattern</span>
 <a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>
 <a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="c1"># Revoke a token that is no longer needed (without deleting the account)</span>
 <a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-old<span class="w"> </span>--api-token
@@ -9210,9 +9210,9 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>svc-old                       enabled               2023-08-20 13:12:05   2023-09-04 10:22:33    false
 <a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>svc-decommissioned            disabled              2023-06-15 08:30:22   2023-07-22 15:18:44    false
 <a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>
-<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>API token revoked for account &#39;svc-old&#39;. Account remains active.
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>API token revoked for account 'svc-old'. Account remains active.
 <a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>
-<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>Account &#39;svc-decommissioned&#39; and associated API token deleted successfully.
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>Account 'svc-decommissioned' and associated API token deleted successfully.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9244,11 +9244,11 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <p>Alert emails contain operational data about the array. Use STARTTLS or SMTPS to protect them in transit.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Configure SMTP relay with TLS</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>puresmtp<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span>--username<span class="w"> </span><span class="s2">&quot;pure-alerts@example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span>--password<span class="w"> </span><span class="s2">&quot;&lt;smtp_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span>--relay-host<span class="w"> </span><span class="s2">&quot;smtp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span>--username<span class="w"> </span><span class="s2">"pure-alerts@example.com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span>--password<span class="w"> </span><span class="s2">"&lt;smtp_password&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span>--relay-host<span class="w"> </span><span class="s2">"smtp.example.com"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">    </span>--relay-host-port<span class="w"> </span><span class="m">587</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">    </span>--sender-domain<span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">    </span>--sender-domain<span class="w"> </span><span class="s2">"example.com"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">    </span>default
 <a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
 <a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="c1"># Add alert notification recipients</span>
@@ -9267,11 +9267,11 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>  Username: pure-alerts@example.com
 <a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>  TLS Enabled: true
 <a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
-<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>Alert recipient &#39;storage-team&#39; created
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>Alert recipient 'storage-team' created
 <a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>  Email: storage-team@example.com
 <a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>  Status: active
 <a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>
-<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>Alert recipient &#39;oncall&#39; created
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>Alert recipient 'oncall' created
 <a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>  Email: oncall@example.com
 <a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>  Status: active
 <a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>

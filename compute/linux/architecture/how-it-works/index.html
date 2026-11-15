@@ -7535,16 +7535,16 @@ How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Sta
 <h2 id="network-stack">Network Stack<a class="headerlink" href="#network-stack" title="Permanent link">&para;</a></h2>
 <p>All production servers require bonded LACP uplinks and separate management/data VLANs:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Configure bonded interface with VLAN (RHEL / nmcli)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>bond<span class="w"> </span>ifname<span class="w"> </span>bond0<span class="w"> </span>bond.options<span class="w"> </span><span class="s2">&quot;mode=802.3ad,miimon=100&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>bond<span class="w"> </span>ifname<span class="w"> </span>bond0<span class="w"> </span>bond.options<span class="w"> </span><span class="s2">"mode=802.3ad,miimon=100"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth0<span class="w"> </span>master<span class="w"> </span>bond0
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth1<span class="w"> </span>master<span class="w"> </span>bond0
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>vlan<span class="w"> </span>con-name<span class="w"> </span>bond0.100<span class="w"> </span>dev<span class="w"> </span>bond0<span class="w"> </span>id<span class="w"> </span><span class="m">100</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nmcli<span class="w"> </span>con<span class="w"> </span>modify<span class="w"> </span>bond0.100<span class="w"> </span>ipv4.addresses<span class="w"> </span>&lt;ip&gt;/&lt;prefix&gt;<span class="w"> </span>ipv4.gateway<span class="w"> </span>&lt;gw&gt;<span class="w"> </span>ipv4.method<span class="w"> </span>manual
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Connection &#39;bond0&#39; (12a4c5d8-9f2e-4a2b-8c1f-7e3a2b9d4f6a) successfully added.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Connection &#39;ethernet-eth0&#39; (3f7b2c1a-5d9e-4a8b-9c2f-1e6a3b8d5f2c) successfully added.
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Connection &#39;ethernet-eth1&#39; (8a2d4f1c-6e3b-5c9a-1d7f-2a9b4e8c3f5d) successfully added.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Connection &#39;bond0.100&#39; (5c9a1f3e-7b2d-4a8c-6e1b-9f3a2c5d8b7e) successfully added.
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Connection 'bond0' (12a4c5d8-9f2e-4a2b-8c1f-7e3a2b9d4f6a) successfully added.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Connection 'ethernet-eth0' (3f7b2c1a-5d9e-4a8b-9c2f-1e6a3b8d5f2c) successfully added.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Connection 'ethernet-eth1' (8a2d4f1c-6e3b-5c9a-1d7f-2a9b4e8c3f5d) successfully added.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Connection 'bond0.100' (5c9a1f3e-7b2d-4a8c-6e1b-9f3a2c5d8b7e) successfully added.
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>(no output — command completes silently)
 </code></pre></div>
 <div class="admonition warning">
@@ -7588,7 +7588,7 @@ How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Sta
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Network</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ip<span class="w"> </span>-br<span class="w"> </span>addr<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>show
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ss<span class="w"> </span>-tulnp
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Link detected|Speed&quot;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Link detected|Speed"</span>
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Storage</span>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
@@ -7613,9 +7613,9 @@ How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Sta
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>     Memory: 12.4M
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        CPU: 2min 34.821s
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>     CGroup: /system.slice/nginx.service
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>             ├─8422 &quot;nginx: master process /usr/sbin/nginx&quot;
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>             ├─8423 &quot;nginx: worker process&quot;
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>             └─8424 &quot;nginx: worker process&quot;
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>             ├─8422 "nginx: master process /usr/sbin/nginx"
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>             ├─8423 "nginx: worker process"
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>             └─8424 "nginx: worker process"
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Jan 18 14:32:15 prod-web-01 systemd[1]: Started The NGINX HTTP and web server.
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>

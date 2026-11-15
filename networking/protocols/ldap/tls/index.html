@@ -7954,7 +7954,7 @@ TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Conf
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check the LDAPS certificate presented by a DC</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|DNS:|Not After&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Subject:|DNS:|Not After"</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Test full TLS handshake</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>&lt;/dev/null
@@ -7996,7 +7996,178 @@ TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Conf
 </tr>
 <tr>
 <td><code>Timeout waiting for input</code></td>
-<td>The command is waiting for stdin; ensure `</td>
+<td>The command is waiting for stdin; ensure <code>&lt;/dev/null</code> is appended to close stdin immediately after the connection completes.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="configuring-ldaps-on-active-directory">Configuring LDAPS on Active Directory<a class="headerlink" href="#configuring-ldaps-on-active-directory" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># LDAPS is enabled automatically when a valid certificate is installed on the DC.</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># Request a certificate from your enterprise CA:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-Certificate</span> <span class="n">-Template</span> <span class="s2">"DomainController"</span> <span class="n">-CertStoreLocation</span> <span class="s2">"Cert:\LocalMachine\My"</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Verify the DC is listening on 636 after certificate is installed</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">netstat</span> <span class="n">-an</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">":636"</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Test LDAPS from a Windows client</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">636</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test LDAPS bind from Linux</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">"svc-ldap@corp.example.com"</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">"P@ssw0rd!"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">"DC=corp,DC=example,DC=com"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">           </span><span class="s2">"(objectClass=domain)"</span><span class="w"> </span>dn
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Disable certificate verification for testing only (never in production)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">LDAPTLS_REQCERT</span><span class="o">=</span>never<span class="w"> </span>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">"svc-ldap@corp.example.com"</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">"P@ssw0rd!"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">""</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">"(objectClass=*)"</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># LDAP Result: Success (0x0)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dn: DC=corp,DC=example,DC=com
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a># numResponses: 1
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a># numEntries: 1
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>dn: cn=config
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>objectClass: top
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>objectClass: OpenLDAProotDSE
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>namingContexts: DC=corp,DC=example,DC=com
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>supportedLDAPVersion: 3
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>supportedSASLMechanisms: GSSAPI
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>supportedControl: 1.3.6.1.4.1.4203.2.11.3.4.2
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>supportedExtension: 1.3.6.1.4.1.1466.20037.2
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TLS certificate problem: self signed certificate</code></td>
+<td>Add the DC's certificate to <code>/etc/ldap/cacerts/</code> and configure <code>TLS_CACERT /etc/ldap/cacerts/ca-cert.pem</code> in <code>/etc/ldap/ldap.conf</code>, or use <code>LDAPTLS_REQCERT=never</code> for testing only.</td>
+</tr>
+<tr>
+<td><code>ldap_sasl_bind_s: Invalid credentials (49)</code></td>
+<td>Verify the service account password is correct and the account exists in Active Directory with <code>ldapsearch -x -H ldaps://dc01.corp.example.com:636 -D "svc-ldap@corp.example.com" -w "PASSWORD"</code>.</td>
+</tr>
+<tr>
+<td><code>Can't contact LDAP server (-1)</code></td>
+<td>Confirm the LDAPS port 636 is open and reachable with <code>telnet dc01.corp.example.com 636</code> or <code>nc -zv dc01.corp.example.com 636</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="channel-binding-and-ldap-signing">Channel Binding and LDAP Signing<a class="headerlink" href="#channel-binding-and-ldap-signing" title="Permanent link">&para;</a></h2>
+<p>Enforced via Group Policy or registry. Required for security hardening (Microsoft guidance post-2020).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check current LDAP server integrity setting</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-ItemProperty</span> <span class="s2">"HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters"</span> <span class="p">|</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Select-Object</span> <span class="n">LDAPServerIntegrity</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Set LDAP signing to Required (2) on the DC</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">"HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters"</span> <span class="p">`</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                 <span class="n">-Name</span> <span class="s2">"LDAPServerIntegrity"</span> <span class="n">-Value</span> <span class="n">2</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c"># Check channel binding token requirement</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">Get-ItemProperty</span> <span class="s2">"HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters"</span> <span class="p">|</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="nb">Select-Object</span> <span class="n">LdapEnforceChannelBinding</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># 0 = disabled, 1 = supported clients, 2 = always required</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># Set channel binding to always required</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">"HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters"</span> <span class="p">`</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                 <span class="n">-Name</span> <span class="s2">"LdapEnforceChannelBinding"</span> <span class="n">-Value</span> <span class="n">2</span>
+</code></pre></div>
+<h2 id="ldapclientintegrity-client-side">LdapClientIntegrity (Client Side)<a class="headerlink" href="#ldapclientintegrity-client-side" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check client-side LDAP signing policy</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-ItemProperty</span> <span class="s2">"HKLM:\SYSTEM\CurrentControlSet\Services\ldap"</span> <span class="p">|</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">LdapClientIntegrity</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># 0 = none, 1 = negotiate signing, 2 = require signing</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Set client to negotiate signing</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">"HKLM:\SYSTEM\CurrentControlSet\Services\ldap"</span> <span class="p">`</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>                 <span class="n">-Name</span> <span class="s2">"LdapClientIntegrity"</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Via Group Policy: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># Local Policies &gt; Security Options &gt; "Network security: LDAP client signing requirements"</span>
+</code></pre></div>
+<h2 id="testing-tls-configuration">Testing TLS Configuration<a class="headerlink" href="#testing-tls-configuration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check supported TLS versions on the DC</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">636</span><span class="w"> </span>dc01.corp.example.com
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify certificate chain is complete</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Verify return code|certificate"</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Test StartTLS upgrade (port 389)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com:389<span class="w"> </span>-ZZ<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">"svc-ldap@corp.example.com"</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">"P@ssw0rd!"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">"DC=corp,DC=example,DC=com"</span><span class="w"> </span><span class="s2">"(objectClass=domain)"</span><span class="w"> </span>dn
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 14:32:18 UTC
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Nmap scan report for dc01.corp.example.com (192.168.1.50)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Host is up (0.0042s latency).
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>PORT    STATE SERVICE
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>636/tcp open  ldapssl
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>| ssl-enum-ciphers:
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>|   TLSv1.2:
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>|     ciphers:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (ecdh_x25519) - A
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (ecdh_x25519) - A
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>|     least strength: A
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>|   TLSv1.3:
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>|     ciphers:
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>|       TLS_AES_256_GCM_SHA384 (ecdh_x25519) - A
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>|     least strength: A
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>|_  least strength: A
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>Verify return code: 0 (ok)
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>subject=CN=dc01.corp.example.com, O=Corp, C=US
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>issuer=CN=Corp Root CA, O=Corp, C=US
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a># command: ldapsearch
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a># extended LDIF
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>#
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a># LDAPv3
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a># base &lt;DC=corp,DC=example,DC=com&gt; with scope subtree
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a># filter: (objectClass=domain)
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a># requesting: dn
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>#
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a># search result
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>search: 2
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>result: 0 Success
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a># numResponses: 2
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a># numEntries: 1
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_start_tls: Connect error (-1)</code></td>
+<td>Verify the LDAP server is listening on port 389 and firewall allows the connection; check with <code>netstat -tlnp | grep 389</code>.</td>
+</tr>
+<tr>
+<td><code>Verify return code: 20 (unable to get local issuer certificate)</code></td>
+<td>Add the DC's issuing CA certificate to the system trust store with <code>update-ca-certificates</code> or specify the correct CA bundle path.</td>
+</tr>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Confirm the service account password is correct and the account is not locked; test with <code>ldapwhoami -H ldap://dc01.corp.example.com:389 -D "svc-ldap@corp.example.com" -w "password"</code>.</td>
 </tr>
 </tbody>
 </table>

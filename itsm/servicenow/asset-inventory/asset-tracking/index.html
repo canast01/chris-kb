@@ -8264,16 +8264,16 @@
 
 <h1 id="inventory-asset-tracking">Inventory — Asset Tracking<a class="headerlink" href="#inventory-asset-tracking" title="Permanent link">&para;</a></h1>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Linux — server hardware info</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dmidecode<span class="w"> </span>-t<span class="w"> </span>system<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Manufacturer|Product|Serial|UUID&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dmidecode<span class="w"> </span>-t<span class="w"> </span>bios<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Version|Release Date&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dmidecode<span class="w"> </span>-t<span class="w"> </span>system<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Manufacturer|Product|Serial|UUID"</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dmidecode<span class="w"> </span>-t<span class="w"> </span>bios<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Version|Release Date"</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Storage</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>lsblk<span class="w"> </span>-d<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,VENDOR,MODEL,SERIAL,ROTA
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>smartctl<span class="w"> </span>-a<span class="w"> </span>/dev/sda<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Serial|Model|Capacity|Health&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>smartctl<span class="w"> </span>-a<span class="w"> </span>/dev/sda<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Serial|Model|Capacity|Health"</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Network interfaces</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/^[0-9]/{print $2}&#39;</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Speed|Duplex&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'/^[0-9]/{print $2}'</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Speed|Duplex"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Manufacturer: Dell Inc.
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Product Name: PowerEdge R750
@@ -8318,16 +8318,16 @@
 </table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All VMs across subscription</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,Location:location,OS:storageProfile.osDisk.osType}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">'[*].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,Location:location,OS:storageProfile.osDisk.osType}'</span><span class="w"> </span>-o<span class="w"> </span>table
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Untagged resources</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[?tags==null || !tags.Owner] | [*].{Name:name,Type:type,RG:resourceGroup}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">'[?tags==null || !tags.Owner] | [*].{Name:name,Type:type,RG:resourceGroup}'</span><span class="w"> </span>-o<span class="w"> </span>table
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Deallocated VMs (not deleted, still costing storage)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[?powerState==`VM deallocated`] | [*].{Name:name,RG:resourceGroup}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">'[?powerState==`VM deallocated`] | [*].{Name:name,RG:resourceGroup}'</span><span class="w"> </span>-o<span class="w"> </span>table
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Unattached disks</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[?diskState==`Unattached`] | [*].{Name:name,Size:diskSizeGb,RG:resourceGroup}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">'[?diskState==`Unattached`] | [*].{Name:name,Size:diskSizeGb,RG:resourceGroup}'</span><span class="w"> </span>-o<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Ordered → Received → Configured → In Service → Decommission Pending → Wiped → Disposed / Returned
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                                                                     ↓
@@ -8339,7 +8339,7 @@
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>Environment,Value<span class="o">=</span>Production<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>Owner,Value<span class="o">=</span>platform-team@example.com
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Azure — tag a resource group (applies to contained resources)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--tags<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>Production<span class="w"> </span><span class="nv">Owner</span><span class="o">=</span><span class="s2">&quot;platform-team@example.com&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--tags<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>Production<span class="w"> </span><span class="nv">Owner</span><span class="o">=</span><span class="s2">"platform-team@example.com"</span>
 </code></pre></div></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUkjJL8_j4krOzy3Iz0vNK4lPtFJQcobxFByVFKqLMxILUq0UQDoS89JzUmuRVCehqHYioDoZRbUzVtXITlHQtVNAsau0OLUY2XZUBclQBQCvuk97?" /></p>
 

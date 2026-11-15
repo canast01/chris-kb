@@ -7274,12 +7274,12 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Resolve-DnsName</span> <span class="n">corp</span><span class="p">.</span><span class="n">local</span>
 </code></pre></div>
 <p>Rename the network adapter to something descriptive if there are multiple NICs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Rename-NetAdapter</span> <span class="n">-Name</span> <span class="s2">&quot;Ethernet&quot;</span> <span class="n">-NewName</span> <span class="s2">&quot;LAN&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Rename-NetAdapter</span> <span class="n">-Name</span> <span class="s2">"Ethernet"</span> <span class="n">-NewName</span> <span class="s2">"LAN"</span>
 </code></pre></div>
 <hr />
 <h2 id="configure-ntp">Configure NTP<a class="headerlink" href="#configure-ntp" title="Permanent link">&para;</a></h2>
 <p>Standalone servers (before domain join) should sync directly with an NTP source. After domain join, the domain hierarchy handles NTP automatically.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;&lt;NTP-server&gt;&quot;</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span> <span class="p">/</span><span class="n">update</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">"&lt;NTP-server&gt;"</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span> <span class="p">/</span><span class="n">update</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Restart-Service</span> <span class="n">w32tm</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
 </code></pre></div>
@@ -7305,10 +7305,10 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>→ Specify intranet Microsoft update service location: http://&lt;wsus-server&gt;:8530
 </code></pre></div>
 <p>Or set directly in the registry:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">$wsus</span> <span class="p">=</span> <span class="s2">&quot;http://&lt;wsus-server&gt;:8530&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot;</span> <span class="p">`</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">$wsus</span> <span class="p">=</span> <span class="s2">"http://&lt;wsus-server&gt;:8530"</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"</span> <span class="p">`</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">-Name</span> <span class="n">WUServer</span> <span class="n">-Value</span> <span class="nv">$wsus</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot;</span> <span class="p">`</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"</span> <span class="p">`</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">-Name</span> <span class="n">WUStatusServer</span> <span class="n">-Value</span> <span class="nv">$wsus</span>
 </code></pre></div>
 <p>Check update status:</p>
@@ -7319,7 +7319,7 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 <p>Join the server to Active Directory and place it in the correct OU.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Add-Computer</span> <span class="p">`</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">-DomainName</span> <span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">-OUPath</span> <span class="s2">&quot;OU=Member Servers,OU=Servers,DC=corp,DC=local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">-OUPath</span> <span class="s2">"OU=Member Servers,OU=Servers,DC=corp,DC=local"</span> <span class="p">`</span>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">-Restart</span>
 </code></pre></div>
@@ -7337,7 +7337,7 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Allow RDP (adjust source IP range in production)</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">New-NetFirewallRule</span> <span class="p">`</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">-DisplayName</span> <span class="s2">&quot;Allow RDP&quot;</span> <span class="p">`</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">-DisplayName</span> <span class="s2">"Allow RDP"</span> <span class="p">`</span>
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="p">`</span>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="p">`</span>
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="n">-LocalPort</span> <span class="n">3389</span> <span class="p">`</span>
@@ -7345,7 +7345,7 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 <a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c"># Allow WinRM (HTTPS) from management subnet</span>
 <a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="nb">New-NetFirewallRule</span> <span class="p">`</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>    <span class="n">-DisplayName</span> <span class="s2">&quot;Allow WinRM HTTPS&quot;</span> <span class="p">`</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>    <span class="n">-DisplayName</span> <span class="s2">"Allow WinRM HTTPS"</span> <span class="p">`</span>
 <a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>    <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="p">`</span>
 <a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>    <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="p">`</span>
 <a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>    <span class="n">-LocalPort</span> <span class="n">5986</span> <span class="p">`</span>
@@ -7353,7 +7353,7 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 <a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    <span class="n">-Action</span> <span class="n">Allow</span>
 </code></pre></div>
 <p>Verify active rules:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Get-NetFirewallRule</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Enabled</span> <span class="o">-eq</span> <span class="s2">&quot;True&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Direction</span> <span class="o">-eq</span> <span class="s2">&quot;Inbound&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Get-NetFirewallRule</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Enabled</span> <span class="o">-eq</span> <span class="s2">"True"</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Direction</span> <span class="o">-eq</span> <span class="s2">"Inbound"</span> <span class="p">}</span> <span class="p">|</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">LocalPort</span><span class="p">,</span> <span class="n">Action</span>
 </code></pre></div>
 <hr />
@@ -7363,9 +7363,9 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Set-Service</span> <span class="n">WinRM</span> <span class="n">-StartupType</span> <span class="n">Automatic</span>
 </code></pre></div>
 <p>For HTTPS-only remoting (recommended for production), create a WinRM listener on port 5986 using a certificate from your internal CA:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-like</span> <span class="s2">&quot;*$env:COMPUTERNAME*&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-like</span> <span class="s2">"*$env:COMPUTERNAME*"</span> <span class="p">}</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">New-WSManInstance</span> <span class="n">-ResourceURI</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">Listener</span> <span class="p">`</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">-SelectorSet</span> <span class="p">@{</span><span class="n">Address</span><span class="p">=</span><span class="s2">&quot;*&quot;</span><span class="p">;</span> <span class="n">Transport</span><span class="p">=</span><span class="s2">&quot;HTTPS&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">-SelectorSet</span> <span class="p">@{</span><span class="n">Address</span><span class="p">=</span><span class="s2">"*"</span><span class="p">;</span> <span class="n">Transport</span><span class="p">=</span><span class="s2">"HTTPS"</span><span class="p">}</span> <span class="p">`</span>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">-ValueSet</span> <span class="p">@{</span><span class="n">Hostname</span><span class="p">=</span><span class="nv">$env:COMPUTERNAME</span><span class="p">;</span> <span class="n">CertificateThumbprint</span><span class="p">=</span><span class="nv">$cert</span><span class="p">.</span><span class="n">Thumbprint</span><span class="p">}</span>
 </code></pre></div>
 <p>Test remoting from an admin workstation:</p>
@@ -7387,14 +7387,14 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 <li>Import the GPO backup to the domain:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">Import-GPO</span> <span class="p">`</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="n">-BackupGpoName</span> <span class="s2">&quot;MSFT Windows Server 2022 - Member Server&quot;</span> <span class="p">`</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">-Path</span> <span class="s2">&quot;C:\SCT\GPOs&quot;</span> <span class="p">`</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">-TargetName</span> <span class="s2">&quot;Server Baseline - Member Servers&quot;</span> <span class="p">`</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="n">-BackupGpoName</span> <span class="s2">"MSFT Windows Server 2022 - Member Server"</span> <span class="p">`</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">-Path</span> <span class="s2">"C:\SCT\GPOs"</span> <span class="p">`</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">-TargetName</span> <span class="s2">"Server Baseline - Member Servers"</span> <span class="p">`</span>
 <a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">-CreateIfNeeded</span>
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
 <a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nb">New-GPLink</span> <span class="p">`</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="n">-Name</span> <span class="s2">&quot;Server Baseline - Member Servers&quot;</span> <span class="p">`</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="n">-Target</span> <span class="s2">&quot;OU=Member Servers,OU=Servers,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="n">-Name</span> <span class="s2">"Server Baseline - Member Servers"</span> <span class="p">`</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="n">-Target</span> <span class="s2">"OU=Member Servers,OU=Servers,DC=corp,DC=local"</span>
 </code></pre></div>
 <p>Force policy application and verify:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">gpupdate</span> <span class="p">/</span><span class="n">force</span>

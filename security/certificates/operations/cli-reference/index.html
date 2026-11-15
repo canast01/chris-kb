@@ -7575,7 +7575,7 @@ Windows certificate operations use `certutil` for verification, revocation, and 
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show SANs (Subject Alternative Names)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A1<span class="w"> </span><span class="s2">&quot;Subject Alternative&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A1<span class="w"> </span><span class="s2">"Subject Alternative"</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Compute SHA-1 thumbprint</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-fingerprint<span class="w"> </span>-sha1
@@ -7659,7 +7659,7 @@ Windows certificate operations use `certutil` for verification, revocation, and 
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>root.pem<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.pem<span class="w"> </span>cert.pem
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check days until expiry</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-enddate<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span><span class="p">|</span><span class="w">   </span>awk<span class="w"> </span>-F<span class="o">=</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;{}&quot;</span><span class="w"> </span>+%s<span class="w"> </span><span class="p">|</span><span class="w">   </span>awk<span class="w"> </span>-v<span class="w"> </span><span class="nv">now</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="s1">&#39;{print int(($1-now)/86400)&quot; days remaining&quot;}&#39;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-enddate<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span><span class="p">|</span><span class="w">   </span>awk<span class="w"> </span>-F<span class="o">=</span><span class="w"> </span><span class="s1">'{print $2}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">"{}"</span><span class="w"> </span>+%s<span class="w"> </span><span class="p">|</span><span class="w">   </span>awk<span class="w"> </span>-v<span class="w"> </span><span class="nv">now</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="s1">'{print int(($1-now)/86400)" days remaining"}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>d8e8fca2dc0f896fd7cb4cb0031ba249
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>d8e8fca2dc0f896fd7cb4cb0031ba249
@@ -7719,18 +7719,18 @@ Windows certificate operations use `certutil` for verification, revocation, and 
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>---
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Certificate chain
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a> 0 s:CN = api.example.com
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>   i:C = US, O = Let&#39;s Encrypt, CN = R3
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>   i:C = US, O = Let's Encrypt, CN = R3
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>-----BEGIN CERTIFICATE-----
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>MIIFWzCCBEOgAwIBAgISA7x8z/9k7z8z/9k7z8z/9k7z MA0GCSqGSIb3DQEBBQsF
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ADBLMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMTGV0J3MgRW5jcnlwdDEkMCIGA1UE
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>...
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>-----END CERTIFICATE-----
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>subject=CN = api.example.com
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>issuer=C = US, O = Let&#39;s Encrypt, CN = R3
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>issuer=C = US, O = Let's Encrypt, CN = R3
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>---
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Signature ok
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>subject=CN = api.example.com
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>issuer=C = US, O = Let&#39;s Encrypt, CN = R3
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>issuer=C = US, O = Let's Encrypt, CN = R3
 <a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Public-Key: (2048 bit, RSA)
 <a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>X509v3 Subject Alternative Name: 
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    DNS:api.example.com, DNS:*.api.example.com
@@ -7798,11 +7798,11 @@ Windows certificate operations use `certutil` for verification, revocation, and 
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Certificate is valid.
 <a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Revocation check: Good (OCSP responder: ocsp.example.com)
 <a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Certificate &quot;ca.crt&quot; added to store.
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Certificate "ca.crt" added to store.
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Certificate deleted.
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>My &quot;Personal&quot; store has 3 certificates:
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>My "Personal" store has 3 certificates:
 <a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  0. server.example.com
 <a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>     Serial: 0x4a2b8c9d1e5f7a3b
 <a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>     Thumbprint: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
@@ -7848,14 +7848,14 @@ Windows certificate operations use `certutil` for verification, revocation, and 
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="nv">$cutoff</span> <span class="p">}</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Find by thumbprint</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Thumbprint</span> <span class="o">-eq</span> <span class="s2">&quot;&lt;thumbprint&gt;&quot;</span> <span class="p">}</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Thumbprint</span> <span class="o">-eq</span> <span class="s2">"&lt;thumbprint&gt;"</span> <span class="p">}</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c"># Validate certificate chain</span>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Test-Certificate</span>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c"># Export certificate to PEM</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-like</span> <span class="s2">&quot;*&lt;cn&gt;*&quot;</span> <span class="p">}</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="no">[System.IO.File]</span><span class="p">::</span><span class="n">WriteAllBytes</span><span class="p">(</span><span class="s2">&quot;C:\cert.cer&quot;</span><span class="p">,</span> <span class="nv">$cert</span><span class="p">.</span><span class="n">Export</span><span class="p">(</span><span class="no">[System.Security.Cryptography.X509Certificates.X509ContentType]</span><span class="p">::</span><span class="n">Cert</span><span class="p">))</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-like</span> <span class="s2">"*&lt;cn&gt;*"</span> <span class="p">}</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="no">[System.IO.File]</span><span class="p">::</span><span class="n">WriteAllBytes</span><span class="p">(</span><span class="s2">"C:\cert.cer"</span><span class="p">,</span> <span class="nv">$cert</span><span class="p">.</span><span class="n">Export</span><span class="p">(</span><span class="no">[System.Security.Cryptography.X509Certificates.X509ContentType]</span><span class="p">::</span><span class="n">Cert</span><span class="p">))</span>
 </code></pre></div>
 <hr />
 <h2 id="key-csr-generation">Key &amp; CSR Generation<a class="headerlink" href="#key-csr-generation" title="Permanent link">&para;</a></h2>
@@ -7869,7 +7869,7 @@ Windows certificate operations use `certutil` for verification, revocation, and 
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>openssl<span class="w"> </span>ecparam<span class="w"> </span>-name<span class="w"> </span>prime256v1<span class="w"> </span>-genkey<span class="w"> </span>-noout<span class="w"> </span>-out<span class="w"> </span>ec-key.pem
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Create a CSR from an existing key</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>key.pem<span class="w"> </span>-out<span class="w"> </span>request.csr<span class="w">   </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=&lt;common_name&gt;/O=&lt;org&gt;/C=&lt;country&gt;&quot;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>key.pem<span class="w"> </span>-out<span class="w"> </span>request.csr<span class="w">   </span>-subj<span class="w"> </span><span class="s2">"/CN=&lt;common_name&gt;/O=&lt;org&gt;/C=&lt;country&gt;"</span>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Create a CSR with SANs (using a config file)</span>
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>key.pem<span class="w"> </span>-out<span class="w"> </span>request.csr<span class="w"> </span>-config<span class="w"> </span>&lt;<span class="o">(</span>cat<span class="w"> </span><span class="s">&lt;&lt;EOF</span>

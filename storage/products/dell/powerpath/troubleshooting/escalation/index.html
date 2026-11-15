@@ -9153,20 +9153,20 @@ How to escalate Dell EMC PowerPath multipath issues to Dell Technologies support
 </div>
 <h3 id="3-capture-kernel-and-system-log-messages">3. Capture kernel and system log messages<a class="headerlink" href="#3-capture-kernel-and-system-log-messages" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux — kernel ring buffer for PowerPath and SCSI errors</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|PowerPath\|scsi\|hba&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pp-dmesg-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"emcp\|PowerPath\|scsi\|hba"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pp-dmesg-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Linux — journal from the systemd perspective (last 2 hours)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>journalctl<span class="w"> </span>-k<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|powerpath&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/pp-dmesg-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>journalctl<span class="w"> </span>-k<span class="w"> </span>--since<span class="w"> </span><span class="s2">"2 hours ago"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"emcp\|powerpath"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/pp-dmesg-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Linux — system messages around the time of the issue</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|scsi\|hba\|powerpath&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-200<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/pp-dmesg-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"emcp\|scsi\|hba\|powerpath"</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-200<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/pp-dmesg-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Windows — PowerPath driver event log entries</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-Source</span> <span class="s2">&quot;*powerpath*&quot;</span> <span class="n">-Newest</span> <span class="n">100</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="n">pp-events</span><span class="p">.</span><span class="n">csv</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-Source</span> <span class="s2">"*powerpath*"</span> <span class="n">-Newest</span> <span class="n">100</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="n">pp-events</span><span class="p">.</span><span class="n">csv</span>
 </code></pre></div>
 <h3 id="4-capture-hba-driver-information">4. Capture HBA driver information<a class="headerlink" href="#4-capture-hba-driver-information" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Linux Fibre Channel HBA driver and firmware version</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;driver_version|firmware_version|port_name|port_state&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"driver_version|firmware_version|port_name|port_state"</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or for each HBA port</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/symbolic_name
@@ -9177,14 +9177,14 @@ How to escalate Dell EMC PowerPath multipath issues to Dell Technologies support
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>cat<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>driver_version = &quot;12.0.0.37&quot;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>firmware_version = &quot;8.10.04&quot;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>port_name = &quot;0x500143800000abcd&quot;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>port_state = &quot;Online&quot;
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>driver_version = &quot;12.0.0.37&quot;
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>firmware_version = &quot;8.10.04&quot;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>port_name = &quot;0x500143800000ef01&quot;
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>port_state = &quot;Online&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>driver_version = "12.0.0.37"
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>firmware_version = "8.10.04"
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>port_name = "0x500143800000abcd"
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>port_state = "Online"
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>driver_version = "12.0.0.37"
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>firmware_version = "8.10.04"
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>port_name = "0x500143800000ef01"
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>port_state = "Online"
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Emulex LPe16002B-M6 Fibre Channel Adapter
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Online
@@ -9231,7 +9231,7 @@ How to escalate Dell EMC PowerPath multipath issues to Dell Technologies support
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Changes in 24h before the issue:
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  - 08:00: QLogic HBA firmware upgraded from 9.03.xx to 9.08.xx
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  - 09:00: powermt display dev=all: 8 devices show 0 alive paths; I/O stopping on db-prod-01
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  - 09:05: dmesg: &quot;emcp: dev=sdb, path dead (HBA qla2xxx port XXXXXXXX)&quot;
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  - 09:05: dmesg: "emcp: dev=sdb, path dead (HBA qla2xxx port XXXXXXXX)"
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>E-Lab Navigator check: QLogic 9.08.xx firmware NOT in compatibility matrix for PowerPath 6.4.0.1 + RHEL 9.2
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Steps already taken:
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  - Did NOT restart the powermt daemon
@@ -9359,7 +9359,7 @@ How to escalate Dell EMC PowerPath multipath issues to Dell Technologies support
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># Recent kernel errors</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|powerpath&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"emcp\|powerpath"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>PowerPath version 6.1.0.0 (build 1234)
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Symmetrix ID: 000296900001

@@ -10363,15 +10363,15 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 <p><strong>Option B: VxRail Manager API (for automation or CLI preference)</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Upload via multipart POST to VxRail Manager</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/tmp/VxRail-7.0.401-bundle.bin&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/bundle&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'mystic:password'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">"file=@/tmp/VxRail-7.0.401-bundle.bin"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="s2">"https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/bundle"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>% Total    % Received % Xferd  Average Speed   Time    Current
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>                                 Dload  Upload   Total   Spent    Left Speed
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--:--
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>100  2847M  100  2847M    0     0  18.5M      0 --:--:-- 153s --:--:-- --:--:--
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>{&quot;bundle_id&quot;:&quot;b7f2c9e1-4a3d-11ed-9e2a-0050569b8d4e&quot;,&quot;status&quot;:&quot;UPLOADING&quot;,&quot;progress&quot;:100,&quot;message&quot;:&quot;Bundle uploaded successfully&quot;}
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>{"bundle_id":"b7f2c9e1-4a3d-11ed-9e2a-0050569b8d4e","status":"UPLOADING","progress":100,"message":"Bundle uploaded successfully"}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10400,37 +10400,37 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 </div>
 <p><strong>Verify the bundle is listed after upload:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/upgrade&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'mystic:password'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">"https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/upgrade"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &quot;id&quot;: &quot;550e8400-e29b-41d4-a716-446655440000&quot;,
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  &quot;state&quot;: &quot;READY&quot;,
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  &quot;currentVersion&quot;: &quot;7.0.510&quot;,
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  &quot;targetVersion&quot;: &quot;7.0.520&quot;,
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  &quot;estimatedDuration&quot;: 3600,
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  &quot;components&quot;: [
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  "id": "550e8400-e29b-41d4-a716-446655440000",
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  "state": "READY",
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  "currentVersion": "7.0.510",
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  "targetVersion": "7.0.520",
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  "estimatedDuration": 3600,
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  "components": [
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    {
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>      &quot;name&quot;: &quot;vxrail-manager&quot;,
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>      &quot;currentVersion&quot;: &quot;7.0.510&quot;,
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>      &quot;targetVersion&quot;: &quot;7.0.520&quot;,
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>      &quot;status&quot;: &quot;PENDING&quot;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>      "name": "vxrail-manager",
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>      "currentVersion": "7.0.510",
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>      "targetVersion": "7.0.520",
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>      "status": "PENDING"
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    },
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    {
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>      &quot;name&quot;: &quot;vcenter&quot;,
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>      &quot;currentVersion&quot;: &quot;7.0.200&quot;,
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>      &quot;targetVersion&quot;: &quot;7.0.210&quot;,
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>      &quot;status&quot;: &quot;PENDING&quot;
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>      "name": "vcenter",
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>      "currentVersion": "7.0.200",
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>      "targetVersion": "7.0.210",
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>      "status": "PENDING"
 <a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    },
 <a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    {
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>      &quot;name&quot;: &quot;esxi&quot;,
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>      &quot;currentVersion&quot;: &quot;7.0.1&quot;,
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>      &quot;targetVersion&quot;: &quot;7.0.2&quot;,
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>      &quot;status&quot;: &quot;PENDING&quot;
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>      "name": "esxi",
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>      "currentVersion": "7.0.1",
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>      "targetVersion": "7.0.2",
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>      "status": "PENDING"
 <a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>    }
 <a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>  ],
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>  &quot;lastUpgradeTime&quot;: &quot;2024-01-15T08:30:00Z&quot;,
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>  &quot;nextScheduledUpgrade&quot;: null
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>  "lastUpgradeTime": "2024-01-15T08:30:00Z",
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>  "nextScheduledUpgrade": null
 <a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -10472,47 +10472,47 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check pre-check results via API</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/precheck/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'mystic:password'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="s2">"https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/precheck/status"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  &quot;id&quot;: &quot;precheck-2024-01-15-08:32:14&quot;,
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  &quot;status&quot;: &quot;COMPLETED&quot;,
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  &quot;startTime&quot;: &quot;2024-01-15T08:32:14.000Z&quot;,
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  &quot;endTime&quot;: &quot;2024-01-15T08:45:22.000Z&quot;,
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  &quot;overallStatus&quot;: &quot;PASSED&quot;,
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  &quot;checkResults&quot;: [
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  "id": "precheck-2024-01-15-08:32:14",
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  "status": "COMPLETED",
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  "startTime": "2024-01-15T08:32:14.000Z",
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  "endTime": "2024-01-15T08:45:22.000Z",
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  "overallStatus": "PASSED",
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  "checkResults": [
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    {
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>      &quot;checkName&quot;: &quot;Disk Space Validation&quot;,
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>      &quot;status&quot;: &quot;PASSED&quot;,
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>      &quot;message&quot;: &quot;All nodes have sufficient disk space&quot;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>      "checkName": "Disk Space Validation",
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>      "status": "PASSED",
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>      "message": "All nodes have sufficient disk space"
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    },
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    {
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>      &quot;checkName&quot;: &quot;Network Connectivity&quot;,
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>      &quot;status&quot;: &quot;PASSED&quot;,
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>      &quot;message&quot;: &quot;All cluster nodes are reachable&quot;
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>      "checkName": "Network Connectivity",
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>      "status": "PASSED",
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>      "message": "All cluster nodes are reachable"
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    },
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    {
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>      &quot;checkName&quot;: &quot;vSAN Health&quot;,
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>      &quot;status&quot;: &quot;PASSED&quot;,
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>      &quot;message&quot;: &quot;vSAN cluster is healthy&quot;
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>      "checkName": "vSAN Health",
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>      "status": "PASSED",
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>      "message": "vSAN cluster is healthy"
 <a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    },
 <a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>    {
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>      &quot;checkName&quot;: &quot;License Compliance&quot;,
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>      &quot;status&quot;: &quot;WARNING&quot;,
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>      &quot;message&quot;: &quot;License expiration in 45 days&quot;
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>      "checkName": "License Compliance",
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>      "status": "WARNING",
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>      "message": "License expiration in 45 days"
 <a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>    }
 <a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>  ],
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>  &quot;nodeDetails&quot;: [
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>  "nodeDetails": [
 <a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>    {
-<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>      &quot;nodeId&quot;: &quot;node-1&quot;,
-<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>      &quot;hostname&quot;: &quot;esx-vxrail-01.lab.local&quot;,
-<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>      &quot;status&quot;: &quot;READY&quot;
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>      "nodeId": "node-1",
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>      "hostname": "esx-vxrail-01.lab.local",
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>      "status": "READY"
 <a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>    },
 <a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>    {
-<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>      &quot;nodeId&quot;: &quot;node-2&quot;,
-<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>      &quot;hostname&quot;: &quot;esx-vxrail-02.lab.local&quot;,
-<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>      &quot;status&quot;: &quot;READY&quot;
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>      "nodeId": "node-2",
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>      "hostname": "esx-vxrail-02.lab.local",
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>      "status": "READY"
 <a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>    }
 <a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>  ]
 <a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>}
@@ -10563,35 +10563,35 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 <p>Or poll via API:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Poll LCM upgrade job status (run repeatedly)</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/upgrade&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'mystic:password'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="s2">"https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/upgrade"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>{
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  &quot;id&quot;: &quot;upgrade-job-12847&quot;,
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  &quot;status&quot;: &quot;IN_PROGRESS&quot;,
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  &quot;progress&quot;: 65,
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  &quot;currentStep&quot;: &quot;Upgrading vSAN cluster&quot;,
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  &quot;startTime&quot;: &quot;2024-01-15T08:32:14Z&quot;,
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  &quot;estimatedTimeRemaining&quot;: 1847,
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  &quot;nodes&quot;: [
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  "id": "upgrade-job-12847",
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  "status": "IN_PROGRESS",
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  "progress": 65,
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  "currentStep": "Upgrading vSAN cluster",
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  "startTime": "2024-01-15T08:32:14Z",
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  "estimatedTimeRemaining": 1847,
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  "nodes": [
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    {
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>      &quot;hostname&quot;: &quot;vxrail-node-01.lab.local&quot;,
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>      &quot;status&quot;: &quot;COMPLETED&quot;,
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>      &quot;version&quot;: &quot;8.0.210&quot;
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>      "hostname": "vxrail-node-01.lab.local",
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>      "status": "COMPLETED",
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>      "version": "8.0.210"
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    },
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    {
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>      &quot;hostname&quot;: &quot;vxrail-node-02.lab.local&quot;,
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>      &quot;status&quot;: &quot;IN_PROGRESS&quot;,
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>      &quot;version&quot;: &quot;8.0.210&quot;
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>      "hostname": "vxrail-node-02.lab.local",
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>      "status": "IN_PROGRESS",
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>      "version": "8.0.210"
 <a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>    },
 <a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    {
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>      &quot;hostname&quot;: &quot;vxrail-node-03.lab.local&quot;,
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>      &quot;status&quot;: &quot;PENDING&quot;,
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>      &quot;version&quot;: &quot;7.0.510&quot;
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>      "hostname": "vxrail-node-03.lab.local",
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>      "status": "PENDING",
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>      "version": "7.0.510"
 <a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>    }
 <a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>  ],
-<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>  &quot;warnings&quot;: [],
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>  &quot;errors&quot;: []
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>  "warnings": [],
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>  "errors": []
 <a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -10656,29 +10656,29 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 <p>Run these checks as soon as the LCM job reports COMPLETED:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Verify all nodes are at the expected ESXi version and build</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Version&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Version</span><span class="p">}},</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Build&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Build</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">"Version"</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Version</span><span class="p">}},</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">"Build"</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Build</span><span class="p">}}</span> <span class="p">|</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c"># Verify vSAN health is green</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="s2">"VxRail-Cluster"</span> <span class="p">|</span>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  <span class="nb">Select-Object</span> <span class="n">OverallHealth</span><span class="p">,</span> <span class="n">OverallHealthDescription</span>
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c"># Check for any policy compliance issues post-upgrade</span>
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span>
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">StoragePolicy</span><span class="p">,</span> <span class="n">ComplianceStatus</span> <span class="p">|</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;compliant&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">"compliant"</span><span class="p">}</span> <span class="p">|</span>
 <a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify VxRail Manager version via API</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxm-ip&gt;/rest/vxm/v1/system&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'mystic:password'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="s2">"https://&lt;vxm-ip&gt;/rest/vxm/v1/system"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s2">import sys, json</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s2">print(&#39;VxRail Version:&#39;, d.get(&#39;version&#39;,&#39;?&#39;))</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s2">print(&#39;Build Number:  &#39;, d.get(&#39;build_number&#39;,&#39;?&#39;))</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s2">&quot;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s2">print('VxRail Version:', d.get('version','?'))</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s2">print('Build Number:  ', d.get('build_number','?'))</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s2">"</span>
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Check iDRAC firmware version on each node</span>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>idrac

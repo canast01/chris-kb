@@ -6940,7 +6940,7 @@ DNS Resolution Failures reference covering Overview, Failure Classification, Dia
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Resolve-DnsName</span> <span class="n">-Name</span> <span class="n">app01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Server</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Type</span> <span class="n">A</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Check conditional forwarders</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">Get-DnsServerZone</span> <span class="n">-ComputerName</span> <span class="n">dc01</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ZoneType</span> <span class="o">-eq</span> <span class="s1">&#39;Forwarder&#39;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">Get-DnsServerZone</span> <span class="n">-ComputerName</span> <span class="n">dc01</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ZoneType</span> <span class="o">-eq</span> <span class="s1">'Forwarder'</span><span class="p">}</span> <span class="p">|</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="nb">Select-Object</span> <span class="n">ZoneName</span><span class="p">,</span> <span class="n">MasterServers</span>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c"># Test DNS resolution and measure response time</span>
@@ -6973,7 +6973,7 @@ DNS Resolution Failures reference covering Overview, Failure Classification, Dia
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Check named statistics</span>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>rndc<span class="w"> </span>stats
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>cat<span class="w"> </span>/var/named/data/named_stats.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;queries|errors&quot;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>cat<span class="w"> </span>/var/named/data/named_stats.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"queries|errors"</span>
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
 <a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Live query logging (enable temporarily)</span>
 <a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>rndc<span class="w"> </span>querylog<span class="w"> </span>on
@@ -7200,7 +7200,7 @@ DNS Resolution Failures reference covering Overview, Failure Classification, Dia
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># If answers differ — this is intentional split-brain</span>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Document expected internal vs external IPs</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># If they should match and don&#39;t — investigate zone records</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># If they should match and don't — investigate zone records</span>
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Check which view is being served (BIND views)</span>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>dig<span class="w"> </span>@nameserver<span class="w"> </span>app.example.com<span class="w"> </span>+short<span class="w">  </span><span class="c1"># from internal IP</span>
@@ -7256,7 +7256,7 @@ DNS Resolution Failures reference covering Overview, Failure Classification, Dia
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Verify PTR exists for all servers in a subnet</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">for</span><span class="w"> </span>ip<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">10</span>.10.1.<span class="o">{</span><span class="m">50</span>..60<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nv">result</span><span class="o">=</span><span class="k">$(</span>dig<span class="w"> </span>-x<span class="w"> </span><span class="nv">$ip</span><span class="w"> </span>+short<span class="k">)</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ip</span><span class="s2"> -&gt; </span><span class="si">${</span><span class="nv">result</span><span class="k">:-</span><span class="nv">MISSING</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$ip</span><span class="s2"> -&gt; </span><span class="si">${</span><span class="nv">result</span><span class="k">:-</span><span class="nv">MISSING</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">done</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Example output:</span>
@@ -7265,8 +7265,8 @@ DNS Resolution Failures reference covering Overview, Failure Classification, Dia
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># 10.10.1.52 -&gt; db01.corp.example.com.</span>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Add missing PTR (Windows DNS)</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Add-DnsServerResourceRecordPtr<span class="w"> </span>-ZoneName<span class="w"> </span><span class="s2">&quot;1.10.10.in-addr.arpa&quot;</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span>-Name<span class="w"> </span><span class="s2">&quot;51&quot;</span><span class="w"> </span>-PtrDomainName<span class="w"> </span><span class="s2">&quot;app02.corp.example.com&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Add-DnsServerResourceRecordPtr<span class="w"> </span>-ZoneName<span class="w"> </span><span class="s2">"1.10.10.in-addr.arpa"</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span>-Name<span class="w"> </span><span class="s2">"51"</span><span class="w"> </span>-PtrDomainName<span class="w"> </span><span class="s2">"app02.corp.example.com"</span><span class="w"> </span><span class="sb">`</span>
 <a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span>-ComputerName<span class="w"> </span>dc01.corp.example.com
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>10.10.1.50 -&gt; app01.corp.example.com.
@@ -7366,13 +7366,13 @@ DNS Resolution Failures reference covering Overview, Failure Classification, Dia
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>dig<span class="w"> </span>+dnssec<span class="w"> </span>corp.example.com
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Look for AD (Authenticated Data) flag in response</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># ;; flags: qr rd ra ad;   ← &#39;ad&#39; flag = DNSSEC validated</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># ;; flags: qr rd ra ad;   ← 'ad' flag = DNSSEC validated</span>
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Check DNSSEC on Windows DNS</span>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Get-DnsServerDnsSecZone<span class="w"> </span>-ComputerName<span class="w"> </span>dc01
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Verify response source matches expected nameserver</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>dig<span class="w"> </span>corp.example.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;SERVER:&quot;</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>dig<span class="w"> </span>corp.example.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"SERVER:"</span>
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1"># ;; SERVER: 10.10.1.10#53(10.10.1.10)</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; +dnssec corp.example.com

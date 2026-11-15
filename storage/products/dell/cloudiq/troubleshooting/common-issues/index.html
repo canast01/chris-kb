@@ -8944,9 +8944,9 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Watch logs live for telemetry errors</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>dsagw<span class="w"> </span>-f
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Look for: &quot;connection refused&quot;, &quot;TLS handshake failed&quot;, &quot;authentication error&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Look for: "connection refused", "TLS handshake failed", "authentication error"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@scg-mgmt-ip&#39;s password: 
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>admin@scg-mgmt-ip's password: 
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Last login: Wed Jan 15 14:32:18 2025 from 10.42.8.105
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>admin@SCG-PROD-01:~$ systemctl status dsagw
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>● dsagw.service - Dell SCG Telemetry Gateway
@@ -8992,16 +8992,16 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Reproduce the failure with verbose output</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;your-client-id&gt;&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;&lt;your-client-secret&gt;&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">CLIENT_ID</span><span class="o">=</span><span class="s2">"&lt;your-client-id&gt;"</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">CLIENT_SECRET</span><span class="o">=</span><span class="s2">"&lt;your-client-secret&gt;"</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-v<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://cloudiq.apis.dell.com/auth/oauth/v2/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=</span><span class="si">${</span><span class="nv">CLIENT_ID</span><span class="si">}</span><span class="s2">&amp;client_secret=</span><span class="si">${</span><span class="nv">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-v<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"https://cloudiq.apis.dell.com/auth/oauth/v2/token"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=client_credentials&amp;client_id=</span><span class="si">${</span><span class="nv">CLIENT_ID</span><span class="si">}</span><span class="s2">&amp;client_secret=</span><span class="si">${</span><span class="nv">CLIENT_SECRET</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Common error responses:</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># HTTP 401: invalid_client — wrong client_id or client_secret</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># HTTP 400: invalid_grant — grant_type value incorrect (must be &#39;client_credentials&#39;)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># HTTP 400: invalid_grant — grant_type value incorrect (must be 'client_credentials')</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># HTTP 403: forbidden — credential exists but has been revoked or expired</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>*   Trying 104.18.45.92:443...
@@ -9019,10 +9019,10 @@
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>&lt; Content-Type: application/json
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>&lt; Content-Length: 287
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>{
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  &quot;access_token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZjdhYzQyYS1iZDk0LTQxZTAtOWY3ZC1jZDM4OWZhYjQ1ZjIiLCJleHAiOjE3MDk4MzIwMDB9&quot;,
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  &quot;token_type&quot;: &quot;Bearer&quot;,
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;expires_in&quot;: 3600,
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  &quot;scope&quot;: &quot;cloudiq:read cloudiq:write&quot;
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZjdhYzQyYS1iZDk0LTQxZTAtOWY3ZC1jZDM4OWZhYjQ1ZjIiLCJleHAiOjE3MDk4MzIwMDB9",
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  "token_type": "Bearer",
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  "expires_in": 3600,
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  "scope": "cloudiq:read cloudiq:write"
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9051,9 +9051,9 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Test the webhook endpoint externally (from a machine that has internet access)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;&lt;your-webhook-url&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;test&quot;: true, &quot;source&quot;: &quot;cloudiq-test&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"&lt;your-webhook-url&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"test": true, "source": "cloudiq-test"}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-v
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expected: HTTP 200 (or 201) response from the endpoint</span>
@@ -9068,7 +9068,7 @@
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Then check the endpoint for the incoming request</span>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
 <a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Step 4: For ServiceNow webhook failures — check the ServiceNow scripted REST API logs:</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># ServiceNow → System Log → Application Logs → filter by &quot;cloudiq&quot; or the REST API script name</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># ServiceNow → System Log → Application Logs → filter by "cloudiq" or the REST API script name</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>*   Trying 203.0.113.45:443...
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>* Connected to webhook.example.com (203.0.113.45) port 443 (#0)
@@ -9084,7 +9084,7 @@
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>&lt; Date: Wed, 15 Jan 2025 14:32:18 GMT
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>&lt;
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>* Connection #0 to host webhook.example.com left intact
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>{&quot;status&quot;:&quot;received&quot;,&quot;id&quot;:&quot;evt-7f2a9c1d&quot;}
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>{"status":"received","id":"evt-7f2a9c1d"}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9112,12 +9112,12 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Query current capacity state to validate against CloudIQ forecast</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-token&gt;&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://cloudiq.apis.dell.com/rest/v1&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">SYSTEM_ID</span><span class="o">=</span><span class="s2">&quot;&lt;your-system-id&gt;&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">"&lt;your-token&gt;"</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">"https://cloudiq.apis.dell.com/rest/v1"</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">SYSTEM_ID</span><span class="o">=</span><span class="s2">"&lt;your-system-id&gt;"</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Key fields to check:</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># total_subscribed_capacity_gb — logical allocated to hosts (thin provisioning)</span>
@@ -9128,18 +9128,18 @@
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># forecast_confidence          — LOW/MEDIUM/HIGH; LOW means insufficient data</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;system_id&quot;: &quot;APM00123456789&quot;,
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;system_name&quot;: &quot;prod-vmax-01&quot;,
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  &quot;total_physical_capacity_gb&quot;: 524288,
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  &quot;total_subscribed_capacity_gb&quot;: 786432,
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  &quot;total_used_capacity_gb&quot;: 287654,
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  &quot;percent_used&quot;: 54.8,
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  &quot;days_to_full&quot;: 127,
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  &quot;forecast_confidence&quot;: &quot;HIGH&quot;,
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  &quot;last_updated&quot;: &quot;2024-01-15T14:32:18Z&quot;,
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  &quot;growth_rate_gb_per_day&quot;: 1842.5,
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  &quot;snapshot_capacity_gb&quot;: 45120,
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  &quot;thin_provisioning_ratio&quot;: 1.5
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  "system_id": "APM00123456789",
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  "system_name": "prod-vmax-01",
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  "total_physical_capacity_gb": 524288,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  "total_subscribed_capacity_gb": 786432,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  "total_used_capacity_gb": 287654,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  "percent_used": 54.8,
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  "days_to_full": 127,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  "forecast_confidence": "HIGH",
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  "last_updated": "2024-01-15T14:32:18Z",
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  "growth_rate_gb_per_day": 1842.5,
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  "snapshot_capacity_gb": 45120,
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  "thin_provisioning_ratio": 1.5
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -9170,22 +9170,22 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Full SCG connectivity diagnostic sequence</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Run on the SCG appliance (SSH as admin)</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== dsagw service status ===&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== dsagw service status ==="</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dsagw
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== DNS resolution ===&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== DNS resolution ==="</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>nslookup<span class="w"> </span>cloudiq.dell.com
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>nslookup<span class="w"> </span>esrs3.emc.com
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Network connectivity ===&quot;</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>curl<span class="w"> </span>-k<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://cloudiq.dell.com<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;cloudiq.dell.com: REACHABLE&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;cloudiq.dell.com: UNREACHABLE&quot;</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://esrs3.emc.com<span class="w">   </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;esrs3.emc.com: REACHABLE&quot;</span><span class="w">   </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;esrs3.emc.com: UNREACHABLE&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Network connectivity ==="</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>curl<span class="w"> </span>-k<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://cloudiq.dell.com<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"cloudiq.dell.com: REACHABLE"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"cloudiq.dell.com: UNREACHABLE"</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://esrs3.emc.com<span class="w">   </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"esrs3.emc.com: REACHABLE"</span><span class="w">   </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"esrs3.emc.com: UNREACHABLE"</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Registered devices ===&quot;</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>dsagw<span class="w"> </span>list-devices<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;dsagw CLI not available — check SCG web UI&quot;</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Registered devices ==="</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>dsagw<span class="w"> </span>list-devices<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"dsagw CLI not available — check SCG web UI"</span>
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Recent dsagw log errors ===&quot;</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>dsagw<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fail|refused|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Recent dsagw log errors ==="</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>dsagw<span class="w"> </span>--since<span class="w"> </span><span class="s2">"1 hour ago"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"error|fail|refused|timeout"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>=== dsagw service status ===
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>● dsagw.service - Dell Storage Gateway Service
@@ -9217,7 +9217,7 @@
 <a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>cloudiq.dell.com: REACHABLE
 <a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>esrs3.emc.com: REACHABLE
 <a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>
-<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>=== Registered devices ===&quot;
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>=== Registered devices ==="
 <a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>DEVICE_ID                             SERIAL          MODEL           STATUS
 <a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>a7f2c891-4d6e-11ee-b56e-0242ac110002  SYS-001234-5678 PowerStore 7000 CONNECTED
 <a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>b8e3d902-5e7f-22ff-c67f-1353bd221113  SYS-009876-5432 PowerVault ME4024 CONNECTED
@@ -9253,14 +9253,14 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Acknowledge an anomaly alert (dismiss as known/planned)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">ALERT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;alert-id&gt;&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts/</span><span class="si">${</span><span class="nv">ALERT_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s1">    &quot;state&quot;: &quot;ACKNOWLEDGED&quot;,</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s1">    &quot;acknowledge_note&quot;: &quot;Known: scheduled batch workload spike. CHG0012345&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">ALERT_ID</span><span class="o">=</span><span class="s2">"&lt;alert-id&gt;"</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts/</span><span class="si">${</span><span class="nv">ALERT_ID</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s1">    "state": "ACKNOWLEDGED",</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s1">    "acknowledge_note": "Known: scheduled batch workload spike. CHG0012345"</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s1">  }'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>

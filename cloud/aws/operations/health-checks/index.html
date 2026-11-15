@@ -8260,41 +8260,41 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Account-level health events (open incidents affecting your services)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>health<span class="w"> </span>describe-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--filter<span class="w"> </span><span class="nv">eventStatusCodes</span><span class="o">=</span>open<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;events[*].{Service:service,Type:eventTypeCode,Region:region,Status:statusCode,Start:startTime}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'events[*].{Service:service,Type:eventTypeCode,Region:region,Status:statusCode,Start:startTime}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 2. EC2 instances with failing system or instance status checks</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instance-status<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceStatuses[?InstanceStatus.Status!=`ok` || SystemStatus.Status!=`ok`].{ID:InstanceId,System:SystemStatus.Status,Instance:InstanceStatus.Status,AZ:AvailabilityZone}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'InstanceStatuses[?InstanceStatus.Status!=`ok` || SystemStatus.Status!=`ok`].{ID:InstanceId,System:SystemStatus.Status,Instance:InstanceStatus.Status,AZ:AvailabilityZone}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># 3. Unhealthy ELB targets</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-target-health<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--target-group-arn<span class="w"> </span>&lt;arn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;TargetHealthDescriptions[?TargetHealth.State!=`healthy`].{ID:Target.Id,Port:Target.Port,State:TargetHealth.State,Reason:TargetHealth.Reason}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'TargetHealthDescriptions[?TargetHealth.State!=`healthy`].{ID:Target.Id,Port:Target.Port,State:TargetHealth.State,Reason:TargetHealth.Reason}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># 4. RDS instance status</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[].{ID:DBInstanceIdentifier,Class:DBInstanceClass,Engine:Engine,Status:DBInstanceStatus,MultiAZ:MultiAZ}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'DBInstances[].{ID:DBInstanceIdentifier,Class:DBInstanceClass,Engine:Engine,Status:DBInstanceStatus,MultiAZ:MultiAZ}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># 5. S3 buckets without server-side encryption configured</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-buckets<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Buckets[].Name&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;aws s3api get-bucket-encryption --bucket {} 2&gt;&amp;1 | grep -q &quot;ServerSideEncryptionConfigurationNotFoundError&quot; &amp;&amp; echo &quot;NO ENCRYPTION: {}&quot;&#39;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-buckets<span class="w"> </span>--query<span class="w"> </span><span class="s1">'Buckets[].Name'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'aws s3api get-bucket-encryption --bucket {} 2&gt;&amp;1 | grep -q "ServerSideEncryptionConfigurationNotFoundError" &amp;&amp; echo "NO ENCRYPTION: {}"'</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># 6. IAM access keys older than 90 days</span>
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>aws<span class="w"> </span>iam<span class="w"> </span>generate-credential-report
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>sleep<span class="w"> </span><span class="m">5</span>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-credential-report<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Content&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Content'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">  </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">  </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $10!=&quot;N/A&quot; &amp;&amp; $10&gt;90 {print &quot;Key age &gt; 90d:&quot;, $1, &quot;last_rotated:&quot;, $10}&#39;</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">  </span>awk<span class="w"> </span>-F<span class="s1">','</span><span class="w"> </span><span class="s1">'NR&gt;1 &amp;&amp; $10!="N/A" &amp;&amp; $10&gt;90 {print "Key age &gt; 90d:", $1, "last_rotated:", $10}'</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="c1"># 7. CloudWatch alarms currently in ALARM state</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">  </span>--state-value<span class="w"> </span>ALARM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;MetricAlarms[].{Name:AlarmName,State:StateValue,Namespace:Namespace,Metric:MetricName,Reason:StateReason}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'MetricAlarms[].{Name:AlarmName,State:StateValue,Namespace:Namespace,Metric:MetricName,Reason:StateReason}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="c1"># 8. Trusted Advisor check summaries (Business/Enterprise support required)</span>
@@ -8305,7 +8305,7 @@
 <a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">    </span>R365s2Qddf<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="w">    </span>ePs02jT06w<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">    </span>Ti39halfu8<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;summaries[].{Name:categorySpecificSummary,Status:status}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'summaries[].{Name:categorySpecificSummary,Status:status}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># 1. Account-level health events
@@ -8414,41 +8414,41 @@
 <p>Verify load balancers, VPC connectivity, and DNS resolution.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all load balancers and their state</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-load-balancers<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;LoadBalancers[*].{Name:LoadBalancerName,Type:Type,State:State.Code,DNS:DNSName}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'LoadBalancers[*].{Name:LoadBalancerName,Type:Type,State:State.Code,DNS:DNSName}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># All target groups and health summary</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-target-groups<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;TargetGroups[*].{Name:TargetGroupName,Protocol:Protocol,Port:Port,LBType:TargetType}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'TargetGroups[*].{Name:TargetGroupName,Protocol:Protocol,Port:Port,LBType:TargetType}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check all target health for a given load balancer</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nv">LB_ARN</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-load-balancers<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--names<span class="w"> </span>&lt;lb-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;LoadBalancers[0].LoadBalancerArn&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--names<span class="w"> </span>&lt;lb-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">'LoadBalancers[0].LoadBalancerArn'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">for</span><span class="w"> </span>TG_ARN<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-target-groups<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--load-balancer-arn<span class="w"> </span><span class="nv">$LB_ARN</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;TargetGroups[*].TargetGroupArn&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Target Group: </span><span class="nv">$TG_ARN</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'TargetGroups[*].TargetGroupArn'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Target Group: </span><span class="nv">$TG_ARN</span><span class="s2"> ==="</span>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-target-health<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span>--target-group-arn<span class="w"> </span><span class="nv">$TG_ARN</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;TargetHealthDescriptions[*].{Target:Target.Id,State:TargetHealth.State,Reason:TargetHealth.Reason}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'TargetHealthDescriptions[*].{Target:Target.Id,State:TargetHealth.State,Reason:TargetHealth.Reason}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span>--output<span class="w"> </span>table
 <a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="k">done</span>
 <a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># VPC peering connection states</span>
 <a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpc-peering-connections<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;VpcPeeringConnections[*].{ID:VpcPeeringConnectionId,Status:Status.Code,Requester:RequesterVpcInfo.VpcId,Accepter:AccepterVpcInfo.VpcId}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'VpcPeeringConnections[*].{ID:VpcPeeringConnectionId,Status:Status.Code,Requester:RequesterVpcInfo.VpcId,Accepter:AccepterVpcInfo.VpcId}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># NAT Gateway status</span>
 <a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-nat-gateways<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;NatGateways[*].{ID:NatGatewayId,State:State,VPC:VpcId,SubnetId:SubnetId}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'NatGateways[*].{ID:NatGatewayId,State:State,VPC:VpcId,SubnetId:SubnetId}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>
 <a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="c1"># VPN connection status</span>
 <a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpn-connections<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;VpnConnections[*].{ID:VpnConnectionId,State:State,Type:Type,Tunnels:VgwTelemetry[*].Status}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'VpnConnections[*].{ID:VpnConnectionId,State:State,Type:Type,Tunnels:VgwTelemetry[*].Status}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h2 id="expected-output-loadbalancers-dns-name-state-type-app-lb-1234567890us-east-1elbamazonawscom-app-lb-prod-active-application-nlb-prod-9876543210us-east-1elbamazonawscom-nlb-prod-active-network-clb-legacy-1122334455us-east-1elbamazonawscom-clb-legacy-active-classic-targetgroups-lbtype-name-port-protocol-ip-tg-api-prod-8080-http-instance-tg-web-prod-443-https-ip-tg-backend-staging-5432-tcp-target-group-arnawselasticloadbalancingus-east-1123456789012targetgrouptg-api-proda1b2c3d4e5f6g7h8-targethealth-reason-state-target-na-healthy-100142-na-healthy-100288-connection-limit-exceeded-unhealthy-100315-vpcpeeringconnections-accepter-id-requester-status-vpc-0987654321abcdef-pcx-1a2b3c4d5e6f7g8h-vpc-abcdef123456-active-vpc-fedcba987654321-pcx-9z8y7x6w5v4u3t2s-vpc-123456abcdef-pending-acceptance-natgateways-id-state-subnetid-vpc-nat-0a1b2c3d4e5f6g7-available-subnet-1a2b3c4d5e6f7-vpc-abcdef123456-nat-9z8y7x6w5v4u3t2-available-subnet-8f7e6d5c4b3a2-vpc-fedcba987654-vpnconnections-id-state-type"><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>----------------------------------------------------------------------------------
@@ -8507,39 +8507,39 @@
 </code></pre></div><a class="headerlink" href="#expected-output-loadbalancers-dns-name-state-type-app-lb-1234567890us-east-1elbamazonawscom-app-lb-prod-active-application-nlb-prod-9876543210us-east-1elbamazonawscom-nlb-prod-active-network-clb-legacy-1122334455us-east-1elbamazonawscom-clb-legacy-active-classic-targetgroups-lbtype-name-port-protocol-ip-tg-api-prod-8080-http-instance-tg-web-prod-443-https-ip-tg-backend-staging-5432-tcp-target-group-arnawselasticloadbalancingus-east-1123456789012targetgrouptg-api-proda1b2c3d4e5f6g7h8-targethealth-reason-state-target-na-healthy-100142-na-healthy-100288-connection-limit-exceeded-unhealthy-100315-vpcpeeringconnections-accepter-id-requester-status-vpc-0987654321abcdef-pcx-1a2b3c4d5e6f7g8h-vpc-abcdef123456-active-vpc-fedcba987654321-pcx-9z8y7x6w5v4u3t2s-vpc-123456abcdef-pending-acceptance-natgateways-id-state-subnetid-vpc-nat-0a1b2c3d4e5f6g7-available-subnet-1a2b3c4d5e6f7-vpc-abcdef123456-nat-9z8y7x6w5v4u3t2-available-subnet-8f7e6d5c4b3a2-vpc-fedcba987654-vpnconnections-id-state-type" title="Permanent link">&para;</a></h2>
 <h2 id="storage-health">Storage Health<a class="headerlink" href="#storage-health" title="Permanent link">&para;</a></h2>
 <p>Verify S3, EBS, EFS, and backup integrity.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># EBS volumes not in &quot;in-use&quot; or &quot;available&quot; state</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># EBS volumes not in "in-use" or "available" state</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-volumes<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>status,Values<span class="o">=</span>error,deleting,deleted<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Volumes[*].{ID:VolumeId,State:State,Size:Size,Type:VolumeType,AZ:AvailabilityZone}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Volumes[*].{ID:VolumeId,State:State,Size:Size,Type:VolumeType,AZ:AvailabilityZone}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># EBS volumes with I/O enabled (performance check)</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-volumes-modifications<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>modification-state,Values<span class="o">=</span>modifying,failed<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;VolumesModifications[*].{ID:VolumeId,State:ModificationState,Progress:Progress}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'VolumesModifications[*].{ID:VolumeId,State:ModificationState,Progress:Progress}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># S3 bucket versioning status</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="k">for</span><span class="w"> </span>BUCKET<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>s3api<span class="w"> </span>list-buckets<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Buckets[].Name&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="nv">STATUS</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-versioning<span class="w"> </span>--bucket<span class="w"> </span><span class="nv">$BUCKET</span><span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Status&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Unknown&quot;</span><span class="k">)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BUCKET</span><span class="s2">: </span><span class="nv">$STATUS</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="k">for</span><span class="w"> </span>BUCKET<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>s3api<span class="w"> </span>list-buckets<span class="w"> </span>--query<span class="w"> </span><span class="s1">'Buckets[].Name'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="nv">STATUS</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-versioning<span class="w"> </span>--bucket<span class="w"> </span><span class="nv">$BUCKET</span><span class="w"> </span>--query<span class="w"> </span><span class="s1">'Status'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Unknown"</span><span class="k">)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$BUCKET</span><span class="s2">: </span><span class="nv">$STATUS</span><span class="s2">"</span>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="k">done</span>
 <a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># EFS file system health</span>
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>aws<span class="w"> </span>efs<span class="w"> </span>describe-file-systems<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;FileSystems[*].{ID:FileSystemId,State:LifeCycleState,Size:SizeInBytes.Value,Throughput:ThroughputMode}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'FileSystems[*].{ID:FileSystemId,State:LifeCycleState,Size:SizeInBytes.Value,Throughput:ThroughputMode}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
 <a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># AWS Backup — recent failed jobs</span>
 <a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>aws<span class="w"> </span>backup<span class="w"> </span>list-backup-jobs<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span>--by-state<span class="w"> </span>FAILED<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>--by-created-after<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;7 days ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;BackupJobs[*].{ID:BackupJobId,Resource:ResourceArn,State:State,Start:CreationDate,Error:StatusMessage}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>--by-created-after<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">'7 days ago'</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'BackupJobs[*].{ID:BackupJobId,Resource:ResourceArn,State:State,Start:CreationDate,Error:StatusMessage}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
 <a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="c1"># RDS storage near capacity</span>
 <a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].{ID:DBInstanceIdentifier,Engine:Engine,StorageGB:AllocatedStorage,FreeStorageSpace:Endpoint.Address,MultiAZ:MultiAZ}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'DBInstances[*].{ID:DBInstanceIdentifier,Engine:Engine,StorageGB:AllocatedStorage,FreeStorageSpace:Endpoint.Address,MultiAZ:MultiAZ}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>---------------------------------------------------------------------------
@@ -8624,46 +8624,46 @@
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>generate-credential-report
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>sleep<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-credential-report<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Content&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>/tmp/iam-report.csv
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Content'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>/tmp/iam-report.csv
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Users with MFA not enabled</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $8==&quot;false&quot; {print &quot;NO MFA:&quot;, $1}&#39;</span><span class="w"> </span>/tmp/iam-report.csv
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>awk<span class="w"> </span>-F<span class="s1">','</span><span class="w"> </span><span class="s1">'NR&gt;1 &amp;&amp; $8=="false" {print "NO MFA:", $1}'</span><span class="w"> </span>/tmp/iam-report.csv
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Access keys unused for &gt; 90 days</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $10!=&quot;N/A&quot; {</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s1">  cmd=&quot;date -d &quot; $10 &quot; +%s&quot;; cmd | getline key_ts; close(cmd)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>awk<span class="w"> </span>-F<span class="s1">','</span><span class="w"> </span><span class="s1">'NR&gt;1 &amp;&amp; $10!="N/A" {</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s1">  cmd="date -d " $10 " +%s"; cmd | getline key_ts; close(cmd)</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s1">  now=systime(); age=int((now - key_ts) / 86400)</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s1">  if (age &gt; 90) print &quot;Old key (&quot; age &quot;d):&quot;, $1, $10</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s1">}&#39;</span><span class="w"> </span>/tmp/iam-report.csv
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s1">  if (age &gt; 90) print "Old key (" age "d):", $1, $10</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s1">}'</span><span class="w"> </span>/tmp/iam-report.csv
 <a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
 <a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Security Hub: critical and high findings</span>
 <a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>aws<span class="w"> </span>securityhub<span class="w"> </span>get-findings<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="s1">    &quot;SeverityLabel&quot;:[</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="s1">      {&quot;Value&quot;:&quot;CRITICAL&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;},</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="s1">      {&quot;Value&quot;:&quot;HIGH&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;}</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="s1">    "SeverityLabel":[</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="s1">      {"Value":"CRITICAL","Comparison":"EQUALS"},</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="s1">      {"Value":"HIGH","Comparison":"EQUALS"}</span>
 <a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="s1">    ],</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="s1">    &quot;WorkflowStatus&quot;:[{&quot;Value&quot;:&quot;NEW&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;}]</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Findings[*].{Title:Title,Severity:Severity.Label,Product:ProductName,Resource:Resources[0].Id}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="s1">    "WorkflowStatus":[{"Value":"NEW","Comparison":"EQUALS"}]</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Findings[*].{Title:Title,Severity:Severity.Label,Product:ProductName,Resource:Resources[0].Id}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
 <a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="c1"># GuardDuty findings</span>
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>aws<span class="w"> </span>guardduty<span class="w"> </span>list-detectors<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;DetectorIds&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>aws<span class="w"> </span>guardduty<span class="w"> </span>list-detectors<span class="w"> </span>--query<span class="w"> </span><span class="s1">'DetectorIds'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>aws<span class="w"> </span>guardduty<span class="w"> </span>list-findings<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">    </span>--detector-id<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span>--finding-criteria<span class="w"> </span><span class="s1">&#39;{&quot;Criterion&quot;:{&quot;severity&quot;:{&quot;Gte&quot;:7}}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;FindingIds&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span>--finding-criteria<span class="w"> </span><span class="s1">'{"Criterion":{"severity":{"Gte":7}}}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'FindingIds'</span><span class="w"> </span>--output<span class="w"> </span>text
 <a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>
 <a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="c1"># Recent root account activity (CloudTrail)</span>
 <a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="w">  </span>--lookup-attributes<span class="w"> </span><span class="nv">AttributeKey</span><span class="o">=</span>Username,AttributeValue<span class="o">=</span>root<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;7 days ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Events[*].{Time:EventTime,Event:EventName,IP:CloudTrailEvent}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">'7 days ago'</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Events[*].{Time:EventTime,Event:EventName,IP:CloudTrailEvent}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    &quot;CredentialReportId&quot;: &quot;12a34b5c-6789-0def-1234-567890abcdef&quot;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    "CredentialReportId": "12a34b5c-6789-0def-1234-567890abcdef"
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>}
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>NO MFA: alice.johnson
@@ -8682,9 +8682,9 @@
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>|           Time            |      Event      |                    IP                    |
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>|---------------------------+-----------------+------------------------------------------|
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>| 2025-01-10T14:32:15Z      | ConsoleLogin    | {&quot;sourceIPAddress&quot;:&quot;203.0.113.42&quot;}       |
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>| 2025-01-09T08:19:47Z      | CreateAccessKey | {&quot;sourceIPAddress&quot;:&quot;203.0.113.42&quot;}       |
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>| 2025-01-05T22:11:22Z      | DeleteUser      | {&quot;sourceIPAddress&quot;:&quot;198.51.100.89&quot;}      |
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>| 2025-01-10T14:32:15Z      | ConsoleLogin    | {"sourceIPAddress":"203.0.113.42"}       |
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>| 2025-01-09T08:19:47Z      | CreateAccessKey | {"sourceIPAddress":"203.0.113.42"}       |
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>| 2025-01-05T22:11:22Z      | DeleteUser      | {"sourceIPAddress":"198.51.100.89"}      |
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8720,24 +8720,24 @@
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--granularity<span class="w"> </span>MONTHLY<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--metrics<span class="w"> </span>BlendedCost<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--group-by<span class="w"> </span><span class="nv">Type</span><span class="o">=</span>DIMENSION,Key<span class="o">=</span>SERVICE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;ResultsByTime[0].Groups[*].{Service:Keys[0],Cost:Metrics.BlendedCost.Amount}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'ResultsByTime[0].Groups[*].{Service:Keys[0],Cost:Metrics.BlendedCost.Amount}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--output<span class="w"> </span>table<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k2<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Cost anomaly detections (last 7 days)</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>aws<span class="w"> </span>ce<span class="w"> </span>get-anomalies<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>--date-interval<span class="w"> </span><span class="nv">StartDate</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;7 days ago&#39;</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span>,EndDate<span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Anomalies[*].{Service:AnomalyScore.CurrentScore,MaxImpact:Impact.MaxImpact,StartDate:AnomalyStartDate}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>--date-interval<span class="w"> </span><span class="nv">StartDate</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">'7 days ago'</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span>,EndDate<span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Anomalies[*].{Service:AnomalyScore.CurrentScore,MaxImpact:Impact.MaxImpact,StartDate:AnomalyStartDate}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
 <a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Budget utilisation</span>
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>aws<span class="w"> </span>budgets<span class="w"> </span>describe-budgets<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span>--account-id<span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--query<span class="w"> </span>Account<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Budgets[*].{Name:BudgetName,Limit:BudgetLimit.Amount,Actual:CalculatedSpend.ActualSpend.Amount,Forecast:CalculatedSpend.ForecastedSpend.Amount}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Budgets[*].{Name:BudgetName,Limit:BudgetLimit.Amount,Actual:CalculatedSpend.ActualSpend.Amount,Forecast:CalculatedSpend.ForecastedSpend.Amount}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
 <a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1"># List cost anomaly monitors</span>
 <a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>aws<span class="w"> </span>ce<span class="w"> </span>get-anomaly-monitors<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;AnomalyMonitors[*].{Name:MonitorName,Type:MonitorType,Spec:MonitorSpecification}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'AnomalyMonitors[*].{Name:MonitorName,Type:MonitorType,Spec:MonitorSpecification}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>---------------------------------------------------------------------------------------------------------
@@ -8803,7 +8803,7 @@
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/Billing<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;MetricAlarms[*].{Name:AlarmName,Threshold:Threshold,State:StateValue}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'MetricAlarms[*].{Name:AlarmName,Threshold:Threshold,State:StateValue}'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>-------------------------------------------------------------------------------------------------
@@ -8845,8 +8845,8 @@
 <hr />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check AWS Health for active issues affecting your account</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>aws<span class="w"> </span>health<span class="w"> </span>describe-events<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s1">&#39;{&quot;eventStatusCodes&quot;:[&quot;open&quot;,&quot;upcoming&quot;]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;events[*].[service,eventTypeCode,region,statusCode,startTime]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s1">'{"eventStatusCodes":["open","upcoming"]}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'events[*].[service,eventTypeCode,region,statusCode,startTime]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Current caller identity (confirm correct account/role)</span>
@@ -8860,9 +8860,9 @@
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>└─────────────────┴──────────────────────────────┴────────────┴──────────┴──────────────────────────────┘
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>{
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    &quot;UserId&quot;: &quot;AIDAI7X3Z4K9MPLQ5N2B&quot;,
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    &quot;Account&quot;: &quot;123456789012&quot;,
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    &quot;Arn&quot;: &quot;arn:aws:iam::123456789012:user/ops-admin&quot;
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    "UserId": "AIDAI7X3Z4K9MPLQ5N2B",
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    "Account": "123456789012",
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    "Arn": "arn:aws:iam::123456789012:user/ops-admin"
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>}
 </code></pre></div>
 <div class="admonition warning">
@@ -8888,14 +8888,14 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Cluster status</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>my-cluster<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;cluster.[name,status,version,endpoint]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'cluster.[name,status,version,endpoint]'</span><span class="w"> </span>--output<span class="w"> </span>table
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Node group status</span>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-nodegroups<span class="w"> </span>--cluster-name<span class="w"> </span>my-cluster<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>aws<span class="w"> </span>eks<span class="w"> </span>describe-nodegroup<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span>--cluster-name<span class="w"> </span>my-cluster<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span>--nodegroup-name<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;nodegroup.[nodegroupName,status,scalingConfig.desiredSize,health.issues]&#39;</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'nodegroup.[nodegroupName,status,scalingConfig.desiredSize,health.issues]'</span>
 <a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
 <a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># After kubeconfig update — node and pod health</span>
 <a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-kubeconfig<span class="w"> </span>--name<span class="w"> </span>my-cluster<span class="w"> </span>--region<span class="w"> </span>eu-west-1
@@ -8908,7 +8908,7 @@
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>nodegroup-1 ACTIVE  3   []
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>nodegroup-2 ACTIVE  2   []
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>nodegroup-3 UPDATING    2   [{&#39;message&#39;: &#39;Ec2LaunchTemplateIdMismatch&#39;, &#39;resourceIds&#39;: [&#39;i-0a1b2c3d4e5f6g7h8&#39;]}]
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>nodegroup-3 UPDATING    2   [{'message': 'Ec2LaunchTemplateIdMismatch', 'resourceIds': ['i-0a1b2c3d4e5f6g7h8']}]
 <a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
 <a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Added new context arn:aws:eks:eu-west-1:123456789012:cluster/my-cluster to /home/user/.kube/config
 <a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>NAME                          STATUS   ROLES    AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE
@@ -8949,12 +8949,12 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># ALB / NLB target group health</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-target-health<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>--target-group-arn<span class="w"> </span>arn:aws:elasticloadbalancing:eu-west-1:&lt;account&gt;:targetgroup/my-tg/&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;TargetHealthDescriptions[*].[Target.Id,TargetHealth.State,TargetHealth.Reason]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'TargetHealthDescriptions[*].[Target.Id,TargetHealth.State,TargetHealth.Reason]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># List load balancers and state</span>
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-load-balancers<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;LoadBalancers[*].[LoadBalancerName,State.Code,Type,DNSName]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'LoadBalancers[*].[LoadBalancerName,State.Code,Type,DNSName]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>-------------------------------------------------------------------------------------------------
@@ -8999,7 +8999,7 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>--state-value<span class="w"> </span>ALARM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;MetricAlarms[*].[AlarmName,StateReason,Namespace,MetricName]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'MetricAlarms[*].[AlarmName,StateReason,Namespace,MetricName]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>---------------------------------------------------------------------------------------------------------
@@ -9042,16 +9042,16 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Verify bucket versioning and replication status</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-versioning<span class="w"> </span>--bucket<span class="w"> </span>my-prod-bucket
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-replication<span class="w"> </span>--bucket<span class="w"> </span>my-prod-bucket<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;ReplicationConfiguration.Rules[*].[ID,Status,Destination.Bucket]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'ReplicationConfiguration.Rules[*].[ID,Status,Destination.Bucket]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Lifecycle rules in place</span>
 <a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-lifecycle-configuration<span class="w"> </span>--bucket<span class="w"> </span>my-prod-bucket<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Rules[*].[ID,Status,Expiration]&#39;</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Rules[*].[ID,Status,Expiration]'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>{
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    &quot;Status&quot;: &quot;Enabled&quot;,
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    &quot;MFADelete&quot;: &quot;Disabled&quot;
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    "Status": "Enabled",
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    "MFADelete": "Disabled"
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>}
 <a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>---------------------------------------------------------------------------
 <a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>|                         ReplicationConfiguration                        |
@@ -9064,17 +9064,17 @@
 <a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
 <a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>[
 <a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    [
-<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>        &quot;expire-old-logs&quot;,
-<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>        &quot;Enabled&quot;,
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>        "expire-old-logs",
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>        "Enabled",
 <a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>        {
-<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>            &quot;Days&quot;: 90
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>            "Days": 90
 <a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>        }
 <a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>    ],
 <a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>    [
-<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>        &quot;archive-after-30d&quot;,
-<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>        &quot;Enabled&quot;,
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>        "archive-after-30d",
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>        "Enabled",
 <a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>        {
-<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>            &quot;Days&quot;: 30
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>            "Days": 30
 <a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>        }
 <a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>    ]
 <a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>]
@@ -9106,13 +9106,13 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># List certificates and expiry</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>aws<span class="w"> </span>acm<span class="w"> </span>list-certificates<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;CertificateSummaryList[*].[DomainName,CertificateArn,Status]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'CertificateSummaryList[*].[DomainName,CertificateArn,Status]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
 <a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># Check expiry for a specific certificate</span>
 <a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>aws<span class="w"> </span>acm<span class="w"> </span>describe-certificate<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">  </span>--certificate-arn<span class="w"> </span>arn:aws:acm:eu-west-1:&lt;account&gt;:certificate/&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Certificate.[DomainName,NotAfter,Status,RenewalSummary.RenewalStatus]&#39;</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Certificate.[DomainName,NotAfter,Status,RenewalSummary.RenewalStatus]'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>---------------------------------------------------------------------------------------------------------
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>|                                    ListCertificates                                                  |
@@ -9126,9 +9126,9 @@
 <a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>+---------------------------------------------------------------------------------------------------------+
 <a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>
 <a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>[
-<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>    &quot;api.example.com&quot;,
-<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>    &quot;2026-03-15T23:59:59+00:00&quot;,
-<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>    &quot;ISSUED&quot;,
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>    "api.example.com",
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>    "2026-03-15T23:59:59+00:00",
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>    "ISSUED",
 <a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>    null
 <a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>]
 </code></pre></div>
@@ -9157,15 +9157,15 @@
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>generate-credential-report
 <a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>sleep<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-credential-report<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Content&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">  </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR==1 || $5==&quot;true&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">  </span>column<span class="w"> </span>-t<span class="w"> </span>-s<span class="s1">&#39;,&#39;</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Content'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">  </span>awk<span class="w"> </span>-F<span class="s1">','</span><span class="w"> </span><span class="s1">'NR==1 || $5=="true"'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">  </span>column<span class="w"> </span>-t<span class="w"> </span>-s<span class="s1">','</span>
 <a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="c1"># Shows: user, arn, mfa_active, access_key_1_active, password_last_used, etc.</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>{
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>    &quot;Content&quot;: &quot;AQpDcmVkZW50aWFsUmVwb3J0VmVyc2lvbjox...&quot;,
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>    &quot;GeneratedTime&quot;: &quot;2024-01-15T14:32:18+00:00&quot;,
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    &quot;ReportFormat&quot;: &quot;text/csv&quot;
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>    "Content": "AQpDcmVkZW50aWFsUmVwb3J0VmVyc2lvbjox...",
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>    "GeneratedTime": "2024-01-15T14:32:18+00:00",
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    "ReportFormat": "text/csv"
 <a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>}
 <a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>user                    arn                                              mfa_active  access_key_1_active  password_last_used
 <a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>root_account            arn:aws:iam::123456789012:root                   true        false                2024-01-10T09:22:15+00:00
@@ -9196,20 +9196,20 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Active findings count by severity</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>aws<span class="w"> </span>securityhub<span class="w"> </span>get-findings<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s1">&#39;{&quot;WorkflowStatus&quot;:[{&quot;Value&quot;:&quot;NEW&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;}]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;length(Findings)&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s1">'{"WorkflowStatus":[{"Value":"NEW","Comparison":"EQUALS"}]}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'length(Findings)'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">  </span>--output<span class="w"> </span>text
 <a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
 <a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Critical + High findings</span>
 <a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>aws<span class="w"> </span>securityhub<span class="w"> </span>get-findings<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="s1">    &quot;SeverityLabel&quot;:[</span>
-<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="s1">      {&quot;Value&quot;:&quot;CRITICAL&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;},</span>
-<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="s1">      {&quot;Value&quot;:&quot;HIGH&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;}</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="s1">    "SeverityLabel":[</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="s1">      {"Value":"CRITICAL","Comparison":"EQUALS"},</span>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="s1">      {"Value":"HIGH","Comparison":"EQUALS"}</span>
 <a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="s1">    ],</span>
-<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="s1">    &quot;WorkflowStatus&quot;:[{&quot;Value&quot;:&quot;NEW&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;}]</span>
-<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Findings[*].[Title,SeverityLabel,ProductName,UpdatedAt]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="s1">    "WorkflowStatus":[{"Value":"NEW","Comparison":"EQUALS"}]</span>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Findings[*].[Title,SeverityLabel,ProductName,UpdatedAt]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>42
@@ -9246,26 +9246,26 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># Quick daily AWS health summary</span>
 <a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="nv">REGION</span><span class="o">=</span><span class="si">${</span><span class="nv">AWS_DEFAULT_REGION</span><span class="k">:-</span><span class="nv">eu</span><span class="p">-west-1</span><span class="si">}</span>
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- EC2 Status Checks ---&quot;</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ==="</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"--- EC2 Status Checks ---"</span>
 <a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instance-status<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceStatuses[?InstanceStatus.Status!=`ok` || SystemStatus.Status!=`ok`].[InstanceId,SystemStatus.Status,InstanceStatus.Status]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'InstanceStatuses[?InstanceStatus.Status!=`ok` || SystemStatus.Status!=`ok`].[InstanceId,SystemStatus.Status,InstanceStatus.Status]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
-<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- CloudWatch Alarms ---&quot;</span>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"--- CloudWatch Alarms ---"</span>
 <a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span>--state-value<span class="w"> </span>ALARM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;MetricAlarms[*].[AlarmName,MetricName,StateReason]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'MetricAlarms[*].[AlarmName,MetricName,StateReason]'</span><span class="w"> </span>--output<span class="w"> </span>table
 <a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>
-<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- RDS Status ---&quot;</span>
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"--- RDS Status ---"</span>
 <a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[?DBInstanceStatus!=`available`].[DBInstanceIdentifier,DBInstanceStatus]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'DBInstances[?DBInstanceStatus!=`available`].[DBInstanceIdentifier,DBInstanceStatus]'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>
-<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- AWS Health Events ---&quot;</span>
+<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"--- AWS Health Events ---"</span>
 <a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a>aws<span class="w"> </span>health<span class="w"> </span>describe-events<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s1">&#39;{&quot;eventStatusCodes&quot;:[&quot;open&quot;]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;events[*].[service,region,statusCode,startTime]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a><span class="w">  </span>--output<span class="w"> </span>table<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;(No active health events)&quot;</span>
+<a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s1">'{"eventStatusCodes":["open"]}'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'events[*].[service,region,statusCode,startTime]'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a><span class="w">  </span>--output<span class="w"> </span>table<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"(No active health events)"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>=== Thu Jan 16 09:42:15 UTC 2025 ===
 <a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>--- EC2 Status Checks ---

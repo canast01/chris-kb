@@ -7349,11 +7349,11 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <hr />
 <h2 id="security-context-constraints">Security Context Constraints<a class="headerlink" href="#security-context-constraints" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List SCCs (ordered from least to most permissive)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>oc<span class="w"> </span>get<span class="w"> </span>scc<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $2, $3}&#39;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>oc<span class="w"> </span>get<span class="w"> </span>scc<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1, $2, $3}'</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check which SCC a running pod used</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>oc<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;ns&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.metadata.annotations.openshift\.io/scc}&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.metadata.annotations.openshift\.io/scc}'</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Which SCC will a pod use (dry run)?</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>oc<span class="w"> </span>adm<span class="w"> </span>policy<span class="w"> </span>scc-subject-review<span class="w"> </span>-f<span class="w"> </span>pod.yaml
@@ -7379,7 +7379,7 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">securityContext</span><span class="p">:</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">capabilities</span><span class="p">:</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="nt">drop</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ALL&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="nt">drop</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"ALL"</span><span class="p p-Indicator">]</span>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 <h2 id="rhcos-node-hardening">RHCOS Node Hardening<a class="headerlink" href="#rhcos-node-hardening" title="Permanent link">&para;</a></h2>
@@ -7393,7 +7393,7 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node&gt;<span class="w"> </span>--<span class="w"> </span>chroot<span class="w"> </span>/host<span class="w"> </span>sestatus
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check which MachineConfig a node currently uses</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>oc<span class="w"> </span>get<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.metadata.annotations.machineconfiguration\.openshift\.io/currentConfig}&#39;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>oc<span class="w"> </span>get<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.metadata.annotations.machineconfiguration\.openshift\.io/currentConfig}'</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Apply kernel sysctl settings via MachineConfig</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
@@ -7412,7 +7412,7 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="s">      - path: /etc/sysctl.d/99-custom.conf</span>
 <a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="s">        mode: 0644</span>
 <a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="s">        contents:</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="s">          source: &quot;data:,net.ipv4.ip_forward%3D1%0Akernel.dmesg_restrict%3D1%0Anet.ipv4.conf.all.log_martians%3D1&quot;</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="s">          source: "data:,net.ipv4.ip_forward%3D1%0Akernel.dmesg_restrict%3D1%0Anet.ipv4.conf.all.log_martians%3D1"</span>
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="s">EOF</span>
 <a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
 <a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c1"># Monitor MachineConfig rollout (nodes drain and reboot sequentially)</span>
@@ -7421,7 +7421,7 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Starting debug pod on node worker-1.example.com ...
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Pod IP: 10.128.45.23
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>If you don&#39;t see a command prompt, try pressing enter.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>If you don't see a command prompt, try pressing enter.
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>sh-4.4# 
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sh-4.4# exit
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>exit
@@ -7509,12 +7509,12 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="c1"># Apply a specific remediation</span>
 <a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>oc<span class="w"> </span>patch<span class="w"> </span>complianceremediation<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>openshift-compliance<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;apply&quot;:true}}&#39;</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">'{"spec":{"apply":true}}'</span>
 <a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>
 <a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="c1"># Apply all remediations for a scan (bulk apply — test in non-prod first)</span>
 <a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>oc<span class="w"> </span>get<span class="w"> </span>complianceremediations<span class="w"> </span>-n<span class="w"> </span>openshift-compliance<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>oc<span class="w"> </span>patch<span class="w"> </span><span class="o">{}</span><span class="w"> </span>-n<span class="w"> </span>openshift-compliance<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;apply&quot;:true}}&#39;</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">'{"spec":{"apply":true}}'</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>scansettingbinding.compliance.openshift.io/cis-compliance created
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>NAME                                    PHASE       RESULT
@@ -7603,9 +7603,9 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pod-security.kubernetes.io/warn-version: latest
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>namespace/my-project labeled
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>LAST SEEN   TYPE     REASON           OBJECT                    MESSAGE
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2m45s       Warning  PodSecurityViolation  pod/nginx-deployment-5d4b8c9f7  violates &quot;restricted&quot;: allowPrivilegeEscalation != false
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>89s         Warning  PodSecurityViolation  pod/app-worker-2k8vx      violates &quot;restricted&quot;: runAsNonRoot != true
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>45s         Warning  PodSecurityViolation  pod/legacy-svc-7j9m2      violates &quot;restricted&quot;: capabilities.drop missing [&quot;ALL&quot;]
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2m45s       Warning  PodSecurityViolation  pod/nginx-deployment-5d4b8c9f7  violates "restricted": allowPrivilegeEscalation != false
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>89s         Warning  PodSecurityViolation  pod/app-worker-2k8vx      violates "restricted": runAsNonRoot != true
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>45s         Warning  PodSecurityViolation  pod/legacy-svc-7j9m2      violates "restricted": capabilities.drop missing ["ALL"]
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -7734,7 +7734,7 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="s">metadata:</span>
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="s">  name: cluster</span>
 <a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="s">spec:</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="s">  schedule: &quot;0 0 * * *&quot;</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="s">  schedule: "0 0 * * *"</span>
 <a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="s">  suspend: false</span>
 <a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="s">  keepTagRevisions: 3</span>
 <a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="s">  keepYoungerThan: 604800   # 7 days in seconds</span>
@@ -7746,11 +7746,11 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="c1"># GOOD: image: quay.io/myorg/myapp@sha256:abc123...</span>
 <a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
 <a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="c1"># Check image streams for untagged/stale images</span>
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>oc<span class="w"> </span>get<span class="w"> </span>imagestream<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;&lt;none&gt;&quot;</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>oc<span class="w"> </span>get<span class="w"> </span>imagestream<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"&lt;none&gt;"</span>
 <a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>images
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Importing image &#39;myapp:latest&#39; from &#39;quay.io/myorg/myapp:latest&#39;
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Scheduled import added to ImageStream &#39;myapp&#39;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Importing image 'myapp:latest' from 'quay.io/myorg/myapp:latest'
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Scheduled import added to ImageStream 'myapp'
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>imagestreamimport.image.openshift.io/myapp imported
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>imagepruner.imageregistry.operator.openshift.io/cluster created
@@ -7790,7 +7790,7 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Enable API audit logging</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>apiserver<span class="w"> </span>cluster<span class="w"> </span>--type<span class="w"> </span>merge<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;audit&quot;:{&quot;profile&quot;:&quot;WriteRequestBodies&quot;}}}&#39;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">'{"spec":{"audit":{"profile":"WriteRequestBodies"}}}'</span>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Available profiles:</span>
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1">#   Default (metadata only): minimal logging</span>
@@ -7810,14 +7810,14 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  servingCerts: {}
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  unsupportedConfigOverrides: null
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Jumping into namespace &quot;openshift-kube-apiserver&quot;
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Jumping into namespace "openshift-kube-apiserver"
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>Starting pod/ip-10-0-45-12-debug ...
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>To use host binaries, run `chroot /host`
 <a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>Nov 15 14:32:18 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=create user=&quot;system:admin&quot; namespace=default resource=pods
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>Nov 15 14:32:19 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=patch user=&quot;system:serviceaccount:openshift-kube-apiserver:sa-token&quot; namespace=openshift-kube-apiserver resource=configmaps
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>Nov 15 14:32:21 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=get user=&quot;system:kube-controller-manager&quot; namespace=&quot;&quot; resource=clusterrolebindings
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>Nov 15 14:32:22 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=watch user=&quot;system:node:ip-10-0-45-12&quot; namespace=default resource=pods
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>Nov 15 14:32:18 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=create user="system:admin" namespace=default resource=pods
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>Nov 15 14:32:19 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=patch user="system:serviceaccount:openshift-kube-apiserver:sa-token" namespace=openshift-kube-apiserver resource=configmaps
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>Nov 15 14:32:21 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=get user="system:kube-controller-manager" namespace="" resource=clusterrolebindings
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>Nov 15 14:32:22 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=watch user="system:node:ip-10-0-45-12" namespace=default resource=pods
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

@@ -7512,31 +7512,31 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># confluence-db-backup.sh</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">DB_HOST</span><span class="o">=</span><span class="s2">&quot;db.internal.example.com&quot;</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">DB_PORT</span><span class="o">=</span><span class="s2">&quot;5432&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">DB_NAME</span><span class="o">=</span><span class="s2">&quot;confluencedb&quot;</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">DB_USER</span><span class="o">=</span><span class="s2">&quot;confluence&quot;</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">BACKUP_DIR</span><span class="o">=</span><span class="s2">&quot;/backup/confluence/db&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">DB_HOST</span><span class="o">=</span><span class="s2">"db.internal.example.com"</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">DB_PORT</span><span class="o">=</span><span class="s2">"5432"</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">DB_NAME</span><span class="o">=</span><span class="s2">"confluencedb"</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">DB_USER</span><span class="o">=</span><span class="s2">"confluence"</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">BACKUP_DIR</span><span class="o">=</span><span class="s2">"/backup/confluence/db"</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">TIMESTAMP</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">BACKUP_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DIR</span><span class="si">}</span><span class="s2">/confluence_</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">.dump&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">BACKUP_FILE</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">BACKUP_DIR</span><span class="si">}</span><span class="s2">/confluence_</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">.dump"</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_DIR</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$BACKUP_DIR</span><span class="s2">"</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DB_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span>pg_dump<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--host<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--port<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DB_PORT</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--username<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DB_PASSWORD</span><span class="s2">"</span><span class="w"> </span>pg_dump<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--host<span class="o">=</span><span class="s2">"</span><span class="nv">$DB_HOST</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--port<span class="o">=</span><span class="s2">"</span><span class="nv">$DB_PORT</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--username<span class="o">=</span><span class="s2">"</span><span class="nv">$DB_USER</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--format<span class="o">=</span>custom<span class="w"> </span><span class="se">\ </span><span class="w">          </span><span class="c1"># Compressed custom format; faster restore than plain SQL</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--blobs<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--no-password<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>--verbose<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>--file<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>--file<span class="o">=</span><span class="s2">"</span><span class="nv">$BACKUP_FILE</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="s2">"</span><span class="nv">$DB_NAME</span><span class="s2">"</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup completed: </span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Backup completed: </span><span class="nv">$BACKUP_FILE</span><span class="s2">"</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># Retain 30 days</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_DIR</span><span class="s2">&quot;</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.dump&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>find<span class="w"> </span><span class="s2">"</span><span class="nv">$BACKUP_DIR</span><span class="s2">"</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.dump"</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pg_dump: dumping contents of table public.spaces
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pg_dump: dumping contents of table public.pages
@@ -7607,12 +7607,12 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 <p>Prefer <code>custom</code> format — it supports parallel restore with <code>-j</code> and selective table restore.</p>
 <h3 id="verify-backup-integrity">Verify Backup Integrity<a class="headerlink" href="#verify-backup-integrity" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check a custom-format dump without restoring</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pg_restore<span class="w"> </span>--list<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pg_restore<span class="w"> </span>--list<span class="w"> </span><span class="s2">"</span><span class="nv">$BACKUP_FILE</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Full verification via test restore to a scratch DB</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>createdb<span class="w"> </span>confluence_verify
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>pg_restore<span class="w"> </span>--host<span class="o">=</span>localhost<span class="w"> </span>--username<span class="o">=</span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--dbname<span class="o">=</span>confluence_verify<span class="w"> </span>--verbose<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--dbname<span class="o">=</span>confluence_verify<span class="w"> </span>--verbose<span class="w"> </span><span class="s2">"</span><span class="nv">$BACKUP_FILE</span><span class="s2">"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>; Archive created at 2024-01-15 14:32:18 UTC
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>;     dbname: confluence_prod
@@ -7675,16 +7675,16 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># confluence-shared-home-backup.sh</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">SHARED_HOME</span><span class="o">=</span><span class="s2">&quot;/mnt/confluence-shared&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">BACKUP_DEST</span><span class="o">=</span><span class="s2">&quot;/backup/confluence/shared-home&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">SHARED_HOME</span><span class="o">=</span><span class="s2">"/mnt/confluence-shared"</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">BACKUP_DEST</span><span class="o">=</span><span class="s2">"/backup/confluence/shared-home"</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">TIMESTAMP</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>rsync<span class="w"> </span>-av<span class="w"> </span>--delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--exclude<span class="o">=</span><span class="s2">&quot;index/disk-store/&quot;</span><span class="w"> </span><span class="se">\ </span><span class="w">   </span><span class="c1"># Exclude volatile in-memory cache dumps</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$SHARED_HOME</span><span class="s2">/&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BACKUP_DEST</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--exclude<span class="o">=</span><span class="s2">"index/disk-store/"</span><span class="w"> </span><span class="se">\ </span><span class="w">   </span><span class="c1"># Exclude volatile in-memory cache dumps</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">"</span><span class="nv">$SHARED_HOME</span><span class="s2">/"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="s2">"</span><span class="si">${</span><span class="nv">BACKUP_DEST</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/"</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Shared home backup: </span><span class="si">${</span><span class="nv">BACKUP_DEST</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Shared home backup: </span><span class="si">${</span><span class="nv">BACKUP_DEST</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sending incremental file list
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>./
@@ -7785,8 +7785,8 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </ul>
 <h3 id="1-restore-the-database">1. Restore the Database<a class="headerlink" href="#1-restore-the-database" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Drop and recreate the target database (CAUTION: destructive)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE IF EXISTS confluencedb;&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE confluencedb OWNER confluence ENCODING &#39;UTF8&#39;;&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"DROP DATABASE IF EXISTS confluencedb;"</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"CREATE DATABASE confluencedb OWNER confluence ENCODING 'UTF8';"</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Restore from custom-format dump</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>pg_restore<span class="w"> </span><span class="se">\</span>
@@ -7799,15 +7799,15 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>DROP DATABASE
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>CREATE DATABASE
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pg_restore: connecting to database &quot;confluencedb&quot;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>pg_restore: creating SCHEMA &quot;public&quot;
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pg_restore: creating EXTENSION &quot;plpgsql&quot;
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pg_restore: processing data for table &quot;public.spaces&quot;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>pg_restore: processing data for table &quot;public.pages&quot;
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>pg_restore: processing data for table &quot;public.attachments&quot;
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>pg_restore: executing CONSTRAINT &quot;fk_pages_space_id&quot;
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>pg_restore: executing INDEX &quot;idx_pages_created_date&quot;
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>pg_restore: restoring table data for table &quot;public.audit_log&quot;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pg_restore: connecting to database "confluencedb"
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>pg_restore: creating SCHEMA "public"
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pg_restore: creating EXTENSION "plpgsql"
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>pg_restore: processing data for table "public.spaces"
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>pg_restore: processing data for table "public.pages"
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>pg_restore: processing data for table "public.attachments"
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>pg_restore: executing CONSTRAINT "fk_pages_space_id"
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>pg_restore: executing INDEX "idx_pages_created_date"
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>pg_restore: restoring table data for table "public.audit_log"
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>pg_restore: finished main parallel loop
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>pg_restore: completed successfully
 </code></pre></div>
@@ -7907,7 +7907,7 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
 <a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># 7. Review DB connectivity</span>
 <a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/space?limit=5&quot;</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span><span class="s2">"https://confluence.example.com/rest/api/space?limit=5"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Starting Confluence...
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Using CATALINA_BASE:   /opt/atlassian/confluence
@@ -7927,7 +7927,7 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 <a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 <a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>                                 Dload  Upload   Total   Spent    Left  Speed
 <a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>100  2847  100  2847    0     0   8234      0 --:--:-- --:--:-- --:--:-- --:--:--  0.0s
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>{&quot;results&quot;:[{&quot;id&quot;:&quot;1234567890&quot;,&quot;key&quot;:&quot;INFRA&quot;,&quot;name&quot;:&quot;Infrastructure&quot;,&quot;type&quot;:&quot;global&quot;},{&quot;id&quot;:&quot;1234567891&quot;,&quot;key&quot;:&quot;OPS&quot;,&quot;name&quot;:&quot;Operations&quot;,&quot;type&quot;:&quot;global&quot;},{&quot;id&quot;:&quot;1234567892&quot;,&quot;key&quot;:&quot;DOCS&quot;,&quot;name&quot;:&quot;Documentation&quot;,&quot;type&quot;:&quot;global&quot;},{&quot;id&quot;:&quot;1234567893&quot;,&quot;key&quot;:&quot;PROJ&quot;,&quot;name&quot;:&quot;Projects&quot;,&quot;type&quot;:&quot;global&quot;},{&quot;id&quot;:&quot;1234567894&quot;,&quot;key&quot;:&quot;TEST&quot;,&quot;name&quot;:&quot;Testing&quot;,&quot;type&quot;:&quot;global&quot;}],&quot;start&quot;:0,&quot;limit&quot;:5,&quot;size&quot;:5,&quot;_links&quot;:{&quot;self&quot;:&quot;https://confluence.example.com/rest/api/space?limit=5&quot;}}
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>{"results":[{"id":"1234567890","key":"INFRA","name":"Infrastructure","type":"global"},{"id":"1234567891","key":"OPS","name":"Operations","type":"global"},{"id":"1234567892","key":"DOCS","name":"Documentation","type":"global"},{"id":"1234567893","key":"PROJ","name":"Projects","type":"global"},{"id":"1234567894","key":"TEST","name":"Testing","type":"global"}],"start":0,"limit":5,"size":5,"_links":{"self":"https://confluence.example.com/rest/api/space?limit=5"}}
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8000,8 +8000,8 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </table>
 <h3 id="backup-to-s3-example">Backup to S3 Example<a class="headerlink" href="#backup-to-s3-example" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># After pg_dump completes</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;s3://company-confluence-backups/db/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span><span class="s2">"</span><span class="nv">$BACKUP_FILE</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">"s3://company-confluence-backups/db/</span><span class="si">${</span><span class="nv">TIMESTAMP</span><span class="si">}</span><span class="s2">/"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--sse<span class="w"> </span>aws:kms<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--kms-key-id<span class="w"> </span>alias/confluence-backup-key
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>

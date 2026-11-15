@@ -8390,14 +8390,14 @@ Availability Zones are physically separate datacenters within an Azure region, e
 <h2 id="checking-zone-support">Checking Zone Support<a class="headerlink" href="#checking-zone-support" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List regions that support Availability Zones</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>account<span class="w"> </span>list-locations<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?availabilityZoneMappings!=null].{Region:name, DisplayName:displayName}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">"[?availabilityZoneMappings!=null].{Region:name, DisplayName:displayName}"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--output<span class="w"> </span>table
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Check which VM sizes support zones in a region</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>az<span class="w"> </span>vm<span class="w"> </span>list-skus<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--location<span class="w"> </span>eastus<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--resource-type<span class="w"> </span>virtualMachines<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?locationInfo[0].zones!=null].{Size:name, Zones:locationInfo[0].zones}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">"[?locationInfo[0].zones!=null].{Size:name, Zones:locationInfo[0].zones}"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Region                DisplayName
@@ -8482,46 +8482,46 @@ Availability Zones are physically separate datacenters within an Azure region, e
 <a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1"># List VMs and their zones</span>
 <a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Name:name, Zone:zones[0], Size:hardwareProfile.vmSize}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">"[].{Name:name, Zone:zones[0], Size:hardwareProfile.vmSize}"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;fqdns&quot;: &quot;&quot;,
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-z1&quot;,
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;location&quot;: &quot;eastus&quot;,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;macAddress&quot;: &quot;00:0D:3A:2E:5F:7A&quot;,
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;powerState&quot;: &quot;VM running&quot;,
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  &quot;privateIpAddress&quot;: &quot;10.0.1.4&quot;,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  &quot;publicIpAddress&quot;: &quot;20.45.123.89&quot;,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  &quot;zones&quot;: [
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    &quot;1&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "fqdns": "",
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-z1",
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  "location": "eastus",
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  "macAddress": "00:0D:3A:2E:5F:7A",
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  "powerState": "VM running",
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  "privateIpAddress": "10.0.1.4",
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  "publicIpAddress": "20.45.123.89",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  "resourceGroup": "prod-rg",
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  "zones": [
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    "1"
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  ]
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>}
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>{
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  &quot;fqdns&quot;: &quot;&quot;,
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-z2&quot;,
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  &quot;location&quot;: &quot;eastus&quot;,
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;macAddress&quot;: &quot;00:0D:3A:2E:5F:7B&quot;,
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  &quot;powerState&quot;: &quot;VM running&quot;,
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  &quot;privateIpAddress&quot;: &quot;10.0.1.5&quot;,
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  &quot;publicIpAddress&quot;: &quot;20.45.124.56&quot;,
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  &quot;zones&quot;: [
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    &quot;2&quot;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  "fqdns": "",
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-z2",
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  "location": "eastus",
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  "macAddress": "00:0D:3A:2E:5F:7B",
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  "powerState": "VM running",
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  "privateIpAddress": "10.0.1.5",
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  "publicIpAddress": "20.45.124.56",
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  "resourceGroup": "prod-rg",
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  "zones": [
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    "2"
 <a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  ]
 <a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>}
 <a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>{
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  &quot;fqdns&quot;: &quot;&quot;,
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  &quot;id&quot;: &quot;/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-z3&quot;,
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  &quot;location&quot;: &quot;eastus&quot;,
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  &quot;macAddress&quot;: &quot;00:0D:3A:2E:5F:7C&quot;,
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>  &quot;powerState&quot;: &quot;VM running&quot;,
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>  &quot;privateIpAddress&quot;: &quot;10.0.1.6&quot;,
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>  &quot;publicIpAddress&quot;: &quot;20.45.125.78&quot;,
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>  &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>  &quot;zones&quot;: [
-<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>    &quot;3&quot;
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  "fqdns": "",
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-z3",
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  "location": "eastus",
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  "macAddress": "00:0D:3A:2E:5F:7C",
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>  "powerState": "VM running",
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>  "privateIpAddress": "10.0.1.6",
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>  "publicIpAddress": "20.45.125.78",
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>  "resourceGroup": "prod-rg",
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>  "zones": [
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>    "3"
 <a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>  ]
 <a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>}
 <a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>Name      Zone    Size
@@ -8573,21 +8573,21 @@ Availability Zones are physically separate datacenters within an Azure region, e
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--name<span class="w"> </span>&lt;disk-name&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &quot;id&quot;: &quot;/subscriptions/12a34b5c-d6ef-7890-g1h2-i3j4k5l6m7n8/resourceGroups/prod-rg/providers/Microsoft.Compute/disks/data-disk-01&quot;,
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;location&quot;: &quot;eastus&quot;,
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &quot;name&quot;: &quot;data-disk-01&quot;,
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &quot;sku&quot;: {
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    &quot;name&quot;: &quot;Premium_ZRS&quot;,
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    &quot;tier&quot;: &quot;Premium&quot;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  "id": "/subscriptions/12a34b5c-d6ef-7890-g1h2-i3j4k5l6m7n8/resourceGroups/prod-rg/providers/Microsoft.Compute/disks/data-disk-01",
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  "location": "eastus",
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  "name": "data-disk-01",
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  "sku": {
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    "name": "Premium_ZRS",
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    "tier": "Premium"
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  },
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  &quot;zones&quot;: [
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    &quot;1&quot;,
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    &quot;2&quot;,
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    &quot;3&quot;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  "zones": [
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    "1",
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    "2",
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    "3"
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  ],
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  &quot;diskSizeGb&quot;: 128,
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  &quot;provisioningState&quot;: &quot;Succeeded&quot;,
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  &quot;timeCreated&quot;: &quot;2024-01-15T10:42:33.456789+00:00&quot;
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  "diskSizeGb": 128,
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  "provisioningState": "Succeeded",
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  "timeCreated": "2024-01-15T10:42:33.456789+00:00"
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>}
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>Disk attached.
 </code></pre></div>
@@ -8676,55 +8676,55 @@ Availability Zones are physically separate datacenters within an Azure region, e
 <a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">  </span>--vnet<span class="w"> </span>&lt;vnet-id&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  &quot;publicIp&quot;: {
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Network/publicIPAddresses/pip-zone-redundant&quot;,
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    &quot;name&quot;: &quot;pip-zone-redundant&quot;,
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    &quot;resourceGroup&quot;: &quot;prod-rg&quot;,
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    &quot;location&quot;: &quot;eastus&quot;,
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    &quot;publicIpAddressVersion&quot;: &quot;IPv4&quot;,
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    &quot;publicIpAllocationMethod&quot;: &quot;Static&quot;,
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    &quot;sku&quot;: {
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>      &quot;name&quot;: &quot;Standard&quot;,
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>      &quot;tier&quot;: &quot;Regional&quot;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  "publicIp": {
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Network/publicIPAddresses/pip-zone-redundant",
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    "name": "pip-zone-redundant",
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    "resourceGroup": "prod-rg",
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    "location": "eastus",
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    "publicIpAddressVersion": "IPv4",
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    "publicIpAllocationMethod": "Static",
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    "sku": {
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>      "name": "Standard",
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>      "tier": "Regional"
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    },
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    &quot;zones&quot;: [
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>      &quot;1&quot;,
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>      &quot;2&quot;,
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>      &quot;3&quot;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    "zones": [
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>      "1",
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>      "2",
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>      "3"
 <a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    ]
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  }
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>}
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>{
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  &quot;loadBalancer&quot;: {
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Network/loadBalancers/lb-standard&quot;,
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    &quot;name&quot;: &quot;lb-standard&quot;,
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    &quot;location&quot;: &quot;eastus&quot;,
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    &quot;sku&quot;: {
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>      &quot;name&quot;: &quot;Standard&quot;,
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>      &quot;tier&quot;: &quot;Regional&quot;
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  "loadBalancer": {
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Network/loadBalancers/lb-standard",
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    "name": "lb-standard",
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    "location": "eastus",
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    "sku": {
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>      "name": "Standard",
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>      "tier": "Regional"
 <a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    },
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>    &quot;frontendIPConfigurations&quot;: [
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>    "frontendIPConfigurations": [
 <a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>      {
-<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>        &quot;name&quot;: &quot;frontend-ip&quot;,
-<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>        &quot;publicIPAddress&quot;: {
-<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>          &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Network/publicIPAddresses/pip-zone-redundant&quot;
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>        "name": "frontend-ip",
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>        "publicIPAddress": {
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>          "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Network/publicIPAddresses/pip-zone-redundant"
 <a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>        }
 <a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>      }
 <a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>    ],
-<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>    &quot;backendAddressPools&quot;: [
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>    "backendAddressPools": [
 <a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>      {
-<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>        &quot;name&quot;: &quot;backend-pool&quot;,
-<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>        &quot;backendIPConfigurations&quot;: []
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>        "name": "backend-pool",
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>        "backendIPConfigurations": []
 <a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>      }
 <a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>    ]
 <a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>  }
 <a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>}
 <a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>{
-<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a>  &quot;address&quot;: {
-<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>    &quot;name&quot;: &quot;vm1-ip&quot;,
-<a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a>    &quot;ipAddress&quot;: &quot;10.0.1.15&quot;,
-<a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a>    &quot;virtualNetwork&quot;: {
-<a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a>      &quot;id&quot;: &quot;/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Network/virtualNetworks/prod-vnet&quot;
+<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a>  "address": {
+<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>    "name": "vm1-ip",
+<a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a>    "ipAddress": "10.0.1.15",
+<a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a>    "virtualNetwork": {
+<a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a>      "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Network/virtualNetworks/prod-vnet"
 <a id="__codelineno-7-51" name="__codelineno-7-51" href="#__codelineno-7-51"></a>    }
 <a id="__codelineno-7-52" name="__codelineno-7-52" href="#__codelineno-7-52"></a>  }
 <a id="__codelineno-7-53" name="__codelineno-7-53" href="#__codelineno-7-53"></a>}
@@ -8787,24 +8787,24 @@ Availability Zones are physically separate datacenters within an Azure region, e
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name-z1&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--command-id<span class="w"> </span>RunShellScript<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--scripts<span class="w"> </span><span class="s2">&quot;ping -c 10 &lt;vm-z2-private-ip&gt;&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--scripts<span class="w"> </span><span class="s2">"ping -c 10 &lt;vm-z2-private-ip&gt;"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;value&quot;: [
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "value": [
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    {
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      &quot;code&quot;: &quot;ProvisioningState/succeeded&quot;,
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      &quot;displayStatus&quot;: &quot;Provision succeeded&quot;,
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      &quot;message&quot;: &quot;Command execution finished&quot;,
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>      &quot;output&quot;: [
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        &quot;PING 10.0.2.45 (10.0.2.45) 56(84) bytes of data.&quot;,
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        &quot;64 bytes from 10.0.2.45: icmp_seq=1 time=2.34 ms&quot;,
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        &quot;64 bytes from 10.0.2.45: icmp_seq=2 time=2.41 ms&quot;,
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        &quot;64 bytes from 10.0.2.45: icmp_seq=3 time=2.38 ms&quot;,
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>        &quot;64 bytes from 10.0.2.45: icmp_seq=4 time=2.39 ms&quot;,
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>        &quot;64 bytes from 10.0.2.45: icmp_seq=5 time=2.35 ms&quot;,
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>        &quot;...&quot;,
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>        &quot;10 packets transmitted, 10 received, 0% packet loss, time 9012ms&quot;,
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>        &quot;rtt min/avg/max/stddev = 2.34/2.37/2.41/0.02 ms&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>      "code": "ProvisioningState/succeeded",
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      "displayStatus": "Provision succeeded",
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>      "message": "Command execution finished",
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>      "output": [
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        "PING 10.0.2.45 (10.0.2.45) 56(84) bytes of data.",
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        "64 bytes from 10.0.2.45: icmp_seq=1 time=2.34 ms",
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        "64 bytes from 10.0.2.45: icmp_seq=2 time=2.41 ms",
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        "64 bytes from 10.0.2.45: icmp_seq=3 time=2.38 ms",
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>        "64 bytes from 10.0.2.45: icmp_seq=4 time=2.39 ms",
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>        "64 bytes from 10.0.2.45: icmp_seq=5 time=2.35 ms",
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>        "...",
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>        "10 packets transmitted, 10 received, 0% packet loss, time 9012ms",
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>        "rtt min/avg/max/stddev = 2.34/2.37/2.41/0.02 ms"
 <a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>      ]
 <a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>    }
 <a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>  ]
@@ -8879,16 +8879,16 @@ Availability Zones are physically separate datacenters within an Azure region, e
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>network<span class="w"> </span>public-ip<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;pip-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;zones&quot;</span><span class="w"> </span>--output<span class="w"> </span>tsv
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">"zones"</span><span class="w"> </span>--output<span class="w"> </span>tsv
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Show zone for a managed disk</span>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>az<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--name<span class="w"> </span>&lt;disk-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;zones&quot;</span><span class="w"> </span>--output<span class="w"> </span>tsv
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">"zones"</span><span class="w"> </span>--output<span class="w"> </span>tsv
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[&quot;1&quot;]
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>[&quot;2&quot;]
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>["1"]
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>["2"]
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>

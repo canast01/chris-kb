@@ -8003,18 +8003,18 @@ SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1
 </table>
 <h2 id="access-denied-diagnostics">Access Denied Diagnostics<a class="headerlink" href="#access-denied-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify share permissions</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-SmbShareAccess</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-SmbShareAccess</span> <span class="n">-Name</span> <span class="s2">"Finance"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Verify NTFS permissions on the path</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">icacls</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">icacls</span> <span class="s2">"C:\Shares\Finance"</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Check effective NTFS rights for a specific user</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="p">).</span><span class="n">Access</span> <span class="p">|</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">IdentityReference</span> <span class="o">-match</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="s2">"C:\Shares\Finance"</span><span class="p">).</span><span class="n">Access</span> <span class="p">|</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">IdentityReference</span> <span class="o">-match</span> <span class="s2">"jsmith"</span> <span class="p">}</span> <span class="p">|</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="nb">Select-Object</span> <span class="n">FileSystemRights</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">IsInherited</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># Check Event ID 5145 (share access check) in Security log</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">5145</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">'Security'</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">5145</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div>
 <h2 id="smb1-disabled-issues">SMB1 Disabled Issues<a class="headerlink" href="#smb1-disabled-issues" title="Permanent link">&para;</a></h2>
@@ -8063,10 +8063,10 @@ SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    host/fileserver01.corp.example.com
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Registering SPN cifs/fileserver01 for DOMAIN\fileserver01$...
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Updated object &quot;CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com&quot;
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>Updated object "CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com"
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Registering SPN cifs/fileserver01.corp.example.com for DOMAIN\fileserver01$...
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Updated object &quot;CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com&quot;
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>Updated object "CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com"
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8114,11 +8114,11 @@ SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Run SMB bandwidth test (requires SmbBandwidthLimit module or robocopy timing)</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Measure-Command</span> <span class="p">{</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="nb">Copy-Item</span> <span class="n">-Path</span> <span class="s2">&quot;\\fileserver01\Finance\testfile.dat&quot;</span> <span class="n">-Destination</span> <span class="s2">&quot;C:\Temp\&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="nb">Copy-Item</span> <span class="n">-Path</span> <span class="s2">"\\fileserver01\Finance\testfile.dat"</span> <span class="n">-Destination</span> <span class="s2">"C:\Temp\"</span> <span class="n">-Force</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># Enable SMB tracing for deep diagnostics</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">netsh</span> <span class="n">trace</span> <span class="nb">start </span><span class="n">capture</span><span class="p">=</span><span class="n">yes</span> <span class="n">provider</span><span class="p">=</span><span class="s2">&quot;Microsoft-Windows-SMBClient&quot;</span> <span class="n">level</span><span class="p">=</span><span class="n">4</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">netsh</span> <span class="n">trace</span> <span class="nb">start </span><span class="n">capture</span><span class="p">=</span><span class="n">yes</span> <span class="n">provider</span><span class="p">=</span><span class="s2">"Microsoft-Windows-SMBClient"</span> <span class="n">level</span><span class="p">=</span><span class="n">4</span>
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># Reproduce the issue, then stop:</span>
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="n">netsh</span> <span class="n">trace</span> <span class="n">stop</span>
 </code></pre></div>

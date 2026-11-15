@@ -9089,7 +9089,7 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 <h2 id="step-1-collect-the-srm-support-bundle">Step 1 — Collect the SRM support bundle<a class="headerlink" href="#step-1-collect-the-srm-support-bundle" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Method 1: SRM vSphere Client Plugin (recommended)
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  1. Open vSphere Client → Site Recovery → Administration
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  2. Select your SRM site → click &quot;Export Support Bundle&quot;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  2. Select your SRM site → click "Export Support Bundle"
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  3. The wizard creates a ZIP containing:
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>     - vmware-dr-*.log (main log — all plan execution detail)
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>     - vmware-srmserver-*.log (service-level log)
@@ -9106,28 +9106,28 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 <hr />
 <h2 id="step-2-parse-the-srm-main-log-for-plan-failures">Step 2 — Parse the SRM main log for plan failures<a class="headerlink" href="#step-2-parse-the-srm-main-log-for-plan-failures" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># On the SRM Windows Server (RDP)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$logDir</span> <span class="p">=</span> <span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter SRM\Logs&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$logDir</span> <span class="p">=</span> <span class="s2">"C:\ProgramData\VMware\VMware vCenter SRM\Logs"</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Show the most recently modified logs</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ChildItem</span> <span class="nv">$logDir</span> <span class="n">-Filter</span> <span class="s2">&quot;*.log&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ChildItem</span> <span class="nv">$logDir</span> <span class="n">-Filter</span> <span class="s2">"*.log"</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Search for errors in the main DR log (replace * with actual filename timestamp)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="s2">&quot;$logDir\vmware-dr-*.log&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="n">-Pattern</span> <span class="s2">&quot;error|fail|exception|timeout&quot;</span> <span class="o">-CaseSensitive</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="s2">"$logDir\vmware-dr-*.log"</span> <span class="p">`</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="n">-Pattern</span> <span class="s2">"error|fail|exception|timeout"</span> <span class="o">-CaseSensitive</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">100</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Find the specific plan step that failed</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="s2">&quot;$logDir\vmware-dr-*.log&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="n">-Pattern</span> <span class="s2">&quot;STEP|Step|ExecuteStep|Failed|Error&quot;</span> <span class="p">|</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="s2">"$logDir\vmware-dr-*.log"</span> <span class="p">`</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="n">-Pattern</span> <span class="s2">"STEP|Step|ExecuteStep|Failed|Error"</span> <span class="p">|</span>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">50</span>
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c"># Extract lines around a specific error (e.g., &quot;replicated disks are not ready&quot;)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="s2">&quot;$logDir\vmware-dr-*.log&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  <span class="n">-Pattern</span> <span class="s2">&quot;replicated disks&quot;</span> <span class="n">-Context</span> <span class="n">5</span><span class="p">,</span> <span class="n">5</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c"># Extract lines around a specific error (e.g., "replicated disks are not ready")</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="s2">"$logDir\vmware-dr-*.log"</span> <span class="p">`</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  <span class="n">-Pattern</span> <span class="s2">"replicated disks"</span> <span class="n">-Context</span> <span class="n">5</span><span class="p">,</span> <span class="n">5</span>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c"># Check service-level log for SRM application errors</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="s2">&quot;$logDir\vmware-srmserver-*.log&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  <span class="n">-Pattern</span> <span class="s2">&quot;error|exception&quot;</span> <span class="o">-CaseSensitive</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">50</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="s2">"$logDir\vmware-srmserver-*.log"</span> <span class="p">`</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  <span class="n">-Pattern</span> <span class="s2">"error|exception"</span> <span class="o">-CaseSensitive</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">50</span>
 </code></pre></div>
 <p><strong>Common log patterns and their meaning:</strong>
 - <code>"Waiting for replicated disks"</code> followed by timeout → vSphere Replication has not synced the VM within the timeout; check <code>hbrsrv.log</code>
@@ -9140,25 +9140,25 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@&lt;vr-appliance-ip&gt;
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check vSphere Replication server log</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/hbrsrv.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|warn&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Expected healthy: &quot;Replication state: running&quot; entries; no timeout/error patterns</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/hbrsrv.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fail\|warn"</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Expected healthy: "Replication state: running" entries; no timeout/error patterns</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check I/O filter log (per-VM replication filter)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/hbrfilter.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/hbrfilter.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fail"</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check overall vRA service status</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-hbrsrv
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Expected: active (running)</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># List all replication configurations seen by the VR appliance</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>cat<span class="w"> </span>/var/log/vmware/hbrsrv.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;ReplicationConfig\|vmId\|rpoSla&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>cat<span class="w"> </span>/var/log/vmware/hbrsrv.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"ReplicationConfig\|vmId\|rpoSla"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>admin@vr-appliance-01:~$ tail -200 /var/log/vmware/hbrsrv.log | grep -i &quot;error\|fail\|warn&quot;
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>admin@vr-appliance-01:~$ tail -200 /var/log/vmware/hbrsrv.log | grep -i "error\|fail\|warn"
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2024-01-15T09:42:33.847Z warn [hbrsrv] Replication state: running for vm-245 (RPO: 300s)
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2024-01-15T09:43:12.521Z warn [hbrsrv] Network latency detected: 45ms to recovery site
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2024-01-15T09:44:01.634Z info [hbrsrv] Replication state: running for vm-512 (RPO: 600s)
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>admin@vr-appliance-01:~$ tail -200 /var/log/vmware/hbrfilter.log | grep -i &quot;error\|fail&quot;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>admin@vr-appliance-01:~$ tail -200 /var/log/vmware/hbrfilter.log | grep -i "error\|fail"
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>(no output — command completes silently)
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>admin@vr-appliance-01:~$ systemctl status vmware-hbrsrv
@@ -9171,7 +9171,7 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>   Memory: 487.3M
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>   CGroup: /systemd/system.slice/vmware-hbrsrv.service
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>admin@vr-appliance-01:~$ cat /var/log/vmware/hbrsrv.log | grep &quot;ReplicationConfig\|vmId\|rpoSla&quot; | tail -50
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>admin@vr-appliance-01:~$ cat /var/log/vmware/hbrsrv.log | grep "ReplicationConfig\|vmId\|rpoSla" | tail -50
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>2024-01-15T09:15:44.221Z info ReplicationConfig loaded: vmId=vm-245, rpoSla=300, target=10.50.12.88
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>2024-01-15T09:16:22.445Z info ReplicationConfig loaded: vmId=vm-512, rpoSla=600, target=10.50.12.88
 <a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>2024-01-15T09:17:05.889Z info ReplicationConfig loaded: vmId=vm-789, rpoSla=1800, target=10.50.12.89
@@ -9210,12 +9210,12 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Log file name depends on the array vendor adapter</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Dell SRDF SRA</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$sraLog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-*.log&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="nv">$sraLog</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$sraLog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-*.log"</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="nv">$sraLog</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">"error|fail"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># NetApp SRA</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">$sraLog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-*.log&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="nv">$sraLog</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">&quot;error|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">$sraLog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-*.log"</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Select-String<span class="w"> </span>-Path<span class="w"> </span><span class="nv">$sraLog</span><span class="w"> </span>-Pattern<span class="w"> </span><span class="s2">"error|fail"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">50</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check SRA command output (SRM calls SRA commands; each call is logged)</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Look for: discoverArrays, discoverDevices, testFailoverStart errors</span>
@@ -9259,7 +9259,7 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 <hr />
 <h2 id="step-5-verify-site-pairing-and-service-health">Step 5 — Verify site pairing and service health<a class="headerlink" href="#step-5-verify-site-pairing-and-service-health" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check SRM service on the SRM Windows Server</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware Site Recovery Manager Server&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Service</span> <span class="s2">"VMware Site Recovery Manager Server"</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Test network connectivity to the remote site vCenter (TCP 443)</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">remote-vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
@@ -9270,7 +9270,7 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># View vCenter events related to SRM (from the local vCenter)</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># vSphere Client → Monitor → Events → filter by: Component = Site Recovery Manager</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Look for: &quot;Site pairing connection failed&quot;, &quot;Certificate error&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Look for: "Site pairing connection failed", "Certificate error"</span>
 </code></pre></div>
 <p><strong>Re-pairing sites if certificate trust is broken:</strong>
 1. SRM vSphere Client plugin → Administration → Sites → select the paired site

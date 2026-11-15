@@ -9032,10 +9032,10 @@ Hardening reference covering Hardening Checklist, Network Segmentation, Operatin
 <li>Review <code>/etc/sudoers</code> and SSH <code>authorized_keys</code> periodically; remove stale entries</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check who has SSH access on an ECS node</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;ecs-node&gt;<span class="w"> </span><span class="s2">&quot;cat /home/admin/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;ecs-node&gt;<span class="w"> </span><span class="s2">"cat /home/admin/.ssh/authorized_keys"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify root direct login is disabled in sshd_config</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh<span class="w"> </span>admin@&lt;ecs-node&gt;<span class="w"> </span><span class="s2">&quot;grep PermitRootLogin /etc/ssh/sshd_config&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh<span class="w"> </span>admin@&lt;ecs-node&gt;<span class="w"> </span><span class="s2">"grep PermitRootLogin /etc/ssh/sshd_config"</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Expected: PermitRootLogin no</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh_rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDk7vJ9mK2xL4pQ8nR5tZ1wX3yH6jK9lM0oP2qS3uV4wX5yZ6aB7cD8eF9gH0iJ1kL2mN3oP4qR5sT6uV7wX8yZ9aB0cD1eF2gH3iJ4kL5mN6oP7qR8sT9uV0wX1yZ2aB3cD4eF5gH6iJ7kL8mN9oP8qR9sU0vW1xY2yZ3aB4cD5eF6gH7iJ8kL9mN0oP9qR0sU1vW2xY3yZ4aB5cD6eF7gH8iJ9kL0mO1pQ0rV2wX3yZ5aB6cD7eF8gH9iJ0kL1mO2pQ1rV3wX4yZ6aB7cD8eF9gH0iJ1kL2mO3pQ2rV4wX5yZ7aB8cD9eF0gH1iJ2kL3mO4pQ3rV5wX6yZ8aB9cD0eF1gH2iJ3kL4mO5pQ4rV6wX7yZ9aB0cD1eF2gH3iJ4kL5mO6pQ5rV7wX8yZ0aB1cD2eF3gH4iJ5kL6mO7pQ6rV8wX9yZ1aB2cD3eF4gH5iJ6kL7mO8pQ7rV9wX0yZ2aB3cD4eF5gH6iJ7kL8mO9pQ8rV0wX1yZ3aB4cD5eF6gH7iJ8kL9mO0pQ9rV1wX2yZ4aB5cD6eF7gH8iJ9kL0mP1pQ0rV2wX3yZ5aB6cD7eF8gH9iJ0kL1mP2pQ1rV3wX4yZ6aB7cD8eF9gH0iJ1kL2mP3pQ2rV4wX5yZ7aB8cD9eF0gH1iJ2kL3mP4pQ3rV5wX6yZ8aB9cD0eF1gH2iJ3kL4mP5pQ4rV6wX7yZ9aB0cD1eF2gH3iJ4kL5mP6pQ5rV7wX8yZ0aB1cD2eF3gH4iJ5kL6mP7pQ6rV8wX9yZ1aB2c
@@ -9077,15 +9077,15 @@ Hardening reference covering Hardening Checklist, Network Segmentation, Operatin
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># (Note: the bucket must have been created with Object Lock enabled)</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-object-lock-configuration<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--bucket<span class="w"> </span>compliance-immutable<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--object-lock-configuration<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;ObjectLockEnabled&quot;: &quot;Enabled&quot;,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;Rule&quot;: {</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">      &quot;DefaultRetention&quot;: {</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">        &quot;Mode&quot;: &quot;COMPLIANCE&quot;,</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">        &quot;Days&quot;: 2557</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--object-lock-configuration<span class="w"> </span><span class="s1">'{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    "ObjectLockEnabled": "Enabled",</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    "Rule": {</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">      "DefaultRetention": {</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">        "Mode": "COMPLIANCE",</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">        "Days": 2557</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">      }</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">    }</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
@@ -9100,12 +9100,12 @@ Hardening reference covering Hardening Checklist, Network Segmentation, Operatin
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>{
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    &quot;ObjectLockConfiguration&quot;: {
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        &quot;ObjectLockEnabled&quot;: &quot;Enabled&quot;,
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        &quot;Rule&quot;: {
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            &quot;DefaultRetention&quot;: {
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                &quot;Mode&quot;: &quot;COMPLIANCE&quot;,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                &quot;Days&quot;: 2557
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    "ObjectLockConfiguration": {
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        "ObjectLockEnabled": "Enabled",
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        "Rule": {
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            "DefaultRetention": {
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                "Mode": "COMPLIANCE",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                "Days": 2557
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>            }
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        }
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    }
@@ -9223,10 +9223,10 @@ Hardening reference covering Hardening Checklist, Network Segmentation, Operatin
 <p>Run these checks at each quarterly security review and after any security-relevant configuration change:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm TLS version on S3 endpoint (should reject TLS 1.0 and 1.1)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>-tls1<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;handshake failure|alert&quot;</span><span class="w">  </span><span class="c1"># Should show failure</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"handshake failure|alert"</span><span class="w">  </span><span class="c1"># Should show failure</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>-tls1_2<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span><span class="w">  </span><span class="c1"># Should show TLSv1.2 or TLSv1.3</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Protocol"</span><span class="w">  </span><span class="c1"># Should show TLSv1.2 or TLSv1.3</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Confirm self-signed certs have been replaced (issuer should be the corporate CA)</span>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:4443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
@@ -9241,15 +9241,15 @@ Hardening reference covering Hardening Checklist, Network Segmentation, Operatin
 <a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
 <a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Confirm management API is not accessible from outside the management network</span>
 <a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># (Run this from an application VLAN host — should time out or be refused)</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>curl<span class="w"> </span>--max-time<span class="w"> </span><span class="m">5</span><span class="w"> </span>https://&lt;ecs-node&gt;:4443/login<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ACCESSIBLE — REMEDIATE&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Blocked — OK&quot;</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>curl<span class="w"> </span>--max-time<span class="w"> </span><span class="m">5</span><span class="w"> </span>https://&lt;ecs-node&gt;:4443/login<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"ACCESSIBLE — REMEDIATE"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Blocked — OK"</span>
 <a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
 <a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># List all namespaces and verify quotas are set</span>
 <a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
 <a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="c1"># Review each namespace output for quota values — alert on any with no quota</span>
 <a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
 <a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="c1"># Review active management users</span>
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/user/users.json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">"X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">  </span><span class="s2">"https://&lt;ecs-node&gt;:4443/user/users.json"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>connect:errno=104
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>140735289937728:error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure:../ssl/record/rec_read_c.c:205:SSL alert number 40
@@ -9266,14 +9266,14 @@ Hardening reference covering Hardening Checklist, Network Segmentation, Operatin
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  Quota: (unlimited)
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>[
 <a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  {
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    &quot;uid&quot;: &quot;admin@internal.local&quot;,
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    &quot;name&quot;: &quot;Administrator&quot;,
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    &quot;created&quot;: &quot;2024-01-10T14:22:33Z&quot;
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    "uid": "admin@internal.local",
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    "name": "Administrator",
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    "created": "2024-01-10T14:22:33Z"
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  },
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  {
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    &quot;uid&quot;: &quot;svc-backup@internal.local&quot;,
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    &quot;name&quot;: &quot;Backup Service&quot;,
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    &quot;created&quot;: &quot;2024-02-05T08:15:12Z&quot;
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    "uid": "svc-backup@internal.local",
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    "name": "Backup Service",
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    "created": "2024-02-05T08:15:12Z"
 <a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  }
 <a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>]
 </code></pre></div>
