@@ -42,7 +42,7 @@ sequenceDiagram
     MDS-->>CLI: COMPOUND response — layout: DS1 handles stripe 0..511MB, DS2 handles 512MB..EOF<br/>deviceid → DS1 addr (10.0.1.11:2049), DS2 addr (10.0.1.12:2049)
     Note over CLI: Client now has full layout — MDS not in I/O path
 
-    Note over CLI,DS1,DS2: Phase 4 — Direct Client-to-DS I/O (pNFS data path)
+    Note over CLI,DS2: Phase 4 — Direct Client-to-DS I/O (pNFS data path)
     CLI->>DS1: COMPOUND [ SEQUENCE | PUTFH | READ offset=0 count=4MB ]
     DS1-->>CLI: READ response (data, eof=false)
     CLI->>DS2: COMPOUND [ SEQUENCE | PUTFH | WRITE offset=512MB count=4MB ]

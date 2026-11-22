@@ -61,7 +61,7 @@ exportClixml: "Export-Clixml\n(DPAPI encrypted .xml" {shape: rectangle}
 prodScript: "Production Script\n(enterprise" {shape: rectangle}
 secretMgmt: "SecretManagement\n(Set-Secret / Get-Secret" {shape: rectangle}
 azKeyVault: "Azure Key Vault\n(cross-machine" {shape: rectangle}
-psCred: "PSCredential object\n($cred" {shape: rectangle}
+psCred: "PSCredential object\n(\$cred" {shape: rectangle}
 cmdlet: "Cmdlet\n(Connect-VIServer,\nInvoke-Command..." {shape: rectangle}
 
 interactiveUser -> getCredential

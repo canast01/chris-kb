@@ -18,7 +18,7 @@ PowerShell diagnostic techniques: inspect the $Error automatic variable for exce
 direction: right
 
 B: "B" {shape: rectangle}
-C: "Inspect $Error[0" {shape: rectangle}
+C: "Inspect \$Error[0" {shape: rectangle}
 D: "Enable transcript logging\nStart-Transcript -Path C:\Logs\trace.txt" {shape: rectangle}
 E: "E" {shape: rectangle}
 F: "Check module install, PATH, and execution policy\nImport-Module -Verbose to see search paths" {shape: rectangle}

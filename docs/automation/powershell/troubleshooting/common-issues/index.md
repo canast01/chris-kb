@@ -52,7 +52,7 @@ R3: "Common Error Reference\n— add module dir to PSModulePath" {shape: rectang
 R4: "Common Error Reference\n— Install-Module -Force -AllowClobber" {shape: rectangle}
 D3: "D3" {shape: rectangle}
 R5: "Debugging Scripts\n— Get-Credential again or Import-Clixml" {shape: rectangle}
-R6: "Debugging Scripts\n— inspect $Error[0" {shape: rectangle}
+R6: "Debugging Scripts\n— inspect \$Error[0" {shape: rectangle}
 B4: "B4" {shape: rectangle}
 R7: "Common Error Reference\n— Enable-PSRemoting -Force on target" {shape: rectangle}
 B5: "B5" {shape: rectangle}
@@ -93,12 +93,12 @@ failure: "Script Error\nor Unexpected Behaviour" {shape: rectangle}
 errType: "Error type?" {shape: rectangle}
 checkPolicy: "Get-ExecutionPolicy -List\ncheck all scopes" {shape: rectangle}
 setPolicy: "Set-ExecutionPolicy RemoteSigned\n-Scope CurrentUser" {shape: rectangle}
-checkModPath: "$env:PSModulePath\nmodule path correct?" {shape: rectangle}
+checkModPath: "\$env:PSModulePath\nmodule path correct?" {shape: rectangle}
 addPath: "Add module directory\nto PSModulePath" {shape: rectangle}
 reinstallMod: "Install-Module -Force\n-AllowClobber" {shape: rectangle}
 testWSMan: "Test-WSMan -ComputerName host\nTest-NetConnection port 5985" {shape: rectangle}
 enableRemoting: "Enable-PSRemoting -Force\non target (as admin" {shape: rectangle}
-checkCred: "$Error[0" {shape: rectangle}
+checkCred: "\$Error[0" {shape: rectangle}
 refreshCred: "Get-Credential again\nor Import-Clixml new file" {shape: rectangle}
 strictMode: "Set-StrictMode -Version Latest\nadd breakpoint(" {shape: rectangle}
 stepDebug: "Set-PSBreakpoint\nstep through execution" {shape: rectangle}

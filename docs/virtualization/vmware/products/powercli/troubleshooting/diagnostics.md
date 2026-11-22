@@ -25,7 +25,7 @@ D: "Add breakpoints\npdb-equivalent: Set-PSBreakpoint" {shape: rectangle}
 E: "Measure-Command timing\nSwitch to Get-View" {shape: rectangle}
 F: "Test-Connection vcenter\ncurl /sdk to verify HTTPS" {shape: rectangle}
 G: "ExtensionData for raw API object\nGet-Member to list all properties" {shape: rectangle}
-H: "Read $_.Exception.Message\nand $_.Exception.InnerException" {shape: rectangle}
+H: "Read \$_.Exception.Message\nand \$_.Exception.InnerException" {shape: rectangle}
 I: "I" {shape: rectangle}
 J: "Verify credential and domain\nConnect-VIServer -Credential Get-Credential" {shape: rectangle}
 K: "Confirm object exists\nGet-VM -Name name; check typo" {shape: rectangle}

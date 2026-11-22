@@ -91,7 +91,7 @@ noTrigger: "noTrigger" {shape: rectangle}
 checkPaths: "Check on.paths filter\nDoes it match the changed files?" {shape: rectangle}
 stepFail: "stepFail" {shape: rectangle}
 permErr: "Resource not accessible\n→ Add permissions: block to job" {shape: rectangle}
-ctxErr: "Context access invalid\n→ Fix ${{ }} expression syntax" {shape: rectangle}
+ctxErr: "Context access invalid\n→ Fix \${{ }} expression syntax" {shape: rectangle}
 exitErr: "Exit code 1\n→ Check step output in logs" {shape: rectangle}
 secretErr: "Secret is empty\n→ Check repo vs env vs org scope" {shape: rectangle}
 wdErr: "No such file\n→ Add working-directory: or cd" {shape: rectangle}

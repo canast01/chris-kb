@@ -10,7 +10,7 @@ direction: right
 
 wfTrigger: "Workflow triggered" {shape: rectangle}
 jobCtx: "Job context\nenvironment: production" {shape: rectangle}
-secretCtx: "${{ secrets.X }}" {shape: rectangle}
+secretCtx: "\${{ secrets.X }}" {shape: rectangle}
 envSecret: "Environment secret\nRequired reviewers enforced" {shape: rectangle}
 repoSecret: "Repository secret\nAll workflows in repo" {shape: rectangle}
 orgSecret: "Organisation secret\nGranted repos only" {shape: rectangle}

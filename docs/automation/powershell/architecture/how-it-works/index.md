@@ -46,8 +46,8 @@ G: "Command Discovery\nAlias → Function → Cmdlet → Native" {shape: rectang
 H: "Parameter Binding" {shape: rectangle}
 I: "Pipeline Processor" {shape: rectangle}
 J: "Output / Objects" {shape: rectangle}
-K: "stdout / next cmdlet / $null" {shape: rectangle}
-L: "Error Stream\n$Error / Write-Error" {shape: rectangle}
+K: "stdout / next cmdlet / \$null" {shape: rectangle}
+L: "Error Stream\n\$Error / Write-Error" {shape: rectangle}
 A: "Input · stdin / script / command" {shape: rectangle}
 
 B -> C

@@ -16,13 +16,13 @@ VxRail Pre-Upgrade Checks reference covering Overview, Pre-Checks, Steps, Valida
 direction: right
 
 prechecks: "Pre-Checks" {shape: rectangle}
-steps: "Steps" {shape: rectangle}
+steps_node: "Steps" {shape: rectangle}
 validation: "Validation" {shape: rectangle}
 rollback: "Rollback" {shape: rectangle}
 verify: "Verify" {shape: rectangle}
 
-prechecks -> steps
-steps -> validation
+prechecks -> steps_node
+steps_node -> validation
 validation -> rollback
 rollback -> verify
 ```

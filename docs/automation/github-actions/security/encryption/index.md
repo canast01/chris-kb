@@ -41,7 +41,7 @@ dev: "Developer\nsets secret" {shape: rectangle}
 ghSettings: "GitHub Settings\nRepo / Env / Org" {shape: rectangle}
 ghEncrypted: "GitHub Encrypted Store\nLibSodium public key encryption" {shape: rectangle}
 wfRun: "Workflow Run\nRunner environment" {shape: rectangle}
-step: "Step\nenv: VAR=${{ secrets.X }}" {shape: rectangle}
+step: "Step\nenv: VAR=\${{ secrets.X }}" {shape: rectangle}
 logs: "Workflow Logs\nValue masked as ***" {shape: rectangle}
 
 dev -> ghSettings

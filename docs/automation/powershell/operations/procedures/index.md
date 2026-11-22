@@ -85,12 +85,12 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 ```d2
 direction: right
 
-scriptStart: "Script Execution\n($ErrorActionPreference = Stop" {shape: rectangle}
+scriptStart: "Script Execution\n(\$ErrorActionPreference = Stop" {shape: rectangle}
 tryBlock: "try { ... }" {shape: rectangle}
 cmdRun: "Cmdlet / Command\nExecutes" {shape: rectangle}
 success: "Command succeeds\n(continue" {shape: rectangle}
 termErr: "Terminating Error\nthrown" {shape: rectangle}
-catchBlock: "catch { ... }\n(inspect $_.Exception" {shape: rectangle}
+catchBlock: "catch { ... }\n(inspect \$_.Exception" {shape: rectangle}
 logError: "Write-Error / Out-File\n(log error to file" {shape: rectangle}
 sendAlert: "Send-MailMessage\nor webhook alert" {shape: rectangle}
 finallyBlock: "finally { ... }\n(cleanup / Stop-Transcript" {shape: rectangle}

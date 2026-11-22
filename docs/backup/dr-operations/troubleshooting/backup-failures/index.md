@@ -62,7 +62,7 @@ G: "Check throughput: iperf3\nVerify backup window" {shape: rectangle}
 H: "vssadmin list writers\nCheck for Failed state" {shape: rectangle}
 J: "Restart VSS writers\nnet stop / net start" {shape: rectangle}
 K: "Check VSS event log\nApplication Log Event 8193/12293" {shape: rectangle}
-P: "Check Veeam agent log\nC:\ProgramData\Veeam\Backup\" {shape: rectangle}
+P: "Check Veeam agent log\nC:\ProgramData\Veeam\Backup\\" {shape: rectangle}
 R: "Update agent to match VBR version" {shape: rectangle}
 S: "Re-push agent\nCheck firewall port 2500-3300" {shape: rectangle}
 
