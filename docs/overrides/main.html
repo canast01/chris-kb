@@ -158,6 +158,22 @@
   </script>
   {{ super() }}
   <script>
+    // Homepage skip link: Material points "Skip to content" at the first
+    // Markdown heading (#platforms), which skips the hero <h1>. Point it at
+    // the article instead. Re-run on every instant-navigation page swap.
+    if (window.document$) {
+      document$.subscribe(function () {
+        var hero = document.querySelector('.md-content .hero');
+        var skip = document.querySelector('.md-skip');
+        var article = document.querySelector('article.md-content__inner');
+        if (hero && skip && article) {
+          if (!article.id) article.id = 'kb-content';
+          article.setAttribute('tabindex', '-1');
+          skip.setAttribute('href', '#' + article.id);
+        }
+      });
+    }
+
     // Accessible name for the search dialog (Lighthouse: aria-dialog-name).
     // Material's built-in search widget renders role="dialog" with no
     // aria-label/aria-labelledby -- screen reader users get no indication
