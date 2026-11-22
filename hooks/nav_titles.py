@@ -1,14 +1,14 @@
 """
 MkDocs hook: fix nav titles and restructure top-level tabs.
 
-Top-level nav becomes: Home | Platforms | Site Map
+Top-level nav becomes: Home | Platforms | Site Map | About
 All other sections are nested under Platforms.
 
 Title fixes are applied word-by-word so product names and acronyms
 render correctly regardless of how MkDocs derives them from folder names.
 """
 
-from mkdocs.structure.nav import Section
+from mkdocs.structure.nav import Link, Section
 
 # Word-level substitutions — matched case-insensitively against each individual word.
 # MkDocs derives section titles from folder names via:
@@ -309,6 +309,8 @@ def on_nav(nav, **kwargs):
         new_items.append(platforms)
         if sitemap:
             new_items.append(sitemap)
+        # About is a standalone HTML page (docs/about.html), so add it as a link.
+        new_items.append(Link(title="About", url="/about.html"))
         nav.items = new_items
 
     return nav
