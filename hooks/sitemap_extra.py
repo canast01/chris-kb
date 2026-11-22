@@ -1,8 +1,11 @@
-"""Add standalone HTML pages (not built by MkDocs) to sitemap.xml and sitemap.xml.gz."""
+"""Adjust sitemap.xml / sitemap.xml.gz after build: add standalone HTML pages, drop noindex pages."""
 import gzip
 import os
+import re
 
 EXTRA_PATHS = ["about.html"]
+# Internal dashboards (also marked noindex in overrides/main.html)
+REMOVE_PATHS = ["site-quality/", "usage-metrics/"]
 
 
 def on_post_build(config, **kwargs):
@@ -18,8 +21,10 @@ def on_post_build(config, **kwargs):
         for p in EXTRA_PATHS
         if f"<loc>{base}{p}</loc>" not in xml
     )
-    if not entries:
-        return
+    for p in REMOVE_PATHS:
+        xml = re.sub(
+            r"\s*<url>\s*<loc>" + re.escape(base + p) + r"</loc>.*?</url>",
+            "", xml, flags=re.S)
     xml = xml.replace("</urlset>", entries + "</urlset>")
     with open(path, "w", encoding="utf-8") as f:
         f.write(xml)
