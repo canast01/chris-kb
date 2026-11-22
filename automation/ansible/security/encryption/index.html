@@ -29,10 +29,14 @@
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
+  
+    
       
         <title>Ansible — Encryption - Chris KB</title>
       
     
+  
+
     
       <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
       
@@ -74,17 +78,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Ansible — Encryption · Chris KB">
-  <meta property="og:description" content="Ansible encryption: ansible-vault encrypt, encrypt_string, vault ID configuration, KMS-backed vault password files, and in-transit SSH encryption settings.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Ansible — Encryption · Chris KB">
-  <meta name="twitter:description" content="Ansible encryption: ansible-vault encrypt, encrypt_string, vault ID configuration, KMS-backed vault password files, and in-transit SSH encryption settings.">
   
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Ansible — Encryption", "url": "https://chrisanastasiadis.com/automation/ansible/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Ansible encryption: ansible-vault encrypt, encrypt_string, vault ID configuration, KMS-backed vault password files, and in-transit SSH encryption settings.", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
-  </head>
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Ansible — Encryption - Chris KB" />
+<meta property="og:description" content="Ansible encryption: ansible-vault encrypt, encrypt_string, vault ID configuration, KMS-backed vault password files, and in-transit SSH encryption settings." />
+<meta property="og:image" content="https://chrisanastasiadis.com/assets/images/social/automation/ansible/security/encryption/index.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://chrisanastasiadis.com/automation/ansible/security/encryption/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Ansible — Encryption - Chris KB" />
+<meta property="twitter:description" content="Ansible encryption: ansible-vault encrypt, encrypt_string, vault ID configuration, KMS-backed vault password files, and in-transit SSH encryption settings." />
+<meta property="twitter:image" content="https://chrisanastasiadis.com/assets/images/social/automation/ansible/security/encryption/index.png" />
+</head>
   
   
     
@@ -313,6 +324,25 @@
     
   
   Site Map
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="/about.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
 
       </a>
     </li>
@@ -7146,6 +7176,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/about.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -7344,7 +7401,7 @@ Ansible encryption: `ansible-vault encrypt`, `encrypt_string`, vault ID configur
 *Applies to: Ansible 2.14+*
 </div>
 
-<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kMFqwzAQRO_-isX3_oAPhVIKPaT0INPrsrU3sagtG-06JYT8e6UY2RQUH3eeZjRMaz03akdXQTv-uqIgJ_a7ZzzT3GsF5ctyw1e8S7hKRxNXEF3kTj3fCu0FG_Zqj7YhZRzI0YkHdtFeHwy8bhA-VpjNEulQfegwjV6RXeMv09KuNOYd6oTgbUX5HA611Z4ZleQHx1mnOdYxSYc66PB517MJ298oQWvJt4IyDwP5Swja_geTMJgFZ_P-DwtPz7C3WxfyQtWdbWPC47WS_9GLuzu_0WrN4ejbXybZ_wBHueQ7?" /></p>
+<p><img alt="Kroki" src="kroki-generated-846c54a5-4abb-3b14-b6a7-b67b63fd6241.svg" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> SSH key or service account with sudo on managed hosts; Ansible control node</li>
@@ -7355,7 +7412,7 @@ Ansible encryption: `ansible-vault encrypt`, `encrypt_string`, vault ID configur
 <hr />
 <h2 id="ansible-vault">Ansible Vault<a class="headerlink" href="#ansible-vault" title="Permanent link">&para;</a></h2>
 <p>Ansible Vault encrypts sensitive data at rest using AES-256-CBC. Encrypted content lives alongside plaintext YAML in the same repository — safely committed to Git.</p>
-<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UcFKxDAQvfcrhp687Pa-B8GDoshCQRCEhZK2YzdsmoQkXS2i3-5M03Yrdm8zb-a9vHmppcMqSKN34GRzDElilZD6BSuHYQdpzl3AzwAROugbK7z_MK6GDO7yJzhhn8KXPwqLpEFiQjcKv5Oz6FS415XrLQsJ7WWpcDPAB41xUPjgpG7WBapn7B-kIjR9ZRbk08uMkpOfbDvIFWzpuolRY6i3fauIOT6PNYhA-z6sslu6_a1VxG2c6WxxFs5nQqmMB6OSw3d0JIceohfgrVU5SrYvjTnFWIeSBDpP1LosplivONGiwfrReM5yHzvgdnV9-YmwuYXlX1xy_T9ZNPOQNy85MjzGMsXD0HTaX_EZnYrInk9JfgE4MueA?" /></p>
+<p><img alt="Kroki" src="kroki-generated-03d2f921-b06b-3377-880d-d878bec7cbde.svg" /></p>
 <h3 id="recommended-layout">Recommended Layout<a class="headerlink" href="#recommended-layout" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>group_vars/
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── prod/
@@ -7776,6 +7833,22 @@ Ansible encryption: `ansible-vault encrypt`, `encrypt_string`, vault ID configur
       
     
   <script>
+    // Homepage skip link: Material points "Skip to content" at the first
+    // Markdown heading (#platforms), which skips the hero <h1>. Point it at
+    // the article instead. Re-run on every instant-navigation page swap.
+    if (window.document$) {
+      document$.subscribe(function () {
+        var hero = document.querySelector('.md-content .hero');
+        var skip = document.querySelector('.md-skip');
+        var article = document.querySelector('article.md-content__inner');
+        if (hero && skip && article) {
+          if (!article.id) article.id = 'kb-content';
+          article.setAttribute('tabindex', '-1');
+          skip.setAttribute('href', '#' + article.id);
+        }
+      });
+    }
+
     // Accessible name for the search dialog (Lighthouse: aria-dialog-name).
     // Material's built-in search widget renders role="dialog" with no
     // aria-label/aria-labelledby -- screen reader users get no indication

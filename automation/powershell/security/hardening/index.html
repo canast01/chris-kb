@@ -29,10 +29,14 @@
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
+  
+    
       
         <title>PowerShell — Hardening - Chris KB</title>
       
     
+  
+
     
       <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
       
@@ -74,17 +78,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerShell — Hardening · Chris KB">
-  <meta property="og:description" content="PowerShell hardening: Set-ExecutionPolicy AllSigned, ScriptBlock logging, module logging, AMSI integration, and PowerShell 7 constrained language mode...">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerShell — Hardening · Chris KB">
-  <meta name="twitter:description" content="PowerShell hardening: Set-ExecutionPolicy AllSigned, ScriptBlock logging, module logging, AMSI integration, and PowerShell 7 constrained language mode...">
   
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "PowerShell — Hardening", "url": "https://chrisanastasiadis.com/automation/powershell/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "PowerShell hardening: Set-ExecutionPolicy AllSigned, ScriptBlock logging, module logging, AMSI integration, and PowerShell 7 constrained language mode...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
-  </head>
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="PowerShell — Hardening - Chris KB" />
+<meta property="og:description" content="PowerShell hardening: Set-ExecutionPolicy AllSigned, ScriptBlock logging, module logging, AMSI integration, and PowerShell 7 constrained language mode..." />
+<meta property="og:image" content="https://chrisanastasiadis.com/assets/images/social/automation/powershell/security/hardening/index.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://chrisanastasiadis.com/automation/powershell/security/hardening/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="PowerShell — Hardening - Chris KB" />
+<meta property="twitter:description" content="PowerShell hardening: Set-ExecutionPolicy AllSigned, ScriptBlock logging, module logging, AMSI integration, and PowerShell 7 constrained language mode..." />
+<meta property="twitter:image" content="https://chrisanastasiadis.com/assets/images/social/automation/powershell/security/hardening/index.png" />
+</head>
   
   
     
@@ -313,6 +324,25 @@
     
   
   Site Map
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="/about.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
 
       </a>
     </li>
@@ -7146,6 +7176,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/about.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -7345,7 +7402,7 @@ PowerShell hardening: `Set-ExecutionPolicy AllSigned`, ScriptBlock logging, modu
 </div>
 
 <hr />
-<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9j8EKAiEQhu8-xeC9F_AQdAg67CHqAUTWSQUZF7WWiN49p5C9SNfvm3_mHxsyzjUkUmDTSkIsacVcPMaovckWKZDT0TwbVCDPbK9s4dQtTF8r4VW8WVABbzTkIr6FudtQtSGr8YFUdUyubTkwhUbhyBSm5IbprUDGG2akuXm5Hb50Okz_ewV2exh2-w2WUXHODBv1zAcJPHsP?" /></p>
+<p><img alt="Kroki" src="kroki-generated-f9ae8dd8-fb9a-36dc-8819-7ea4b3c4726d.svg" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -7355,7 +7412,7 @@ PowerShell hardening: `Set-ExecutionPolicy AllSigned`, ScriptBlock logging, modu
 </ul>
 <hr />
 <h2 id="powershell-hardening-layers">PowerShell Hardening Layers<a class="headerlink" href="#powershell-hardening-layers" title="Permanent link">&para;</a></h2>
-<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kr1OwzAQx_c-xYmJJQKkTh2QQpuhVSshgsSSxTgnx-DYlj8KFWLlAXhEnoSzU5VUish0H75f7u5_rXTIgzR6AU6KLsxm-I783ijJDwu4qMiJKQ1DqNGXD9ibgLUUGlu4glKpwb6AD98xiwQiItNC4efMcydtSA-kFsSrsw_HANFqDEUZQ4c6SG7azGUhOpzEcdUTZGm0D47J1MCWMpEJhB0VE-9pVS5TV9ZuDX9FN4l5QUaYTVVSwSb6AJU2UXRQtr3UMrHTyJOlvWmjQhravBFilz3IbqGochgqN8GsdWZPLQ4lfhJHv9LDjjzhHk8ebI0Qxw0F5kIxSv18fUNDn0e3R9c01isjpvFeYlpYva52tBRiQqmZOnjpCcwUugAkrY_eSi5N9PCsaGv-Hynv0oM_IbM7arbak5CwXsH85no-iRndFxS3cHYg5-eS0iR4Ej2ZJFoSLpkjEcYbzDyaeNzqKTaqOcV-ATHXEYk=?" /></p>
+<p><img alt="Kroki" src="kroki-generated-bd3114a6-c117-3c5c-b929-30dbc543d3cd.svg" /></p>
 <h2 id="audit-and-event-log">Audit and Event Log<a class="headerlink" href="#audit-and-event-log" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Enable script block logging (logs all script blocks to the event log)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Registry path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging</span>
@@ -7631,6 +7688,22 @@ PowerShell hardening: `Set-ExecutionPolicy AllSigned`, ScriptBlock logging, modu
       
     
   <script>
+    // Homepage skip link: Material points "Skip to content" at the first
+    // Markdown heading (#platforms), which skips the hero <h1>. Point it at
+    // the article instead. Re-run on every instant-navigation page swap.
+    if (window.document$) {
+      document$.subscribe(function () {
+        var hero = document.querySelector('.md-content .hero');
+        var skip = document.querySelector('.md-skip');
+        var article = document.querySelector('article.md-content__inner');
+        if (hero && skip && article) {
+          if (!article.id) article.id = 'kb-content';
+          article.setAttribute('tabindex', '-1');
+          skip.setAttribute('href', '#' + article.id);
+        }
+      });
+    }
+
     // Accessible name for the search dialog (Lighthouse: aria-dialog-name).
     // Material's built-in search widget renders role="dialog" with no
     // aria-label/aria-labelledby -- screen reader users get no indication
