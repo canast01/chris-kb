@@ -10,11 +10,9 @@ description: "Common questions about Python operations, configuration, and troub
 *Applies to: Python 3.x*
 
 <div class="kb-summary">
-Common questions about Python operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Python operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Python — Frequently Asked Questions](../../../assets/automation-python-operations-faq.svg)
-
-![Python FAQ](../../../assets/automation-python-operations-faq.svg)
 
 ## General
 

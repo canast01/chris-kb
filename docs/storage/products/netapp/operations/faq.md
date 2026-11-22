@@ -10,11 +10,9 @@ description: "Common questions about NetApp operations, configuration, and troub
 *Applies to: NetApp ONTAP 9.x*
 
 <div class="kb-summary">
-Common questions about NetApp operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about NetApp operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![NetApp — Frequently Asked Questions](../../../../assets/storage-netapp-operations-faq.svg)
-
-![NetApp FAQ](../../../../assets/storage-netapp-operations-faq.svg)
 
 ## General
 

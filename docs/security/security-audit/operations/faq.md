@@ -10,11 +10,9 @@ description: "Common questions about Security Audit operations, configuration, a
 *Applies to: All products (Security)*
 
 <div class="kb-summary">
-Common questions about Security Audit operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Security Audit operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Security Audit — Frequently Asked Questions](../../../assets/security-security-audit-operations-faq.svg)
-
-![Security Audit FAQ](../../../assets/security-security-audit-operations-faq.svg)
 
 ## General
 

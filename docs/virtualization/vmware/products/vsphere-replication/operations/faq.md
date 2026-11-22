@@ -10,11 +10,9 @@ description: "Common questions about VMware vSphere Replication operations, conf
 *Applies to: VMware vSphere 7.x / 8.x*
 
 <div class="kb-summary">
-Common questions about VMware vSphere Replication operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about VMware vSphere Replication operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![VMware vSphere Replication — Frequently Asked Questions](../../../../../assets/virtualization-vmware-vsphere-replication-operations-faq.svg)
-
-![VMware vSphere Replication FAQ](../../../../../assets/virtualization-vmware-vsphere-replication-operations-faq.svg)
 
 ## General
 

@@ -10,11 +10,9 @@ description: "Common questions about Red Hat OpenShift operations, configuration
 *Applies to: OpenShift 4.x*
 
 <div class="kb-summary">
-Common questions about Red Hat OpenShift operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Red Hat OpenShift operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Red Hat OpenShift — Frequently Asked Questions](../../../assets/virtualization-openshift-operations-faq.svg)
-
-![Red Hat OpenShift FAQ](../../../assets/virtualization-openshift-operations-faq.svg)
 
 ## General
 

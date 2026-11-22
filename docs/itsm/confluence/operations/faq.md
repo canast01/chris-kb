@@ -10,11 +10,9 @@ description: "Common questions about Confluence operations, configuration, and t
 *Applies to: Confluence*
 
 <div class="kb-summary">
-Common questions about Confluence operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Confluence operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Confluence — Frequently Asked Questions](../../../assets/itsm-confluence-operations-faq.svg)
-
-![Confluence FAQ](../../../assets/itsm-confluence-operations-faq.svg)
 
 ## General
 

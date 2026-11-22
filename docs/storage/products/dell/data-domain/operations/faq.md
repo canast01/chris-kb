@@ -10,11 +10,9 @@ description: "Common questions about Dell Data Domain operations, configuration,
 *Applies to: Dell EMC Storage*
 
 <div class="kb-summary">
-Common questions about Dell Data Domain operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell Data Domain operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell Data Domain — Frequently Asked Questions](../../../../../assets/storage-dell-data-domain-operations-faq.svg)
-
-![Dell Data Domain FAQ](../../../../../assets/storage-dell-data-domain-operations-faq.svg)
 
 ## General
 

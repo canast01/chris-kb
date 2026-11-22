@@ -10,11 +10,9 @@ description: "Common questions about Superna Eyeglass for NetApp operations, con
 *Applies to: NetApp ONTAP 9.x*
 
 <div class="kb-summary">
-Common questions about Superna Eyeglass for NetApp operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Superna Eyeglass for NetApp operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Superna Eyeglass for NetApp — Frequently Asked Questions](../../../../../assets/storage-netapp-superna-eyeglass-operations-faq.svg)
-
-![Superna Eyeglass for NetApp FAQ](../../../../../assets/storage-netapp-superna-eyeglass-operations-faq.svg)
 
 ## General
 

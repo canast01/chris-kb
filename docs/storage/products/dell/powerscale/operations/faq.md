@@ -10,11 +10,9 @@ description: "Common questions about Dell PowerScale (Isilon) operations, config
 *Applies to: Dell PowerScale (Isilon) 9.x*
 
 <div class="kb-summary">
-Common questions about Dell PowerScale (Isilon) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell PowerScale (Isilon) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell PowerScale (Isilon) — Frequently Asked Questions](../../../../../assets/storage-dell-powerscale-operations-faq.svg)
-
-![Dell PowerScale (Isilon) FAQ](../../../../../assets/storage-dell-powerscale-operations-faq.svg)
 
 ## General
 

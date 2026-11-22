@@ -10,11 +10,9 @@ description: "Common questions about Dell APEX Storage as a Service operations, 
 *Applies to: Dell EMC Storage*
 
 <div class="kb-summary">
-Common questions about Dell APEX Storage as a Service operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell APEX Storage as a Service operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell APEX Storage as a Service — Frequently Asked Questions](../../../../../assets/storage-dell-apex-storage-as-a-service-operations-faq.svg)
-
-![Dell APEX Storage as a Service FAQ](../../../../../assets/storage-dell-apex-storage-as-a-service-operations-faq.svg)
 
 ## General
 

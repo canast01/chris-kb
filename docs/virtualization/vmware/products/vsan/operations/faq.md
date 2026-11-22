@@ -10,11 +10,9 @@ description: "Common questions about VMware vSAN operations, configuration, and 
 *Applies to: VMware vSAN 7.x / 8.x*
 
 <div class="kb-summary">
-Common questions about VMware vSAN operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about VMware vSAN operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![VMware vSAN — Frequently Asked Questions](../../../../../assets/virtualization-vmware-vsan-operations-faq.svg)
-
-![VMware vSAN FAQ](../../../../../assets/virtualization-vmware-vsan-operations-faq.svg)
 
 ## General
 

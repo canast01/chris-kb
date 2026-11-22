@@ -10,11 +10,9 @@ description: "Common questions about Dell PowerMax operations, configuration, an
 *Applies to: Dell PowerMax · VMAX*
 
 <div class="kb-summary">
-Common questions about Dell PowerMax operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell PowerMax operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell PowerMax — Frequently Asked Questions](../../../../../assets/storage-dell-powermax-operations-faq.svg)
-
-![Dell PowerMax FAQ](../../../../../assets/storage-dell-powermax-operations-faq.svg)
 
 ## General
 

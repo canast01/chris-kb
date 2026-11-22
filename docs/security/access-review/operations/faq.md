@@ -10,11 +10,9 @@ description: "Common questions about Access Review operations, configuration, an
 *Applies to: All products (Security)*
 
 <div class="kb-summary">
-Common questions about Access Review operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Access Review operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Access Review — Frequently Asked Questions](../../../assets/security-access-review-operations-faq.svg)
-
-![Access Review FAQ](../../../assets/security-access-review-operations-faq.svg)
 
 ## General
 

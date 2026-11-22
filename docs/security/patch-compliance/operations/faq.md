@@ -10,11 +10,9 @@ description: "Common questions about Patch Compliance operations, configuration,
 *Applies to: All products (Security)*
 
 <div class="kb-summary">
-Common questions about Patch Compliance operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Patch Compliance operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Patch Compliance — Frequently Asked Questions](../../../assets/security-patch-compliance-operations-faq.svg)
-
-![Patch Compliance FAQ](../../../assets/security-patch-compliance-operations-faq.svg)
 
 ## General
 

@@ -10,11 +10,9 @@ description: "Common questions about VMware Tanzu operations, configuration, and
 *Applies to: VMware Tanzu*
 
 <div class="kb-summary">
-Common questions about VMware Tanzu operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about VMware Tanzu operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![VMware Tanzu — Frequently Asked Questions](../../../../../assets/virtualization-vmware-tanzu-operations-faq.svg)
-
-![VMware Tanzu FAQ](../../../../../assets/virtualization-vmware-tanzu-operations-faq.svg)
 
 ## General
 

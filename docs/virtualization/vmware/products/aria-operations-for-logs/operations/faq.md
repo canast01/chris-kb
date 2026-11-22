@@ -10,7 +10,7 @@ description: "Common questions about VMware Aria Operations for Logs operations,
 *Applies to: VMware Aria 8.x*
 
 <div class="kb-summary">
-Common questions about VMware Aria Operations for Logs operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about VMware Aria Operations for Logs operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![VMware Aria Operations for Logs — Frequently Asked Questions](../../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-fa.svg)
 

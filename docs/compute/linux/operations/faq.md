@@ -10,11 +10,9 @@ description: "Common questions about Linux operations, configuration, and troubl
 *Applies to: Linux (RHEL / Ubuntu / Debian)*
 
 <div class="kb-summary">
-Common questions about Linux operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Linux operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Linux — Frequently Asked Questions](../../../assets/compute-linux-operations-faq.svg)
-
-![Linux FAQ](../../../assets/compute-linux-operations-faq.svg)
 
 ## General
 

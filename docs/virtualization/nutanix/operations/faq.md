@@ -10,11 +10,9 @@ description: "Common questions about Nutanix AOS operations, configuration, and 
 *Applies to: Nutanix AOS 6.x · AHV*
 
 <div class="kb-summary">
-Common questions about Nutanix AOS operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Nutanix AOS operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Nutanix AOS — Frequently Asked Questions](../../../assets/virtualization-nutanix-operations-faq.svg)
-
-![Nutanix AOS FAQ](../../../assets/virtualization-nutanix-operations-faq.svg)
 
 ## General
 

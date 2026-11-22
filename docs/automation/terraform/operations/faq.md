@@ -10,11 +10,9 @@ description: "Common questions about Terraform operations, configuration, and tr
 *Applies to: Terraform 1.x*
 
 <div class="kb-summary">
-Common questions about Terraform operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Terraform operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Terraform — Frequently Asked Questions](../../../assets/automation-terraform-operations-faq.svg)
-
-![Terraform FAQ](../../../assets/automation-terraform-operations-faq.svg)
 
 ## General
 

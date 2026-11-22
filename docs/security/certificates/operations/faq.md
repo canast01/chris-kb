@@ -10,11 +10,9 @@ description: "Common questions about Certificate Management operations, configur
 *Applies to: All products (Security)*
 
 <div class="kb-summary">
-Common questions about Certificate Management operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Certificate Management operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Certificate Management — Frequently Asked Questions](../../../assets/security-certificates-operations-faq.svg)
-
-![Certificate Management FAQ](../../../assets/security-certificates-operations-faq.svg)
 
 ## General
 

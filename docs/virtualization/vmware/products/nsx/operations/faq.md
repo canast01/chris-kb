@@ -10,11 +10,9 @@ description: "Common questions about VMware NSX operations, configuration, and t
 *Applies to: VMware NSX-T 3.x / 4.x*
 
 <div class="kb-summary">
-Common questions about VMware NSX operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about VMware NSX operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![VMware NSX — Frequently Asked Questions](../../../../../assets/virtualization-vmware-nsx-operations-faq.svg)
-
-![VMware NSX FAQ](../../../../../assets/virtualization-vmware-nsx-operations-faq.svg)
 
 ## General
 

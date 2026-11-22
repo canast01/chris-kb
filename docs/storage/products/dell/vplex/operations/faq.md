@@ -10,11 +10,9 @@ description: "Common questions about Dell VPLEX operations, configuration, and t
 *Applies to: Dell EMC Storage*
 
 <div class="kb-summary">
-Common questions about Dell VPLEX operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell VPLEX operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell VPLEX — Frequently Asked Questions](../../../../../assets/storage-dell-vplex-operations-faq.svg)
-
-![Dell VPLEX FAQ](../../../../../assets/storage-dell-vplex-operations-faq.svg)
 
 ## General
 

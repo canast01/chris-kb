@@ -10,11 +10,9 @@ description: "Common questions about Pure1 operations, configuration, and troubl
 *Applies to: Pure Storage*
 
 <div class="kb-summary">
-Common questions about Pure1 operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Pure1 operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Pure1 — Frequently Asked Questions](../../../../../assets/storage-pure-pure1-operations-faq.svg)
-
-![Pure1 FAQ](../../../../../assets/storage-pure-pure1-operations-faq.svg)
 
 ## General
 

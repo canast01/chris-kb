@@ -10,11 +10,9 @@ description: "Common questions about Dell ECS (Elastic Cloud Storage) operations
 *Applies to: Dell EMC Storage*
 
 <div class="kb-summary">
-Common questions about Dell ECS (Elastic Cloud Storage) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell ECS (Elastic Cloud Storage) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell ECS (Elastic Cloud Storage) — Frequently Asked Questions](../../../../../assets/storage-dell-ecs-operations-faq.svg)
-
-![Dell ECS (Elastic Cloud Storage) FAQ](../../../../../assets/storage-dell-ecs-operations-faq.svg)
 
 ## General
 

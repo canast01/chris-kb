@@ -10,11 +10,9 @@ description: "Common questions about AWS operations, configuration, and troubles
 *Applies to: AWS*
 
 <div class="kb-summary">
-Common questions about AWS operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about AWS operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![AWS — Frequently Asked Questions](../../../assets/cloud-aws-operations-faq.svg)
-
-![AWS FAQ](../../../assets/cloud-aws-operations-faq.svg)
 
 ## General
 

@@ -10,11 +10,9 @@ description: "Common questions about Commvault operations, configuration, and tr
 *Applies to: Commvault 11.x*
 
 <div class="kb-summary">
-Common questions about Commvault operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Commvault operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Commvault — Frequently Asked Questions](../../../../assets/backup-commvault-operations-faq.svg)
-
-![Commvault FAQ](../../../../assets/backup-commvault-operations-faq.svg)
 
 ## General
 

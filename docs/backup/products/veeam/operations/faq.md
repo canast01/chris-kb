@@ -10,11 +10,9 @@ description: "Common questions about Veeam Backup & Replication operations, conf
 *Applies to: Veeam Backup & Replication 12.x*
 
 <div class="kb-summary">
-Common questions about Veeam Backup & Replication operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Veeam Backup & Replication operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Veeam Backup & Replication — Frequently Asked Questions](../../../../assets/backup-veeam-operations-faq.svg)
-
-![Veeam Backup & Replication FAQ](../../../../assets/backup-veeam-operations-faq.svg)
 
 ## General
 

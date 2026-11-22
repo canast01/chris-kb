@@ -10,11 +10,9 @@ description: "Common questions about Dell CloudIQ operations, configuration, and
 *Applies to: Dell CloudIQ*
 
 <div class="kb-summary">
-Common questions about Dell CloudIQ operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell CloudIQ operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell CloudIQ — Frequently Asked Questions](../../../../../assets/storage-dell-cloudiq-operations-faq.svg)
-
-![Dell CloudIQ FAQ](../../../../../assets/storage-dell-cloudiq-operations-faq.svg)
 
 ## General
 

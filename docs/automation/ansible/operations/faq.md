@@ -10,11 +10,9 @@ description: "Common questions about Ansible operations, configuration, and trou
 *Applies to: Ansible 2.x*
 
 <div class="kb-summary">
-Common questions about Ansible operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Ansible operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Ansible — Frequently Asked Questions](../../../assets/automation-ansible-operations-faq.svg)
-
-![Ansible FAQ](../../../assets/automation-ansible-operations-faq.svg)
 
 ## General
 

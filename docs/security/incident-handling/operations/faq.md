@@ -10,11 +10,9 @@ description: "Common questions about Incident Handling operations, configuration
 *Applies to: All products (Security)*
 
 <div class="kb-summary">
-Common questions about Incident Handling operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Incident Handling operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Incident Handling — Frequently Asked Questions](../../../assets/security-incident-handling-operations-faq.svg)
-
-![Incident Handling FAQ](../../../assets/security-incident-handling-operations-faq.svg)
 
 ## General
 

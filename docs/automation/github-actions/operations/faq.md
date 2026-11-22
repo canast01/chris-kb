@@ -10,11 +10,9 @@ description: "Common questions about GitHub Actions operations, configuration, a
 *Applies to: GitHub Actions*
 
 <div class="kb-summary">
-Common questions about GitHub Actions operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about GitHub Actions operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![GitHub Actions — Frequently Asked Questions](../../../assets/automation-github-actions-operations-faq.svg)
-
-![GitHub Actions FAQ](../../../assets/automation-github-actions-operations-faq.svg)
 
 ## General
 

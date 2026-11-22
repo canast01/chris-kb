@@ -10,11 +10,9 @@ description: "Common questions about Pure Storage FlashBlade operations, configu
 *Applies to: Pure Storage FlashBlade*
 
 <div class="kb-summary">
-Common questions about Pure Storage FlashBlade operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Pure Storage FlashBlade operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Pure Storage FlashBlade — Frequently Asked Questions](../../../../../assets/storage-pure-flashblade-operations-faq.svg)
-
-![Pure Storage FlashBlade FAQ](../../../../../assets/storage-pure-flashblade-operations-faq.svg)
 
 ## General
 

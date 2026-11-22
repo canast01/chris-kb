@@ -10,11 +10,9 @@ description: "Common questions about Ceph operations, configuration, and trouble
 *Applies to: Ceph 18.x (Reef)*
 
 <div class="kb-summary">
-Common questions about Ceph operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Ceph operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Ceph — Frequently Asked Questions](../../../../assets/storage-ceph-operations-faq.svg)
-
-![Ceph FAQ](../../../../assets/storage-ceph-operations-faq.svg)
 
 ## General
 

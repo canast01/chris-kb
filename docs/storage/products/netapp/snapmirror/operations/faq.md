@@ -10,11 +10,9 @@ description: "Common questions about NetApp SnapMirror operations, configuration
 *Applies to: NetApp ONTAP 9.x · SnapMirror*
 
 <div class="kb-summary">
-Common questions about NetApp SnapMirror operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about NetApp SnapMirror operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![NetApp SnapMirror — Frequently Asked Questions](../../../../../assets/storage-netapp-snapmirror-operations-faq.svg)
-
-![NetApp SnapMirror FAQ](../../../../../assets/storage-netapp-snapmirror-operations-faq.svg)
 
 ## General
 

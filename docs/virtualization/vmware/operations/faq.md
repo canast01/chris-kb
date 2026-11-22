@@ -10,11 +10,9 @@ description: "Common questions about VMware vSphere operations, configuration, a
 *Applies to: VMware vSphere 7.x / 8.x*
 
 <div class="kb-summary">
-Common questions about VMware vSphere operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about VMware vSphere operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![VMware vSphere — Frequently Asked Questions](../../../assets/virtualization-vmware-operations-faq.svg)
-
-![VMware vSphere FAQ](../../../assets/virtualization-vmware-operations-faq.svg)
 
 ## General
 

@@ -10,11 +10,9 @@ description: "Common questions about Venafi Trust Protection Platform operations
 *Applies to: Venafi Trust Protection Platform*
 
 <div class="kb-summary">
-Common questions about Venafi Trust Protection Platform operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Venafi Trust Protection Platform operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Venafi Trust Protection Platform — Frequently Asked Questions](../../../../assets/security-venafi-operations-faq.svg)
-
-![Venafi Trust Protection Platform FAQ](../../../../assets/security-venafi-operations-faq.svg)
 
 ## General
 

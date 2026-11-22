@@ -10,11 +10,9 @@ description: "Common questions about MySQL operations, configuration, and troubl
 *Applies to: Linux · MySQL 8.x*
 
 <div class="kb-summary">
-Common questions about MySQL operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about MySQL operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![MySQL — Frequently Asked Questions](../../../../assets/compute-linux-mysql-operations-faq.svg)
-
-![MySQL FAQ](../../../../assets/compute-linux-mysql-operations-faq.svg)
 
 ## General
 

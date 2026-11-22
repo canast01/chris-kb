@@ -10,11 +10,9 @@ description: "Common questions about Active Directory operations, configuration,
 *Applies to: Windows Server 2022 · Active Directory*
 
 <div class="kb-summary">
-Common questions about Active Directory operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Active Directory operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Active Directory — Frequently Asked Questions](../../../../assets/compute-windows-server-active-directory-operations-faq.svg)
-
-![Active Directory FAQ](../../../../assets/compute-windows-server-active-directory-operations-faq.svg)
 
 ## General
 

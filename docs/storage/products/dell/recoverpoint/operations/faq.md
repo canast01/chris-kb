@@ -10,11 +10,9 @@ description: "Common questions about Dell RecoverPoint operations, configuration
 *Applies to: Dell EMC Storage*
 
 <div class="kb-summary">
-Common questions about Dell RecoverPoint operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell RecoverPoint operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell RecoverPoint — Frequently Asked Questions](../../../../../assets/storage-dell-recoverpoint-operations-faq.svg)
-
-![Dell RecoverPoint FAQ](../../../../../assets/storage-dell-recoverpoint-operations-faq.svg)
 
 ## General
 

@@ -10,11 +10,9 @@ description: "Common questions about Dell PowerPath operations, configuration, a
 *Applies to: Dell PowerPath 7.x*
 
 <div class="kb-summary">
-Common questions about Dell PowerPath operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell PowerPath operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell PowerPath — Frequently Asked Questions](../../../../../assets/storage-dell-powerpath-operations-faq.svg)
-
-![Dell PowerPath FAQ](../../../../../assets/storage-dell-powerpath-operations-faq.svg)
 
 ## General
 

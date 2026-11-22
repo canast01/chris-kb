@@ -10,11 +10,9 @@ description: "Common questions about Multi-Factor Authentication operations, con
 *Applies to: All products (Security)*
 
 <div class="kb-summary">
-Common questions about Multi-Factor Authentication operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Multi-Factor Authentication operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Multi-Factor Authentication — Frequently Asked Questions](../../../assets/security-mfa-operations-faq.svg)
-
-![Multi-Factor Authentication FAQ](../../../assets/security-mfa-operations-faq.svg)
 
 ## General
 

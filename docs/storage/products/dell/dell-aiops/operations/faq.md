@@ -10,11 +10,9 @@ description: "Common questions about Dell AIOps operations, configuration, and t
 *Applies to: Dell EMC Storage*
 
 <div class="kb-summary">
-Common questions about Dell AIOps operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Dell AIOps operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Dell AIOps — Frequently Asked Questions](../../../../../assets/storage-dell-dell-aiops-operations-faq.svg)
-
-![Dell AIOps FAQ](../../../../../assets/storage-dell-dell-aiops-operations-faq.svg)
 
 ## General
 

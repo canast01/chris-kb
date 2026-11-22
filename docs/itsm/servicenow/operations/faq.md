@@ -10,11 +10,9 @@ description: "Common questions about ServiceNow operations, configuration, and t
 *Applies to: ServiceNow*
 
 <div class="kb-summary">
-Common questions about ServiceNow operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about ServiceNow operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![ServiceNow — Frequently Asked Questions](../../../assets/itsm-servicenow-operations-faq.svg)
-
-![ServiceNow FAQ](../../../assets/itsm-servicenow-operations-faq.svg)
 
 ## General
 

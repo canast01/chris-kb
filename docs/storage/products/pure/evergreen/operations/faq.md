@@ -10,11 +10,9 @@ description: "Common questions about Pure Storage Evergreen operations, configur
 *Applies to: Pure Storage*
 
 <div class="kb-summary">
-Common questions about Pure Storage Evergreen operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
+Common questions about Pure Storage Evergreen operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 ![Pure Storage Evergreen — Frequently Asked Questions](../../../../../assets/storage-pure-evergreen-operations-faq.svg)
-
-![Pure Storage Evergreen FAQ](../../../../../assets/storage-pure-evergreen-operations-faq.svg)
 
 ## General
 
