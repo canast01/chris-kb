@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block htmltitle %}
+  {% if page and page.is_homepage %}
+    <title>Christos Anastasiadis — Infrastructure Engineering Knowledge Base</title>
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
 {% block extrahead %}
   {{ super() }}
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui%2Csans-serif' font-size='13' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3ECA%3C/text%3E%3C/svg%3E">
@@ -16,10 +24,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="{{ config.site_name }}">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="{% if page and page.title %}{{ page.title }} · {{ config.site_name }}{% else %}{{ config.site_name }}{% endif %}">
+  <meta property="og:title" content="{% if page and page.is_homepage %}Christos Anastasiadis — Infrastructure Engineering Knowledge Base{% elif page and page.title %}{{ page.title }} · {{ config.site_name }}{% else %}{{ config.site_name }}{% endif %}">
   <meta property="og:description" content="{% if page and page.meta and page.meta.description %}{{ page.meta.description }}{% else %}{{ config.site_description }}{% endif %}">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{% if page and page.title %}{{ page.title }} · {{ config.site_name }}{% else %}{{ config.site_name }}{% endif %}">
+  <meta name="twitter:title" content="{% if page and page.is_homepage %}Christos Anastasiadis — Infrastructure Engineering Knowledge Base{% elif page and page.title %}{{ page.title }} · {{ config.site_name }}{% else %}{{ config.site_name }}{% endif %}">
   <meta name="twitter:description" content="{% if page and page.meta and page.meta.description %}{{ page.meta.description }}{% else %}{{ config.site_description }}{% endif %}">
   {% if schema_jsonld %}
   <script type="application/ld+json">{{ schema_jsonld | safe }}</script>
