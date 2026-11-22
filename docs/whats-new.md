@@ -12,12 +12,92 @@ description: "Recent additions and updates to the knowledge base. Major changes 
 <div class="kb-summary">
 Recent additions and updates to the knowledge base. Major changes by date — newest first.
 
-<em>Auto-updated from commit history.</em> Subscribe via <a href="../feed_rss_updated.xml">RSS</a> to get updates outside the browser.
+Subscribe via <a href="../feed_rss_updated.xml">RSS</a> to get updates outside the browser.
 </div>
 
 ![What's New](assets/whats-new.svg)
 
+## November 2026
+
+### 2026-11-21 — Site fixes
+
+- Search works again for common terms like "VMware", "vSAN" and "storage". A duplicate page was breaking it.
+- The full [VxRail — How It Works](virtualization/vmware/products/vxrail/architecture/how-it-works.md) page is visible again. The shorter overview moved to [Cluster Software Stack](virtualization/vmware/products/vxrail/architecture/cluster-software-stack.md).
+- FAQ pages: fixed the "Operations" link and removed a repeated diagram.
+- Search downloads less data, so it starts faster on phones.
+- Shared links now show a preview image.
+
+---
+
+## July 2026
+
+### 2026-07-10 — Sections reorganized by product
+
+Backup, storage, security and VMware are now organized as `products/` plus shared cross-product pages. Certification material moved to [Certifications](certifications/index.md).
+
+---
+
+### 2026-07-12 — Easier to find and share
+
+- Meta descriptions added to about 2,500 pages.
+- [RSS feed](../feed_rss_updated.xml) for this page.
+- Structured data on every page for search engines.
+- Accessibility fixes from a Lighthouse pass: color contrast and the search dialog label.
+
+---
+
+### 2026-07-03 — Diagram cleanup
+
+- 137 Mermaid subgraph diagrams replaced with cleaner layered SVGs.
+- Fixed clipped or overflowing text in SVG diagrams across the site.
+- Diagram readability pass: clearer colors and glossary coverage for FlashArray and NetApp ONTAP terms.
+
+---
+
+### 2026-07-01 — Hover definitions and new diagram types
+
+- Hover over abbreviations anywhere on the site to see what they mean.
+- Mermaid, D2, PlantUML and Vega-Lite diagrams rendered via Kroki.
+- Video links on related pages, and tabbed content (UI / CLI).
+
+---
+
 ## June 2026
+
+### 2026-06-29 — Example command output
+
+Commands across storage, SAN, cloud, compute, VMware, ITSM and security pages now show example output (1,373 pages), so you can see what a healthy result looks like.
+
+---
+
+### 2026-06-28 — Link and diagram fixes
+
+- Fixed about 2,400 broken "See also" links.
+- Diagrams no longer clip on narrow screens.
+- Narrow top-down Mermaid diagrams (610) redrawn to read better.
+- Vega-Lite threshold charts on 23 health-check pages.
+
+---
+
+### 2026-06-27 — Sequence diagrams
+
+Product-specific PlantUML sequence diagrams added to architecture pages, showing how components talk to each other step by step.
+
+---
+
+### 2026-06-26 — More visuals
+
+- 272 ASCII diagrams converted to SVG.
+- Step-flow diagrams on 62 deploy pages.
+- FAQ answers turned into comparison tables where it helps.
+
+---
+
+### 2026-06-25 — FAQ pages
+
+FAQ pages added under each product's Operations section.
+
+---
 
 ### 2026-06-21 — Full SVG coverage: every page now has a diagram
 
