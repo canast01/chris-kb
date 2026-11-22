@@ -36,6 +36,26 @@ def on_page_context(context, page, config, nav, **kwargs):
     if date_published:
         data['datePublished'] = date_published
 
+    if page.is_homepage:
+        # Homepage describes the site and its author, not an article.
+        person = {
+            '@type': 'Person',
+            'name': 'Christos Anastasiadis',
+            'jobTitle': 'Infrastructure Engineer',
+            'url': site_url + 'about.html',
+            'sameAs': ['https://www.linkedin.com/in/canast/'],
+        }
+        data = {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            'name': config.get('site_name'),
+            'alternateName': 'Christos Anastasiadis — Infrastructure Engineering Knowledge Base',
+            'url': site_url,
+            'description': description,
+            'author': person,
+            'publisher': person,
+        }
+
     encoded = json.dumps(data, ensure_ascii=False)
     encoded = encoded.replace('</', '<\\/')
     context['schema_jsonld'] = encoded
