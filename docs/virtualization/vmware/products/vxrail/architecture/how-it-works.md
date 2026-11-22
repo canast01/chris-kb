@@ -260,6 +260,7 @@ VxRail upgrades always move the entire stack (ESXi + vCenter + vSAN + firmware) 
 
 ## See also
 
+- [VxRail — Cluster Software Stack and Data Plane](../cluster-software-stack/)
 - [VxRail — Design Standards](../design-standards/)
 - [VxRail — Deploy](../../deploy/)
 - [VxRail — Integrations](../integrations/)

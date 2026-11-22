@@ -16,6 +16,7 @@ VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk 
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="cluster-software-stack/"><strong>Cluster Software Stack</strong><span>HCI node cluster, software stack, and data plane overview.</span></a>
 <a class="kb-card" href="../integration/"><strong>Integration</strong><span>Integration with vCenter, NSX, Aria Operations, and Dell SupportAssist.</span></a>
 <a class="kb-card" href="../design-standards/"><strong>Design Standards</strong><span>Sizing, VMkernel network design, vSAN policy, and cluster configuration best practices.</span></a>
 </div>
