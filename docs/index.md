@@ -8,7 +8,11 @@
   <div class="hero-name">
     <strong>Christos Anastasiadis</strong>
     <span>Infrastructure Engineer</span>
-    <span><a href="/about.html" style="color:rgba(255,255,255,0.7);text-decoration:none;">About</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/canast/" style="color:rgba(255,255,255,0.7);text-decoration:none;">LinkedIn</a> &nbsp;·&nbsp; <a href="mailto:canast01@gmail.com" style="color:rgba(255,255,255,0.7);text-decoration:none;">Email</a></span>
+    <div class="hero-links">
+      <a class="hero-link" href="/about.html">About me</a>
+      <a class="hero-link" href="https://www.linkedin.com/in/canast/">LinkedIn</a>
+      <a class="hero-link" href="mailto:canast01@gmail.com">Email me</a>
+    </div>
   </div>
 </div>
 
