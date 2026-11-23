@@ -126,7 +126,57 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     *Applies to:*), Check 64 (confluence common-issues prose block), Check 65 (6 SVG
     vertical-overflow/occlusion; run scripts/svg_vertical_bugs_fix.py). Left for a
     dedicated fix session, not fixed here per the one-item rule.
-- [ ] automation/python
+- [x] automation/python
+  - Audit (2026-11-23): KB has 5 top-level sections (architecture, deploy, operations,
+    security, troubleshooting) plus learning-path, FAQ, release notes, known issues
+    (27 pages, ~5,530 lines). Strongly ops-focused. Strong on: venv/pyenv install and
+    upgrade, dependency pinning, pip-audit; REST/API clients with pagination/retry,
+    requests/boto3/paramiko; logging and job design; pytest + pre-commit + ruff/black
+    (design-standards); pdb/traceback diagnostics; secrets/Vault, `cryptography`, file
+    permissions; pandas/CSV/Excel/Jinja2 reports. Thin or missing on the language itself:
+    zero coverage of `yield`, context managers (`with` only in passing, no
+    `__enter__`/`contextlib`), dataclasses, closures, `match-case`, properties/
+    descriptors, ABCs, metaclasses, `ExceptionGroup`/`except*`, copy/deepcopy,
+    pickle/shelve, `sqlite3`, PEP 257 docstrings; generators, decorators, type hints,
+    classes/inheritance (only custom exception classes), PEP 8, and XML each get one or
+    two passing mentions at most; comprehensions get none.
+  - Cert research (2026-11-23): No vendor cert (the PSF does not certify). The
+    recognised independent body is the **OpenEDG Python Institute**, whose ladder is
+    PCEP → PCAP → PCPP1 → PCPP2. Both of the relevant exams were revised this month,
+    so the notes below use the new versions.
+    **Target bar: PCPP1-32-102 "Certified Professional Python Programmer: Software
+    Development"** (blueprint v1.3, revised 2026-11-06; replaces PCPP1-32-101). 45 Qs,
+    72% pass, no formal prerequisite (PCAP-level knowledge recommended). The cert page
+    says 65 minutes, but the syllabus FAQ says the final blueprint doesn't set a duration.
+    Seven sections: (1) Advanced OOP & core syntax 15% (special methods, function/class
+    decorators, class/static methods, properties & descriptors, subclassing built-ins);
+    (2) Abstract classes, metaclasses & exception groups 12% (ABCs, metaprogramming,
+    exception chaining, `ExceptionGroup`/`except*`); (3) Data modelling, object mechanics
+    & type systems 19% (shallow/deep copy, pickle/shelve, CSV/JSON/XML, type hints,
+    dataclasses, context managers); (4) Text processing, formatting & security 12%
+    (frozenset/frozen dataclasses, regex, advanced formatting, injection risks &
+    templating incl. `string.Template`/t-strings); (5) Code development & maintenance 15%
+    (PEPs/Zen, PEP 8, PEP 257, linters/formatters, dead code & coverage);
+    (6) Services & logging 15% (networking, HTTP, REST, `sqlite3`, application and
+    structured logging); (7) Collaborative engineering & AI-assisted development 12%
+    (VCS strategy, technical risk, AI-assisted workflows and their governance).
+    Source (primary, certifying body, verified via direct fetch): https://pythoninstitute.org/pcpp1-exam-syllabus
+    (cert page: https://pythoninstitute.org/pcpp1)
+    **Foundation bar: PCAP-31-04 "Certified Associate Python Programmer"** (blueprint
+    v1.5, revised 2026-11-02; replaces PCAP-31-03). 42 Qs, 65 min, 72% pass. Six sections:
+    modules & packages 12%, exceptions 12%, strings 9.5%, OOP 28.5%, advanced constructs &
+    I/O 24% (comprehensions, `match-case`, lambda/map/filter, closures, file I/O,
+    `pathlib`), testing/debugging/collaboration/AI assistance 14%.
+    Source (primary, verified via direct fetch): https://pythoninstitute.org/pcap-exam-syllabus
+  - Gap vs blueprint: the KB covers PCPP1 §6 (HTTP/REST/logging) and parts of §5
+    (linters, pytest/coverage) well. §1–§4 are almost entirely missing (decorators,
+    descriptors, ABCs/metaclasses, exception groups, dataclasses, type hints, context
+    managers, copy semantics, serialization, regex/templating injection safety), as is
+    §7 (AI-assisted development governance). On the PCAP side: closures, comprehensions,
+    `match-case`, packages/namespaces, inheritance/MRO. Flagged for Phase B; it may
+    need a new "language" subsection, since the existing tree is ops-oriented.
+  - site_audit (2026-11-23): 67/67 clean (full run, no exceptions triggered). This run
+    only edited this queue file.
 - [ ] automation/terraform
 
 ### Backup
