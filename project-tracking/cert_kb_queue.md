@@ -82,7 +82,50 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     federation walkthrough (mentioned only implicitly), artifact attestations/SLSA
     provenance, enterprise-level org policy/IP allow list detail, YAML anchors/aliases,
     GITHUB_STEP_SUMMARY job summaries. Flagged for Phase B.
-- [ ] automation/powershell
+- [x] automation/powershell
+  - Audit (2026-11-23): KB has 5 top-level sections (architecture, deploy, operations,
+    security, troubleshooting) plus learning-path, FAQ, release notes, known issues
+    (27 pages, ~3,950 lines). Strong on: PS 7 vs 5.1 engine/runspaces/modules
+    (architecture); WinRM/SSH remoting and ports; PowerCLI + AD/disk integrations;
+    error handling, trace/transcript/script-block-logging diagnostics; module manifest
+    creation + PSGallery publishing; scheduled tasks; JEA/execution policy/hardening;
+    approved verbs and basic Pester (design-standards). Thin or missing: CIM sessions
+    (`New-CimSession`), providers/PSDrives, background jobs (`Start-Job`/`Receive-Job`/
+    `Start-ThreadJob`), pipeline parameter binding (ByValue/ByPropertyName), Microsoft
+    Graph / Exchange Online / Az module administration (zero coverage), PowerShell
+    classes, PSResourceGet, PSScriptAnalyzer as a lint gate.
+  - Cert research (2026-11-23): **No formal cert.** Microsoft has no PowerShell-specific
+    certification exam; PowerShell is only tested incidentally inside role exams
+    (e.g. AZ-800/AZ-801 → AZ-802 Windows Server, MS-102 Microsoft 365).
+    **Fallback: Microsoft's official instructor-led course AZ-040T00-A "Automate
+    Administration with PowerShell"** (Advanced, 5 days, Windows Server/Administrator
+    role, page updated 2025-12-04, no exam attached; the vendor page lists none).
+    Its 11 modules in order: get started with Windows PowerShell; system administration
+    tasks; the pipeline; providers & PowerShell drives; CIM/WMI; variables, arrays &
+    hash tables; create & modify scripts; administer remote computers; manage cloud
+    (Azure) resources; manage Microsoft 365 services; background jobs & scheduled jobs.
+    Source (primary, vendor, verified via direct fetch): https://learn.microsoft.com/en-us/training/courses/az-040t00
+    Supplementary bar for the authoring/craft side that AZ-040 doesn't cover (advanced
+    functions, module layout, naming, error-handling, docs): Microsoft's own cmdlet
+    development guidelines + the community PoshCode "PowerShell Practice and Style"
+    guide (unofficial but the widely cited community standard, ~2.4k GitHub stars).
+    Sources: https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/strongly-encouraged-development-guidelines
+    and https://github.com/PoshCode/PowerShellPracticeAndStyle
+  - Gap vs fallback bar: biggest gaps are AZ-040's cloud modules (Az for Azure
+    resources, Microsoft Graph/Exchange Online for M365 — zero KB coverage), plus
+    providers/PSDrives, CIM sessions, background jobs, and pipeline binding mechanics.
+    Craft side: no PowerShell classes coverage; PSScriptAnalyzer/CI lint gate and
+    PSResourceGet only mentioned in passing (one page each). Flagged for Phase B.
+  - site_audit (2026-11-23): 59/65 clean. This run only edited this queue file
+    (outside `docs/`), so none of the failures are from it. Besides Check 59's known soft
+    heuristic, 5 checks fail and all predate this run: Check 6 (docs/goals,
+    docs/goals-overview, docs/p, docs/p/bnl1n2i8 have no index.md; created 01:53, before
+    this run), Check 35 (2,521 "See also" links flagged, e.g.
+    `architecture/ports.md` → `../how-it-works/`; possibly the checker misresolving
+    non-index pages, needs a look), Check 45 (vxrail cluster-software-stack.md missing
+    *Applies to:*), Check 64 (confluence common-issues prose block), Check 65 (6 SVG
+    vertical-overflow/occlusion; run scripts/svg_vertical_bugs_fix.py). Left for a
+    dedicated fix session, not fixed here per the one-item rule.
 - [ ] automation/python
 - [ ] automation/terraform
 
