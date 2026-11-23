@@ -142,9 +142,24 @@ def find_bug_a(elems):
     for r in rects:
         if r['w'] < 60 or r['h'] < 30:
             continue
-        member_ys = [t['y'] for t in texts
-                     if r['x'] - 2 <= t['x'] <= r['x'] + r['w'] + 2
-                     and r['y'] - 2 <= t['y'] <= r['y'] + r['h'] + 8]
+        member_ys = []
+        for t in texts:
+            if not (r['x'] - 2 <= t['x'] <= r['x'] + r['w'] + 2
+                    and r['y'] - 2 <= t['y'] <= r['y'] + r['h'] + 8):
+                continue
+            # A text is only this rect's OWN content if no sibling rect
+            # starts between r's top and the text's y -- otherwise it's the
+            # sibling's own text (e.g. the next table row's label), which
+            # the y-range window alone can't tell apart from genuine
+            # overflow content when rows sit close together.
+            intervening = any(
+                other is not r and other['y'] > r['y'] and other['y'] <= t['y']
+                and r['x'] - 2 <= other['x'] <= r['x'] + r['w'] + 2
+                for other in rects
+            )
+            if intervening:
+                continue
+            member_ys.append(t['y'])
         if len(member_ys) < 2:
             continue
         last_y = max(member_ys)
