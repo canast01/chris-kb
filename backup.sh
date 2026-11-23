@@ -25,6 +25,7 @@ rsync -a ${LINK_DEST[@]+"${LINK_DEST[@]}"} \
   --exclude "__pycache__/" \
   --exclude "*.pyc" \
   --exclude ".DS_Store" \
+  --exclude "/.git/sg-inflight-*" \
   "$ROOT_DIR/" "$DEST/"
 
 cat > "$DEST/backup-info.txt" <<INFO
