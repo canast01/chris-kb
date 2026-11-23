@@ -225,7 +225,7 @@ NSX-Manager-Self-Signed  expires=2025-03-15  days_left=87  OK
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed in production variants). |
     | `jq: command not found` or `json.decoder.JSONDecodeError` | Verify the API endpoint returns valid JSON by testing with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/trust-management/certificates" | python3 -m json.tool` and confirm NSX Manager credentials are correct. |
-    | `datetime.fromisoformat() is not available` (Python < 3.7)` | Upgrade to Python 3.7+ or replace the fromisoformat call with `datetime.strptime(exp.replace('Z', ''), '%Y-%m-%dT%H:%M:%S')`. |
+    | `datetime.fromisoformat() is not available` (Python < 3.7) | Upgrade to Python 3.7+ or replace the fromisoformat call with `datetime.strptime(exp.replace('Z', ''), '%Y-%m-%dT%H:%M:%S')`. |
 ```bash
 # 8. Open alarms — critical severity only; any output here needs immediate attention
 curl -sk -u 'admin:password' \

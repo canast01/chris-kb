@@ -435,7 +435,7 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
     |---|---|
     | `traceroute: command not found` | Install traceroute using `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS). |
     | `traceroute: getaddrinfo: Name or service not known` | Verify the destination hostname or IP address is correct and that DNS resolution is working with `nslookup <destination>`. |
-    | `* * *` (all hops timing out)` | Check firewall rules blocking ICMP packets; the destination or intermediate routers may be configured to drop traceroute probes. |
+    | `* * *` (all hops timing out) | Check firewall rules blocking ICMP packets; the destination or intermediate routers may be configured to drop traceroute probes. |
 ```bash
 # Capture current route table
 ip route show > /tmp/routes-before.txt
@@ -534,7 +534,7 @@ rtt min/avg/max/stddev = 1.89/2.11/2.34/0.18 ms
     |---|---|
     | `ping: connect: Network is unreachable` | Verify the default route exists with `ip route show` and check that the network interface is up with `ip link show`. |
     | `ping: Name or service not known` | Replace `<gateway_ip>` with an actual IP address (e.g., `192.168.1.1`) instead of a placeholder variable. |
-    | `PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.` followed by no responses and timeout` | Check gateway connectivity with `ip neighbor show` and verify the interface has a valid IP address using `ip addr show`. |
+    | `PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.` followed by no responses and timeout | Check gateway connectivity with `ip neighbor show` and verify the interface has a valid IP address using `ip addr show`. |
 ```bash
 show ip ospf neighbor            # all neighbors in FULL state
 show ip ospf neighbor <id>       # specific neighbor detail
@@ -799,7 +799,7 @@ LocalAddress      LocalPort RemoteAddress RemotePort State       OwningProcess
     |---|---|
     | `ss: No such file or directory` | Install iproute2 package with `apt install iproute2` (Debian/Ubuntu) or `yum install iproute2` (RHEL/CentOS). |
     | `netstat: command not found` | Install net-tools with `apt install net-tools` or use `ss` instead, which is the modern replacement. |
-    | `Access denied` (Windows)` | Run PowerShell or Command Prompt as Administrator to view all process information. |
+    | `Access denied` (Windows) | Run PowerShell or Command Prompt as Administrator to view all process information. |
 ```bash
 # Check interface MTU
 ip link show <interface>

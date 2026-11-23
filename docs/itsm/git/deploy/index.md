@@ -905,7 +905,7 @@ nothing to commit, working tree clean
     | Error | Fix |
     |---|---|
     | `fatal: not a git repository (or any of the parent directories): .git` | Initialize the repository first with `git init` or clone an existing repo into `~/git-test`. |
-    | `.DS_Store` appears in the untracked files list` | Add `.DS_Store` to `.gitignore` with `echo ".DS_Store" >> ~/.gitignore` to exclude macOS system files from tracking. |
+    | `.DS_Store` appears in the untracked files list | Add `.DS_Store` to `.gitignore` with `echo ".DS_Store" >> ~/.gitignore` to exclude macOS system files from tracking. |
 ---
 
 ## Verify

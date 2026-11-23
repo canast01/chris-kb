@@ -488,7 +488,7 @@ export VSPHERE_SERVER="vcenter.corp.local"
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `bash: export: `administrator@vsphere.local': not a valid identifier` | Remove or escape the `@` symbol in the username, or use quotes: `export VSPHERE_USER="administrator@vsphere.local"` (ensure the entire string is quoted). |
+    | `bash: export: `administrator@vsphere.local': not a valid identifier | Remove or escape the `@` symbol in the username, or use quotes: `export VSPHERE_USER="administrator@vsphere.local"` (ensure the entire string is quoted). |
     | `bash: VSPHERE_PASSWORD: command not found` | Ensure the password value is not left empty or contains unquoted special characters; use `export VSPHERE_PASSWORD="your_actual_password"` with proper quoting. |
 In `providers.tf`:
 

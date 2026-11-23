@@ -530,7 +530,7 @@ example.com.		86400	IN	RRSIG	NS 8 2 86400 20240215120000 20240201120000 12847 ex
     |---|---|
     | `status: SERVFAIL` | Check that the recursive resolver has DNSSEC validation enabled and can reach the root nameservers; disable DNSSEC temporarily with `dig +no-dnssec` to isolate the issue. |
     | `dig: couldn't get address for 'corp.example.com': not found` | Verify the domain name spelling and that the resolver can reach authoritative nameservers using `dig @8.8.8.8 corp.example.com` to test with a public resolver. |
-    | `flags: qr rd ra;` (no 'ad' flag present)` | The resolver is not validating DNSSEC; check resolver configuration with `systemctl status systemd-resolved` on Linux or enable DNSSEC in `/etc/resolv.conf`. |
+    | `flags: qr rd ra;` (no 'ad' flag present) | The resolver is not validating DNSSEC; check resolver configuration with `systemctl status systemd-resolved` on Linux or enable DNSSEC in `/etc/resolv.conf`. |
 ---
 
 ## Escalation Criteria

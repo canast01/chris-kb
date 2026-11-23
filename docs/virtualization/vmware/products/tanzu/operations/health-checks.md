@@ -461,7 +461,7 @@ tanzu-system           tanzu-webhook-req-xyz789                  True       Fals
     |---|---|
     | `error: the server doesn't have a resource type "csr"` | Ensure you're connected to the correct cluster with `kubectl cluster-info` and that the API server is responding. |
     | `No resources found in cert-manager namespace.` | Install cert-manager with `helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace` or verify the namespace name is correct. |
-    | `READY False` on certificates` | Check the certificate status with `kubectl describe certificate <name> -n <namespace>` to see if the issuer is misconfigured or the secret is missing. |
+    | `READY False` on certificates | Check the certificate status with `kubectl describe certificate <name> -n <namespace>` to see if the issuer is misconfigured or the secret is missing. |
 ---
 
 ## See also

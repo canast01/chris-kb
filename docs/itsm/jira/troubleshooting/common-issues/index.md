@@ -268,7 +268,7 @@ drwxr-xr-x  2 jira jira  4096 Jan 15 14:28 change_history
     |---|---|
     | `LockObtainFailedException: Lock held by another process` | Stop the JIRA service, remove `/var/atlassian/application-data/jira/caches/indexes/write.lock`, then restart the service. |
     | `CorruptIndexException: _0.cfs (No such file or directory)` | Delete the corrupted index directory and trigger a full re-index via JIRA Administration > System > Indexing > Re-Index All Issues. |
-    | `Permission denied` when listing indexes directory` | Ensure the jira user owns the indexes directory with `sudo chown -R jira:jira /var/atlassian/application-data/jira/caches/indexes/`. |
+    | `Permission denied` when listing indexes directory | Ensure the jira user owns the indexes directory with `sudo chown -R jira:jira /var/atlassian/application-data/jira/caches/indexes/`. |
 ```bash
 # 1. Stop Jira
 systemctl stop jira

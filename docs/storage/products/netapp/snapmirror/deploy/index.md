@@ -244,7 +244,7 @@ svm-test     svm-test-dr      peered        cluster-dr.example.com
     | Error | Fix |
     |---|---|
     | `Error: command not found: vserver` | Ensure you are logged into the NetApp cluster CLI (ssh to cluster management IP) rather than a local shell. |
-    | `Vserver     Peer Vserver     Peer State    Peer Cluster` (no data rows)` | Create the vserver peer relationship first using `vserver peer create -vserver <local-svm> -peer-vserver <remote-svm> -peer-cluster <remote-cluster>`. |
+    | `Vserver     Peer Vserver     Peer State    Peer Cluster` (no data rows) | Create the vserver peer relationship first using `vserver peer create -vserver <local-svm> -peer-vserver <remote-svm> -peer-cluster <remote-cluster>`. |
     | `peered (Unreachable)` | Verify network connectivity between clusters and check firewall rules allow port 11104 (intercluster communication) between cluster management IPs. |
 If replicating across multiple SVM pairs, repeat this step for each pair.
 

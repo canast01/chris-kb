@@ -231,7 +231,7 @@ aws cloudwatch get-metric-statistics \
     |---|---|
     | `date: illegal time format` | Use `date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ` on Linux instead of the BSD `-v` flag. |
     | `An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Lookup attributes do not support EventSource` | Use `EventName` or `ResourceName` attributes instead; CloudTrail EVS events may require filtering by specific operation names like `CreateEnvironment`. |
-    | `jq: command not found` or Python JSON parsing errors` | Ensure `python3` is installed and the CloudTrail event JSON structure matches your AWS region's API version by testing with `aws cloudtrail lookup-events --max-results 1` first. |
+    | `jq: command not found` or Python JSON parsing errors | Ensure `python3` is installed and the CloudTrail event JSON structure matches your AWS region's API version by testing with `aws cloudtrail lookup-events --max-results 1` first. |
 ---
 
 ## Step 3 — Inspect VPC Flow Logs for network drops

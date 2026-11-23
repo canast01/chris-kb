@@ -19,7 +19,7 @@ export PASS="your-password"
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `bash: export: `your-password': not a valid identifier` | Wrap the password in quotes if it contains special characters: `export PASS="your-password"` or use single quotes for literal strings. |
+    | `bash: export: `your-password': not a valid identifier | Wrap the password in quotes if it contains special characters: `export PASS="your-password"` or use single quotes for literal strings. |
     | `bash: mycompany.service-now.com: command not found` | Remove the protocol from the INSTANCE variable or wrap the full URL in quotes: `export INSTANCE="https://mycompany.service-now.com"`. |
 ```bash
 # Create an incident

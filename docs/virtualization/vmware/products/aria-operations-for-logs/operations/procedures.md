@@ -454,7 +454,7 @@ inet 192.168.1.50/32 scope global secondary eth0
     |---|---|
     | `nc: connect to 192.168.1.50 port 514 (tcp) failed: Connection refused` | Verify the syslog forwarder service is running on the vRLI cluster with `systemctl status loginsight` and check firewall rules allow port 514 inbound. |
     | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate validation, or import the vRLI self-signed cert into your management host's CA bundle. |
-    | `inet 192.168.1.50/32 scope global secondary eth0` not found in output` | SSH to the vRLI master node and confirm keepalived is running with `systemctl status keepalived`; if stopped, restart it with `systemctl start keepalived`. |
+    | `inet 192.168.1.50/32 scope global secondary eth0` not found in output | SSH to the vRLI master node and confirm keepalived is running with `systemctl status keepalived`; if stopped, restart it with `systemctl start keepalived`. |
 6. Test HA failover: power off the master VM → confirm VIP moves to a worker (now promoted master) within ~30 seconds
 
 ---

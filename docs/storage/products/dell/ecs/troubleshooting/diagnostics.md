@@ -514,7 +514,7 @@ node-03: Fri Nov 17 14:32:18 UTC 2023
     |---|---|
     | `chronyc: command not found` | Install chrony with `apt-get install chrony` or `yum install chrony` depending on your OS. |
     | `viprexec: command not found or not in PATH` | Source the ECS environment setup script or add the viprexec binary directory to your PATH. |
-    | `node-02: Fri Nov 17 14:32:28 UTC 2023` (10+ second drift detected)` | Restart the chronyd service on the drifted node with `systemctl restart chronyd` and verify NTP connectivity. |
+    | `node-02: Fri Nov 17 14:32:28 UTC 2023` (10+ second drift detected) | Restart the chronyd service on the drifted node with `systemctl restart chronyd` and verify NTP connectivity. |
 ### Network connectivity
 
 ```bash

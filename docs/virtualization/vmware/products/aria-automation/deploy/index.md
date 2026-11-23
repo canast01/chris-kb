@@ -306,7 +306,7 @@ Cluster Health Status:
     |---|---|
     | `Connection refused` | Verify SSH is enabled on the AAC appliance and the hostname/IP is correct with `ping aac.example.local`. |
     | `vracli: command not found` | Ensure you are logged in as root and the vracli binary is in the PATH; check `/opt/vmware/vra/bin/` exists. |
-    | `CrashLoopBackOff` or `ImagePullBackOff` in pod status` | Check pod logs with `kubectl logs <pod-name> -n <namespace>` and verify image registry connectivity and disk space. |
+    | `CrashLoopBackOff` or `ImagePullBackOff` in pod status | Check pod logs with `kubectl logs <pod-name> -n <namespace>` and verify image registry connectivity and disk space. |
 Submit a smoke-test deployment from Service Broker and confirm it reaches `DEPLOYMENT_SUCCESSFUL`, then delete it.
 
 | Check | Command / Location | Expected |

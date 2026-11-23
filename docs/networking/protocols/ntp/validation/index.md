@@ -101,7 +101,7 @@ active
     |---|---|
     | `506 Cannot talk to daemon` | Ensure chronyd is running with `systemctl start chronyd` and listening on localhost. |
     | `Stratum : 16` and `Reach : 0` | Check network connectivity to NTP servers and verify firewall allows UDP port 123 outbound. |
-    | `system time : X seconds fast/slow of NTP time` (consistently >1 second)` | Run `chronyc makestep` to force immediate clock correction, or check for hardware clock drift. |
+    | `system time : X seconds fast/slow of NTP time` (consistently >1 second) | Run `chronyc makestep` to force immediate clock correction, or check for hardware clock drift. |
 ### Linux — systemd-timesyncd
 
 ```bash

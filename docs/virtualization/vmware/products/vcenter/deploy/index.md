@@ -134,7 +134,7 @@ LOCAL(0)        .LOCL.          10 l  998 1024  377    0.000    0.000   0.001
     |---|---|
     | `Connection refused connecting to Management Agent on 10.20.50.100:443` | Verify the ESXi host is reachable and the vSphere Client has network connectivity to the target host. |
     | `NTP Enabled: false` | Enable NTP on the ESXi host using `esxcli system ntp set --enabled=true` and start the service with `esxcli system service start ntpd`. |
-    | `reach   delay   offset  jitter` (no data rows below header)` | Wait 2-3 minutes for NTP to synchronize, or restart ntpd with `esxcli system service restart ntpd`. |
+    | `reach   delay   offset  jitter` (no data rows below header) | Wait 2-3 minutes for NTP to synchronize, or restart ntpd with `esxcli system service restart ntpd`. |
 ### Datastore Space Check
 
 | VCSA Size | Max Hosts | Max VMs | Required Disk |

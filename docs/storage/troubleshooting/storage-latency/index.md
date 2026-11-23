@@ -227,7 +227,7 @@ PWWN: 50:00:14:40:5a:2b:c1:e0  NWWN: 50:00:14:40:5a:2b:c1:e1  State: Online
     |---|---|
     | `multipathd: command not found` | Install device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
     | `reinstate path sdd: path does not exist` | Verify the path name with `multipathd show paths` and ensure the device is visible to the kernel before reinstatement. |
-    | `systemctl status multipathd` shows inactive` | Start the multipath daemon with `systemctl start multipathd && systemctl enable multipathd`. |
+    | `systemctl status multipathd` shows inactive | Start the multipath daemon with `systemctl start multipathd && systemctl enable multipathd`. |
 ---
 
 ## Snapshot and Replication Impact on Latency

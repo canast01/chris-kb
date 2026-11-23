@@ -501,7 +501,7 @@ export NSX_PASS="YourPassword"
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `bash: export: `YourPassword': not a valid identifier` | Wrap the password in quotes if it contains special characters: `export NSX_PASS="Your\$Password"` or use single quotes for literal strings. |
+    | `bash: export: `YourPassword': not a valid identifier | Wrap the password in quotes if it contains special characters: `export NSX_PASS="Your\$Password"` or use single quotes for literal strings. |
     | `bash: NSX_USER: command not found` | Ensure you're using `export` keyword before the variable name, not running it as a separate command. |
 ```bash
 echo "localhost ansible_connection=local" > ~/inventory

@@ -372,7 +372,7 @@ License Expiration: 2026-03-15
     |---|---|
     | `powermt: Command not found` | Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and add `/opt/PowerPath/bin` to PATH if needed. |
     | `Registration Status: EXPIRED` | Contact Dell EMC support to renew the PowerPath license or the array connectivity will be blocked after the grace period. |
-    | `dead` count is non-zero after restore` | Run `powermt config` to rescan paths and verify all SAN fabric connectivity and array LUN masking rules are correct. |
+    | `dead` count is non-zero after restore | Run `powermt config` to rescan paths and verify all SAN fabric connectivity and array LUN masking rules are correct. |
 ### Post-Restore Checklist
 
 - [ ] `powermt display options` — policy matches pre-change baseline (CLAROpt for Dell/EMC arrays)

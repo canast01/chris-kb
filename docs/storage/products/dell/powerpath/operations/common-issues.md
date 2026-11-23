@@ -205,7 +205,7 @@ Total paths: 8, Dead paths: 0
     |---|---|
     | `powermt: command not found` | Install EMC PowerPath package (e.g., `apt-get install emc-powerpath` or equivalent for your distribution) and ensure the PowerPath daemon is running with `systemctl start powerpath`. |
     | `No such file or directory: /sys/class/fc_host/host0/issue_lip` | Verify HBA is present and loaded with `lspci | grep -i fibre` and check actual host numbers with `ls /sys/class/fc_host/` before issuing LIP commands. |
-    | `dead` still appears after restore and LIP` | Check SAN fabric connectivity and zoning with `fcstat` or vendor tools, and verify HBA firmware is current before attempting further recovery steps. |
+    | `dead` still appears after restore and LIP | Check SAN fabric connectivity and zoning with `fcstat` or vendor tools, and verify HBA firmware is current before attempting further recovery steps. |
 If paths still do not recover after the above steps, escalate to the SAN team to confirm the switch port and array FA port are fully online and zoned correctly.
 
 ---

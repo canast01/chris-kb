@@ -88,7 +88,7 @@ trust list | grep "internal-ca"
     |---|---|
     | `cp: cannot stat 'internal-ca.crt': No such file or directory` | Verify the certificate file exists in the current directory or provide the full path to the source certificate. |
     | `update-ca-trust: command not found` | Install the ca-certificates package using your distribution's package manager (apt-get install ca-certificates on Debian/Ubuntu, or yum install ca-certificates on RHEL/CentOS). |
-    | `trust list | grep "internal-ca"` returns no results` | Confirm the certificate was successfully copied to /etc/pki/ca-trust/source/anchors/ and that update-ca-trust extract completed without errors. |
+    | `trust list | grep "internal-ca"` returns no results | Confirm the certificate was successfully copied to /etc/pki/ca-trust/source/anchors/ and that update-ca-trust extract completed without errors. |
 ## Windows — Local Machine Store
 
 ```powershell

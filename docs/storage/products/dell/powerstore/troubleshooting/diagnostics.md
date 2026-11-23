@@ -362,7 +362,7 @@ FC port b1: link_state=Degraded, speed=8Gbps
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the command). |
     | `jq: command not found` or `python3: command not found` | Install the missing tool with `apt-get install python3` or `yum install python3` on the management station. |
-    | `401 Unauthorized` in JSON response` | Regenerate the authentication cookie by running the login command: `curl -sk -X POST -d '{"username":"admin","password":"<pwd>"}' https://<powerstore-mgmt-ip>/api/rest/login -c /tmp/ps-cookie.txt`. |
+    | `401 Unauthorized` in JSON response | Regenerate the authentication cookie by running the login command: `curl -sk -X POST -d '{"username":"admin","password":"<pwd>"}' https://<powerstore-mgmt-ip>/api/rest/login -c /tmp/ps-cookie.txt`. |
 ---
 
 ## Step 5 — Check NAS server and file system health

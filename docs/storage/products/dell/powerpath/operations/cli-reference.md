@@ -939,7 +939,7 @@ Configuration saved to /etc/powerpath/powerpath.conf
     |---|---|
     | `powermt: Command not found` | Install EMC PowerPath package or verify the installation with `rpm -qa | grep PowerPath`. |
     | `powermt: Permission denied` | Run the command with `sudo` or as root user. |
-    | `No dead paths detected` but paths still unavailable` | Check physical SAN connectivity and zoning with `powermt display` and verify HBA status with `systool -c fc_host -v`. |
+    | `No dead paths detected` but paths still unavailable | Check physical SAN connectivity and zoning with `powermt display` and verify HBA status with `systool -c fc_host -v`. |
 ---
 
 ## Verify

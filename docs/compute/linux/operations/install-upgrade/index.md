@@ -383,7 +383,7 @@ Done.
     | Error | Fix |
     |---|---|
     | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the script with `sudo` or as the root user. |
-    | `E: Unable to locate package` (during security-only upgrade)` | The grep filter may match no packages; wrap the apt-get install command with `[ -n "$(apt-get --just-print upgrade 2>/dev/null | grep "^Inst" | grep -i security)" ] &&` to skip if empty. |
+    | `E: Unable to locate package` (during security-only upgrade) | The grep filter may match no packages; wrap the apt-get install command with `[ -n "$(apt-get --just-print upgrade 2>/dev/null | grep "^Inst" | grep -i security)" ] &&` to skip if empty. |
 ### Kernel Updates and Reboot
 
 ```bash

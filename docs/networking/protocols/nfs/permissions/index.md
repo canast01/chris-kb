@@ -106,7 +106,7 @@ Jan 18 14:32:47 nfs-server01 systemd[1]: Started NFSv4 ID Mapper.
     |---|---|
     | `systemctl: command not found` | Verify the system uses systemd (RHEL/CentOS 7+, Ubuntu 15.04+); older distros use `service nfs-idmapd restart` instead. |
     | `nfsidmap: command not found` | Install the nfs-utils package with `apt-get install nfs-utils` (Debian/Ubuntu) or `yum install nfs-utils` (RHEL/CentOS). |
-    | `Domain = corp.local` not taking effect (files still show "nobody")` | Ensure `/etc/idmapd.conf` has identical `Domain` values on both client and server, then run `nfsidmap -c` and remount the NFS share. |
+    | `Domain = corp.local` not taking effect (files still show "nobody") | Ensure `/etc/idmapd.conf` has identical `Domain` values on both client and server, then run `nfsidmap -c` and remount the NFS share. |
 ## Kerberos Security Modes
 
 | Mode | Authentication | Integrity | Encryption |

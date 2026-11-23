@@ -444,8 +444,8 @@ hbr-capture.pcap                                100%  2.4MB   8.2MB/s   00:00
     | Error | Fix |
     |---|---|
     | `openssl: connect: Connection refused` | Verify the VRA service is running and the FQDN/port is correct with `netstat -tlnp | grep 443` on the VRA appliance. |
-    | `notAfter=<date> GMT` (where date is in the past)` | Renew the certificate immediately via VAMI at `https://<vra-ip>:5480` under Certificate Management to restore replication connectivity. |
-    | `Permission denied` (when running pktcap-uw)` | Execute the packet capture command with root privileges or add your user to the appropriate group with `sudo pktcap-uw`. |
+    | `notAfter=<date> GMT` (where date is in the past) | Renew the certificate immediately via VAMI at `https://<vra-ip>:5480` under Certificate Management to restore replication connectivity. |
+    | `Permission denied` (when running pktcap-uw) | Execute the packet capture command with root privileges or add your user to the appropriate group with `sudo pktcap-uw`. |
 ---
 
 ## Step 7 — Collect VRA support bundle for VMware SR

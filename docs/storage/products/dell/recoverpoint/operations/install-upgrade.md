@@ -168,7 +168,7 @@ RecoverPoint                                    5.4.2.1                PartnerSu
     |---|---|
     | `VIB signature verification failed. Use --no-sig-check to override.` | Add the `--no-sig-check` flag to the esxcli command as shown in the documentation. |
     | `Error: Could not find a matching VIB package at /tmp/RecoverPoint-*.vib` | Verify the VIB file exists in /tmp/ by running `ls -la /tmp/RecoverPoint*.vib` and confirm the filename matches the glob pattern. |
-    | `HTTP 403 Forbidden` when accessing the vRPA cluster VIB URL` | Ensure the vRPA cluster IP is correct and reachable from vCenter, and verify network connectivity with `ping <vRPA-cluster-IP>`. |
+    | `HTTP 403 Forbidden` when accessing the vRPA cluster VIB URL | Ensure the vRPA cluster IP is correct and reachable from vCenter, and verify network connectivity with `ping <vRPA-cluster-IP>`. |
 After VIB installation, trust the splitter from the vRPA cluster UI or via REST API:
 
 ```bash

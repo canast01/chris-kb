@@ -350,7 +350,7 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
     | Error | Fix |
     |---|---|
     | `tcpdump: eth0: No such device` | Verify the correct interface name with `ip link show` and replace eth0 with the appropriate NIC (e.g., ens0, ens160). |
-    | `0 pps` (no packets captured)` | Confirm NetFlow/IPFIX is enabled on source switches/vDS and verify firewall rules allow UDP 2055 inbound with `sudo ufw status` or check security groups. |
+    | `0 pps` (no packets captured) | Confirm NetFlow/IPFIX is enabled on source switches/vDS and verify firewall rules allow UDP 2055 inbound with `sudo ufw status` or check security groups. |
     | `tcpdump: Permission denied` | Run the command with `sudo` or add your user to the pcap group with `sudo usermod -aG pcap $USER` and restart your session. |
 ---
 

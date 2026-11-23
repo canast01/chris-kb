@@ -83,7 +83,7 @@ rtt min/avg/max/stddev = 11.8/12.05/12.4/0.24 ms
     |---|---|
     | `curl: (7) Failed to connect to api.example.com port 443: Connection refused` | Verify the API endpoint is reachable and listening; check firewall rules and DNS resolution with `ndig api.example.com`. |
     | `ping: sendmsg: Operation not permitted` | The `-M do` flag requires root or CAP_NET_RAW capability; run with `sudo` or adjust system capabilities. |
-    | `notAfter=Jan 14 10:22:33 2024 GMT` (certificate expired)` | Renew the TLS certificate immediately using your certificate provider or `certbot renew` for Let's Encrypt certificates. |
+    | `notAfter=Jan 14 10:22:33 2024 GMT` (certificate expired) | Renew the TLS certificate immediately using your certificate provider or `certbot renew` for Let's Encrypt certificates. |
 ### Route and latency
 
 ```bash

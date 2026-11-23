@@ -154,7 +154,7 @@ sudo systemctl restart vmware-vcf-lcm
     |---|---|
     | `Unit vmware-vcf-lcm.service not found.` | Verify the VCF version is installed correctly and the service name matches your deployment with `systemctl list-units 'vmware-vcf-*'`. |
     | `Failed to restart vmware-vcf-lcm.service: Access denied` | Ensure you are running the command with `sudo` or as root user. |
-    | `Connection refused` (when SSH'ing to sddc-manager)` | Verify the SDDC Manager hostname resolves correctly and SSH is enabled; check network connectivity with `ping sddc-manager.corp.example.com`. |
+    | `Connection refused` (when SSH'ing to sddc-manager) | Verify the SDDC Manager hostname resolves correctly and SSH is enabled; check network connectivity with `ping sddc-manager.corp.example.com`. |
 ---
 
 ## Step 2 — Analyze LCM lifecycle and upgrade logs

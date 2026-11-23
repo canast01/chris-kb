@@ -5,6 +5,12 @@ tags:
 ---
 # VxRail — Cluster Software Stack and Data Plane
 
+<div class="kb-summary">
+VxRail cluster software stack reference covering Overview and HCI Node Cluster.
+
+*Applies to: VxRail 7.x · 8.x*
+</div>
+
 ## Overview
 
 VxRail is a hyper-converged infrastructure (HCI) appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Each node contributes local compute (CPU, RAM), NVMe flash cache, and capacity storage to a unified cluster. VxRail Manager orchestrates all lifecycle and configuration operations by communicating with vCenter.

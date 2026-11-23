@@ -238,7 +238,7 @@ notAfter=Jan 15 10:22:33 2025 GMT
     |---|---|
     | `unable to get local issuer certificate` | The internal CA certificate is not in the system trust store; add it to `/etc/pki/ca-trust/source/anchors/` and run `update-ca-trust`. |
     | `Verify return code: 21 (unable to verify the first certificate)` | The certificate chain is incomplete; ensure the intermediate CA certificate is installed on the LCM appliance in the certificate chain file. |
-    | `subject=CN = lcm.example.local` does not match expected hostname` | Update the certificate with the correct FQDN or add a Subject Alternative Name (SAN) entry for the actual hostname and redeploy. |
+    | `subject=CN = lcm.example.local` does not match expected hostname | Update the certificate with the correct FQDN or add a Subject Alternative Name (SAN) entry for the actual hostname and redeploy. |
 ### Configure Locker Passwords
 
 LCM → Locker → Passwords → Add Password

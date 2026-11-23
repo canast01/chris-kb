@@ -182,7 +182,7 @@ RSA key ok
     | Error | Fix |
     |---|---|
     | `leaf.pem: CN = aria-lcm.internal.corp, error 20 at 0 depth lookup: unable to get local issuer certificate` | Ensure the intermediate CA certificate is included in chain.pem in the correct order (root last). |
-    | `8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  - (certificate hash)` does not match private key hash` | Regenerate the certificate and private key pair together, or verify you are using the correct matching files. |
+    | `8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  - (certificate hash)` does not match private key hash | Regenerate the certificate and private key pair together, or verify you are using the correct matching files. |
     | `Enter PEM pass phrase:` | Remove the passphrase from the private key using `openssl rsa -in private.key -out private.key.nopass` before importing into LCM. |
 ---
 

@@ -109,7 +109,7 @@ cat .python-version
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `pyenv: version `3.11.7' is not installed` | Run `pyenv install 3.11.7` to install the required Python version. |
+    | `pyenv: version `3.11.7' is not installed | Run `pyenv install 3.11.7` to install the required Python version. |
     | `cat: .python-version: No such file or directory` | Create a `.python-version` file in the project root with `echo "3.11.7" > .python-version`. |
 The `.python-version` file records the required Python version for the project. `pyenv` activates it automatically when entering the directory.
 

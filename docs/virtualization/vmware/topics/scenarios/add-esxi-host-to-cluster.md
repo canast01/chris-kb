@@ -127,7 +127,7 @@ ntpq -p
     |---|---|
     | `Error: Unknown option --server` | Use `esxcli system ntp set --servers=ntp1.domain.local,ntp2.domain.local` (comma-separated in a single argument) on some ESXi versions instead of repeated `--server` flags. |
     | `Error: Unable to resolve ntp1.domain.local` | Verify DNS resolution is working on the ESXi host and the NTP server hostnames are resolvable via `nslookup ntp1.domain.local`. |
-    | `reach   delay   offset  jitter` (no peer entries)` | Wait 2-3 minutes for NTP to synchronize and re-run `ntpq -p`, or check firewall rules allow UDP port 123 outbound to the NTP servers. |
+    | `reach   delay   offset  jitter` (no peer entries) | Wait 2-3 minutes for NTP to synchronize and re-run `ntpq -p`, or check firewall rules allow UDP port 123 outbound to the NTP servers. |
 Look for: `*` or `+` next to a server in the `ntpq -p` output, indicating an active sync source.
 
 ---

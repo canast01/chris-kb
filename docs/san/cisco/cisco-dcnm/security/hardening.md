@@ -58,7 +58,7 @@ EOF
     | Error | Fix |
     |---|---|
     | `bash: /etc/issue.net: Permission denied` | Run the command with `sudo` or as root user. |
-    | `bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `EOF')` | Ensure the closing `EOF` is on its own line with no leading whitespace. |
+    | `bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `EOF') | Ensure the closing `EOF` is on its own line with no leading whitespace. |
 ```bash
 # Check available security updates
 yum updateinfo list security

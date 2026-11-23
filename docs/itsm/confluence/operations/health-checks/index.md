@@ -179,7 +179,7 @@ Top 10 directories in shared home:
     | Error | Fix |
     |---|---|
     | `df: '/mnt/confluence-shared': No such file or directory` | Verify the shared home mount point exists and is mounted with `mount | grep confluence-shared`. |
-    | `awk: syntax error in regex at or near `%'` | Ensure the df output format is standard; run `df -h /opt/atlassian/confluence` manually to confirm column 5 contains the percentage value. |
+    | `awk: syntax error in regex at or near `%' | Ensure the df output format is standard; run `df -h /opt/atlassian/confluence` manually to confirm column 5 contains the percentage value. |
     | `du: cannot access '/mnt/confluence-shared/*': Permission denied` | Run the script with sudo or ensure the executing user has read permissions on the shared home directory. |
 ---
 

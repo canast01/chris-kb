@@ -139,7 +139,7 @@ notAfter=Jan 14 10:22:33 2026 GMT
     | Error | Fix |
     |---|---|
     | `leaf.pem: error 20 at 0 depth lookup: unable to get local issuer certificate` | Add the intermediate CA certificate to chain.pem between the leaf and root, or use `-partial_chain` if the chain is incomplete. |
-    | `5d41402abc4b2a76b9719d911017c592` (first hash) does not match second hash` | Regenerate the private key or certificate so they correspond to the same key pair. |
+    | `5d41402abc4b2a76b9719d911017c592` (first hash) does not match second hash | Regenerate the private key or certificate so they correspond to the same key pair. |
     | `Enter pass phrase for private.key:` | Decrypt the private key with `openssl rsa -in private.key -out private-unencrypted.key` and use the unencrypted version for LCM. |
 ---
 
@@ -264,7 +264,7 @@ Cipher is ECDHE-RSA-AES256-GCM-SHA384
     | Error | Fix |
     |---|---|
     | `connect: Connection refused` | Verify the LCM host is running and accessible on port 443 with `ping lcm-prod-01.example.local` and `nc -zv lcm-prod-01.example.local 443`. |
-    | `alert handshake failure` (appears for TLS 1.2 test instead of 1.0)` | Confirm the server's minimum TLS version is actually 1.2 by checking `/opt/vmware/vcac/server/conf/catalina.properties` or the LCM security policy. |
+    | `alert handshake failure` (appears for TLS 1.2 test instead of 1.0) | Confirm the server's minimum TLS version is actually 1.2 by checking `/opt/vmware/vcac/server/conf/catalina.properties` or the LCM security policy. |
     | `grep: (standard input) is empty` | The openssl connection succeeded but grep found no matching line; try removing `2>/dev/null` to see the full output and verify the expected string format. |
 LCM 8.x defaults to TLS 1.2 minimum. If TLS 1.0 or 1.1 must be disabled explicitly, configure this via the NGINX configuration on the LCM appliance — consult the Broadcom hardening guide for the specific configuration path for each LCM version.
 

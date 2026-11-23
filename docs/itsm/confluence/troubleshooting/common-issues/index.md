@@ -187,9 +187,11 @@ numEntries: 1
 ```
 
 !!! warning "Common errors"
-    **`ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839"` — Verify the service account password is correct and the account is not locked in Active Directory.
-    **`ldapsearch: error code 1 "Operations error"` — Confirm the LDAP server hostname resolves correctly and port 636 is open from the Confluence server (test with `nc -zv dc01.example.com 636`).
-    **`LDAPException: Referral limit exceeded` — Increase the referral limit in Confluence LDAP configuration or simplify the search base to avoid excessive referral chasing across domain controllers.
+    | Error | Fix |
+    |---|---|
+    | `ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839"` | Verify the service account password is correct and the account is not locked in Active Directory. |
+    | `ldapsearch: error code 1 "Operations error"` | Confirm the LDAP server hostname resolves correctly and port 636 is open from the Confluence server (test with `nc -zv dc01.example.com 636`). |
+    | `LDAPException: Referral limit exceeded` | Increase the referral limit in Confluence LDAP configuration or simplify the search base to avoid excessive referral chasing across domain controllers. |
 ```bash
 # 1. Update bind account password in Confluence:
 # Admin > User Management > User Directories > [Directory] > Edit
@@ -584,7 +586,7 @@ Confluence started successfully. PID: 8742
     |---|---|
     | `mount: /mnt/confluence-shared: special device /mnt/confluence-shared does not exist` | Verify the NFS export path exists on the server and check /etc/fstab for correct mount point definition. |
     | `iptables: No chain/target/match by that name` | Ensure iptables is installed and running; on systems using nftables, convert rules or check with `nft list ruleset | grep 5801` instead. |
-    | `Connection refused` (when Confluence fails to start)` | Check that port 5801 is not already in use with `lsof -i :5801` and verify sufficient disk space with `df -h /opt/atlassian`. |
+    | `Connection refused` (when Confluence fails to start) | Check that port 5801 is not already in use with `lsof -i :5801` and verify sufficient disk space with `df -h /opt/atlassian`. |
 ```bash
 # Check mail queue and error queue
 curl -s -H "Authorization: Bearer $CF_TOKEN" \

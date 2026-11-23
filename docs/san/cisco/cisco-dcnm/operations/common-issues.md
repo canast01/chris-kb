@@ -299,7 +299,7 @@ Ethernet1/1
     |---|---|
     | `NVE peer information for switch prod-leaf-01: NVE peer not found` | Verify the remote VTEP loopback is reachable and BGP EVPN routes are being advertised with `show bgp l2vpn evpn neighbors`. |
     | `PING 10.1.1.6 (10.1.1.6) from 10.1.1.5: 100.00% packet loss` | Confirm loopback0 interface is up and routed connectivity exists between spines; check `show ip route` for the remote loopback prefix. |
-    | `MTU 9216` (actual interface MTU less than 9216)` | Increase the interface MTU to at least 9216 with `config t; interface ethernet X/X; mtu 9216` to accommodate VXLAN 50-byte overhead. |
+    | `MTU 9216` (actual interface MTU less than 9216) | Increase the interface MTU to at least 9216 with `config t; interface ethernet X/X; mtu 9216` to accommodate VXLAN 50-byte overhead. |
 ## License Issues
 
 ### "License Expired" Warning

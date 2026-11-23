@@ -712,7 +712,7 @@ export VC_PASS="YourPassword"
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `bash: export: `YourPassword': not a valid identifier` | Wrap the password in quotes if it contains special characters: `export VC_PASS="Your\$Password"` or use single quotes for literal interpretation. |
+    | `bash: export: `YourPassword': not a valid identifier | Wrap the password in quotes if it contains special characters: `export VC_PASS="Your\$Password"` or use single quotes for literal interpretation. |
     | `bash: administrator@vsphere.local: command not found` | Ensure the VC_USER value is quoted; use `export VC_USER="administrator@vsphere.local"` instead of unquoted assignment. |
 **Step 4 — Create a minimal inventory file**
 

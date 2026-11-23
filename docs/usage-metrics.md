@@ -26,7 +26,7 @@ section_page_counts -> health_checks: uses
 | Pages with full-width ASCII diagrams | 155 |
 | Pages with SVG diagrams | 1,450 |
 | Pages with Mermaid diagrams | 44 |
-| Pages with kb-summary | 2,571 |
+| Pages with kb-summary | 2,572 |
 | Pages with tags | 2,819 |
 | Audit score | 54 / 55 |
 

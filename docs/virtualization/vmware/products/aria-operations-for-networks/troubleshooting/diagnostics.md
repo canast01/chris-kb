@@ -136,7 +136,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBsb2NhbCIsImV4cCI6MTcwNTM
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
     | `jq: command not found` or `python3: command not found` | Install the required JSON parser (`apt-get install python3` or `brew install jq`) and use the appropriate tool for your environment. |
-    | `{"error":"Invalid credentials"}` or empty `$TOKEN` output` | Verify the username, password, and domain are correct; check that the LOCAL domain exists and the admin user is configured in vRNI. |
+    | `{"error":"Invalid credentials"}` or empty `$TOKEN` output | Verify the username, password, and domain are correct; check that the LOCAL domain exists and the admin user is configured in vRNI. |
 ---
 
 ## Step 2 — Check data source connectivity and sync status

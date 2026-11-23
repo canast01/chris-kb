@@ -396,7 +396,7 @@ Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
     | Error | Fix |
     |---|---|
     | `vmkping: Unknown host <peer-tep-ip>` | Replace `<peer-tep-ip>` with the actual IP address of the peer TEP VMkernel adapter (e.g., 172.16.50.12). |
-    | `Name                           PortBinding            DhcpEnabled   IPv4Address      IPv6Address` (no TEP adapter listed)` | Create the TEP VMkernel adapter on the vxlan port binding using `esxcli network ip interface add -i vmk10 -p vxlan -I 172.16.50.11 -N 255.255.255.0`. |
+    | `Name                           PortBinding            DhcpEnabled   IPv4Address      IPv6Address` (no TEP adapter listed) | Create the TEP VMkernel adapter on the vxlan port binding using `esxcli network ip interface add -i vmk10 -p vxlan -I 172.16.50.11 -N 255.255.255.0`. |
 ---
 
 ## 8. Prevention

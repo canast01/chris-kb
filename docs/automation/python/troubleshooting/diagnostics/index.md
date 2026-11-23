@@ -418,7 +418,7 @@ Diagnostic snapshot saved to /tmp/python-diag-2024-01-15-1432.txt
     | Error | Fix |
     |---|---|
     | `ModuleNotFoundError: No module named '<package>'` | Activate the virtual environment with `source /path/to/venv/bin/activate` and run `pip install <package>`. |
-    | `VIRTUAL_ENV=` (empty output)` | Activate the virtual environment before running diagnostics, or the wrong Python interpreter is being used. |
+    | `VIRTUAL_ENV=` (empty output) | Activate the virtual environment before running diagnostics, or the wrong Python interpreter is being used. |
     | `pip: command not found` | Install pip with `python3 -m ensurepip --upgrade` or use `python3 -m pip` instead of `pip`. |
 ---
 

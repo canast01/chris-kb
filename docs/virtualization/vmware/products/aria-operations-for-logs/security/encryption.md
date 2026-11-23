@@ -104,7 +104,7 @@ Protocol  : TLSv1.2
     |---|---|
     | `unable to load client cert (no certs available)` | Ensure the system's CA certificates are installed via `update-ca-certificates` or equivalent, or add `-CAfile /path/to/ca-bundle.crt` to the openssl command. |
     | `connect: Connection refused` | Verify the vrli-prod-01.example.local hostname resolves and port 443 is accessible; check DNS resolution with `nslookup vrli-prod-01.example.local` and firewall rules. |
-    | `Protocol  : TLSv1.0` (when TLS 1.0 should be rejected)` | Disable TLS 1.0 on the Aria Operations for Logs appliance via the security settings in the web UI or by editing `/etc/ssl/openssl.cnf` to remove TLSv1 from the MinProtocol directive. |
+    | `Protocol  : TLSv1.0` (when TLS 1.0 should be rejected) | Disable TLS 1.0 on the Aria Operations for Logs appliance via the security settings in the web UI or by editing `/etc/ssl/openssl.cnf` to remove TLSv1 from the MinProtocol directive. |
 Use `testssl.sh` for a comprehensive scan before exposing the UI to any external network:
 
 ```bash

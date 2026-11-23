@@ -98,7 +98,7 @@ PSP: VMW_PSP_MRU
     | Error | Fix |
     |---|---|
     | `Unknown command or namespace esxcli storage` | Verify esxcli is available and you are running commands directly on an ESXi host (not vCenter); SSH to the ESXi management IP and try again. |
-    | `State: dead` paths persist after reboot` | Run `esxcli storage core path set --path=<path_id> --state=active` to manually recover the path, or check array-side LUN masking and fabric connectivity. |
+    | `State: dead` paths persist after reboot | Run `esxcli storage core path set --path=<path_id> --state=active` to manually recover the path, or check array-side LUN masking and fabric connectivity. |
     | `grep: (standard input) is empty` | The storage subsystem may not have detected any paths; verify LUN presentation with `esxcli storage core device list` and rescan HBAs using `esxcli storage core adapter rescan --adapter=vmhba0`. |
 ## Step 3: Check for vSAN Resync or Rebuild
 
