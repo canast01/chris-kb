@@ -621,7 +621,7 @@ Daily check complete: 5 passed, 0 warned, 0 failed
     |---|---|
     | `ERROR: SID not set` | Export the SID variable before running the script: `export SID=000123456789` |
     | `symcfg: command not found` | Verify SYMCLI_PATH is correct and the Symmetrix CLI package is installed: `ls -la /usr/symcli/bin/symcfg` |
-    | `[FAIL] SRDF pair states` | Check SRDF licensing and array connectivity: `$SYMCLI_PATH/symrdf list -sid $SID -v` for detailed error output |
+    | `[FAIL] SRDF pair states` | Check SRDF licensing and array connectivity: `$SYMCLI_PATH/symrdf list -sid $SID -v` for detailed error output. |
 ---
 
 ## Incident Triage Script (Bash)

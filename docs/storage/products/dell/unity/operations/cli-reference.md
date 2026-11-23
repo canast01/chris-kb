@@ -113,8 +113,8 @@ audit_890          admin                  Changed pool settings     pool_tier1  
     | Error | Fix |
     |---|---|
     | `Error: Connection refused` | Verify the Unity array IP address is correct and the management interface is reachable (ping <ip>) |
-    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account is not locked |
-    | `Error: Command not found: uemcli` | Install the EMC Unity CLI package or verify the installation path is in $PATH |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account is not locked. |
+    | `Error: Command not found: uemcli` | Install the Unisphere CLI (UEMCLI) package or verify the installation path is in $PATH. |
 ### Alert Severity Levels
 
 | Severity | Meaning | Action |

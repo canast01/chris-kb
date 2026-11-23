@@ -78,7 +78,7 @@ Id                                      Name                          Status
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `ERROR: (AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' does not have authorization to perform action 'Microsoft.Security/autoProvisioningSettings/read' over scope '/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890'.` | Ensure your user account has the Security |
+    | `ERROR: (AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' does not have authorization to perform action 'Microsoft.Security/autoProvisioningSettings/read' over scope '/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890'.` | Ensure your user account has the Security Admin (or Security Reader for read-only) role on the subscription, then sign in again to refresh the token. |
 ## Defender Plans
 
 Defender for Cloud has free (CSPM) and paid (Defender) plans per resource type. Enabling a plan activates threat detection, just-in-time VM access, file integrity monitoring, and other protections.

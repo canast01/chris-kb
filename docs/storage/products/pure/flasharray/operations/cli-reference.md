@@ -533,7 +533,7 @@ backup-hosts,1000.0,756.2,243.8
     | Error | Fix |
     |---|---|
     | `purehost: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`). |
-    | `Error: Unable to connect to array at <ip>` | Verify network connectivity to the FlashArray management IP and confirm authentication credentials are configured in |
+    | `Error: Unable to connect to array at <ip>` | Verify network connectivity to the FlashArray management IP and confirm authentication credentials are configured in your CLI/SDK profile (API token or username and password). |
 ### Hardware & Health
 
 ```bash

@@ -686,7 +686,7 @@ deployment.apps/dns-default restarted
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `error: the server doesn't have a resource type "co"` | Use the full resource name `oc describe clusteroperator |
+    | `error: the server doesn't have a resource type "co"` | Use the full resource name `oc describe clusteroperator <name>` (list them with `oc get clusteroperators`). |
 ---
 
 ## See also

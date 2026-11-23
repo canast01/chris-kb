@@ -225,7 +225,7 @@ total 2048
     |---|---|
     | `grep: /var/log/vmware/vrlcm/vlcm.log: No such file or directory` | Verify the LCM service is running with `systemctl status vrlcm` and check the correct log path with `find /var/log -name "vlcm.log" 2>/dev/null`. |
     | `tail: cannot open '/var/log/vmware/vrlcm/installer*.log' for reading: No such file or directory` | Run `ls -la /var/log/vmware/vrlcm/` to confirm installer logs exist, or check if the operation has actually started yet. |
-    | `grep: (standard input): line too long` | Pipe through `sed 's/.\{1000\}/&\n/g'` before grep to handle extremely long |
+    | `grep: (standard input): line too long` | Pipe through `sed 's/.\{1000\}/&\n/g'` before grep to handle extremely long lines, or trim them first with `cut -c1-4000`. |
 ---
 
 ## Step 3 — Check certificate expiry

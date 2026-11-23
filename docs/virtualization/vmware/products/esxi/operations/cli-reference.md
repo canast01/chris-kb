@@ -335,7 +335,7 @@ $ du -sh /vmfs/volumes/datastore1/vm-prod-web01/
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `ls: cannot access '/vmfs/volumes/<datastore>/': No such file or directory` | Replace `<datastore>` with an actual datastore name from the `ls /vmfs/ |
+    | `ls: cannot access '/vmfs/volumes/<datastore>/': No such file or directory` | Replace `<datastore>` with an actual datastore name from the `ls /vmfs/volumes/` output. |
 ```bash
 # vmkfstools — VMDK operations
 vmkfstools -l /vmfs/volumes/<ds>/<vm>/<vm>.vmdk
@@ -510,7 +510,7 @@ State: dead
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown option --address` | Use `--server` instead of `--address` for iS |
+    | `Error: Unknown option --address` | `--address` is the correct option for `esxcli iscsi adapter discovery sendtarget add`; this error means it was passed to a different subcommand or the namespace is mistyped. Check the syntax for your build with `esxcli iscsi adapter discovery sendtarget add --help`. |
 ## VM Management (vim-cmd)
 
 ```bash

@@ -232,7 +232,7 @@ total 2.1M
     |---|---|
     | `ssh: Could not resolve hostname vr-appliance.example.com: Name or service not known` | Verify the VR appliance hostname/IP is correct and resolvable in your DNS or /etc/hosts file. |
     | `Unit vmware-hbrsrv.service could not be found.` | Confirm the SRM VR appliance is properly deployed and the hbrsrv service package is installed. |
-    | `hbr-configure: command not found` | Ensure you are logged in as root or with sudo privileges, as hbr-configure |
+    | `hbr-configure: command not found` | Ensure you are logged in as root (or use sudo) on the vSphere Replication appliance itself, where hbr-configure is installed; it is not available on the SRM server or your workstation. |
 ---
 
 ## NSX-T Integration for Network Mapping

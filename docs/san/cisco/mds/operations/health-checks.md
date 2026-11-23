@@ -212,7 +212,7 @@ CPU Usage: 12%
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `% Invalid command` | Verify you are in the correct CLI mode |
+    | `% Invalid command` | Verify you are in the correct CLI mode (EXEC vs `configure terminal`) and check the syntax for your NX-OS release with `?`. |
 ```bash
 show version
 show running-config

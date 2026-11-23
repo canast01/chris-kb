@@ -2025,7 +2025,7 @@ evt-004     2024-01-15 04:15:22   1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p     JOB_C
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Invalid job ID format` | Ensure the job ID matches the UUID format shown in the job history list output (e.g., `isi job events list --job-id 1a2b3c4d-5e6f-7g8h- |
+    | `Error: Invalid job ID format` | Ensure the job ID matches the format shown in the job history list output (copy it exactly from `isi job jobs list` or `isi job events list`). |
 ### Job Impact Policies
 
 ```bash

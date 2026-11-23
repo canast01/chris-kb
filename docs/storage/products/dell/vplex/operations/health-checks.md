@@ -136,7 +136,7 @@ drwxr-xr-x 3 root root 4096 Jan 15 10:17 cluster-2/
     |---|---|
     | `ls: cannot access '/clusters/*/health-indications/': No such file or directory` | Verify the VPLEX management console is running and the cluster paths are correctly mounted with `mount | grep clusters`. |
     | `health-check: command not found` | Ensure you are logged into the VPLEX management CLI with proper credentials and the health-check utility is in your PATH. |
-    | `Permission denied` | Run the commands with appropriate VPLEX administrative privileges |
+    | `Permission denied` | Run the commands with appropriate VPLEX administrative privileges. |
 ## Cluster Status
 
 ![Cluster Status](../../../../../assets/storage-dell-vplex-hc-cluster-status.svg)

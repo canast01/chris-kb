@@ -779,7 +779,7 @@ Attach this file to your Dell support case.
     |---|---|
     | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep PowerPath` and add its bin directory to PATH or use full path `/opt/emc/PowerPath/bin/powermt`. |
     | `Permission denied` | Run the script with `sudo bash powerpath_support_collect.sh` or as root user; PowerPath commands require elevated privileges. |
-    | `systemctl status PowerPath` returned exit code 3` | The PowerPath service may not be installed or the unit name differs; check available services with `systemctl list-units | grep -i power`. |
+    | `systemctl status PowerPath` returned exit code 3 | The PowerPath service may not be installed or the unit name differs; check available services with `systemctl list-units | grep -i power`. |
 ---
 
 ## Log locations

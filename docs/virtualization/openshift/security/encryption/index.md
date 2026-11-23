@@ -169,7 +169,7 @@ etcd.encryption.kubernetes.io/hash: "sha256:a3f8d2c1e9b4f6a7c2d8e1f3a5b7c9d0e2f4
     |---|---|
     | `error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"` | Verify you are connected to an OpenShift 4.x cluster with `oc version` and confirm the API server CRD exists with `oc api-resources | grep apiserver`. |
     | `Encrypted = false in conditions after 30+ minutes` | Check etcd pod logs with `oc logs -n openshift-etcd etcd-<node>` for encryption errors and verify sufficient disk space with `oc describe node <node>`. |
-    | `etcd.encryption.kubernetes.io/hash annotation not found on secret` | Wait for the encryption migration to complete (monitor with `oc get apiserver cluster -o jsonpath='{.status.conditions[?(@. |
+    | `etcd.encryption.kubernetes.io/hash annotation not found on secret` | Wait for the encryption migration to complete (monitor with `oc get kubeapiserver -o=jsonpath='{range .items[0].status.conditions[?(@.type=="Encrypted")]}{.reason}{"\n"}{end}'` until it reports `EncryptionCompleted`). |
 ### etcd Encryption Key Rotation
 
 Key rotation is automatic once encryption is enabled. OCP generates new keys periodically and re-encrypts all existing data. There is no manual rotation step required unless you are transitioning between algorithm types.

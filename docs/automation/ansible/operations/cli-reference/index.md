@@ -534,7 +534,7 @@ first_found                                         return first file found from
     |---|---|
     | `[WARNING]: Ansible is being run in a world writable /tmp directory.` | Run ansible-doc from a non-world-writable directory or set ANSIBLE_LIBRARY to a secure path. |
     | `ERROR! No module named 'ansible'` | Install Ansible using `pip install ansible` or your system package manager. |
-    | `[ERROR]: module not found in configured module paths` | Ensure the module exists by running `ansible-doc -l` to verify it's available in your Ansible |
+    | `[ERROR]: module not found in configured module paths` | Ensure the module exists by running `ansible-doc -l` to verify it's available in your Ansible installation, and install the collection that provides it with `ansible-galaxy collection install <namespace.collection>`. |
 ### ansible-config
 
 Inspect Ansible's effective configuration — useful when troubleshooting unexpected behavior.

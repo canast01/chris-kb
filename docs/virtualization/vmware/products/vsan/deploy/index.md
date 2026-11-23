@@ -406,7 +406,7 @@ round-trip min/avg/max = 0.789/0.796/0.801 ms
     |---|---|
     | `PING 192.168.100.12 (192.168.100.12): 56 data bytes — No response from host` | Verify the vSAN VMkernel IP is correct and the network path between hosts is unblocked. |
     | `Unknown interface vmk2` | Confirm vmk2 exists on this host with `esxcli network ip interface list` and use the correct VMkernel interface name. |
-    | `4 packets transmitted, 0 packets received, 100% packet loss` | Check that the vSAN network MTU is set to 9000 on all physical switches and VMkernel interfaces with `esxcli network ip |
+    | `4 packets transmitted, 0 packets received, 100% packet loss` | Check that the vSAN network MTU is set to 9000 on all physical switches and VMkernel interfaces with `esxcli network ip interface list`, then retest with `vmkping -I vmk<n> -d -s 8972 <peer-ip>`. |
 Any packet loss means MTU 9000 is not configured somewhere in the path (switch port, trunk, uplink). Fix before enabling vSAN.
 
 ### Configure NIOC (If Sharing NICs)

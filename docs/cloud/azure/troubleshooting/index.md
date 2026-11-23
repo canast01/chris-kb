@@ -181,7 +181,7 @@ pod "test-pod" deleted
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `error: the server doesn't have a resource type "pod" (get pods)` | Verify |
+    | `error: the server doesn't have a resource type "pod" (get pods)` | Verify kubectl is pointed at the AKS cluster with `az aks get-credentials -g <rg> -n <cluster>` and check the context with `kubectl config current-context`. |
 **Expected output:** Node conditions show `Ready True`. `kubectl top nodes` shows CPU and memory below 80%. DNS test returns an address for `kubernetes.default`. Events show `Pulled` and `Started` rather than `BackOff` or `ErrImagePull`.
 
 ## App Service 502/503

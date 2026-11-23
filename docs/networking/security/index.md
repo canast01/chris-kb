@@ -105,7 +105,7 @@ Jan 15 14:30:15 web-server-01 kernel: [UFW BLOCK] IN=eth0 OUT= MAC=52:54:00:12:3
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: command not found` | Verify you are connected to the PAN-OS device via SSH or CLI and have proper credentials; |
+    | `Error: command not found` | Verify you are connected to the PAN-OS device via SSH or CLI and have proper credentials; PAN-OS commands only run inside the device's CLI, not your local shell. |
 ```bash
 # Identify which policy matched a session (PAN-OS)
 show session all filter destination <ip> destination-port <port>

@@ -1153,7 +1153,7 @@ LISTEN    0         128                [::]:22                 [::]:*           
     |---|---|
     | `ausearch: command not found` | Install audit tools with `yum install audit` or `apt install auditd` and ensure the auditd service is running. |
     | `grep: /var/log/secure: No such file or directory` | On Ubuntu/Debian systems, check `/var/log/auth.log` instead of `/var/log/secure` (which is RHEL/AlmaLinux only). |
-    | `ss: command not found` | Install iproute2 package with `y |
+    | `ss: command not found` | Install iproute2 package with `yum install iproute` (RHEL) or `apt-get install iproute2` (Debian/Ubuntu). |
 What to look for:
 - SELinux should be `Enforcing` on production RHEL systems — `Permissive` means policy is not being enforced.
 - Repeated failed SSH logins from the same IP indicate a brute-force attack — consider `fail2ban` or firewall block.

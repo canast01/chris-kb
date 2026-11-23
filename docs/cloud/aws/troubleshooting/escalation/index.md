@@ -260,7 +260,7 @@ No bucket policy
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID '<instance-id>' does not exist` | Verify the instance ID is correct and exists in the current AWS region; check `aws |
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID '<instance-id>' does not exist` | Verify the instance ID is correct and exists in the current AWS region; check `aws configure get region` or pass `--region` explicitly. |
 ### 4. Collect CloudWatch metrics and logs
 
 ```bash

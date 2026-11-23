@@ -183,7 +183,7 @@ Resource                                                                        
     |---|---|
     | `InvalidResourceId : The resource id '<subscription-id>' is invalid.` | Replace `<subscription-id>` with your actual subscription ID (e.g., `a1b2c3d4-e5f6-4789-0abc-def123456789`). |
     | `PolicyDefinitionNotFound : Policy definition '96670d01-0a4d-4649-9c89-2d3abc0a5025' not found.` | Verify the policy definition ID exists in your tenant; use `az policy definition list --query "[].id"` to confirm. |
-    | `AuthorizationFailed : The client 'user@example.com' with object id 'xyz' does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/write' over scope '/subscriptions/...'.` | Ensure your account has Owner or |
+    | `AuthorizationFailed : The client 'user@example.com' with object id 'xyz' does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/write' over scope '/subscriptions/...'.` | Ensure your account has Owner or Tag Contributor role on the target scope, then retry the tagging operation. |
 ## Tag Inheritance
 
 Tags on resource groups are not automatically inherited by child resources. Use the `Inherit a tag from the resource group if missing` built-in policy to propagate tags.

@@ -248,7 +248,7 @@ main.(*Server).Run(0xc0004a2000, 0x0, 0x0)
     |---|---|
     | `error: the server doesn't have a resource type "events"` | Ensure you have sufficient RBAC permissions and the kubeconfig points to a valid cluster endpoint. |
     | `Unable to connect to the server: dial tcp 10.0.1.45:6443: i/o timeout` | Verify the cluster-kubeconfig path is correct and the Supervisor cluster API server is reachable from your management network. |
-    | `pod "kube-apiserver-supervisor-1" not found` | Confirm the pod name matches exactly (use `kubectl get pods -n kube-system` first) and you are querying |
+    | `pod "kube-apiserver-supervisor-1" not found` | Confirm the pod name matches exactly (use `kubectl get pods -n kube-system` first) and you are querying the Supervisor cluster context, not a workload cluster. |
 ### 5. Write the timeline
 
 ```text

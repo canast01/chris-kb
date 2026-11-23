@@ -113,7 +113,7 @@ MIICljCCAX4CAQAwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALRiMLAA...
     |---|---|
     | `unable to load certificate` | Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for encoding issues or corruption). |
     | `MAC verification failure` | Ensure the correct password is provided when prompted for the PKCS#12 bundle, or the file may be corrupted. |
-    | `no start line:PEM routines:PEM_read_bio:no start line:../crypto/pem/pem_lib.c` | Convert the certificate to PEM format using `openssl x509 -inform DER -in cert.der - |
+    | `no start line:PEM routines:PEM_read_bio:no start line:../crypto/pem/pem_lib.c` | Convert the certificate to PEM format using `openssl x509 -inform DER -in cert.der -out cert.pem`, then retry with the PEM file. |
 ---
 
 ## openssl — Verification

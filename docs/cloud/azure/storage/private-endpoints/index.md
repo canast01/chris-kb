@@ -185,7 +185,7 @@ Address: 10.2.1.15
     | Error | Fix |
     |---|---|
     | `ResourceNotFound: The Resource 'Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net' under resource group 'rg-prod-eastus' was not found.` | Run the first `az network private-dns zone create` command before attempting to link or create the zone group. |
-    | `InvalidResourceReference: The private endpoint 'pe-blob-prod' does not exist in resource group 'rg-prod-eastus'.` | Ensure the private endpoint |
+    | `InvalidResourceReference: The private endpoint 'pe-blob-prod' does not exist in resource group 'rg-prod-eastus'.` | Ensure the private endpoint name and resource group are correct; list existing endpoints with `az network private-endpoint list -g <rg> -o table`. |
 ## Verifying Connectivity
 
 ```bash

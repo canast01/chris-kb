@@ -212,7 +212,7 @@ Status report saved to /tmp/eyeglass-status-2025-01-15-143401.txt
     |---|---|
     | `igls: command not found` | Verify Eyeglass is running with `systemctl status eyeglass` and confirm you're logged into the correct appliance hostname. |
     | `Connection refused` or `ssh: connect to host <eyeglass-hostname> port 22: Connection refused` | Confirm the Eyeglass appliance IP/hostname is reachable with `ping` and that SSH is enabled in Eyeglass admin console. |
-    | `Permission denied (publickey,password)` | Verify your SSH credentials and that the admin user exists; reset the password via |
+    | `Permission denied (publickey,password)` | Verify your SSH credentials and that the admin user exists; reset the password via the Eyeglass appliance console or the admin web UI. |
 ### 3. Collect PowerScale SyncIQ status (from both clusters)
 
 ```bash
@@ -479,7 +479,7 @@ ID      Policy                  State       Progress    Bytes Transferred
     |---|---|
     | `[ERROR] Failed to replicate access zone 'az-finance' — connection timeout` | Verify network connectivity between Eyeglass and secondary cluster; check firewall rules for port 8080 and 3218. |
     | `Connection refused to secondary cluster dr-isilon-02:8080` | Confirm the secondary cluster is online and accessible; run `ping dr-isilon-02` and `isi status` on the target cluster. |
-    | `SyncIQ job 'policy-backup-daily' exceeded retry limit` | Check the SyncIQ job logs on PowerScale with `isi sync jobs view <job-id>` and resolve the underlying replication failure before manual |
+    | `SyncIQ job 'policy-backup-daily' exceeded retry limit` | Check the SyncIQ job logs on PowerScale with `isi sync jobs view <job-id>` and resolve the underlying replication failure before manually re-running the policy. |
 ---
 
 ## License Issues

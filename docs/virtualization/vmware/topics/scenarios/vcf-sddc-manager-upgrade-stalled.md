@@ -127,7 +127,7 @@ Issues Detected:
     | Error | Fix |
     |---|---|
     | `sudo: command not found` | Ensure you are logged in as a user with sudo privileges; if using a restricted shell, request admin access. |
-    | `/var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory` | Verify the LCM service is running with `systemctl status vmware-vcf-lcm` and check the correct log path for your |
+    | `/var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory` | Verify the LCM service is running with `systemctl status vmware-vcf-lcm` and check the correct log path for your VCF version under `/var/log/vmware/vcf/lcm/`. |
 Look for: the specific exception class or error message. Common patterns:
 
 ```text

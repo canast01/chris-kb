@@ -415,7 +415,7 @@ Tomcat started.
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or configure proper SSL certificates on the Confluence server. |
     | `ERROR [main] [com.atlassian.confluence.setup.BootstrapManager] Database connection failed` | Verify database credentials and connectivity in `confluence.cfg.xml` and ensure the database service is running and accessible. |
-    | `ERROR [main] [com.atlassian.confluence.search.v2.ContentIndexer] Search index corruption detected` | Delete the corrupted index directory at `/var/atlassian/application-data/confluence/index` and restart Confluence to rebuild |
+    | `ERROR [main] [com.atlassian.confluence.search.v2.ContentIndexer] Search index corruption detected` | Delete the corrupted index directory at `/var/atlassian/application-data/confluence/index` and restart Confluence to rebuild the search index from scratch. |
 ---
 
 ## Data Center Backup Best Practices

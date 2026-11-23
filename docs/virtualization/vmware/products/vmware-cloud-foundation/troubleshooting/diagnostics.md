@@ -219,7 +219,7 @@ proxy.protocol=http
     |---|---|
     | `grep: /var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory` | Verify the LCM service is running with `systemctl status vmware-vcf-lcm` and check the correct log path with `find /var/log -name "*lcm*" -type f`. |
     | `curl: (7) Failed to connect to depot.vmware.com port 443: Connection timed out` | Verify network connectivity and proxy settings with `curl -v --proxy [proxy:port] https://depot.vmware.com` or check firewall rules blocking outbound HTTPS. |
-    | `taskId=<task-uuid>: No such file or directory` | Replace the literal `<task-uuid>` placeholder with an actual UUID from a previous grep output, e.g., `grep "taskId=a7f2c |
+    | `taskId=<task-uuid>: No such file or directory` | Replace the literal `<task-uuid>` placeholder with an actual task ID taken from the output of a previous grep before running the command. |
 ---
 
 ## Step 3 — Diagnose NSX Manager cluster and transport nodes

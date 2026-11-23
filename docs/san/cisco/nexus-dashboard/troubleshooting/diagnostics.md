@@ -155,7 +155,7 @@ ndfc        ndfc-scheduler-job-5c8d9f.17a4f8c1a2b3d4e8     Normal    Completed  
     | Error | Fix |
     |---|---|
     | `error: the server doesn't have a resource type "events"` | Verify kubectl version is 1.19+ and the API server is responding with `kubectl cluster-info`. |
-    | `error: namespace "ndfc" not found` | Confirm the ndfc namespace exists with `kubectl get namespaces | grep ndfc` and create it if missing with ` |
+    | `error: namespace "ndfc" not found` | Confirm the ndfc namespace exists with `kubectl get namespaces | grep ndfc` and create it if missing with `kubectl create namespace ndfc`. |
 ```bash
 # Check etcd cluster health
 ETCDCTL_API=3 etcdctl \

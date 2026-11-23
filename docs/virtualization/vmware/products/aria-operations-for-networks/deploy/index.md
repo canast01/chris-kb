@@ -446,7 +446,7 @@ listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
     | Error | Fix |
     |---|---|
     | `tcpdump: command not found` | Install tcpdump with `sudo apt-get install tcpdump` on the collector VM. |
-    | `tcpdump: eth0: No such device` | Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, ens |
+    | `tcpdump: eth0: No such device` | Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens160, ens192). |
 ---
 
 ## Phase 6 — Post-Deployment Validation

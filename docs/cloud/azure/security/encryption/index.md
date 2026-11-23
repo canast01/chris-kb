@@ -595,7 +595,7 @@ az network private-endpoint dns-zone-group create \
     | Error | Fix |
     |---|---|
     | `(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<kv-name>' under resource group '<rg-name>' was not found.` | Verify the Key Vault name and resource group name are correct and exist in your subscription. |
-    | `(InvalidResourceId) The provided resource ID is invalid or does not exist.` | Ensure the `<kv- |
+    | `(InvalidResourceId) The provided resource ID is invalid or does not exist.` | Ensure the `<kv-name>` placeholder is replaced with an existing Key Vault name and you are in the right subscription (`az account show`). |
 ---
 
 ## Key Vault Diagnostics

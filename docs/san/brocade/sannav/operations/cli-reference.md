@@ -351,7 +351,7 @@ curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/ports \
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
-    | `jq: command not found` or `json.tool: No module named json` | Install Python 3 (`apt-get install python3`) or use `jq` instead of `python3 - |
+    | `jq: command not found` or `json.tool: No module named json` | Install Python 3 (`apt-get install python3`) or use `jq` instead of `python3 -m json.tool` (install it with `apt-get install jq`). |
 ```bash
 # Get active alerts (last 100)
 curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/all/events?limit=100&filter=acknowledged:false" \

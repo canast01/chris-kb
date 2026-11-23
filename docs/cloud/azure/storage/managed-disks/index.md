@@ -120,7 +120,7 @@ az vm disk attach \
     | Error | Fix |
     |---|---|
     | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in the target subscription. |
-    | `InvalidDiskSize` | Confirm the disk size in GB |
+    | `InvalidDiskSize` | Confirm the disk size in GB is within the limits for the chosen disk SKU and is not smaller than the current size (managed disks can only grow). |
 ## Resizing Disks
 
 ```bash

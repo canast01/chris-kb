@@ -417,7 +417,7 @@ aws ec2 authorize-security-group-ingress --group-id $SGID \
     | Error | Fix |
     |---|---|
     | `An error occurred (InvalidParameterValue) when calling the CreateSecurityGroup operation: Invalid id: "vpc-xxx" id does not exist` | Replace `vpc-xxx` with a valid VPC ID from your AWS account (e.g., `vpc-0a1b2c3d4e5f6g7h8`). |
-    | `An error occurred (InvalidGroup.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0a7f2c9e1b4d5f8k2' does not exist` | Add a short delay (` |
+    | `An error occurred (InvalidGroup.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0a7f2c9e1b4d5f8k2' does not exist` | Add a short delay (`sleep 10`) after creating the security group before adding rules, since the group can take a few seconds to become visible to other API calls. |
 Create the SSH key pair for ESXi DCUI access:
 
 ```bash

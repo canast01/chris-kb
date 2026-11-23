@@ -33,6 +33,16 @@ def split_cells(row):
     return out
 
 
+def error_cell_unbalanced(row):
+    """True if the Error cell (up to the first "` | ") has an odd backtick count.
+
+    Catches rows that still split into 2 cells but at the wrong boundary,
+    because the stray backtick shifted which | sits inside a code span.
+    """
+    m = re.match(r'^    \| (.*?`) \| ', row)
+    return bool(m) and m.group(1).count('`') % 2 == 1
+
+
 def fix_row(row):
     # Cell 1 ends at the first "` | " boundary. Drop its stray final backtick
     # only if that yields a clean 2-cell row; otherwise leave the row alone.
@@ -60,7 +70,7 @@ def main():
                     continue
                 j = i + 3
                 while j < len(lines) and lines[j].startswith('    |'):
-                    if len(split_cells(lines[j])) != 2:
+                    if len(split_cells(lines[j])) != 2 or error_cell_unbalanced(lines[j]):
                         new = fix_row(lines[j])
                         if new != lines[j]:
                             lines[j] = new; dirty = True; changed_rows += 1

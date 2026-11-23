@@ -151,7 +151,7 @@ hostd.log  vmkernel.log  vpxa.log  fdm.log  shell.log  syslog.log
     |---|---|
     | `Permission denied (publickey).` | Verify SSH is enabled on the ESXi host and the root account credentials are correct. |
     | `tail: cannot open '/var/log/vmkernel.log' for reading: No such file or directory` | Ensure you are connected to the ESXi host via SSH and the log files exist; check the correct path with `ls /var/log/`. |
-    | `Connection refused` | Confirm the ESXi host IP address |
+    | `Connection refused` | Confirm the ESXi host IP address is correct, that SSH is enabled on the host (Host > Configure > System > Services > SSH > Start), and that TCP 22 is not blocked between you and the host. |
 ---
 
 ## Step 2 — Check live storage state

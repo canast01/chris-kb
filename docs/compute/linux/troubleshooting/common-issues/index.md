@@ -470,7 +470,7 @@ SEL has 128 entries (max 128 entries)
     | Error | Fix |
     |---|---|
     | `ipmitool: Error: Unable to establish IPMI v1 / IPMI v2 session` | Verify IPMI is enabled in BIOS and the BMC is accessible; if running in a VM, IPMI may not be available. |
-    | `journalctl: command not found` | Install systemd-journal or use `dmesg` and |
+    | `journalctl: command not found` | Install systemd-journal or use `dmesg` and the files under `/var/log/` instead on systems without systemd. |
 ## Useful One-Liners
 
 ```bash

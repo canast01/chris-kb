@@ -159,7 +159,7 @@ Description: Just-in-time VM access reduces exposure to attacks by limiting acce
     | Error | Fix |
     |---|---|
     | `ResourceNotFound : The resource '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>' could not be found.` | Verify the subscription ID, resource group name, and VM name are correct and exist in your current Azure context. |
-    | `InvalidParameter : The value of parameter 'virtual-machines' is invalid.` | Ensure the |
+    | `InvalidParameter : The value of parameter 'virtual-machines' is invalid.` | Ensure the parameter value uses the exact allowed name; check accepted values with the command's `--help` output. |
 ## Exemptions
 
 Mark a resource as exempt when a recommendation doesn't apply (e.g., a VM has a third-party endpoint agent that satisfies the requirement).

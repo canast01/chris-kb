@@ -241,7 +241,7 @@ Establish command submitted. Starting sync progress monitor...
     |---|---|
     | `symrdf: Error: RDF group 3 not found for SID PROD01` | Verify the RDF_GROUP value matches the configured group number with `symrdf query -sid <SID>` and re-run with correct RDF_GROUP parameter. |
     | `WARNING: Sync timed out after 3600s` | Increase SYNC_TIMEOUT environment variable (e.g., `SYNC_TIMEOUT=7200 ./srdf-resync-after-dr-test.sh`) or investigate replication delays on the array with `symrdf query -sid <SID> -rdfg <RDF_GROUP> -detail`. |
-    | `Aborted by operator. Please ensure DR hosts are off R2 volumes before resyncing.` | Confirm that all I/O has stopped and R2 volumes are unmounted on DR hosts, then re-run the script and respond with |
+    | `Aborted by operator. Please ensure DR hosts are off R2 volumes before resyncing.` | Confirm that all I/O has stopped and R2 volumes are unmounted on DR hosts, then re-run the script and respond with yes at the confirmation prompt. |
 ```bash
 chmod +x srdf-resync-after-dr-test.sh
 SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-resync-after-dr-test.sh

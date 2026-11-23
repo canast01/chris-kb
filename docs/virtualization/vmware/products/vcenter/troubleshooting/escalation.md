@@ -434,7 +434,7 @@ Jan 15 09:52:18 vcsa-01 kernel: audit: type=1400 audit(1705318338.123:456): appa
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory` | Verify vpxd service is running with |
+    | `grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory` | Verify vpxd service is running with `service-control --status vmware-vpxd`, and make sure you are in the appliance Bash shell (type `shell` first), not the appliance shell. |
 ---
 
 ## Support Portal and SLA Reference

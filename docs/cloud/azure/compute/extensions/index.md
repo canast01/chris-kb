@@ -135,7 +135,7 @@ DependencyAgentWindows               9.10.6   Windows
     |---|---|
     | `The resource 'Microsoft.Compute/virtualMachines/<vm-name>/extensions/<extension-name>' under resource group '<rg>' was not found.` | Verify the extension name matches exactly using `az vm extension list` and check that the VM exists in the specified resource group. |
     | `ResourceGroupNotFound : Resource group '<rg>' could not be found.` | Confirm the resource group name is correct and exists in your subscription using `az group list`. |
-    | `The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/extensions/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has at least Reader role on the VM or resource group using `az role assignment list --scope /subscriptions/<sub- |
+    | `The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/extensions/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has at least Reader role on the VM or resource group using `az role assignment list --scope /subscriptions/<sub-id>/resourceGroups/<rg> --assignee <user>`. |
 ---
 
 ## Custom Script Extension

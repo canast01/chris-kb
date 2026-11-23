@@ -107,7 +107,7 @@ az network route-table route create \
     | Error | Fix |
     |---|---|
     | `ResourceNotFound : The Resource 'Microsoft.Network/routeTables/myRouteTable' under resource group 'myRG' was not found.` | Verify the route table exists in the correct resource group with `az network route-table show --resource-group myRG --name myRouteTable`. |
-    | `InvalidNextHopIpAddress : The next hop IP address '10.0.0.4' is not valid for the next hop type 'VirtualAppliance'.` | Ensure the NVA IP address exists within your VNet address space and the NVA is deployed and running |
+    | `InvalidNextHopIpAddress : The next hop IP address '10.0.0.4' is not valid for the next hop type 'VirtualAppliance'.` | Ensure the NVA IP address exists within your VNet address space and the NVA is deployed and running. |
 ## Next Hop Types
 
 | Next Hop Type          | Description                                          |

@@ -192,7 +192,7 @@ PWWN: 50:00:09:73:a2:5f:b4:22  FCID: 0x630100  NodeName: 50:00:09:73:a2:5f:b4:21
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `% Invalid command` | Verify the exact VSAN number exists with `show vsan` before |
+    | `% Invalid command` | Verify the exact VSAN number exists with `show vsan` before running VSAN-specific commands, and check you are in the right configuration mode. |
 Save all output to a text file and paste the critical sections into the TAC case description.
 
 ### 3. Run show tech-support (takes 2–5 minutes)

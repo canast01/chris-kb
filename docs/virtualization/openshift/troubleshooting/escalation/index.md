@@ -163,7 +163,7 @@ must-gather-2024-01-16-1430.tar.gz
     | Error | Fix |
     |---|---|
     | `error: the server doesn't have a resource type "clusterversion"` | Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc cluster-info`. |
-    | `error: Unable to connect to the server: dial tcp: lookup api.cluster.example.com on 8.8.8.8:53: no such host` | Check your kubeconfig context with `oc config current |
+    | `error: Unable to connect to the server: dial tcp: lookup api.cluster.example.com on 8.8.8.8:53: no such host` | Check your kubeconfig context with `oc config current-context` and confirm your DNS resolver can resolve the cluster API hostname (a public resolver such as 8.8.8.8 cannot resolve internal cluster names). |
 Case description must include:
 1. **OpenShift version**: exact version from `oc get clusterversion`
 2. **Infrastructure**: IPI/UPI, cloud/bare-metal/vSphere, network plugin (OVN-K/SDN)

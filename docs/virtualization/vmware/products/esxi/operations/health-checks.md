@@ -246,7 +246,7 @@ running
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `esxcli: command not found` | SSH into |
+    | `esxcli: command not found` | SSH into the ESXi host itself (enable SSH first under Host > Configure > System > Services); `esxcli` only exists in the ESXi shell, not on vCenter or your workstation. |
 ## Hardware Health
 
 ![Hardware Health](../../../../../assets/virtualization-vmware-esxi-hc-hardware-health.svg)

@@ -428,7 +428,7 @@ Available log files:
     |---|---|
     | `log view: command not found` | Ensure you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and have appropriate permissions. |
     | `log view <log_filename>: No such file or directory` | Run `log list` first to verify the exact log filename, then use the correct name from the available list. |
-    | `log watch: Permission denied` | Verify your user account has read access to system logs |
+    | `log watch: Permission denied` | Verify your user account has read access to system logs. |
 ```bash
 # Create a support bundle
 support bundle create

@@ -575,7 +575,7 @@ size=1.5T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `rescan-scsi-bus.sh: command not found` | Install sg3 |
+    | `rescan-scsi-bus.sh: command not found` | Install sg3_utils (`yum install sg3_utils` or `apt-get install sg3-utils`), which provides `rescan-scsi-bus.sh`. |
 ---
 
 ## Validate

@@ -265,7 +265,7 @@ vmss-autoscale-prod       prod-rg          True       2           10          2
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachineScaleSets/<vmss-resource-id>' under resource group '<rg>' was not found.` | Verify the VMSS resource ID is correct and exists in the specified resource group using `az vmss |
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachineScaleSets/<vmss-resource-id>' under resource group '<rg>' was not found.` | Verify the VMSS resource ID is correct and exists in the specified resource group using `az vmss list -g <rg> -o table`. |
 ---
 
 ## Upgrade Policies

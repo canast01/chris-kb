@@ -281,7 +281,7 @@ weekly-budget-export    Microsoft.CostManagement/exports  /subscriptions/1234567
     |---|---|
     | `InvalidResourceId : The resource ID is invalid or does not exist.` | Verify the storage account resource ID and subscription ID are correct and the storage account exists in the specified resource group. |
     | `StorageAccountAccessDenied : The managed identity does not have access to the storage account.` | Ensure the storage account's access control (IAM) grants the Cost Management service principal "Storage Blob Data Contributor" role on the container. |
-    | `InvalidScope : The provided scope is not valid for this operation.` | Confirm the subscription ID in the scope parameter matches your active subscription and is formatted as |
+    | `InvalidScope : The provided scope is not valid for this operation.` | Confirm the subscription ID in the scope parameter matches your active subscription and is formatted as `/subscriptions/<sub-id>`. |
 ### Export Types
 
 | Export Type | Description |

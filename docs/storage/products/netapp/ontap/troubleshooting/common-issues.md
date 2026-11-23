@@ -479,7 +479,7 @@ PING 192.168.101.50 (192.168.101.50): 56 data bytes
     |---|---|
     | `Error: command failed: No snapmirror relationships found` | Verify the source and destination paths exist and the snapmirror relationship has been initialized with `snapmirror initialize -source-path <src> -destination-path <dst>`. |
     | `Error: network ping: failed to resolve destination address` | Confirm the remote intercluster LIF IP address is correct and reachable by checking `cluster peer show` and verifying firewall rules allow ICMP traffic on port 10000-10001. |
-    | `Error: command failed: Intercluster LIF is not configured` | Create an intercluster LIF on both clusters using `network interface create -vserver <admin_svm> -lif <lif_name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask |
+    | `Error: command failed: Intercluster LIF is not configured` | Create an intercluster LIF on both clusters using `network interface create -vserver <admin_svm> -lif <lif_name> -service-policy default-intercluster -home-node <node> -home-port <port> -address <ip> -netmask <mask>`. |
 ### Resolution
 
 ```bash

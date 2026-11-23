@@ -321,7 +321,7 @@ TOTAL        10.00000  1.00000  10.0T   2.1T     21.00    227328      10.00000
     | Error | Fix |
     |---|---|
     | `Error EINVAL: osd.X: OSD does not have bluestore backend` | Ensure devices are unpartitioned and empty; run `ceph-volume lvm zap /dev/sdX` to clear any existing LVM metadata before deployment. |
-    | `Error: device /dev/sdb is not available on ceph-node1` | Verify the device exists and is visible to cephadm by running `ceph orch device ls` and confirm the device is marked as `avail: |
+    | `Error: device /dev/sdb is not available on ceph-node1` | Verify the device exists and is visible to cephadm by running `ceph orch device ls` and confirm the device is marked as `avail: True` (wipe old partitions with `ceph orch device zap <host> /dev/sdb --force` if needed). |
 ## Enable RBD Pool
 
 ```bash

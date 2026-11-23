@@ -359,7 +359,7 @@ Finished defragmenting etcd member [6d1a0b8c3e7f2d4] in 8.456s
     |---|---|
     | `error: unable to match a volume mount in pod openshift-etcd/etcd-ip-10-0-1-45.ec2.internal for /etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/` | Verify the certificate path exists in the pod with `oc rsh -n openshift-etcd <pod> ls -la /etc/kubernetes/static-pod-certs/secrets/` and adjust the path if using a different OpenShift version. |
     | `Error: context deadline exceeded` | The etcd cluster is overloaded or unhealthy; check member health with `etcdctl_cmd member list` and verify all three masters are running before retrying. |
-    | `Error: failed to dial default: context deadline exceeded` | Ensure network connectivity between the control plane nodes and that the etcd service is listening on port 2379 with `oc rsh -n openshift-et |
+    | `Error: failed to dial default: context deadline exceeded` | Ensure network connectivity between the control plane nodes and that the etcd service is listening on port 2379 with `oc rsh -n openshift-etcd <etcd-pod> etcdctl endpoint health`. |
 ## Network Diagnostics
 
 ```bash
@@ -559,7 +559,7 @@ sh-4.4# systemctl --failed
     | Error | Fix |
     |---|---|
     | `chroot: can't execute '/bin/bash': No such file or directory` | Use `sh` instead of `bash` or verify the host filesystem is properly mounted by checking `ls /host/bin`. |
-    | `error: unable to get pod logs: rpc error: code = Unavailable desc = connection error: desc = "error reading from server: EOF"` | Restart the CRI-O service with `systemctl restart crio` or check if the container runtime socket is accessible |
+    | `error: unable to get pod logs: rpc error: code = Unavailable desc = connection error: desc = "error reading from server: EOF"` | Restart the CRI-O service with `systemctl restart crio` or check if the container runtime socket is accessible. |
 ---
 
 ## See also

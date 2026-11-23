@@ -324,7 +324,7 @@ $ ceph osd unset pause
     | Error | Fix |
     |---|---|
     | `Error: error connecting to the cluster` | Verify MON quorum with `ceph mon stat`; if quorum is lost, restart failed MON services with `systemctl restart ceph-mon@<hostname>` on down nodes. |
-    | `Error: ENOENT: error reading /var/lib/ceph/mon/ceph-<hostname>/store.db` | The MON data directory is corrupted; restore |
+    | `Error: ENOENT: error reading /var/lib/ceph/mon/ceph-<hostname>/store.db` | The MON data directory is corrupted; restore it from a backup or remove the monitor and redeploy it so it resyncs from the remaining quorum. |
 ## Pre-Case Self-Service Checklist
 
 Before opening a support case, check the Red Hat Knowledge Base for known solutions:

@@ -440,7 +440,7 @@ round-trip min/avg/max/stddev = 2.267/2.361/2.501/0.089 ms
     | Error | Fix |
     |---|---|
     | `PING 192.168.100.11 (192.168.100.11): 56 data bytes — No response from host` | Verify the TEP VLAN is tagged on the physical switch uplink port and that the vmk10 interface is assigned to the correct VLAN ID in the NSX uplink profile. |
-    | `Unable to locate vmkernel interface vmk10` | Confirm NSX Host Preparation has completed successfully on the ESXi host by |
+    | `Unable to locate vmkernel interface vmk10` | Confirm NSX Host Preparation has completed successfully on the ESXi host by checking NSX Manager > System > Fabric > Hosts for a Success status before retrying. |
 ---
 
 ## Phase 5 — Edge Cluster and T0 Gateway

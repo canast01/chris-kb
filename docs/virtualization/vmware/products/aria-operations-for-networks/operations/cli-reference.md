@@ -196,7 +196,7 @@ Enter Pairing Key: ••••••••••••••••••••�
     |---|---|
     | `ni-collector.service - Unit not found.` | Verify the collector package is installed with `sudo apt list --installed | grep ni-collector` and reinstall if missing. |
     | `[ERROR] Failed to connect to platform at aon-platform.corp.local:443: Name or service not known` | Confirm DNS resolution with `nslookup aon-platform.corp.local` and verify network connectivity to the platform VM. |
-    | `[ERROR] Certificate validation failed: peer certificate cannot be authenticated with given CA certificates` | Regenerate |
+    | `[ERROR] Certificate validation failed: peer certificate cannot be authenticated with given CA certificates` | Regenerate or re-import the CA certificate chain that signed the peer certificate, then retry; confirm the chain with `openssl s_client -connect <host>:443 -showcerts`. |
 ---
 
 ## Disk Usage

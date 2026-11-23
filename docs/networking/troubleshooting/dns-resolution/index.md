@@ -366,7 +366,7 @@ server.partner.com.	3600	IN	A	203.45.67.89
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `dig: couldn't get address for 'dc01': not found` | Use the full FQDN or IP address of the DNS server (e.g., |
+    | `dig: couldn't get address for 'dc01': not found` | Use the full FQDN or IP address of the DNS server (e.g., `dig @dc01.corp.example.com <name>` or `dig @10.0.0.10 <name>`). |
 ---
 
 ## Split-Brain DNS Verification

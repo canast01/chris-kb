@@ -257,7 +257,7 @@ RHSA-2026:1236 | Moderate Patch Advisory | curl-7.76.1-29.el9_4
     | Error | Fix |
     |---|---|
     | `Error: Failed to synchronize cache for repo 'rhel-9-baseos-rpms'` | Verify network connectivity and subscription status with `subscription-manager status`, then retry the update. |
-    | `Error: Package kernel conflicts with kernel-5.14.0-427.12.1.el9_4.x86_64` | Remove the conflicting kernel version with `dnf remove kernel-5.14.0-427. |
+    | `Error: Package kernel conflicts with kernel-5.14.0-427.12.1.el9_4.x86_64` | Remove the conflicting kernel version with `dnf remove kernel-5.14.0-427.12.1.el9_4.x86_64` (never the running kernel; check with `uname -r`), then retry the install. |
 ### RHEL — yum history (Rollback)
 
 ```bash

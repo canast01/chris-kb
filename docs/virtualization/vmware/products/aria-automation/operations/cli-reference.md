@@ -526,7 +526,7 @@ redis-cache-01
     | Error | Fix |
     |---|---|
     | `curl: (7) Failed to connect to <aria-auto> port 443: Connection refused` | Verify the VRA hostname is correct and the Aria Automation appliance is running and accessible on the network. |
-    | `{"status":401,"message":"Unauthorized"}` | Ensure the $ |
+    | `{"status":401,"message":"Unauthorized"}` | Ensure the `$TOKEN` variable holds a current bearer token (tokens expire); request a new one from the identity API and retry. |
 ---
 
 ## REST API — Blueprints and Catalog
@@ -622,7 +622,7 @@ resources:
     | Error | Fix |
     |---|---|
     | `curl: (7) Failed to connect to aria-automation.corp: Name or service not known` | Verify the $VRA variable is set correctly with the full FQDN or IP address (e.g., `export VRA=https://aria-automation.corp:443`). |
-    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API token in $TOKEN is valid and not expired; re-authenticate and regenerate the bearer token |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API token in $TOKEN is valid and not expired; re-authenticate and regenerate the bearer token. |
 ---
 
 ## REST API — Projects and Cloud Accounts

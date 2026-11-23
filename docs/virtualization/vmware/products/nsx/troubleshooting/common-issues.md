@@ -133,7 +133,7 @@ Request timed out.
     | Error | Fix |
     |---|---|
     | `Request timed out.` | Verify network connectivity between TEP hosts, check firewall rules allow UDP 6081 (VXLAN), and confirm the remote TEP IP is reachable via `ping` from the ESXi management network first. |
-    | `vmkping: Unknown option` | Use correct vmkping syntax with interface flag as `-I vmk<n>` (capital I) and ensure the vmkernel port |
+    | `vmkping: Unknown option` | Use correct vmkping syntax with interface flag as `-I vmk<n>` (capital I) and ensure the vmkernel port exists (`esxcli network ip interface list`). |
 ```bash
 # Step 1 — Confirm the policy is published (not in draft)
 curl -sk -u 'admin:password' \

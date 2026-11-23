@@ -133,7 +133,7 @@ grep -i "APD\|path.*dead" /var/log/vmkernel.log | head -20
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `grep: /var/log/vmkernel.log: No such file or directory` | Verify you are running the command directly on the ESXi host |
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Verify you are running the command directly on the ESXi host (log files live under `/var/run/log/` on ESXi; `/var/log/vmkernel.log` is a symlink to it). |
 Common vmkernel.log entries:
 
 ```text

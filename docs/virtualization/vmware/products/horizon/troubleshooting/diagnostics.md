@@ -231,7 +231,7 @@ root@uag-prod-01:~# exit
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the UAG's CA certificate into your system trust store. |
     | `Connection refused` | Verify the UAG hostname/IP is correct, the appliance is powered on, and firewall rules allow traffic from your client to the UAG on the tested port. |
-    | `ssh: Permission denied (publickey,password)` | Ensure you are using the correct root password and that SSH |
+    | `ssh: Permission denied (publickey,password)` | Ensure you are using the correct root password and that SSH is enabled on the target appliance (it is disabled by default on most Horizon appliances). |
 ---
 
 ## Step 5 — Use vdmadmin for session and assignment diagnostics

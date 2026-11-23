@@ -187,7 +187,7 @@ curl -sk -H "x-xenon-auth-token: $TOKEN" \
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands to skip SSL verification, or import the LCM server's CA certificate into your system trust store. |
-    | `jq: parse error: (null) is not defined at line 1, column 0` | Verify the authentication token is valid by checking the login response; the API likely returned an error |
+    | `jq: parse error: (null) is not defined at line 1, column 0` | Verify the authentication token is valid by checking the login response; the API likely returned an error message instead of JSON, so print the raw response before piping it to `jq`. |
 Store these JSON exports alongside the backup job output in a version-controlled location.
 
 ---
@@ -237,7 +237,7 @@ Build: 8.13.1.20240110-1
     | Error | Fix |
     |---|---|
     | `sudo: no tty present and no -S option was specified` | Add `-t` flag to ssh command: `ssh -t admin@lcm-prod-01.example.local` |
-    | `Connection refused` | Verify LCM appliance is reachable and SSH service is running; check firewall rules and DNS resolution for lcm-prod-01.example.local |
+    | `Connection refused` | Verify LCM appliance is reachable and SSH service is running; check firewall rules and DNS resolution for lcm-prod-01.example.local. |
     | `vracli: command not found` | Source the vracli environment or use full path `/opt/vmware/vracli/bin/vracli status` |
 5. Open the LCM UI and verify:
    - Environments show correct products and versions

@@ -351,7 +351,7 @@ sfpshow
     |---|---|
     | `Invalid slot/port number` | Verify the port exists with `portshow` and use the correct slot/port format (e.g., 0/0, not 0-0). |
     | `SFP not present` | Confirm the SFP module is fully seated in the port; reseat if necessary and retry `sfpshow`. |
-    | `Permission denied` | Run |
+    | `Permission denied` | Run the command as a user with admin role on the switch (log in as `admin`, not `user`), or ask the fabric administrator to grant the required role. |
 ### SFP optical levels
 
 `sfpshow` output shows each SFP's measured Tx power, Rx power, temperature, and voltage.

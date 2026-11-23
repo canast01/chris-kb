@@ -470,7 +470,7 @@ Receiving objects: 100% (42/42), 15.23 KiB | 2.54 MiB/s, done.
     |---|---|
     | `Permission denied (publickey).` | Verify the private key path is correct and readable (`ls -la ~/.ssh/id_ed25519`), then confirm the public key is added to your Git hosting provider's SSH keys. |
     | `Could not open a connection to your authentication agent.` | Start the SSH agent with `eval "$(ssh-agent -s)"` before running `ssh-add`. |
-    | `Host key verification failed.` | Run `ssh-keyscan -H github.com >> ~/.ssh/ |
+    | `Host key verification failed.` | Run `ssh-keyscan -H github.com >> ~/.ssh/known_hosts` to add the host key, after verifying the fingerprint against GitHub's published SSH key fingerprints. |
 ---
 
 ## Step 5 — Diagnose HTTPS authentication and proxy
@@ -794,7 +794,7 @@ Review before sharing to ensure no secrets are present.
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `fatal: not a git repository (or any of the parent directories): .git` | Ensure the script is |
+    | `fatal: not a git repository (or any of the parent directories): .git` | Ensure the script is run from inside the repository's working tree (`cd` into the repo first), or pass the path with `git -C <repo-path>`. |
 ---
 
 ## Log locations

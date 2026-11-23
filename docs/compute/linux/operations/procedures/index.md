@@ -289,7 +289,7 @@ Jan 17 09:43:02 prod-web-01 nginx[4521]: 192.168.1.107 - - [17/Jan/2024:09:43:02
     |---|---|
     | `Failed to start <service>.service: Unit <service>.service not found.` | Verify the correct service name with `systemctl list-units --all` and use the exact unit name. |
     | `Failed to enable <service>.service: Unit <service>.service is masked.` | Unmask the service with `systemctl unmask <service>` before enabling it. |
-    | `Failed to get unit file state for <service>.service: No such file or directory` | Ensure |
+    | `Failed to get unit file state for <service>.service: No such file or directory` | Ensure the service name is spelled correctly and the unit is installed; list available units with `systemctl list-unit-files --type=service`. |
 ```bash
 # All active services
 systemctl list-units --type=service --state=active

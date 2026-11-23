@@ -645,7 +645,7 @@ Triage data saved to: /tmp/mds_triage_192.168.1.20_20250115_143247.txt
     |---|---|
     | `ssh: connect to host 192.168.1.20 port 22 (tcp): Connection timed out` | Verify the MDS_HOST IP is correct and reachable; check network connectivity and firewall rules allowing SSH to port 22. |
     | `Permission denied (publickey,password).` | Ensure SSH_USER is correct and has valid credentials configured; verify the admin account exists and SSH key authentication is properly set up. |
-    | `show: command not found` | The SSH session is not entering the MDS CLI properly; remove `-o BatchMode=yes` or add `terminal length 0` to the ssh_ |
+    | `show: command not found` | The SSH session is not entering the MDS CLI properly; remove `-o BatchMode=yes` or add `terminal length 0` to the ssh_ command string so the command runs in the switch CLI. |
 ```bash
 #!/bin/bash
 # mds_precheck.sh

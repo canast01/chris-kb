@@ -139,7 +139,7 @@ mgmt0         Up          1500   1Gb/s      10.0.0.50
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Connection refused (10.0.0.50:443)` | Verify the FlashB |
+    | `Error: Connection refused (10.0.0.50:443)` | Verify the FlashBlade management IP is reachable on TCP 443 from this host (`curl -kI https://10.0.0.50`) and that no firewall is blocking it. |
 ## Array Health
 
 ![Array Health](../../../../../assets/storage-pure-flashblade-hc-array-health.svg)

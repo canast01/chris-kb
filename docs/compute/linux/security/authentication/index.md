@@ -231,7 +231,7 @@ Now try logging in with: "ssh jsmith@server01"
     | Error | Fix |
     |---|---|
     | `Permission denied (publickey).` | Verify authorized_keys permissions are 600 and ~/.ssh is 700 on the remote server using `ssh jsmith@server01 "ls -la ~/.ssh"` |
-    | `ssh-copy-id: command not found` | Use the manual append method with `cat ~/.ssh/id_ed25519.pub | ssh jsmith@server01 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"` instead |
+    | `ssh-copy-id: command not found` | Use the manual append method with `cat ~/.ssh/id_ed25519.pub | ssh jsmith@server01 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"` instead. |
 ```bash
 # Install required packages (RHEL)
 dnf install -y realmd sssd oddjob oddjob-mkhomedir adcli samba-common

@@ -178,7 +178,7 @@ EventTime    Username          EventName        ErrorCode
     |---|---|
     | `An error occurred (InvalidParameterValueException) when calling the LookupEvents operation: Invalid start time` | Use the correct date format `YYYY-MM-DDTHH:MM:SSZ` and ensure the start time is not older than 90 days. |
     | `An error occurred (CloudTrailNotEnabledException) when calling the LookupEvents operation: CloudTrail is not enabled` | Enable CloudTrail for your AWS account via the CloudTrail console or use `aws cloudtrail create-trail`. |
-    | `date: invalid date 'now'` | Replace `date -d "1 hour ago"` with `date -v-1H` on macOS, or use `date --date="1 hour ago"` on Linux systems |
+    | `date: invalid date 'now'` | Replace `date -d "1 hour ago"` with `date -v-1H` on macOS, or use `date --date="1 hour ago"` on Linux systems. |
 ---
 
 ## Step 2 — Diagnose VPC connectivity with Flow Logs and Reachability Analyzer

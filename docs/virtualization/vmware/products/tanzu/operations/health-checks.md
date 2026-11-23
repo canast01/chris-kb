@@ -221,7 +221,7 @@ Conditions:
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `error: Metrics API not available` | Install metrics-server with `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml` and wait 30 seconds for it to |
+    | `error: Metrics API not available` | Install metrics-server with `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml` and wait 30 seconds for it to start collecting metrics before retrying. |
 ---
 
 ## PVC and Storage Health

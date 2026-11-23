@@ -469,8 +469,8 @@ server.3=zk-node-3.internal:2888:3888
     | Error | Fix |
     |---|---|
     | `Connection refused` | Verify ZooKeeper is running with `systemctl status zookeeper` and listening on port 2181. |
-    | `Mode: follower` on the expected leader node` | Check cluster quorum status with `echo "stat" | nc localhost 2181` and review ZooKeeper logs at `/var/log/zookeeper/zookeeper.log` for election failures. |
-    | `Outstanding: <high number>` (e.g., Outstanding: 847)` | Identify slow clients with `echo "cons" | nc localhost 2181` and check for network latency or client-side processing delays. |
+    | `Mode: follower` on the expected leader node | Check cluster quorum status with `echo "stat" | nc localhost 2181` and review ZooKeeper logs at `/var/log/zookeeper/zookeeper.log` for election failures. |
+    | `Outstanding: <high number>` (e.g., Outstanding: 847) | Identify slow clients with `echo "cons" | nc localhost 2181` and check for network latency or client-side processing delays. |
 ### NTP and clock sync
 
 ```bash

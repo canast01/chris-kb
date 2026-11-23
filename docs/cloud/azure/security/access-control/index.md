@@ -126,7 +126,7 @@ Storage Blob Data Reader       /subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `ERROR: The subscription '<sub-id>' could not be found.` | Verify the subscription |
+    | `ERROR: The subscription '<sub-id>' could not be found.` | Verify the subscription ID is correct and that your account has access to it with `az account list -o table`, then select it with `az account set --subscription <sub-id>`. |
 ### Create a Role Assignment
 
 ```bash

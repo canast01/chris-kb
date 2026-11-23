@@ -165,7 +165,7 @@ Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-42-generic x86_64)
     | Error | Fix |
     |---|---|
     | `Job for cassandra.service failed because the control process exited with error code.` | Run `sudo find /var/lib/cassandra -name "*.tmp" -delete && sudo systemctl start cassandra` to clear corrupted temp files from an unclean shutdown. |
-    | `Unit postgres.service not found.` | Verify the correct service name with `sudo systemctl list-units --type |
+    | `Unit postgres.service not found.` | Verify the correct service name with `sudo systemctl list-units --type=service --all` and use the exact PostgreSQL unit name shown there. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

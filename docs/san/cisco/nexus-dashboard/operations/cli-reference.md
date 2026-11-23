@@ -666,7 +666,7 @@ curl -sk "${NDI_BASE}/san/flows?fabricName=DC1-SAN&timeRange=LAST_HOUR" \
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the Nexus Dashboard CA certificate into your system trust store. |
     | `{"error": "Invalid or expired token", "code": 401}` | Regenerate the Bearer token in Nexus Dashboard UI (System > Settings > API Tokens) and ensure `$TOKEN` variable is set correctly. |
-    | `curl: (7) Failed to connect to <host>: Connection refused` | Verify the Nexus Dashboard hostname/IP in `$ND` variable is reachable and the API service is running with `curl -sk https://<nd-host>/appcenter/cisco/ndinsight/api/v1/health |
+    | `curl: (7) Failed to connect to <host>: Connection refused` | Verify the Nexus Dashboard hostname/IP in `$ND` variable is reachable and the API service is running with `curl -sk https://<nd-host>/` before retrying the API call. |
 ```bash
 # Count switches by management state
 curl -sk "${NDFC_BASE}/inventory/switches" \

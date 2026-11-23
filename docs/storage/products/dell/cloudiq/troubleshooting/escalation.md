@@ -230,7 +230,7 @@ Last Sync: 2025-01-15 14:35:22 UTC
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `scg: command not found` | Verify the scg CLI tool is installed and in PATH by running `which scg` or reinst |
+    | `scg: command not found` | Verify the scg CLI tool is installed and in PATH by running `which scg`, or reinstall Secure Connect Gateway and open a new shell. |
 ### 4. Collect CloudIQ API diagnostics
 
 ```bash

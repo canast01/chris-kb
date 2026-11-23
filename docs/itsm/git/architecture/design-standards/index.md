@@ -149,7 +149,7 @@ index 0000000..a1b2c3d
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `fatal: your current branch 'main' does not have any commits yet` | Initialize the repository with at |
+    | `fatal: your current branch 'main' does not have any commits yet` | Initialize the repository with at least one commit (e.g., `git commit --allow-empty -m "Initial commit"`) before creating or renaming branches. |
 ```bash
 # Create a lightweight tag
 git tag v2.3.0

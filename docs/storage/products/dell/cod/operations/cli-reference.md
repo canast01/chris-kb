@@ -220,7 +220,7 @@ curl -s -k -u "${USER}:${PASS}" \
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in the example, but |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in the example, but check it was not dropped when copying the command). |
 ```bash
 # List all licenses with status
 symcfg -sid <sid> list -license

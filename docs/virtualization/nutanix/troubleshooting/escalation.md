@@ -417,7 +417,7 @@ nutanix@NTNX-CVM-001:~$ ncli cluster info | grep -i "storage\|usage\|capacity"
     |---|---|
     | `Connection refused` | Verify the CVM is running and SSH is enabled; check firewall rules allowing port 22 to the CVM IP. |
     | `ncli: command not found` | Confirm you are logged in as the nutanix user and the PATH includes /home/nutanix/bin; source the environment if needed. |
-    | `Permission denied` | Ensure your SSH key is authorized in /home/nut |
+    | `Permission denied` | Ensure your SSH public key is in `/home/nutanix/.ssh/authorized_keys` on the CVM, or log in as the `nutanix` user with its password. |
 ---
 
 ## Support SLA Reference

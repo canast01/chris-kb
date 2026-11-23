@@ -153,7 +153,7 @@ Configuration saved successfully to /etc/powerpath/powerpath.cfg
     |---|---|
     | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/EMCpower/powerpath/bin` is in your PATH. |
     | `Permission denied` | Run the command with `sudo` or as root; PowerPath requires elevated privileges to display device and port states. |
-    | `Cannot open /etc/powerpath/powerpath.cfg for writing` | Ensure `/etc |
+    | `Cannot open /etc/powerpath/powerpath.cfg for writing` | Ensure `/etc/powerpath/` is writable by the user running the command (use sudo) and that the filesystem is not mounted read-only. |
 ### 3. Capture kernel and system log messages
 
 ```bash

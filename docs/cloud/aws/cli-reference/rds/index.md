@@ -130,7 +130,7 @@ aws rds modify-db-instance \
     | Error | Fix |
     |---|---|
     | `An error occurred (DBParameterGroupNotFound) when calling the DescribeDBParameterGroups operation: DB parameter group not found` | Verify the parameter group name exists with `aws rds describe-db-parameter-groups` and check for typos. |
-    | `An error occurred (InvalidParameterValue) when calling the ModifyDBParameterGroup operation: The parameter max_connections cannot be modified because it is not modifiable` | Check if the parameter is modifiable by reviewing its properties in `describe-db-parameters` output; |
+    | `An error occurred (InvalidParameterValue) when calling the ModifyDBParameterGroup operation: The parameter max_connections cannot be modified because it is not modifiable` | Check if the parameter is modifiable by reviewing its properties in `describe-db-parameters` output; parameters with `IsModifiable: false` cannot be changed. |
 ## Subnet Groups
 
 ```bash
@@ -467,7 +467,7 @@ aws rds create-db-cluster-snapshot \
     |---|---|
     | `An error occurred (DBClusterNotFoundFault) when calling the DescribeDBClusters operation: DBCluster not found: <cluster_id>` | Verify the cluster identifier is correct and exists in the current AWS region using `aws rds describe-db-clusters`. |
     | `An error occurred (InvalidDBInstanceState) when calling the FailoverDBCluster operation: Failover cannot be performed on <cluster_id> because it is not in available state` | Wait for the cluster to reach "available" status before attempting failover; check status with `aws rds describe-db-clusters --db-cluster-identifier <cluster_id>`. |
-    | `An error occurred (DBClusterSnapshotAlreadyExistsFault) when calling the CreateDBClusterSnapshot operation: <snap_name> already exists` | Use a unique snapshot identifier or delete the existing snapshot with `aws rds delete-db-cluster-snapshot --db- |
+    | `An error occurred (DBClusterSnapshotAlreadyExistsFault) when calling the CreateDBClusterSnapshot operation: <snap_name> already exists` | Use a unique snapshot identifier or delete the existing snapshot with `aws rds delete-db-cluster-snapshot --db-cluster-snapshot-identifier <snapshot-id>`. |
 ## Log Export and Monitoring
 
 ```bash

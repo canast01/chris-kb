@@ -252,7 +252,7 @@ az policy exemption create \
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Policy definition not found with id '9daedab3-fb2d-461e-b861-71790eead4f6'.` | Verify the policy definition ID exists in your subscription using `az policy |
+    | `Policy definition not found with id '9daedab3-fb2d-461e-b861-71790eead4f6'.` | Verify the policy definition ID exists in your subscription using `az policy definition show --name <definition-id>`; built-in IDs differ from custom ones. |
 ## Assignment Managed Identity
 
 Policies with the `deployIfNotExists` or `modify` effect require a managed identity to perform remediation actions.

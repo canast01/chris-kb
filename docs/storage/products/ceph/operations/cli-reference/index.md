@@ -636,7 +636,7 @@ ID                                    TIMESTAMP           ENTITY      MESSAGE
     |---|---|
     | `Error ENOENT: unrecognized service 'osd'` | Verify the service name matches exactly (e.g., `osd.0` for a specific daemon) or use `ceph orch ls` to list available services. |
     | `Error EINVAL: host 'new-node' is not in the cluster` | Ensure the hostname is resolvable and the host has been bootstrapped with `ceph orch host add` before deploying daemons to it. |
-    | `Error EBUSY: host 'ceph-node-02' still has running daemons` | Run `ceph orch host drain <hostname>` before removing the host to gracefully |
+    | `Error EBUSY: host 'ceph-node-02' still has running daemons` | Run `ceph orch host drain <hostname>` before removing the host to gracefully migrate its daemons, then wait for `ceph orch ps <hostname>` to show none. |
 ## Auth Management
 
 ```bash

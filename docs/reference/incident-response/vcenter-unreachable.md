@@ -217,7 +217,7 @@ grep -i "error\|fatal\|exception" /var/log/vmware/vpxd/vpxd.log | tail -50
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory` | Verify vCenter is installed and running with `systemctl status vmware-vpxd`, or |
+    | `tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory` | Verify vCenter is installed and running with `systemctl status vmware-vpxd`, or check the service with `service-control --status vmware-vpxd` from the appliance shell. |
 Check the reverse proxy log if HTTPS is not responding:
 
 ```bash

@@ -467,7 +467,7 @@ aws cloudformation validate-template --template-body file://template.yaml
     | Error | Fix |
     |---|---|
     | `Template format error: Every Mappings object member must contain a String key and an object value.` | Validate your YAML syntax, especially in the Mappings section, using `aws cloudformation validate-template` before deployment. |
-    | `User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudformation:CreateStack` | Ensure your IAM user or role has the `cloudformation:* |
+    | `User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudformation:CreateStack` | Ensure your IAM user or role has the `cloudformation:*` permissions (or at least the specific action named in the error) attached via an IAM policy. |
 ---
 
 ## RDS

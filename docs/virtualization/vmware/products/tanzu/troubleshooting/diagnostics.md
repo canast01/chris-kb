@@ -245,7 +245,7 @@ workload-ns-02        dev-cluster-02    Running   12d
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Permission denied (publickey)` | Verify the SSH key file has 600 permissions (`chmod 600 |
+    | `Permission denied (publickey)` | Verify the SSH key file has 600 permissions (`chmod 600 <key-file>`) and that it is the key registered for the node (pass it explicitly with `ssh -i <key-file>`). |
 ---
 
 ## Step 3 — Collect the diagnostics bundle

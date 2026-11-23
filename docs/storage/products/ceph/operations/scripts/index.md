@@ -327,7 +327,7 @@ Snapshot written to: /tmp/ceph-snapshot-2024-01-15-1430.txt
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: error connecting to the cluster` | Verify C |
+    | `Error: error connecting to the cluster` | Verify Ceph config and keyring: confirm `/etc/ceph/ceph.conf` lists reachable `mon_host` addresses and the client keyring is readable by the user running the script. |
 ## osd-utilization-report.sh
 
 ```bash

@@ -145,7 +145,7 @@ Encrypt data in transit for Application Gateway          High        /subscripti
     | Error | Fix |
     |---|---|
     | `ERROR: The following arguments are required: --resource` | Provide the full resource ID for the storage account using `--resource /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.Storage/storageAccounts/<name>`. |
-    | `ERROR: (ResourceNotFound) Resource 'Microsoft.Network/networkWatchers' not found` | Ensure Network Watcher is deployed in the target region with `az network watcher configure --resource-group <rg> |
+    | `ERROR: (ResourceNotFound) Resource 'Microsoft.Network/networkWatchers' not found` | Ensure Network Watcher is deployed in the target region with `az network watcher configure --resource-group <rg> --locations <region> --enabled true`. |
 ---
 
 ## VM Health

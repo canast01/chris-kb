@@ -275,7 +275,7 @@ Boot diagnostics enabled on VM 'myvm' in resource group 'prod-rg'.
     | Error | Fix |
     |---|---|
     | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/myvm' under resource group 'prod-rg' was not found.` | Verify the VM name and resource group name are correct using `az vm list -g <rg>`. |
-    | `StorageAccountNotFound: The storage account 'diagstorage' was not found in the current subscription.` | Ensure the storage account exists in |
+    | `StorageAccountNotFound: The storage account 'diagstorage' was not found in the current subscription.` | Ensure the storage account exists in the current subscription and resource group (`az storage account list -o table`), or switch subscription with `az account set`. |
 ---
 
 ## Step 4 — Check NSG and routing

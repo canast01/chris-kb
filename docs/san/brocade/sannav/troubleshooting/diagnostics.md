@@ -171,7 +171,7 @@ Filesystem      Size  Used Avail Use% Mounted on
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification, or import the SANnav CA certificate into your system's trust store. |
-    | `sannav-admin: command not found` | Ensure you are logged in as the `admin` user and `/opt/sannav/ |
+    | `sannav-admin: command not found` | Ensure you are logged in as the `admin` user and `/opt/sannav/` (the SANnav install directory) contains the script, or run it by its full path. |
 ---
 
 ## Step 2 — Check database health

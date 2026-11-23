@@ -171,7 +171,7 @@ Review for secrets before uploading to vendor support portal.
     |---|---|
     | `sudo: gitlab-ctl: command not found` | Verify GitLab is installed with `which gitlab-ctl` and ensure the script runs on the GitLab server, not a client machine. |
     | `Permission denied: /var/opt/gitlab/git-data` | Add the current user to the `gitlab-www` group with `sudo usermod -aG gitlab-www $USER` and log out/in, or run the entire script with `sudo`. |
-    | `grpc_health_probe: command not found` | Install the health probe tool with `sudo /opt/gitlab/embedded/bin/grpc_health_probe` or verify the embedded |
+    | `grpc_health_probe: command not found` | Call it by full path if your GitLab bundle includes it (check with `ls /opt/gitlab/embedded/bin/ | grep grpc`); otherwise check Gitaly health with `sudo gitlab-ctl status gitaly` instead. |
 ### Data Collection Checklist
 
 - [ ] `gitlab-ctl status` output

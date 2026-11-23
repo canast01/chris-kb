@@ -77,7 +77,7 @@ realtime =none                   extsz=4096   blocks=0, extsz=4096 blks
     |---|---|
     | `Device /dev/sdb is not a block device or does not exist.` | Verify the correct device path with `lsblk` and ensure the device is attached and visible to the system. |
     | `No key available with this passphrase.` | Ensure the passphrase entered during `luksOpen` exactly matches the one set during `luksFormat`, including case and special characters. |
-    | `Device /dev/mapper/secure-data is busy` | Unmount the filesystem with `umount /mnt/secure-data` and close the LUKS device with `cryptsetup l |
+    | `Device /dev/mapper/secure-data is busy` | Unmount the filesystem with `umount /mnt/secure-data` and close the LUKS device with `cryptsetup luksClose secure-data`; if it is still busy, find the holder with `lsof +D /mnt/secure-data`. |
 ```bash
 # Get the UUID of the LUKS device
 blkid /dev/sdb

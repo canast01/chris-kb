@@ -1592,7 +1592,7 @@ def _common_error_rows():
                 _j += 1
 
 try:
-    from fix_common_errors_stray_backtick import split_cells as _split_ce
+    from fix_common_errors_stray_backtick import split_cells as _split_ce, error_cell_unbalanced as _unbal_ce
 except ImportError:
     _split_ce = None
 
@@ -1605,8 +1605,8 @@ except ImportError:
 issues = check(66, '"Common errors" table row does not split into Error | Fix')
 if _split_ce:
     for _p, _n, _row in _common_error_rows():
-        if len(_split_ce(_row)) != 2:
-            warn(issues, f'{os.path.relpath(_p, DOCS)}:{_n}: row splits into {len(_split_ce(_row))} cells (stray backtick?)')
+        if len(_split_ce(_row)) != 2 or _unbal_ce(_row):
+            warn(issues, f'{os.path.relpath(_p, DOCS)}:{_n}: Error cell has a stray backtick / row splits into {len(_split_ce(_row))} cells')
 
 
 # ── Check 67: "Common errors" Fix text truncated mid-sentence ────────────────

@@ -186,7 +186,7 @@ Diagnostic bundle created: /tmp/fa_diag_20240115_143022.tgz (2.4GB)
     |---|---|
     | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the bin directory (typically `/opt/purearray/bin`). |
     | `Error: Array unreachable at 192.168.1.10` | Verify network connectivity to the array management IP and confirm firewall rules allow port 443 (HTTPS) from the admin host. |
-    | `purediag: insufficient disk space in /tmp` | Redirect the diagnostic bundle to a mount point with at least 5GB free space using `--output /var/log/fa |
+    | `purediag: insufficient disk space in /tmp` | Redirect the diagnostic bundle to a mount point with at least 5GB free space using `--output /var/log/fa-diag` (or any path with enough room). |
 ---
 
 ## Step 2 — Alert triage

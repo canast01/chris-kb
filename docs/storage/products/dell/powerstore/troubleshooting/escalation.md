@@ -481,7 +481,7 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/replication_session" \
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in examples, but ensure it's not removed). |
-    | `{"error": "Unauthorized"}` | Verify base64 credentials are |
+    | `{"error": "Unauthorized"}` | Verify base64 credentials are encoded from `user:password` exactly (`echo -n 'user:password' | base64`, no trailing newline) and the account has a PowerStore role. |
 ---
 
 ## Support SLA Reference

@@ -205,7 +205,7 @@ dmesg -T | grep -i "MCE\|DIMM\|memory controller"
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `dmesg: read kernel buffer failed: Operation not permitted` | Run the command with `sudo` or as root user |
+    | `dmesg: read kernel buffer failed: Operation not permitted` | Run the command with `sudo` or as root user. |
 ---
 
 ## Step 3 — Search audit log for SELinux denials and auth events
@@ -399,7 +399,7 @@ $ ps -eo pid,comm,stat,wchan | grep " D "
     | Error | Fix |
     |---|---|
     | `strace: attach: ptrace(PTRACE_SEIZE, <PID>): Operation not permitted` | Run strace with `sudo` or ensure the user has CAP_SYS_PTRACE capability. |
-    | `lsof: command not found` | Install lsof with `apt-get install lsof` (Debian/Ubuntu) or `yum install lsof` ( |
+    | `lsof: command not found` | Install lsof with `apt-get install lsof` (Debian/Ubuntu) or `yum install lsof` (RHEL/CentOS). |
 ---
 
 ## Step 6 — Profile performance

@@ -49,7 +49,7 @@ CATALINA_OPTS="$CATALINA_OPTS -XX:G1HeapRegionSize=16M -XX:InitiatingHeapOccupan
     |---|---|
     | `grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory` | Verify the Confluence data directory path matches your installation; check `confluence.home` in `confluence.cfg.xml` or use `find / -name atlassian-confluence.log 2>/dev/null`. |
     | `pgrep: command not found` | Install `procps` package (`apt install procps` on Debian/Ubuntu or `yum install procps-ng` on RHEL/CentOS) or replace with `ps aux | grep confluence | grep -v grep | awk '{print $2}'`. |
-    | `jstat: command not found` | Ensure the JDK (not just JR |
+    | `jstat: command not found` | Ensure the JDK (not just the JRE) is installed, since `jstat` ships only with the JDK; Confluence's bundled JRE does not include it. |
 ```bash
 # 1. Run VACUUM ANALYZE on the Confluence database
 psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \

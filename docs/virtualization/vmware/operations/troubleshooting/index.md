@@ -250,7 +250,7 @@ LAST SEEN              TYPE      REASON                    OBJECT               
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `error: the server doesn't have a resource type "pods"` | Verify the cluster context with |
+    | `error: the server doesn't have a resource type "pods"` | Verify the cluster context with `kubectl config current-context` and confirm you are pointed at a Kubernetes cluster, not a management endpoint. |
 ## VxRail Troubleshooting
 
 ```bash

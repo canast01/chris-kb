@@ -291,7 +291,7 @@ dr-cluster.local   repl-finance-data        2024-01-15 14:15:22  Active
     | Error | Fix |
     |---|---|
     | `Connection timeout to target host` | Verify network connectivity between clusters with `ping <dr-cluster>` and confirm firewall rules allow port 8080 for SyncIQ. |
-    | `Target path does not exist: /ifs/backup/hourly` | Create the target directory on the DR cluster with `isi |
+    | `Target path does not exist: /ifs/backup/hourly` | Create the target directory on the DR cluster with `mkdir -p /ifs/backup/hourly` from any node (`/ifs` is cluster-wide), then re-run the policy. |
 **Common SyncIQ failure patterns:**
 - `"Source path not found"` → files moved since the policy was created; update source path in Eyeglass → Configuration Replication
 - `"Target host unreachable"` → network issue between clusters; check ICMP and TCP 445 between cluster SmartConnect zones

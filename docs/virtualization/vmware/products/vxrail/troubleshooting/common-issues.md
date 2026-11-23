@@ -811,7 +811,7 @@ Temperature Information:
     | Error | Fix |
     |---|---|
     | `Connection refused` | Verify the iDRAC IP address is correct and iDRAC service is running; check firewall rules allow SSH on port 22 to the iDRAC. |
-    | `racadm: command not found` | SSH directly to the iDRAC management interface (not the hypervisor); racadm is only available on the iDRAC, not |
+    | `racadm: command not found` | SSH directly to the iDRAC management interface (not the hypervisor); racadm is only available on the iDRAC, not in the ESXi shell. |
 ### Interpreting Common iDRAC Alarms
 
 | Alarm Type | Severity | Action |

@@ -877,7 +877,7 @@ Row Cache Size (MB): 0
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `nodetool: command not found` | Ensure Cassandra is installed and the nodetool binary is in your PATH, or use the full |
+    | `nodetool: command not found` | Ensure Cassandra is installed and the nodetool binary is in your PATH, or use the full path (locate it with `find /home/nutanix -name nodetool 2>/dev/null`). |
 **Status codes:** `UN` = Up/Normal (healthy), `DN` = Down, `?N` = Unknown — investigate any non-UN nodes.
 
 ---
@@ -982,7 +982,7 @@ Zeus Cluster Configuration:
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `tail: cannot open '/home/nutanix/data/logs/stargate.ERROR' for reading: No such file or directory` | Verify the log file path is correct; on some AOS versions it may be `/home/nutanix/data/ |
+    | `tail: cannot open '/home/nutanix/data/logs/stargate.ERROR' for reading: No such file or directory` | Verify the log file path is correct; on some AOS versions it may be `/home/nutanix/data/logs/stargate.out` instead, and `.ERROR` files only exist once an error has been logged. List what is present with `ls -l /home/nutanix/data/logs/stargate*`. |
 ---
 
 ---

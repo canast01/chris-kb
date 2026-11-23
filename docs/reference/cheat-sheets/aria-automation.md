@@ -171,7 +171,7 @@ curl -sk $HDR $BASE/iaas/api/zones | python3 -m json.tool                  # clo
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification in a lab, or import the vCenter/Aria CA certificate to trust it properly. |
 ## See also
 
 - [Aria Automation Procedures](../../../virtualization/vmware/products/aria-automation/operations/procedures/)

@@ -104,7 +104,7 @@ legacy-service              c9e5h0g4-3d6f-6e1c-0h4g-5f7e9d1c3g6c  f1g4h6c3-7e0d-
     | Error | Fix |
     |---|---|
     | `Insufficient privileges to complete the operation.` | Ensure your Azure account has Application Administrator or Cloud Application Administrator role in the tenant. |
-    | `Invalid value provided for parameter 'id': <app-id>. The value should be a valid UUID or object ID.` | Replace `<app-id>` or `<app-id-or- |
+    | `Invalid value provided for parameter 'id': <app-id>. The value should be a valid UUID or object ID.` | Replace `<app-id>` or `<app-id-or-object-id>` with the real application (client) ID GUID from `az ad app list --display-name <name> --query [].appId`. |
 ## Client Secrets
 
 Client secrets are password credentials used by confidential clients (server-side applications) to authenticate.

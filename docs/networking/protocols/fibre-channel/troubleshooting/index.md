@@ -158,7 +158,7 @@ Adapter vmhba5 Driver: lpfc Model: Emulex LPe16000 State: online
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Fabric login failed` | Verify switch connectivity and ensure the initiator PWWN is zoned correctly in the active |
+    | `Error: Fabric login failed` | Verify switch connectivity and ensure the initiator PWWN is zoned correctly in the active zoneset on the fabric. |
 ## Common Issues Reference
 
 | Symptom | Likely cause | First check |

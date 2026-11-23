@@ -136,7 +136,7 @@ MiB Swap:   4096.0 total,   2867.2 free,   1228.8 used.   5017.6 avail Mem
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Permission denied (publickey).` | Verify the SSH key |
+    | `Permission denied (publickey).` | Verify the SSH key is loaded (`ssh-add -l`) and authorized on the appliance, or log in with the `support` user password instead. |
 ### 2. Generate the support bundle
 
 **Method 1 — Via SSH (recommended for any severity):**
