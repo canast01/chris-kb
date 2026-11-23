@@ -9063,7 +9063,7 @@ Internal architecture and data-path reference: Director architecture, Global Cac
 *Applies to: PowerMax 2500 / 8500*
 </div>
 <p><img alt="Dell PowerMax — How It Works" src="../../../../../../assets/storage-dell-powermax-architecture-how-it-works.svg" /></p>
-<p><img alt="Kroki" src="kroki-generated-a0f0a24d-357f-38d1-8f3a-2e6b950728dd.svg" /></p>
+<p><img alt="Dell PowerMax — How It Works diagram" src="kroki-generated-a0f0a24d-357f-38d1-8f3a-2e6b950728dd.svg" /></p>
 <h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
 <p>PowerMax is Dell's flagship enterprise all-NVMe storage array, purpose-built for mission-critical tier-1 workloads including mainframe, OLTP databases, ERP platforms, and financial transaction systems. It uses a massively parallel director-based architecture: multiple independent processing boards (Directors) share access to a large global DRAM cache and back-end NVMe flash drives.</p>
 <p>Two models are available:</p>
@@ -9128,7 +9128,7 @@ Internal architecture and data-path reference: Director architecture, Global Cac
 </ul>
 <p><strong>Vault protection:</strong> In the event of a power failure, PowerMax uses battery-backed NVRAM to safely flush the contents of global cache to a dedicated vault area on the NVMe drives. On power restoration, the array replays the vault log and restores the cache to its pre-failure state before accepting new host I/O.</p>
 <h2 id="io-architecture">I/O Architecture<a class="headerlink" href="#io-architecture" title="Permanent link">&para;</a></h2>
-<p><img alt="Kroki" src="kroki-generated-ed9879e8-0267-34e3-9160-2ead82beca7b.svg" /></p>
+<p><img alt="I/O Architecture diagram" src="kroki-generated-ed9879e8-0267-34e3-9160-2ead82beca7b.svg" /></p>
 <h2 id="srdf-replication">SRDF Replication<a class="headerlink" href="#srdf-replication" title="Permanent link">&para;</a></h2>
 <p>SRDF (Symmetrix Remote Data Facility) is PowerMax's native replication protocol, used for disaster recovery and metro high availability. SRDF operates at the volume (device) level — individual devices or groups of devices are paired between a source (R1) and a target (R2) PowerMax.</p>
 <p><strong>SRDF/S — Synchronous</strong></p>
@@ -9274,9 +9274,9 @@ Internal architecture and data-path reference: Director architecture, Global Cac
 </table>
 <h2 id="srdf-replication-topology-r1r2-groups-director-ports-and-modes">SRDF Replication Topology — R1/R2 Groups, Director Ports, and Modes<a class="headerlink" href="#srdf-replication-topology-r1r2-groups-director-ports-and-modes" title="Permanent link">&para;</a></h2>
 <p><strong>Part 1 — R1 site internal write path:</strong> host I/O enters through FA directors, stages in Global Cache, and splits to either back-end NVMe (normal destage) or the RA directors (replication path).</p>
-<p><img alt="Kroki" src="kroki-generated-b2258b1e-d442-3987-9617-2d360e24b79c.svg" /></p>
+<p><img alt="SRDF Replication Topology — R1/R2 Groups, Director Ports, and Modes diagram" src="kroki-generated-b2258b1e-d442-3987-9617-2d360e24b79c.svg" /></p>
 <p><strong>Part 2 — Inter-site SRDF topology:</strong> the two RA director pairs connect over dedicated links; SRDF/S holds the host ACK until Site B confirms, SRDF/A releases the host immediately and transmits delta sets periodically.</p>
-<p><img alt="Kroki" src="kroki-generated-7978aa9d-eddf-330a-a499-fb1537dc3a2d.svg" /></p>
+<p><img alt="SRDF Replication Topology — R1/R2 Groups, Director Ports, and Modes diagram" src="kroki-generated-7978aa9d-eddf-330a-a499-fb1537dc3a2d.svg" /></p>
 <p>Key points illustrated:</p>
 <ul>
 <li><strong>SRDF/S (synchronous):</strong> The R1 Global Cache holds the host write and does not issue the ACK until the remote RA director at Site B has confirmed the write is in the R2 cache. Every millisecond of RTT on the inter-site link adds directly to host write latency — this is why SRDF/S is limited to metro distances of less than 10 ms RTT.</li>
