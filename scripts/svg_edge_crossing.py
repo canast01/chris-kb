@@ -158,6 +158,25 @@ def _a(tag, name):
     return m.group(1) if m else None
 
 
+_FONTS = {}
+
+
+def _text_width(txt, fs, bold):
+    """Rendered width in px using real Arial metrics; 0.56em/char fallback."""
+    import html
+    txt = ' '.join(html.unescape(txt).split())  # SVG collapses whitespace
+    key = bold
+    if key not in _FONTS:
+        try:
+            from PIL import ImageFont
+            name = 'Arial Bold.ttf' if bold else 'Arial.ttf'
+            _FONTS[key] = ImageFont.truetype('/System/Library/Fonts/Supplemental/' + name, 100)
+        except Exception:
+            _FONTS[key] = None
+    f = _FONTS[key]
+    return f.getlength(txt) * fs / 100 if f else len(txt) * fs * 0.56
+
+
 def _text_boxes(svg):
     out = []
     for m in _TEXT_RE.finditer(svg):
@@ -167,7 +186,8 @@ def _text_boxes(svg):
             continue
         x, y = float(x), float(y)
         fs = float(_a(a, 'font-size') or 10)
-        w = len(re.sub(r'&\w+;', '_', m.group(2))) * fs * 0.56
+        bold = (_a(a, 'font-weight') or '') in ('bold', '600', '700', '800', '900')
+        w = _text_width(m.group(2), fs, bold)
         anc = _a(a, 'text-anchor') or 'start'
         x0 = x - w / 2 if anc == 'middle' else (x - w if anc == 'end' else x)
         out.append((x0, y - fs * 0.8, x0 + w, y + fs * 0.25))
