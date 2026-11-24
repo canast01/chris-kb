@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 68 checks.
+KB site audit — 70 checks.
 
 Usage:
     python3 scripts/site_audit.py               # run all checks, print summary
@@ -1641,6 +1641,34 @@ try:
                     warn(issues, f'assets/{fname}: {len(_h68)} arrow/box crossing(s) -- run scripts/svg_edge_crossing.py for coordinates')
 except ImportError:
     pass
+
+
+# ── Check 69: connector line runs through box text ───────────────────────────
+# Found 2026-11-24: the Mermaid converter drew within-subgraph edges as dashed
+# centre-to-centre lines through both child boxes' text (351 lines, 86 SVGs;
+# fixed by scripts/svg_fix_internal_connectors.py). Also catches hand-drawn
+# diagrams whose arrows/dividers cross text. Detector: svg_edge_crossing.py
+issues = check(69, 'SVG connector line runs through text')
+try:
+    from svg_edge_crossing import find_text_crossings as _tx69, find_child_overflow as _co70
+    if os.path.isdir(ASSETS):
+        for fname in sorted(os.listdir(ASSETS)):
+            if fname.endswith('.svg'):
+                _h69 = _tx69(os.path.join(ASSETS, fname))
+                if _h69:
+                    warn(issues, f'assets/{fname}: {len(_h69)} line(s) through text')
+except ImportError:
+    _co70 = None
+
+
+# ── Check 70: child box sticking out of its container ────────────────────────
+# Found 2026-11-24: a child box taller than its siblings poked out of its group
+# box (Commvault, NetApp ONTAP) -- leftover from an earlier automated fix.
+issues = check(70, 'SVG child box sticks out of its container')
+if _co70 and os.path.isdir(ASSETS):
+    for fname in sorted(os.listdir(ASSETS)):
+        if fname.endswith('.svg') and _co70(os.path.join(ASSETS, fname)):
+            warn(issues, f'assets/{fname}: child box extends past its container')
 
 
 # ── Report ────────────────────────────────────────────────────────────────────

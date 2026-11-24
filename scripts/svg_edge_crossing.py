@@ -124,6 +124,7 @@ def find_crossings(path):
     return out
 
 
+
 def main():
     files = sys.argv[1:] or sorted(os.path.join(ASSETS, f) for f in os.listdir(ASSETS) if f.endswith('.svg'))
     n = 0
@@ -140,3 +141,106 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# ── Connector lines through text (audit Check 69) ───────────────────────────
+# Found 2026-11-24: the Mermaid-subgraph converter drew within-subgraph edges
+# as a dashed line from one child box's centre to the other's, straight
+# through both boxes' text (e.g. "Source VM", "VFS Layer"). Labels that sit
+# on a line on purpose (text over an opacity<1 background rect) are exempt.
+_TEXT_RE = re.compile(r'<text\b([^>]*)>([^<]*)</text>')
+_CONN_RE = re.compile(r'<(line|polyline)\b[^>]*/>')
+_LBL_RECT_RE = re.compile(r'<rect\b[^>]*opacity="0?\.\d+"[^>]*/>')
+
+
+def _a(tag, name):
+    m = re.search(rf'\b{name}="([^"]*)"', tag)
+    return m.group(1) if m else None
+
+
+def _text_boxes(svg):
+    out = []
+    for m in _TEXT_RE.finditer(svg):
+        a = m.group(1)
+        x, y = _a(a, 'x'), _a(a, 'y')
+        if x is None or y is None:
+            continue
+        x, y = float(x), float(y)
+        fs = float(_a(a, 'font-size') or 10)
+        w = len(re.sub(r'&\w+;', '_', m.group(2))) * fs * 0.56
+        anc = _a(a, 'text-anchor') or 'start'
+        x0 = x - w / 2 if anc == 'middle' else (x - w if anc == 'end' else x)
+        out.append((x0, y - fs * 0.8, x0 + w, y + fs * 0.25))
+    return out
+
+
+def find_text_crossings(path):
+    """List of (start, end, textbox) for connector lines that cut through text."""
+    try:
+        svg = open(path, encoding='utf-8').read()
+    except OSError:
+        return []
+    if 'transform=' in svg:
+        return []
+    labels = []
+    for t in _LBL_RECT_RE.findall(svg):
+        x, y, w, h = (float(_a(t, k) or 0) for k in ('x', 'y', 'width', 'height'))
+        labels.append((x, y, x + w, y + h))
+    texts = [t for t in _text_boxes(svg)
+             if not any(l[0] - 2 <= (t[0] + t[2]) / 2 <= l[2] + 2 and l[1] - 2 <= (t[1] + t[3]) / 2 <= l[3] + 2
+                        for l in labels)]
+    out = []
+    parsed = parse(path)
+    rects = parsed[0] if parsed else []
+    for m in _CONN_RE.finditer(svg):
+        tag = m.group(0)
+        if m.group(1) == 'line':
+            pts = [(float(_a(tag, 'x1') or 0), float(_a(tag, 'y1') or 0)),
+                   (float(_a(tag, 'x2') or 0), float(_a(tag, 'y2') or 0))]
+        else:
+            n = [float(v) for v in re.findall(r'-?[\d.]+', _a(tag, 'points') or '')]
+            pts = list(zip(n[0::2], n[1::2]))
+        hit = False
+        for t in texts:
+            if any(_seg_hits(a, b, (t[0] - INSET, t[1] - INSET, t[2] + INSET, t[3] + INSET))
+                   for a, b in zip(pts, pts[1:])):
+                out.append((pts[0], pts[-1], t))
+                hit = True
+                break
+        if not hit and 'marker-end' not in tag:
+            # undecorated connector starting/ending deep inside a box: drawn
+            # through that box's content (the Mermaid centre-to-centre bug)
+            for p in (pts[0], pts[-1]):
+                deep = [r for r in rects if r[0] + DEEP < p[0] < r[2] - DEEP and r[1] + DEEP < p[1] < r[3] - DEEP]
+                if deep and not any(_inside(pts[0], r, 0) and _inside(pts[-1], r, 0) and
+                                    min(r[2] - r[0], r[3] - r[1]) > 0 for r in
+                                    [min(deep, key=lambda q: (q[2] - q[0]) * (q[3] - q[1]))]):
+                    out.append((pts[0], pts[-1], min(deep, key=lambda q: (q[2] - q[0]) * (q[3] - q[1]))))
+                    break
+    return out
+
+
+DEEP = 6.0  # px from every edge = "inside" a box, not on its border
+
+
+# ── Child box sticking out of its container (audit Check 70) ────────────────
+# Found 2026-11-24: two Mermaid-converted SVGs had one child box taller than
+# its siblings (54.9 vs 38, 96.9 vs 83) -- an artefact of an earlier
+# automated overflow fix -- so it poked out of the bottom of its group box.
+def find_child_overflow(path):
+    """List of (child, container) where a box is mostly inside a larger box but pokes out >2px."""
+    parsed = parse(path)
+    if parsed is None:
+        return []
+    rects, out = parsed[0], []
+    for c in rects:
+        ca = (c[2] - c[0]) * (c[3] - c[1])
+        for q in rects:
+            if q == c or (q[2] - q[0]) * (q[3] - q[1]) <= ca * 1.5:
+                continue
+            ix = max(0.0, min(c[2], q[2]) - max(c[0], q[0]))
+            iy = max(0.0, min(c[3], q[3]) - max(c[1], q[1]))
+            if 0.6 < ix * iy / ca < 0.999 and (c[3] - q[3] > 2 or q[1] - c[1] > 2 or c[2] - q[2] > 2 or q[0] - c[0] > 2):
+                out.append((c, q))
+                break
+    return out
