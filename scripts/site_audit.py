@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 62 checks.
+KB site audit — 68 checks.
 
 Usage:
     python3 scripts/site_audit.py               # run all checks, print summary
@@ -1623,6 +1623,24 @@ if _split_ce:
         _fix = _cells[-1].strip() if len(_cells) == 2 else ''
         if _fix and (_fix.count('`') % 2 == 1 or not re.search(r'[.)`\]"\'!?>*]$', _fix)):
             warn(issues, f'{os.path.relpath(_p, DOCS)}:{_n}: Fix text appears truncated: "...{_fix[-50:]}"')
+
+
+# ── Check 68: SVG arrow passes through an unrelated box ──────────────────────
+# Found 2026-11-23: the Git "Distributed Model" and VCF "How It Works" Mermaid
+# conversions drew straight arrows through boxes they don't connect (e.g.
+# origin -> Dev B straight through "Fork Remote"). Checks 59/65 only look at
+# text/box geometry, not edges. Detector: scripts/svg_edge_crossing.py
+issues = check(68, 'SVG arrow passes through a box it does not connect')
+try:
+    from svg_edge_crossing import find_crossings as _cross68
+    if os.path.isdir(ASSETS):
+        for fname in sorted(os.listdir(ASSETS)):
+            if fname.endswith('.svg'):
+                _h68 = _cross68(os.path.join(ASSETS, fname))
+                if _h68:
+                    warn(issues, f'assets/{fname}: {len(_h68)} arrow/box crossing(s) -- run scripts/svg_edge_crossing.py for coordinates')
+except ImportError:
+    pass
 
 
 # ── Report ────────────────────────────────────────────────────────────────────
