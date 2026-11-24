@@ -177,7 +177,87 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     need a new "language" subsection, since the existing tree is ops-oriented.
   - site_audit (2026-11-23): 67/67 clean (full run, no exceptions triggered). This run
     only edited this queue file.
-- [ ] automation/terraform
+- [x] automation/terraform
+  - Audit (2026-11-24): KB has 5 top-level sections (architecture, deploy, operations,
+    security, troubleshooting) plus learning-path, FAQ, release notes, known issues
+    (27 pages, ~6,550 lines; *Applies to: Terraform 1.x*). Strongly ops-focused. Strong
+    on: core workflow (init/plan -out/apply), remote backends and state locking
+    (S3 backend, `force-unlock`), CLI state surgery (`state list/show/mv/rm/pull/push`),
+    `terraform import` CLI, workspaces, `.terraform.lock.hcl` and `required_providers`,
+    drift detection, TF_LOG diagnostics, tfvars, OIDC and static-analysis scanners
+    (tflint/checkov/tfsec), Sentinel mentioned in hardening/escalation. Thin or missing
+    on the language: zero mentions of `for_each`, `dynamic` blocks, `count.index`/
+    `each.key`, provider `alias`, config-driven `import {}`/`removed {}`/`check {}`
+    blocks, `precondition`/`postcondition`, `terraform test`, `templatefile`,
+    `-replace`, ephemeral values, Terraform MCP server, HCP Terraform run tasks;
+    `moved {}`, variable `validation`, `lifecycle`, `depends_on`, HCL functions,
+    `terraform_remote_state`/`tfe_outputs`, and dynamic provider credentials get one to
+    four passing mentions each.
+  - Cert research (2026-11-24): Real, named, published certs exist. HashiCorp offers
+    Terraform certifications "at three levels" (per its certifications overview page):
+    **Foundation: Terraform Associate (004)**, 1 hr, multiple choice, online proctored,
+    tests Terraform 1.12, $70.50, expires after 2 yrs. 8 domains: IaC concepts;
+    Terraform fundamentals (providers, state); core workflow (init/validate/plan/apply/
+    destroy/fmt); configuration (resource vs data, references, variables/outputs,
+    complex types, expressions/functions, dependencies, custom conditions, sensitive
+    data/Vault); modules (sourcing, variable scope, usage, versioning); state (local
+    backend, locking, remote backend, drift); maintenance (import, inspect state with
+    the CLI, verbose logging); HCP Terraform (runs, collaboration/governance,
+    workspaces/projects, CLI integration). New vs 003: `depends_on`/
+    `create_before_destroy`, custom conditions, ephemeral values/write-only arguments,
+    projects.
+    Sources (primary, vendor, verified via direct fetch): https://developer.hashicorp.com/certifications/terraform-associate
+    and https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-review-004
+    **Mid tier: Terraform Infrastructure Engineer Professional (002)**, 90 min,
+    multiple choice, tests Terraform 1.15, $200, expires after 2 yrs. 40 objectives in
+    7 domains, no published weightings: scalable configuration design (incl. tracing
+    `for_each`, predicting function output, advanced configs, providers, using the
+    Terraform MCP server with AI coding agents); state & backend operations (remote
+    state, drift, dependency chains before upgrades, upgrading Terraform across
+    environments); lifecycle operations (plan/apply/import, multi-environment,
+    troubleshooting, provider/module versions); CI/CD & automation (pipelines,
+    deployment strategies, dynamic provider credentials, `.tfvars`/`auto.tfvars`
+    precedence); security & governance (secrets, rotation, pipeline identities,
+    policy rules, risky-change mitigation); modules & registry (when to refactor,
+    module contract, registry, `terraform test` unit tests); HCP Terraform/Enterprise
+    operations (usage/cost tracking, multi-env, workspace version upgrades, policy as
+    code in CI/CD).
+    Sources (primary, verified via direct fetch): https://developer.hashicorp.com/certifications/terraform-infrastructure-engineer-professional
+    and https://developer.hashicorp.com/terraform/tutorials/certification-infra-professional/cert-pro-review
+    **Top tier (target bar): Terraform Authoring & Operations Advanced**: lab-based
+    scenarios plus multiple choice, 4 hrs, AWS or Azure version (same credential),
+    $295 with a free retake, expires after 2 yrs, needs production experience. Its
+    cert page still says it tests **Terraform 1.6**, older than the other two. 6
+    domains: resource lifecycle (`init`/`plan`/`apply`/`destroy` and their options,
+    state incl. import and drift); dynamic configuration (validation, data sources,
+    HCL functions, meta-arguments, complex-typed variables/outputs, sensitive
+    data/Vault); collaborative workflows (version constraints, remote state,
+    automation, sharing data across configurations/workspaces); modules (create, use,
+    refactor/version, refactor existing config into modules); providers (plugin
+    architecture, aliasing/versioning/sourcing/upgrades, authentication,
+    troubleshooting); HCP Terraform (run workflow, workspaces/access, provider
+    credentials, policy as code; this domain is multiple choice only).
+    Sources (primary, verified via direct fetch): https://developer.hashicorp.com/certifications/terraform-advanced
+    and https://developer.hashicorp.com/terraform/tutorials/pro-cert/adv-review
+    Overview: https://developer.hashicorp.com/certifications
+    Rationale: Advanced is the highest-tier and hands-on bar, so it is the target.
+    Because it pins Terraform 1.6, Phase B should also cover the newer Associate 004 /
+    Professional 002 topics (custom conditions, ephemeral/write-only, `terraform test`,
+    MCP server) so the KB doesn't freeze at 1.6.
+  - Gap vs blueprint: the KB covers the operational side well (lifecycle CLI, remote
+    state/locking, CLI state inspection, drift, TF_LOG troubleshooting, OIDC). The big
+    gap is the authoring side, which carries the most weight in all three exams:
+    meta-arguments (`for_each`, `dynamic` blocks, `lifecycle`, `depends_on`; `count =`
+    appears in just one example),
+    HCL functions and expressions, provider aliasing, variable validation and custom
+    conditions, config-driven `import`/`moved`/`removed` refactoring, module authoring
+    and refactoring config into modules, `terraform test`, sharing data across
+    configurations (`terraform_remote_state`/`tfe_outputs`), HCP Terraform
+    runs/run tasks/dynamic provider credentials/policy as code, ephemeral values, and
+    the Terraform MCP server. Flagged for Phase B; it probably needs a new
+    "language/authoring" subsection.
+  - site_audit (2026-11-24): 70/70 clean (full run, ~14 min, no exceptions triggered).
+    This run only edited this queue file.
 
 ### Backup
 - [ ] backup/products/commvault
