@@ -428,7 +428,67 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     edited this queue file.
 
 ### Cloud
-- [ ] cloud/aws
+- [x] cloud/aws
+  - Audit (2026-11-25): 109 pages, ~17,600 lines (EVS sub-section excluded; it has its
+    own queue item). Sections: architecture, compute, storage, networking, identity,
+    security, governance, monitoring, backup, cost, deploy, operations, cli-reference,
+    troubleshooting, plus a learning path, FAQ and release notes. Pages say "Applies to:
+    AWS". It is strong on the infra-admin core: VPC/subnets/route tables/NAT/IGW/SGs/
+    NACLs/endpoints/flow logs/Route 53/ELB, IAM (roles, policies, cross-account, access
+    keys, Identity Center 7 pages, SCPs 12), KMS/Secrets Manager/ACM/GuardDuty/Security
+    Hub/Inspector, S3 + lifecycle, EBS snapshots, and a deep cost section (Budgets,
+    Cost Explorer, RIs, Savings Plans, tags, anomaly detection). There is no database
+    sub-section and no application-integration sub-section. No exam-blueprint content.
+  - Cert research (2026-11-25): AWS has a full cert ladder, so this section needs a
+    chosen target. Target: **AWS Certified Solutions Architect - Associate (SAA-C03)**,
+    AWS's canonical infra-design cert and the usual first associate exam. AWS has not
+    announced a successor; the official guide on docs.aws.amazon.com is still SAA-C03.
+    Format (official guide + cert page): 65 questions (50 scored + 15 unscored, not
+    identified); multiple choice (1 of 4) and multiple response (2+ of 5+); 130 min;
+    scaled score 100-1,000, 720 to pass, compensatory scoring, no guessing penalty;
+    150 USD; valid 3 years; ~1 year hands-on AWS design experience recommended.
+    Domains (official guide, "% of scored content"):
+    **D1 Design Secure Architectures (30%)**: 1.1 secure access to AWS resources;
+    1.2 secure workloads and applications; 1.3 data security controls.
+    **D2 Design Resilient Architectures (26%)**: 2.1 scalable and loosely coupled
+    architectures; 2.2 highly available and/or fault-tolerant architectures.
+    **D3 Design High-Performing Architectures (24%)**: 3.1 storage; 3.2 elastic
+    compute; 3.3 databases; 3.4 network architectures; 3.5 data ingestion and
+    transformation.
+    **D4 Design Cost-Optimized Architectures (20%)**: 4.1 storage; 4.2 compute;
+    4.3 database; 4.4 network.
+    The guide publishes a non-exhaustive in-scope service list (~130 services across
+    analytics, app integration, compute, containers, database, migration, networking,
+    security, storage, serverless, ML).
+    Secondary target, noted for later: **AWS Certified CloudOps Engineer - Associate
+    (SOA-C03)**, the renamed SysOps Administrator exam. Its domains (Monitoring/Logging/
+    Remediation 22%, Reliability & BC 22%, Deployment/Provisioning/Automation 22%,
+    Security & Compliance 16%, Networking & Content Delivery 18%) fit this KB's ops
+    focus closely. It uses the same 50+15 question, 720-pass format. Phase B should
+    cover SAA-C03 first; most SOA-C03 gaps are a subset of it plus CloudFormation/SSM
+    automation depth.
+    Sources (primary, vendor): https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html
+    https://aws.amazon.com/certification/certified-solutions-architect-associate/
+    https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html
+    Target bar: the SAA-C03 domains above.
+  - Gap vs blueprint (pages mentioning each term, out of 109): Zero coverage: Step
+    Functions, Global Accelerator, Cognito, Shield, CloudHSM, Storage Gateway,
+    DataSync, Snow Family, DMS, Athena, Redshift, Spot Instances, placement groups,
+    pilot light / warm standby DR strategies, Compute Optimizer. Thin: Well-Architected
+    (1), RPO/RTO (1), SQS (2), SNS (3), EventBridge (3), API Gateway (1), Kinesis (3),
+    ElastiCache (1), Aurora (4), DynamoDB (7), read replicas (2), Multi-AZ (5),
+    CloudFront (5), WAF (2), PrivateLink (1), Site-to-Site VPN (2), Direct Connect (4),
+    Auto Scaling (6), Fargate (2), FSx (4), Glacier (4), Macie (1), Cost and Usage
+    Report (1). D1 is mostly covered; D2-D4 are the big gaps because the KB is written
+    for operating existing infra, not choosing between services. Phase B should add a
+    databases sub-section (RDS/Aurora/DynamoDB/ElastiCache, Multi-AZ vs read replicas),
+    an application-integration page (SQS/SNS/EventBridge/Step Functions/API Gateway/
+    Kinesis), a resilience & DR-strategies page (backup-restore -> pilot light -> warm
+    standby -> multi-site, RPO/RTO, Route 53 failover, Global Accelerator), EC2
+    purchasing/placement (Spot, placement groups, Auto Scaling policies), edge security
+    (CloudFront, WAF, Shield), hybrid storage/migration (Storage Gateway, DataSync, Snow,
+    DMS, Transfer Family), a storage-class/cost decision page, and a Well-Architected
+    framing on the learning path.
 - [ ] cloud/aws/evs
 - [ ] cloud/azure
 
