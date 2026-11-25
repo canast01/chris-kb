@@ -260,7 +260,49 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     This run only edited this queue file.
 
 ### Backup
-- [ ] backup/products/commvault
+- [x] backup/products/commvault
+  - Audit (2026-11-24): 27 pages, ~2,950 lines in the standard 5 sections plus a
+    learning path. Content is CommCell-era and on-prem: CommServe/MediaAgent
+    topology, storage policies (36 mentions), subclients, DDB health, CV_DIAG, ports,
+    escalation. No exam-blueprint content yet.
+  - Cert research (2026-11-24): Real, named certifications exist, but **Commvault
+    publishes no exam objectives or blueprint**. The program was rebuilt in 2026 (blog
+    dated 2026-05-11) into four "Commvault Cloud" tiers on Readiverse Academy:
+    **Practitioner** ("foundational platform and resilience knowledge"; needs the
+    Commvault Cloud Administrator - 2026 course and exam plus Cyber Resilience - 2026
+    and one workload course), **Specialist** ("expanded operational and security
+    depth"), **Professional** ("advanced recovery and workload expertise", including
+    Cloud Rewind or Cleanroom Recovery coursework), and **Expert** ("full cloud
+    engineering and resilience leadership": Cloud Engineer coursework, two Advanced
+    Feature courses with assessments, Cloud Rewind, Cleanroom Recovery). Tiers are
+    earned by coursework, hands-on labs and validated assessments. No question count,
+    duration, passing score or validity is published. Expert launched around Sep 2026,
+    and badges were still being issued in Nov 2026. "There is no direct progression"
+    from the old tracks. The old Professional/Engineer/Expert certs (with Command
+    Center and CommCell Console tracks) stay valid but reach end of life as their
+    releases retire. "Commvault Certified Engineer - 2027" (launched 08 Oct 2026) is
+    still in the catalog.
+    Sources (verified via direct fetch): https://www.commvault.com/blogs/introducing-new-readiverse-courses-and-certification-programs
+    https://community.commvault.com/readiverse-academy-60/new-readiverse-academy-certification-tiers-are-here-11844
+    https://community.commvault.com/readiverse-academy-60/readiverse-academy-customer-course-catalog-10789
+    Not readable: readiverse.commvault.com (JavaScript/login portal), and the
+    commvault.com/download-pdf/40151 "data sheet" (a design file, no content).
+  - **Fallback bar (no published blueprint):** use Commvault's own official
+    curriculum. Target the **Commvault Cloud Expert** tier and the courses its tiers
+    are built from in the customer catalog: Cloud Administrator - 2026, Cyber
+    Resilience - 2026, Core Security, MediaAgent Advanced, Indexing Advanced, Working
+    with Support, Cloud Rewind, Cleanroom Recovery, Threat Scan, Risk Analysis, Auto
+    Recovery, workload courses (VMware, M365, Entra ID/AD, Kubernetes, SQL/Oracle,
+    Salesforce, Clumio, cloud VMs) and Storage Accelerator.
+  - Gap vs bar: the KB is built on the legacy CommCell/storage-policy model, while
+    the 2026 curriculum is built on Command Center and plans. Content with zero
+    coverage: cyber-resilience features (Threat Scan, Risk Analysis, Cleanroom
+    Recovery, Cloud Rewind, Auto Recovery), SaaS workloads (M365, Salesforce,
+    Clumio), Storage Accelerator and Arlie. Barely covered: Kubernetes (1 mention),
+    Entra ID/AD, Oracle/SQL agents, KMS, immutability/air gap, multi-tenancy. Phase B
+    should first reframe procedures from storage policies to plans, then add a
+    "cyber resilience" subsection and per-workload protection pages. Recheck
+    Readiverse (logged in) for real objectives before Phase B starts.
 - [ ] backup/products/netbackup
 - [ ] backup/products/veeam
 
