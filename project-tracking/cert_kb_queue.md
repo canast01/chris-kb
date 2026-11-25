@@ -670,7 +670,64 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     tuned, and an exam-style "persist across reboot" checklist on each task page.
   - site_audit (2026-11-25): 70/70 clean (full run; one run covered cloud/azure and
     compute/linux since neither touched docs/). This item only edited this queue file.
-- [ ] compute/linux/mysql
+- [x] compute/linux/mysql
+  - Audit (2026-11-25): 27 pages, ~4,160 lines: architecture, deploy, operations,
+    security, troubleshooting, learning path, release notes. Mostly written for "MySQL
+    8.0" (20 mentions) with MariaDB 10.x folded in (6 pages); "Applies to" is written 7
+    ways (15 say just "RHEL / Ubuntu LTS"). Only 1 mention of 8.4 LTS. Strong-ish on
+    InnoDB (19), replication (17), binlog (12), users/GRANT (11), TLS (11), upgrades
+    (11), slow query log and Performance Schema (9 each). No exam-blueprint content.
+  - Cert research (2026-11-25): **The old target is gone.** Exam 1Z0-908 (MySQL 8.0
+    Database Administrator, OCP) retired 2026-11-16; its MyLearn page now returns "We
+    couldn't find the exam ... may already be retired" (checked in a rendered browser,
+    2026-11-25). Current target: **Exam 1Z0-918: MySQL Database Administration
+    Professional** (Oracle MyLearn page, rendered and read 2026-11-25): proctored online,
+    multiple choice, 120 min, 70 questions, passing score 60 (percent, by Oracle's usual
+    convention; the page shows just "60"). The page does not name a MySQL version or a
+    formal credential title and gives no domain weights; price not shown (Oracle Exam
+    Subscription is ~$245 per a secondary source, unverified). Audience: DBAs, sysadmins,
+    DB engineers, support and ops. Exam topics (verbatim headings, official page):
+    **(1) Understanding MySQL Architecture, Storage, and InnoDB Fundamentals**:
+    architecture, connectivity and storage fundamentals; InnoDB storage structures and
+    memory usage.
+    **(2) Managing MySQL Server Installation, Startup, Configuration, Upgrade, and
+    Multiple Server Instances**: install/initialize/maintain; runtime behavior and
+    multiple instances.
+    **(3) Administering MySQL Security, Authentication, Authorization, Encryption, and
+    Firewall Controls**: identities, authentication and access control; secure server,
+    host and connection environments; advanced data protection and threat prevention.
+    **(4) Monitoring MySQL Activity, Analysing Operations, and Maintaining Stability**:
+    monitor, audit and analyze activity; performance, capacity and stability.
+    **(5) Optimizing MySQL Queries Through Analysis, Indexing, and Statistics**: query
+    processing analysis; index design and index statistics.
+    **(6) Managing MySQL Backup and Recovery Methods, Tools, and Strategies**: plan and
+    evaluate backup strategy; implement backup and recovery with the right tools.
+    **(7) Managing MySQL High Availability Using Replication, Monitoring, InnoDB
+    Cluster, and Recovery**: configure/manage/monitor replication; replication and HA
+    concepts; implement and recover InnoDB Cluster.
+    Other current MySQL exams (secondary source only, not targets): 1Z0-909 developer,
+    1Z0-922 Implementation Associate.
+    Sources: https://mylearn.oracle.com/ou/exam/mysql-database-administration-professional-1z0-918/51871/164064/275183
+    (client-side rendered: WebFetch returns an empty shell; use a real browser)
+    https://mylearn.oracle.com/ou/exam/mysql-80-database-administrator-1z0-908/51871/110678/170386 (now "not found")
+    Lead only: https://dailydebian.com/blogs/it-certification-news/mysql-certification-2026-1z0-908-1z0-918-1z0-909
+    Target bar: the 1Z0-918 topics above, on MySQL 8.4 LTS (Oracle names no version;
+    8.4 is the current LTS, so Phase B should verify against 8.4 docs).
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: multiple
+    server instances, MySQL Enterprise Firewall, histograms/ANALYZE TABLE (index
+    statistics), EXPLAIN ANALYZE/optimizer trace, data masking, connection control,
+    InnoDB ClusterSet, SET PERSIST, data dictionary. Thin: redo/undo logs (3 each),
+    InnoDB Cluster (3), MySQL Router/Shell (3 each), Group Replication (4), roles (4),
+    sys schema (4), audit (4; Enterprise Audit 2), EXPLAIN (5), GTID (5), keyring/TDE
+    (1), clone plugin (1), MySQL Enterprise Backup (2), partitioning (1). Phase B
+    should: pick 8.4 LTS as the baseline and split MariaDB out (it diverges on
+    auth, replication and clustering); add an InnoDB internals page (buffer pool, redo/
+    undo, doublewrite, tablespaces); a query-optimization page (EXPLAIN/EXPLAIN ANALYZE,
+    index design, histograms); an Enterprise security page (Firewall, Audit, TDE/
+    keyring, masking, connection control, password validation); an InnoDB Cluster /
+    ClusterSet / Router / Shell lab; a backup-strategy page (mysqldump vs MEB vs clone
+    vs snapshots, PITR with binlogs); multiple-instance operation.
+  - site_audit (2026-11-25): 70/70 clean (full run). This item only edited this queue file.
 - [ ] compute/linux/postgresql
 - [ ] compute/windows-server
 - [ ] compute/windows-server/active-directory
