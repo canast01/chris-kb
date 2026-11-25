@@ -305,7 +305,58 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     Readiverse (logged in) for real objectives before Phase B starts.
   - site_audit (2026-11-24): 70/70 clean (full run, no exceptions). This run only
     edited this queue file.
-- [ ] backup/products/netbackup
+- [x] backup/products/netbackup
+  - Audit (2026-11-25): 27 pages, ~4,160 lines in the standard 5 sections plus a
+    learning path. It is strong on classic operations: three-tier topology, ports,
+    MSDP (73 mentions), catalog backup/recovery, bpexpdate, VxUL logs, nbsu, error
+    codes, DD Boost. It is branded Veritas throughout (0 mentions of Cohesity, which
+    has owned NetBackup since Dec 2024). No exam-blueprint content yet.
+  - Cert research (2026-11-25): A real, named, published cert exists: **Cohesity
+    Certified Protection Professional - NetBackup, exam COH-284** (the URL slug still
+    says vcs-284). 105 min, $200, 65% pass mark, valid 2 yrs, retake every 14 days,
+    no prerequisites, proctored onsite or remote, 9 months' experience recommended.
+    Recommended courses: NetBackup 11.0: Administration (5 days) and NetBackup 10.0:
+    Advanced Administration (5 days). A sibling exam, **CCPP - NetBackup and NetBackup
+    Appliances** (COH-285), is the superset. There is no Expert/Architect NetBackup
+    tier. Cohesity's top tier is Security Specialist (CCSS), which covers Cohesity's
+    own platform, not NetBackup.
+    Domains (official prep guide 1000108-001-EN, dated 9-2025):
+    **S1 Configure (31%)**: primary/media/client host properties incl. security
+    certificates; disk, cloud storage and storage unit groups; backup policies and
+    protection plans; synthetic backups, TIR, multiple data streams, checkpoint
+    restart, disk staging, SLPs, AIR, Isolated Recovery Environment, Accelerator;
+    dedup options (media-server and client-side dedup, optimized duplication, KMS,
+    MSDP Cloud, WORM, Universal Shares, Snapshot Manager, storage servers); catalog
+    backup config.
+    **S2 Monitor and Maintain (36%)**: image management (verify, expire, import,
+    manual duplicate); disk and cloud storage management; reports; job control
+    (prioritize, cancel, suspend, resume, restart, retry); restores; security (RBAC,
+    host ID certs); updates via VxUpdate; Anomaly and Malware Detection.
+    **S3 Tune (10%)**: analyze, optimize and tune NetBackup.
+    **S4 Troubleshoot (23%)**: status codes and job details; devices and media, plus
+    primary/media/client connectivity; DR issues incl. catalog recovery.
+    The experience list also covers appliances (CLISH, Appliance Web Console, AMS),
+    NetBackup for VMware and Snapshot Manager. The sample questions show how deep it
+    goes: exact paths (anomaly_detection folder), SLP defaults
+    (SLP.MIN_SIZE_PER_REPLICATION_JOB), client-side dedup attribute combinations,
+    stream math, status 96/2111, frozen tapes via bptm, default RBAC roles.
+    Sources (primary, read in a real browser because cohesity.com returns 403 to
+    plain fetches): https://www.cohesity.com/academy/certification/exam-vcs-284/
+    https://www.cohesity.com/content/dam/cohesity/resource-assets/datasheets/ccpp-netbackup-certification-exam-preparation-guide-en.pdf
+    https://www.cohesity.com/academy/certification/
+    Target bar: COH-284 domains, plus the COH-285 appliance extras (CLISH, AMS).
+  - Gap vs blueprint: the catalog, MSDP, logs and status-code basics are covered.
+    Zero coverage: protection plans, synthetic backups, TIR, multiple data streams
+    (and the stream/job math), checkpoint restart, disk staging, IRE, client-side
+    dedup, optimized duplication, WORM/immutability, Universal Shares, Snapshot
+    Manager, bpduplicate/manual duplication, VxUpdate, Anomaly Detection, CLISH, Smart
+    Meter, deployment policies. Thin (1-3 mentions): host properties, SLPs (1!),
+    storage unit groups, RBAC, malware scan, multiplexing, VMware transport modes,
+    tuning (buffers), Accelerator, KMS, volume pools/scratch, tape daemons
+    (bptm/vmd/ltid). Phase B should rebrand Veritas to Cohesity, and add a
+    "policies and SLPs" deep-dive (S1 is the core), a job-control and image-management
+    page, a security page (RBAC, certs, anomaly/malware, WORM, IRE), a tuning page and
+    an appliances page.
 - [ ] backup/products/veeam
 
 ### Cloud
