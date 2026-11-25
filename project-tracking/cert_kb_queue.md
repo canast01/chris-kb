@@ -549,10 +549,127 @@ community standard). Research via WebSearch, verify, don't assume from memory.
   - site_audit (2026-11-25): 70/70 clean (same full run as cloud/aws; docs/ unchanged by
     either item). The 3 accuracy bugs are content errors for Phase B, not audit-detectable
     structure bugs.
-- [ ] cloud/azure
+- [x] cloud/azure
+  - Audit (2026-11-25): 125 pages, ~37,200 lines (the biggest cloud section): architecture,
+    compute, storage, networking, identity, governance, security, monitoring, backup-dr,
+    cost, deploy, operations, cli-reference, troubleshooting, learning path. "Applies to"
+    is written 5 ways (119 say just "Azure"). Strong on RBAC (63 pages), Entra ID (37),
+    storage accounts (43), NSGs (32), Key Vault (32), Azure Monitor/Log Analytics (28/27),
+    Recovery Services/Backup vaults (23), AKS (23), App Service (22), ExpressRoute (17),
+    management groups (17), Azure Policy/Private Endpoint/Load Balancer (15 each). No
+    exam-blueprint content.
+  - Cert research (2026-11-25): Microsoft has a full role-based ladder, so this section
+    needs a chosen target. Target: **Exam AZ-104: Microsoft Azure Administrator**, which
+    earns **Microsoft Certified: Azure Administrator Associate**. It matches this KB's
+    implement/manage/monitor focus. Format (Microsoft Learn, verified via the official
+    study guide and exam-duration pages): pass 700 (scale to 1,000); associate role-based
+    exams are 100 min (120 min seat), or 120/140 min if labs are included, and Microsoft
+    does not say which exams have labs; "most exams typically contain between 40-60
+    questions"; certification renews every 12 months via a free online assessment. Price
+    varies by country (not verified here). Skills measured as of **April 17, 2026**
+    (current version; the change log shows only minor edits from the prior version):
+    **Manage Azure identities and governance (20-25%)**: Entra users and groups (licenses,
+    external users, SSPR); access to Azure resources (built-in roles, scopes, interpreting
+    assignments); subscriptions and governance (Azure Policy, resource locks, tags,
+    resource groups, subscriptions, cost alerts/budgets/Advisor, management groups).
+    **Implement and manage storage (15-20%)**: storage access (firewalls and VNets, SAS,
+    stored access policies, access keys, identity-based access for Azure Files); storage
+    accounts (redundancy, object replication, encryption, Storage Explorer and AzCopy);
+    Azure Files and Blob (file shares, containers, tiers, soft delete, Files snapshots,
+    lifecycle management, versioning).
+    **Deploy and manage Azure compute resources (20-25%)**: ARM/Bicep (interpret, modify,
+    deploy, export, convert); VMs (encryption at host, move across RG/sub/region, sizes,
+    disks, zones and availability sets, VM Scale Sets); containers (ACR, ACI, Container
+    Apps, sizing and scaling); App Service (plans, scaling, TLS/certs, custom DNS, backup,
+    networking, deployment slots).
+    **Implement and manage virtual networking (15-20%)**: VNets/subnets, peering, public
+    IPs, UDRs, troubleshoot connectivity; NSGs and ASGs, effective security rules, Bastion,
+    service endpoints, private endpoints; Azure DNS, internal/public load balancer,
+    troubleshoot load balancing.
+    **Monitor and maintain Azure resources (10-15%)**: metrics, log settings, log queries,
+    alert rules/action groups/alert processing rules, Monitor Insights, Network Watcher
+    and Connection Monitor; Recovery Services vault, Backup vault, backup policies,
+    backup/restore, Site Recovery config and failover, backup reports and alerts.
+    Next tier up, for later: AZ-305 (Azure Solutions Architect Expert), which requires
+    AZ-104.
+    Sources (primary, vendor): https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-104
+    https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/
+    https://learn.microsoft.com/en-us/credentials/support/exam-duration-exam-experience
+    Target bar: the AZ-104 skills measured above.
+  - Gap vs blueprint (pages mentioning each term, out of 125): Zero coverage: AzCopy,
+    Storage Explorer, object replication, stored access policies, encryption at host,
+    App Service deployment slots, Container Apps. Thin: ARM/Bicep (4; the whole ARM/Bicep
+    skill group is a real gap: interpret/modify/export/convert), external users/B2B (2),
+    Entra licensing (2), SAS (6), storage firewalls (2), Azure Files (9), availability
+    sets/zones (7 each), ACI (2), application security groups (1), Bastion (2),
+    Connection Monitor (1), alert processing rules (1), Monitor Insights (3), effective
+    rules/routes (5), UDRs (7). Phase B should add an ARM/Bicep page (read, modify,
+    deploy, export, decompile), a storage data-tools and data-protection page (AzCopy,
+    Storage Explorer, SAS vs stored access policy, object replication, versioning, soft
+    delete), a containers page (ACR/ACI/Container Apps), App Service slots/TLS/custom
+    domains, VM placement and moves (zones vs sets, encryption at host, move RG/sub/
+    region), and fill Bastion/ASG/Connection Monitor/alert processing rules into the
+    existing networking and monitoring pages.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered cloud/azure and
+    compute/linux since neither touched docs/). This item only edited this queue file.
 
 ### Compute
-- [ ] compute/linux
+- [x] compute/linux
+  - Audit (2026-11-25): 34 pages, ~12,900 lines (mysql/ and postgresql/ sub-sections
+    excluded; they have their own queue items): architecture, deploy, operations,
+    security, troubleshooting, directory-integration, learning path. Written
+    distro-neutral: "RHEL / Ubuntu LTS" (15 pages), "RHEL 8.x/9.x, Ubuntu 22.04/24.04"
+    (6). **No page mentions RHEL 10.** Strong on systemd (31), dnf/yum (26), sudo (25),
+    kernel (25), journalctl (19), SELinux concepts (16). Operationally focused; no
+    exam-blueprint content.
+  - Cert research (2026-11-25): Target: **Red Hat Certified System Administrator (RHCSA),
+    exam EX200**, the standard vendor Linux admin cert. Per the official exam page
+    (redhat.com, fetched 2026-11-25): "based on Red Hat Enterprise Linux 10";
+    performance-based (hands-on tasks on live systems; configs "must persist after reboot
+    without intervention"); no internet; product docs available. Prep: RH124 + RH134, or
+    RH199 Rapid Track. Next step up: RHCE (EX294, Ansible; see automation/ansible).
+    Duration, passing score and price are not on the exam page (not verified here). Red
+    Hat's FAQ says the May 2026 framework changes did not change exam content,
+    objectives, price or proctoring. A community thread says the RHEL 9 vs 10 version is
+    chosen at scheduling (unofficial).
+    Objectives (10 groups, 70 bullets, official page, paraphrased): **(1) essential
+    tools** (shell syntax, redirection, grep/regex, SSH, switching users, tar/gzip/bzip2,
+    editing files, file ops, hard/soft links, ugo/rwx, man/info/usr-share-doc);
+    **(2) software** (RPM repos and packages, **Flatpak** repos and packages);
+    **(3) simple shell scripts** (if/test/[], loops, $1.., command output);
+    **(4) operate running systems** (boot/reboot/shutdown, boot into targets, interrupt
+    boot to gain access, find and kill heavy processes, scheduling priority, **tuning
+    profiles**, logs and journals, persistent journal, network services, secure file
+    transfer); **(5) local storage** (GPT partitions, PVs/VGs/LVs, mount by UUID/label,
+    non-destructive add of partitions/LVs/swap); **(6) file systems** (VFAT/ext4/XFS,
+    NFS, autofs, extend LVs, fix permission problems); **(7) deploy/maintain** (at, cron,
+    systemd timers, services at boot, default target, time client, packages from CDN/
+    remote repo/local file, bootloader); **(8) networking** (IPv4/IPv6, hostname
+    resolution, services at boot, firewalld); **(9) users and groups** (users, password
+    aging, groups, privileged access); **(10) security** (firewalld, default
+    permissions/umask, SSH keys, SELinux modes, contexts, restore contexts, port labels,
+    booleans). Note: containers/podman are not in the RHEL 10 objectives.
+    Secondary, distro-neutral, noted for the Ubuntu side: **LFCS** (Linux Foundation):
+    online proctored performance-based, 2 h, valid 2 yrs, $445; domains Operations
+    Deployment 25%, Networking 25%, Storage 20%, Essential Commands 20%, Users and
+    Groups 10%; no distro named.
+    Sources: https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam
+    https://www.redhat.com/en/services/training-and-certification/faq
+    https://training.linuxfoundation.org/certification/linux-foundation-certified-sysadmin-lfcs/
+    Target bar: the EX200 (RHEL 10) objectives above.
+  - Gap vs blueprint (pages mentioning each term, out of 34): Zero coverage: RHEL 10,
+    Flatpak, tuned/tuning profiles, `at` scheduling, VFAT, ACLs (setfacl), SELinux port
+    labels, VDO (no longer in objectives, fine). Thin: systemd timers (1), autofs (1),
+    semanage/restorecon (1), SELinux booleans (1), shell scripting (1 page with a bash
+    script tutorial angle), podman (1, not needed), GPT partitioning (2), umask (2),
+    IPv6 (2), man/usr-share-doc (2), NFS client (6), firewalld (9), nmcli (7). Phase B
+    should do a RHEL 10 pass first, then add: shell scripting fundamentals, a storage
+    lab page (GPT -> PV/VG/LV -> fs -> fstab by UUID -> extend -> swap), SELinux
+    hands-on (contexts, restorecon, semanage port, booleans), scheduling (at/cron/
+    timers), boot targets and root password recovery, software (dnf repos + Flatpak),
+    tuned, and an exam-style "persist across reboot" checklist on each task page.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered cloud/azure and
+    compute/linux since neither touched docs/). This item only edited this queue file.
 - [ ] compute/linux/mysql
 - [ ] compute/linux/postgresql
 - [ ] compute/windows-server
