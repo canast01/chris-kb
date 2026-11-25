@@ -489,7 +489,66 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     (CloudFront, WAF, Shield), hybrid storage/migration (Storage Gateway, DataSync, Snow,
     DMS, Transfer Family), a storage-class/cost decision page, and a Well-Architected
     framing on the learning path.
-- [ ] cloud/aws/evs
+  - site_audit (2026-11-25): 70/70 clean (full run). This item only edited this queue file.
+- [x] cloud/aws/evs
+  - Audit (2026-11-25): 27 pages, ~8,580 lines: architecture (how-it-works, design
+    standards, integrations, ports), deploy, operations (procedures, health checks,
+    backup-restore, install-upgrade, CLI, scripts, FAQ), security (4 pages),
+    troubleshooting (5 pages), learning path, release notes. "Applies to" is written
+    5 different ways (normalise in Phase B). The whole section is written for VCF
+    5.2.1 on i4i.metal (EVS's GA state). Strong on HCX migration (18 pages), Direct
+    Connect/Transit Gateway connectivity (12), NSX/vSAN basics, SDDC Manager.
+    **Accuracy bugs found (fix in Phase B):** `operations/install-upgrade.md:290-292`
+    lists VCF 5.1, 5.0 and 4.5 as EVS versions; EVS never supported them (GA was
+    5.2.1). `troubleshooting/escalation.md:122-125` and `operations/cli-reference.md:
+    276-278` show EVS hosts as m5.2xlarge/r5.2xlarge; EVS hosts are bare-metal only.
+  - Product state (AWS What's New, verified 2026-11-25): GA 2025-08-05 with VCF 5.2.1
+    on i4i.metal in 6 regions, "license portability entitlement" (bring your own VCF
+    subscription), on-demand/1-yr/3-yr. 2026-01: VCF and ESX version selection (5.2.2
+    added). 2026-07-06: VCF 9.0 and 9.1 supported in all EVS regions; the customer has
+    "complete control of the installation, operations, and management", with a
+    Solutions-for-EVS GitHub repo. 2026-11-17: r7i.metal-24xl/-48xl for VCF 9.x; these
+    have no local NVMe, so EVS added VCF external principal storage (FSx for NetApp
+    ONTAP); the EVS Deployment Orchestrator (EDO) automates end-to-end VCF 9.x deploy.
+    KB coverage of all of this: zero (no VCF 9, r7i, EDO, licensing portability).
+  - Cert research (2026-11-25): **No AWS or Broadcom certification exists for EVS
+    itself** (searched AWS What's New, the EVS product page and AWS T&C; nothing found).
+    EVS = AWS infrastructure + customer-operated VCF, so the expert bar is the VCF exam.
+    Target: **VMware Cloud Foundation 9.0 Administrator (2V0-17.25)**, credential
+    **VCP-VCF Administrator**. Format (official Broadcom exam guide, Nov 2026, read in
+    full): 60 items, scaled, pass 300, 135-min appointment, proctored via Pearson VUE.
+    Recommended courses: VCF: Build, Manage, and Secure; VCF: Automation and Operations.
+    MQC: 1 yr IT + 6 months VCF, foundational Kubernetes, DNS/NTP/certs. Sections 1, 3
+    and 5 have NO testable objectives; no weightings published. Testable objectives:
+    **2.1** Modern private cloud vision; **2.2** compute (vCenter/ESX deploy, clusters,
+    VMs); **2.3** storage (vSAN ESA vs OSA, deploy, storage policies, resilience, space
+    efficiency); **2.4** networking (VCF networking components, fabrics, connectivity
+    and routing, services); **2.5** vSphere Supervisor / VKS. **4.1** deploy and
+    configure (deployment models, VCF Network Gateway, workload domains, WLD storage,
+    Supervisor); **4.2** manage (Fleet Management, Identity/RBAC, license, certificate,
+    password management, vCenter import, lifecycle); **4.3** operations (VCF Operations
+    views/reports/dashboards/alerts/policies, logs, Health and Diagnostics, network and
+    storage operations, compliance, drift); **4.4** VCF Automation (regions, multi-org
+    tenancy, provider networking, content library, org governance, extensibility,
+    Supervisor services).
+    Sources: https://docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide
+    https://aws.amazon.com/about-aws/whats-new/2025/08/aws-general-availability-amazon-elastic-evs
+    https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-evs-vcf9/
+    https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-evs-r7i-agent-skill-support/
+    Target bar: 2V0-17.25 objectives, plus the AWS-side networking/connectivity
+    knowledge from SAA-C03 D1/D3 (see cloud/aws above).
+  - Gap vs blueprint: The exam body overlaps almost entirely with
+    `virtualization/vmware/products/vmware-cloud-foundation` (its own queue item, same
+    target). Phase B for EVS should NOT duplicate that; it should (1) do a VCF 9 pass on
+    the EVS pages (versions, r7i + FSx ONTAP external storage, EDO, who installs what,
+    licensing portability) and fix the 3 accuracy bugs above; (2) cover the EVS-specific
+    delta: VPC/VLAN-subnet underlay, Route Server, host/instance sizing, AWS-side
+    shared responsibility; (3) link each 2V0-17.25 objective to the VCF section's
+    pages. Zero EVS coverage today of VCF Operations, Fleet Management, VCF Automation,
+    Identity Broker; 1 page mentions Supervisor/Kubernetes.
+  - site_audit (2026-11-25): 70/70 clean (same full run as cloud/aws; docs/ unchanged by
+    either item). The 3 accuracy bugs are content errors for Phase B, not audit-detectable
+    structure bugs.
 - [ ] cloud/azure
 
 ### Compute
