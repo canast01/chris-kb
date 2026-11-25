@@ -357,6 +357,8 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     "policies and SLPs" deep-dive (S1 is the core), a job-control and image-management
     page, a security page (RBAC, certs, anomaly/malware, WORM, IRE), a tuning page and
     an appliances page.
+  - site_audit (2026-11-25): 70/70 clean (full run, no exceptions). This run only
+    edited this queue file.
 - [ ] backup/products/veeam
 
 ### Cloud
