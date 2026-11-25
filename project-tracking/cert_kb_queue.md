@@ -303,6 +303,8 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     should first reframe procedures from storage policies to plans, then add a
     "cyber resilience" subsection and per-workload protection pages. Recheck
     Readiverse (logged in) for real objectives before Phase B starts.
+  - site_audit (2026-11-24): 70/70 clean (full run, no exceptions). This run only
+    edited this queue file.
 - [ ] backup/products/netbackup
 - [ ] backup/products/veeam
 
