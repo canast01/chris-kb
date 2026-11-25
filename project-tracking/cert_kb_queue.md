@@ -359,7 +359,73 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     an appliances page.
   - site_audit (2026-11-25): 70/70 clean (full run, no exceptions). This run only
     edited this queue file.
-- [ ] backup/products/veeam
+- [x] backup/products/veeam
+  - Audit (2026-11-25): 28 pages, ~3,360 lines in the standard 5 sections plus a
+    learning path, release notes and FAQ. Pages say "Applies to: Veeam Backup &
+    Replication 12.x" (1 mention of v13). It is strong on VBR VMware basics: deploy
+    walkthrough (proxies, transport modes, repos, first job), SOBR/capacity tier,
+    S3 Object Lock and the hardened Linux repo, SureBackup/virtual labs, Instant VM
+    Recovery, CBT reset, logs and support bundle, escalation. No exam-blueprint
+    content yet. The release-notes table has dates that look wrong (it lists 12.1 as
+    2024-Q1 and 11.0 as 2021-Q2; 12.1 shipped Dec 2023 and v11 shipped Feb 2021).
+    Re-verify those dates in Phase B.
+  - Cert research (2026-11-25): A real, named, published cert exists: **Veeam
+    Certified Engineer Plus (VMCE+) v13**. The exam spec says it "aligns to Veeam
+    Data Platform 13 capabilities" and covers VBR, Veeam ONE and Veeam Recovery
+    Orchestrator. Veeam's FAQ says the old VMCE (v12) and VMCA are retired. A
+    community announcement says VMCE+ was released 2026-06-01. Format: 100
+    multiple-choice items, all scored; 150 min (+30 min for non-native English
+    speakers); scaled score 300-900 with a 724 pass mark; English (US) only; taken
+    through Pearson Professional Assessments at a test center or online. Credentials
+    do not expire. Retakes wait 24 h after the 1st fail and 14 days after attempts
+    2-4, with a 12-month wait after attempts 5 and 9. You must first complete 3
+    courses: VBR: Configure, Manage and Recover; Veeam Data Platform: Monitor,
+    Manage, Analyze (Veeam ONE); and Veeam Data Platform: Scale, Automate, Secure
+    (Recovery Orchestrator). The spec recommends 2+ years of hands-on experience.
+    The next tier up is **Veeam Certified Security Expert (VMCSE)**, which needs
+    VMCE+ plus the Enterprise Data Security course. The vendor page still says
+    "coming soon" and one community thread claims a pass, so its status is
+    unconfirmed and it is not the target here.
+    Domains (official exam spec PDF, dated 5.20.2026; blueprint from a JTA by Alpine
+    Testing Solutions):
+    **Fundamentals, Strategy, and Design (14%)**: RPO/RTO, transport modes, ports,
+    permission requirements; workload protection requirements; design to business
+    requirements.
+    **Deployment, Configuration, and Security (20%)**: hardened backup
+    infrastructure; deploy components; initial security config; initial system
+    config; secure, reliable backup infrastructure.
+    **Data Protection and Maintenance (26%)**: VM backup and replication jobs;
+    NAS/unstructured data and offsite copies; physical workloads, cloud machines,
+    enterprise plug-ins; plan and maintain infrastructure; platform maintenance.
+    **Recovery and Verification (15%)**: perform and validate restores; app-item
+    restores with Veeam Explorer; SureBackup.
+    **Analytics, Monitoring, and Observability (13%)**: monitor and resolve backup
+    ops; environment health and remediation; reports; dashboards and alarms (Veeam
+    ONE).
+    **Orchestration and DR (10%)**: configure Recovery Orchestrator; recovery plans;
+    Orchestrator reports; DataLabs verification.
+    The weights in Veeam's own PDF add up to 98%, not 100%. That is copied exactly,
+    not a typo here.
+    Sources (primary, vendor): https://www.veeam.com/veeam_certified_engineer_plus_v13_exam_guide_ds.pdf
+    https://www.veeam.com/vmce-certification.html
+    https://www.veeam.com/support/training/vmce-training-faq.html
+    Target bar: the VMCE+ v13 domains above.
+  - Gap vs blueprint: The KB is pinned to 12.x, but the exam is v13. Phase B needs a
+    v13 pass first (the Linux software appliance, what changed). Zero coverage:
+    Veeam Recovery Orchestrator (1 passing mention), recovery plans, Orchestrator
+    reports, NAS/unstructured backup (3 mentions), M365 and enterprise plug-ins
+    (Oracle RMAN/SAP), backup chain formats (forever forward / reverse incremental /
+    GFS, 1 mention), compact/defrag maintenance, Four-Eyes authorization, Secure
+    Restore / malware detection (1 mention), the gateway server, and Cloud Connect.
+    Thin: Veeam ONE dashboards (2) and reports, physical/agent workloads, cloud
+    machines, Veeam Explorer (5), permissions (1), mount server (1), WAN
+    accelerators (2), Archive Tier (1), CDP (3). Phase B should add a "backup
+    methods and job settings" deep-dive (D3 is the biggest), a Veeam ONE
+    monitoring and reporting page, a Recovery Orchestrator/DataLabs page, a
+    NAS/agents/plug-ins page, and fold Four-Eyes, MFA, malware detection and Secure
+    Restore into security.
+  - site_audit (2026-11-25): 70/70 clean (full run, no exceptions). This run only
+    edited this queue file.
 
 ### Cloud
 - [ ] cloud/aws
