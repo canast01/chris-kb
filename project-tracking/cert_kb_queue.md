@@ -3988,20 +3988,1074 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     browser access to netapp.com).
   - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
     items). Queue file only.
-- [ ] storage/products/netapp/snapmirror
-- [ ] storage/products/netapp/superna-eyeglass
+- [x] storage/products/netapp/snapmirror
+  - Audit (2026-11-25): 28 pages, 6,253 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" on 27/28,
+    all generic ("SnapMirror" x21, "ONTAP 9.x" variants x6); none pins a release.
+    Version mentions: 9.12 x5, 9.10 x4, 9.6 x3, 9.13.1 x3, 9.8 x2, 9.14 x2; zero
+    mentions of 9.15.1+, 9.18.1 (NS0-165 basis) or 9.20.1 (current). Uses the old
+    name SM-BC/SMBC; "active sync" on only 2/28 pages.
+    CLI stems checked against docs.netapp.com/us-en/ontap-cli (200 = real).
+    The 404s (command doesn't exist):
+    `snapmirror history show` deploy/index.md:520, operations/health-checks.md:76,
+    operations/procedures.md:61 (the real command is `snapmirror show-history`);
+    `snapmirror status` operations/cli-reference.md:34;
+    `snapmirror schedule show` operations/cli-reference.md:314;
+    `snapmirror reverse-resync` learning-path/index.md:64;
+    `snapmirror show summary` troubleshooting/diagnostics.md:384,403;
+    `snapmirror cloud target modify` troubleshooting/known-issues.md:66;
+    `security token create|show|delete` security/authentication.md:282,289,292;
+    `security key-manager setup` security/encryption.md:183 (the real command is
+    `security key-manager onboard enable`);
+    `volume encryption show` security/encryption.md:225,243.
+    Parameters that don't exist on real commands:
+    `snapmirror create|modify -encryption-algorithm aes-256` and "SnapMirror TDE"
+    security/encryption.md:10,41,50,78,279,312 (neither command page has an
+    encryption parameter; in-flight encryption is set on the cluster peer:
+    `cluster peer modify -encryption-protocol-proposed tls-psk`);
+    `-max-transfer-rate` operations/faq.md:31, operations/cli-reference.md:121
+    (the real parameter is `-throttle`, in KB/s);
+    `snapmirror modify -compression true` operations/faq.md:47 (compression is
+    set on the policy: `snapmirror policy ... -is-network-compression-enabled`);
+    `security config modify -min-protocol-version` security/encryption.md:315
+    (the real parameter is `-supported-protocols`).
+    Wrong facts:
+    the SM-S and SMBC "<5ms RTT" limit at architecture/how-it-works.md:57,93,94
+    is wrong (docs say SM-S works where latency doesn't exceed 10 ms; active
+    sync needs RTT under 10 ms);
+    "-type StrictSync/Sync" at architecture/design-standards.md:44 is wrong (sync
+    relationships are type XDP; Sync and StrictSync are policy names, of type
+    sync-mirror and strict-sync-mirror);
+    "ONTAP 9.12+ defaults to XDP" at deploy/index.md:255 is wrong (XDP is already
+    the CLI default, and 9.12.1+ doesn't support DP-type relationships at all, so
+    they must be converted before upgrading);
+    "snapmirror create auto-creates the destination" at deploy/index.md:91 is
+    wrong (you create the destination yourself; `snapmirror protect` is the
+    command that creates destinations);
+    "MirrorLatest gives a tighter RPO" at deploy/index.md:308 is wrong (the
+    policy picks which snapshots are sent; the schedule sets RPO);
+    port 11104 "between cluster management IPs" at deploy/index.md:248 is wrong
+    (11104 and 11105 are TCP between intercluster LIFs);
+    "UDP 11104-11105" at troubleshooting/diagnostics.md:253 is wrong (TCP);
+    "Encryption not supported with MirrorAllSnapshots" at
+    security/encryption.md:108 is invented;
+    "destination must be equal or newer ONTAP" at operations/install-upgrade.md:29
+    is wrong (the XDP interop matrix is bidirectional);
+    "remove -schedule when creating XDP" at operations/cli-reference.md:153 is
+    wrong (`-schedule` is a valid `snapmirror create` parameter);
+    SnapMirror Cloud "ONTAP 9.12+" via the "cluster management LIF" at
+    troubleshooting/known-issues.md:65 and architecture/ports.md:43 is wrong
+    (the feature arrived in ONTAP 9.8; NetApp search snippets say it uses
+    intercluster LIFs, but I did not fetch that page).
+    The lag EMS event has three different names: snapmirror.lag.warn
+    (design-standards.md:46), .warning (troubleshooting/escalation.md:236) and
+    .threshold (escalation.md:425). None is verified.
+    release-notes.md is template-generated and is not evidence.
+  - Cert research (2026-11-25): Uses the NCDA facts the coordinator verified:
+    the exam is NS0-165 on ONTAP 9.18.1, and the Data Protection domain covers
+    DP, business continuity and troubleshooting. The next tier is NCIE Data
+    Protection Specialist (replication and DR skills). Topics confirmed from the
+    ONTAP data-protection docs:
+    - Policy types (`snapmirror policy create -type`): async-mirror, vault,
+      mirror-vault, sync-mirror, strict-sync-mirror, automated-failover,
+      automated-failover-duplex and continuous. DP relationships support only
+      async-mirror.
+    - The default policy for XDP FlexVol relationships is MirrorAndVault
+      (MirrorAllSnapshots when DP is specified). MirrorAndVault has rules
+      sm_created 1, daily 7 and weekly 52; Unified7year adds monthly 84.
+      XDPDefault is a vault policy (daily and weekly). The doc lists 19 default
+      policies (Asynchronous, AutomatedFailOver[Duplex], CloudBackupDefault,
+      Continuous, DailyBackup, DPDefault, MirrorAllSnapshots[DiscardNetwork],
+      MirrorAndVault[DiscardNetwork], MirrorLatest, SnapCenterSync, StrictSync,
+      Sync, Unified7year, XDPDefault).
+    - Tries defaults to 8 and network compression defaults to false.
+    - One SnapMirror license covers mirror and vault (9.3+). SM-S needs its own
+      license on both clusters (ONTAP One). SnapMirror Cloud needs a Cloud
+      license plus the async license.
+    - SM-S (9.5+): Sync mode vs StrictSync mode (StrictSync fails I/O when
+      OutOfSync), InSync/OutofSync with auto-resync, 10 ms latency. Limits per HA
+      pair in 9.20.1: AFF 600, ASA 400, FAS 80, Select 40 (9.11.1 to 9.19.1: AFF
+      400). Not supported: consistency groups, FlexGroup, MetroCluster, SnapLock
+      and others.
+    - Fan-out and cascade: any mix of DR, vault and unified. Only one sync leg is
+      allowed in a fan-out (9.5+). A sync cascade (9.6+) must be async after the
+      first hop. Long-term retention snapshots are allowed only on the last
+      cascade hop.
+    - SVM DR: `-identity-preserve` and `-discard-configs network`. Fan-out goes
+      to 2 destinations at most (9.4+). SVM DR isn't version-independent.
+    - Active sync (SM-BC before 9.15.1): AFF, ASA and ASA r2, with SAN on CGs and
+      NAS on SVMs (9.19.1). Needs ONTAP Mediator 1.2+ in a third failure domain,
+      or the Cloud Mediator (9.17.1+). RTT must be under 10 ms. Ports: 3260,
+      11104, 11105 and 443 between intercluster LIFs.
+    - Peering encryption: TLS-PSK is on by default for new peers from 9.6.
+    - SnapMirror S3 (9.10.1+). SnapMirror Cloud (9.8+).
+    Sources (primary, vendor): docs.netapp.com/us-en/ontap/data-protection/
+    {supported-deployment-config-concept, snapmirror-synchronous-disaster-recovery-
+    basics-concept, compatible-ontap-versions-snapmirror-concept,
+    snapmirror-unified-replication-concept, snapmirror-svm-replication-concept,
+    snapmirror-licensing-concept, convert-snapmirror-version-flexible-task,
+    default-protection-policies-concept}.html; .../ontap/snapmirror-active-sync/
+    {index, prerequisites-reference, network-port-requirements}.html;
+    .../ontap/networking/ontap_port_usage_on_a_storage_system_overview.html;
+    .../ontap/peering/{index, enable-cluster-peering-encryption-existing-task}.html;
+    .../ontap/concepts/snapmirror-cloud-backups-object-store-concept.html;
+    .../ontap/s3-snapmirror/index.html; docs.netapp.com/us-en/ontap-cli/
+    {snapmirror-create, snapmirror-modify, snapmirror-show, snapmirror-policy-
+    create, snapmirror-protect, cluster-peer-create, security-config-modify}.html
+    plus 70 stem URL checks (200/404)
+    Target bar: NS0-165 Data Protection domain plus NCIE-DP replication and DR,
+    at the depth of the ONTAP 9.18.1/9.20.1 data-protection docs.
+  - Gap vs blueprint (pages mentioning each term, out of 28): Zero coverage:
+    mirror-vault, Unified7year, unified replication, identity-preserve,
+    version-flexible, DP->XDP conversion, tls-psk peer encryption,
+    `snapmirror release`, SnapMirror S3, load-sharing mirrors, ARP with
+    SnapMirror, SM-S per-HA-pair limits, Cloud Mediator, active sync for NAS.
+    Thin: async-mirror 1, XDPDefault 1, cascade 1, fan-out 2, FlexGroup 1,
+    label/retention rules 1, `snapmirror restore` 1, network compression 2,
+    sync-mirror/StrictSync 2, active sync name 2, MirrorAndVault 3, throttle 4,
+    SnapMirror Cloud 4. Adequate: SVM DR 11, Mediator 12, cluster peer 13,
+    intercluster LIF 15, lag-time 15.
+    Phase B should: (1) fix or remove the 10 nonexistent stems and the 4 invented
+    parameters, and rewrite security/encryption.md around cluster-peer TLS-PSK;
+    (2) fix the wrong facts listed in the audit (10 ms RTT, XDP and policy type
+    model, DP unsupported in 9.12.1+, TCP 11104/11105 between intercluster LIFs,
+    bidirectional version interop, Cloud 9.8 and intercluster LIF);
+    (3) add a policy-type and default-policy reference page with rules and keep
+    counts; add unified replication, fan-out/cascade rules, version-flexible
+    replication and DP->XDP conversion, SVM DR in depth (identity-preserve,
+    discard-configs, the 2-destination fan-out limit), SM-S Sync vs StrictSync
+    plus limits, active sync renamed from SMBC (CG, NAS, Mediator/Cloud
+    Mediator, AUFO, ports 3260 and 443), SnapMirror Cloud and S3, and
+    release/protect/restore workflows; (4) set "Applies to:" to ONTAP 9.18.1 and
+    9.20.1 and add an NS0-165 DP-domain exam-prep page.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/netapp/superna-eyeglass
+  - Audit (2026-11-25): 27 pages, 4,365 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" 21x
+    "Superna Eyeglass", 2x "2.x / 3.x for PowerScale (OneFS)", 1x "2.x", 2x
+    "NetApp ONTAP 9.x" (release-notes.md:8, operations/faq.md:10). MISFILED:
+    content is PowerScale DR (SyncIQ 19 pages/222 hits, PowerScale 19p, OneFS 15p,
+    Isilon 7p); NetApp hits (27p) are mostly the `netapp` tag/asset paths, ONTAP
+    7p, SnapMirror 2p. Section contradicts itself: index.md:4,9 says "NetApp
+    PowerScale"; learning-path/index.md:32-89 describes an ONTAP CIFS-audit
+    ransomware product; diagnostics.md:132 says "Contact NetApp support";
+    diagnostics.md:414-415 uses "netapp-cluster1" as SyncIQ clusters. Versions
+    inconsistent: "2.5.8/2.9.x" (faq.md:20, escalation.md:317) vs invented
+    "v5.8.2 / 5.2.1 / 5.4.2.1" (escalation.md:101,190,291,427; diagnostics.md:118;
+    backup-restore.md:132); release-notes.md table template-generated, unverified.
+    Invented CLI: ~100 `igls` lines across cli-reference.md (8), diagnostics.md (37),
+    escalation.md (46), backup-restore.md (6) use `igls synciq status`, `igls dr
+    readiness`, `igls config replication status`, `igls version`, `igls dfs status`,
+    `igls rapa status`, `igls failback list|run|status`, `igls clusters list`,
+    `igls license`, `igls backup restore`, `igls support bundle` - none exist in
+    Superna's CLI reference (real: `igls admin version|health|schedules`,
+    `igls adv ...`, `igls app restore`, `igls appliance report`, `igls rsw`,
+    `igls airgap`, `igls csm`). Invented ports: architecture/ports.md:24,42,72,90
+    put web UI on 8081 (Superna: 443, 80 redirect); ports.md:29,57 claim LDAP
+    636/389 + Kerberos 88 to AD (not in Superna table; AD auth proxied via SMB 445
+    to PowerScale); missing 2011-2014 websockets, 53/123/25, 9090/5514 ECA,
+    phone-home 443, ICMP. ports.md 8080 to PowerScale, 22, 111/2049 are correct.
+    Recommend move to storage/products/dell/superna-eyeglass/ (beside powerscale)
+    and rename title to "Superna Disaster Recovery Edition (Eyeglass) for
+    PowerScale"; drop ONTAP ransomware narrative (that is Data Security
+    Essentials for NetApp - separate product, could be a one-page stub under
+    netapp/ if wanted).
+  - Cert research (2026-11-25): No Superna certification exam found. superna.io
+    nav, /partners and /support pages contain no training/certification/academy
+    text; web searches found no Superna Academy or Superna exam (gated partner
+    portal content not verifiable). Product facts verified: current docs portal
+    docs.superna.io ("Cyberstorage for Dell", current 2.15.1, 2026-10-05; versions
+    2.8.0-2.15.1 listed); manuals.supernaeyeglass.com marked as moving/retiring.
+    Product = "Superna Disaster Recovery Edition (built on the Eyeglass platform)"
+    for Dell PowerScale OneFS + SyncIQ only (DR not supported on ECS; DR Edition
+    page names only Isilon/PowerScale). Sibling editions: Data Security Edition,
+    Data Orchestration Edition, Enterprise AirGap, Data Security Essentials (the
+    NetApp ONTAP offering: ransomware/audit, no DR). Separate "Superna 5.x"
+    next-gen platform doc set exists (no version detail). Adjacent vendor exam
+    (coordinator-verified): Dell D-PSC-DY-01 PowerScale Deploy - Install/Create
+    Cluster 14%, Configure Post-Install 62%, Monitor/Troubleshoot 12%, Enable Data
+    Protection 12% (SyncIQ/SnapshotIQ/SmartLock/CAVA) - only the SyncIQ slice
+    overlaps. Fallback bar = Superna DR for Dell 2.15.1 doc TOC: Prerequisites
+    (platform support, 4 vCPU/24 GB/198 GB appliance, scalability-to-RAM table,
+    SCA0094, <15 ms admin latency, ports), Design Guide (DFS / Access Zone-IP Pool
+    / per-SyncIQ-policy failover, 3-site), Installation + Upgrade (OVF/VHDX on
+    VMware/Hyper-V/Nutanix, add clusters, OneFS upgrade procedure), Configuration
+    Guide, Failover Guide, Readiness Guide (30+ validations, LiveOps), Integration
+    Guide, API Guide (autonomous failover patterns), User Help/Use Cases (rehearsal,
+    failback, recovery), Reference (CLI, compliance, advisories).
+    Sources (primary, vendor): https://docs.superna.io/ ;
+    https://docs.superna.io/dellcyber/disasterrecovery/ (+ /configuration/,
+    /prerequisites/, /reference/, /user_help/, /installation_guide/,
+    /reference/cli_guide/) ; https://docs.superna.io/dellcyber/ ;
+    https://docs.superna.io/superna5x ; https://docs.superna.io/whatsnew ;
+    https://docs.superna.io/whatsnew/dellcyber-2151 ;
+    https://manuals.supernaeyeglass.com/project-eyeglass-administration-guides/HTML/eyeglass-cli-commands.html ;
+    https://manuals.supernaeyeglass.com/project-eyeglass-administration-guides/HTML/eyeglass-ports-requirements-and-scalability-limits.html ;
+    https://superna.io/ ; https://superna.io/superna-disaster-recovery-edition ;
+    https://superna.io/netapp ; https://superna.io/partners ;
+    https://superna.io/become-a-partner ; https://superna.io/support
+    Target bar: No Superna exam; expert = can design, deploy, operate and execute
+    every failover type in Superna DR Edition 2.15.x docs, plus D-PSC-DY-01 SyncIQ.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    Failover Wizard, SPN, dual DNS delegation, Easy Auditor, AirGap, Runbook Robot,
+    LiveOps, Hot/Hot-Hot/Cold, 3-site/multi-site, CSM, SCA0094, phone home,
+    Hyper-V, Nutanix, `igls admin health`, `igls app restore`, "Disaster Recovery
+    Edition" name, Data Security Edition. Thin: DFS 3, Access Zone 6, failback 4,
+    reverse replication/reprotect 1, ECA 1, Ransomware Defender 2, REST API 4,
+    pre/post-failover scripts 2, OVF/OVA 6, rehearsal/DR test 6, SmartConnect 8.
+    OK-ish: SyncIQ 19, readiness 13, config replication 11, quota 12.
+    Phase B should: (1) move section to storage/products/dell/superna-eyeglass/
+    with redirects, rename to DR Edition (Eyeglass), fix tags/asset names; (2)
+    delete ONTAP/ransomware learning-path text and NetApp "Applies to"; (3) replace
+    every invented `igls` command with real ones from the 2.15.1 CLI guide; (4)
+    rewrite ports.md from Superna's port table (443 UI, 8080 REST, 22, 445,
+    2011-2014, 53, 123, 25, 9090/5514, ICMP); (5) standardize version to 2.15.x
+    and drop 5.x build strings; (6) add pages for the three failover types +
+    Failover Wizard, SPN/dual-delegation, readiness/LiveOps, failback/reprotect,
+    3-site, scalability/RAM sizing, upgrade + OneFS upgrade procedure, backup
+    (`igls app restore`), DR rehearsal; (7) regenerate release-notes from
+    docs.superna.io/whatsnew.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
 
 ### Storage — Pure
-- [ ] storage/products/pure/evergreen
-- [ ] storage/products/pure/evergreen-one
-- [ ] storage/products/pure/flasharray
-- [ ] storage/products/pure/flashblade
-- [ ] storage/products/pure/pure1
+- [x] storage/products/pure/evergreen
+  - Audit (2026-11-25): 28 pages, 7,071 lines. Subdirs: architecture, cli-reference,
+    controller-upgrades, evergreen-one (1 nested page, 74 lines, which duplicates the
+    sibling section storage/products/pure/evergreen-one), integration, learning-path,
+    lifecycle, operations, scripts, security, standards, troubleshooting,
+    vendor-support. "Applies to:" tally: 24 "Evergreen", 2 "Pure Storage",
+    1 "Evergreen//Forever, Evergreen//Flex", 1 "...subscription programs". Names: the
+    vendor rebranded as Everpure in 2026 (everpuredata.com, "Everpure FlashArray"); the
+    KB has 0 pages that mention Everpure. Code blocks are mostly Purity//FA CLI
+    (purearray 54, purevol 18, purealert 17, purepod/purepgroup 13), which overlaps
+    storage/products/pure/flasharray, plus 18 invented `purecli` lines.
+    Contradictions with vendor terms:
+    architecture/how-it-works.md:44 says Evergreen is a hardware subscription "rather
+    than purchasing hardware outright" and is FlashArray-only. Vendor: under
+    Evergreen//Forever you buy (CAPEX) a FlashArray or FlashBlade//S and subscribe to
+    upgrades. Evergreen//Flex is also owned hardware.
+    how-it-works.md:49 says Flex "adds non-disruptive capacity and blade swap
+    flexibility for FlashBlade". Wrong: Flex is owned hardware with usage-based
+    billing (reserve commit billed in advance, on-demand in arrears), site-level
+    pooling by controller model, data pack mobility and a >30% minimum commit.
+    lifecycle/index.md:44 and operations/install-upgrade.md:36 call Flex a
+    "Subscription lease". Wrong, the customer owns the hardware.
+    how-it-works.md:48 and operations/faq.md:28 give Ever Modern as "every three
+    years" but leave out that it comes with each 3-year renewal, that the //E family
+    is every 6 years, and that it covers blades for FlashBlade. Ever Agile is missing
+    (0 pages).
+    faq.md:28: "DirectFlash module refreshes" included is not verified in that form.
+    Vendor terms are capacity consolidation with up to 50% credit, and "storage
+    expansion as needed" is bought.
+    controller-upgrades/index.md:33-35,123-125,150: `purecli array list`,
+    `purecli login` and ~/.purerc are invented. In vendor docs "purecli" appears only
+    as an SSH user/prompt; the commands are purearray/purehw.
+    operations/common-issues.md:406 sample output "Tier: Evergreen Premium" is
+    invented (Pure1 API tiers: Evergreen//Forever, Evergreen//Foundation).
+    operations/scripts.md:129 `.items[].consumed_tib` and the `/api/1.x` paths are
+    not in the Pure1 API spec (real version strings: 1.0-1.7, 1.latest).
+    NDCR steps and "<30 ms failover" (how-it-works.md:72-80,85): not verified.
+    release-notes.md is a template table, not evidence.
+  - Cert research (2026-11-25): no current Everpure exam centres on Evergreen.
+    PEAK IT certifications: DSA, FASP, FBSP, FAIS, FBIS, FASS, FBSS, Cloud Specialist,
+    Cyber Resilience Professional, Migration Specialist, Pure1 Professional, Portworx,
+    Platform Architect Expert (PAE). Global Enablement architect exams:
+    FAAA_005, FAAP_004.
+    I fetched every PEAK "Exam Objectives" page. Evergreen shows up only as minor
+    items:
+    - The Architect overview lists Evergreen among PAE's covered products. PAE 1.01
+      cites the "Effective Used Capacity (EUC) Reference Guide for Evergreen//One,
+      //Flex and Everpure Cloud Dedicated".
+    - Cloud Specialist 1.03: "Apply Evergreen//One and subscription models".
+    - FAIS 2.02: "Configure Evergreen//One (EG1) entitlement".
+    - Cyber Resilience 3.04: Evergreen//One cyber recovery SLA.
+    The DSA, FASP and FBSP objectives have 0 Evergreen mentions. Exams: $200
+    Associate, $300 Professional/Specialist, $400 Expert; valid 3 years.
+    Fallback bar: Everpure's Evergreen//Forever and //Flex program terms (product
+    pages, Forever data sheet) plus the Pure1 API subscription model. Verified as
+    listed below.
+    Sources (primary, vendor):
+    https://www.everpuredata.com/products/evergreen-staas/forever.html
+    https://www.everpuredata.com/products/evergreen-staas/flex.html
+    https://www.everpuredata.com/content/dam/pdf/en/datasheets/ds-evergreen-forever-subscription.pdf
+    https://www.everpuredata.com/products/evergreen-staas.html
+    https://static.pure1.purestorage.com/api-swagger/Pure1-1.latest.spec.yaml
+    https://academy.purestorage.com/student/activity/2133577-it-certifications
+    https://www.everpuredata.com/content/dam/pdf/en/course-descriptions/peak-certification-guide.pdf
+    https://www.everpuredata.com/partners/certifications/flasharray-architect-associate.html
+    https://www.everpuredata.com/partners/certifications/flasharray-architect-professional.html
+    https://support.everpuredata.com/api/khub/maps/SzT0h9SShXLlgrV2VEVyLw/topics
+      (Certifications map, including PAE/FAIS/Cloud/CRP/DSA/FASP objective topics)
+    https://support.everpuredata.com/api/khub/clustered-search ("purecli")
+    Target bar: explain and defend Evergreen//Forever vs //Flex vs //One terms (Ever
+    Modern 3y/6y-on-renewal, Ever Agile trade-in, Flex reserve/on-demand/pooling/
+    data-pack mobility, guarantees) and report them from Pure1 (subscriptions API).
+  - Gap vs blueprint (pages mentioning each term, out of 27, nested E//One page
+    excluded): Zero coverage: Everpure, Ever Agile, Flat & Fair, Love Your Storage,
+    zero data loss guarantee, no data migration guarantee, reserve commit, in arrears,
+    data pack mobility, Evergreen//Foundation, EUC. Thin: Evergreen//Flex 8 (mostly
+    wrong), on-demand 1, site-level/pool 2, renewal 10, 6-year //E cycle 0 explicit,
+    Ever Modern 13 (ok). Phase B should: rewrite Forever/Flex definitions from vendor
+    pages (ownership, Ever Modern conditions, Ever Agile, guarantees, Flex billing and
+    pooling); remove `purecli` and invented API fields/versions, using Pure1
+    /api/1.latest/subscriptions, subscription-licenses, subscription-assets and
+    invoices instead; delete the nested evergreen-one/ page in favour of the sibling
+    section; move generic Purity//FA ops/CLI content to the flasharray section and
+    link to it; adopt Everpure naming.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/pure/evergreen-one
+  - Audit (2026-11-25): 19 pages, 4,056 lines. Subdirs: architecture, cli-reference,
+    integration, learning-path, lifecycle, operations (only index and faq), scripts,
+    security, standards, troubleshooting, vendor-support. "Applies to:" tally:
+    15 "Evergreen//One", 2 "Pure Storage", 1 "Evergreen//One STaaS",
+    1 "...STaaS for FlashArray and FlashBlade". 0 pages mention Everpure (the 2026
+    rebrand). Overlap: duplicated by storage/products/pure/evergreen/evergreen-one/
+    index.md, and the code blocks use Purity CLI and esxcli (purearray 14, esxcli 13),
+    which overlaps the flasharray section.
+    Contradictions with the Product Guide (subscriptions from 2026-10-01) and the
+    Terms of Use:
+    architecture/how-it-works.md:41-45 and 68-70 use a "Reserved tier / Burst tier /
+    Performance tier defined in the service agreement" model. Vendor model: Reserve
+    Commitment plus On-Demand, with fixed catalog tiers (UBF Ultra/Premium/
+    Performance/Capacity/Adaptive; UFFO Standard/Performance/Premium/Adaptive;
+    UDR B&F, UDR F&O; E//One for AI). "Burst" in vendor terms means Overdrive, which
+    is performance above the SLA with the SLA suspended for that period plus 6 h.
+    how-it-works.md:69 "burst headroom": the vendor term is the Buffer Capacity SLA,
+    25% of the higher of reserve or EUC, capped at 1 PiB.
+    how-it-works.md:88 "raw host-written data": EUC is host-written data plus
+    incremental unique snapshot data. known-issues.md:43 counts thin provisioning;
+    wrong.
+    lifecycle/index.md:73 "burst billing accrues daily and is invoiced monthly":
+    vendor bills On-Demand in arrears each calendar quarter on average daily
+    Effective Usable consumption. The reserve is billed in advance (monthly,
+    quarterly or annual).
+    lifecycle:103, troubleshooting/index.md:60 and operations/index.md:93 "30 days
+    lead time": vendor requires 28 or 45 days notice for unforecasted growth.
+    lifecycle:43 "typically 3-5 year term": vendor offers a one-year commitment; UDR
+    and Medical Imaging have a 36-month minimum; AI has 12 months.
+    The SLA set is incomplete: the KB has only availability, performance and
+    "capacity" (evergreen/evergreen-one/index.md:24-26). Vendor: 8 standard SLAs
+    (performance, availability 99.9999%, buffer capacity, energy efficiency, zero
+    planned downtime, no data migration, zero data loss, service activation date)
+    plus the cyber recovery & resilience and site rebalance add-ons. Paid Power &
+    Rack is a separate SLA/commitment: an upfront cash payment, net-new contracts
+    only, minimum reserve by tier. Credits run 3%-100% per the guide's tables.
+    scripts/index.md and cli-reference/index.md:211: the fields reserved_tib,
+    consumed_tib, burst_consumed_tib and committed_tib, the paths /api/1.x and
+    /subscriptions/{id}, and the /api/1.0 base are invented. The real Pure1 API uses
+    /api/1.latest (1.0-1.7) with subscriptions, subscription-licenses (reservation,
+    on-demand usage), subscription-assets and invoices.
+    how-it-works.md:51 "component replacement within agreed response time" as an SLA
+    and faq.md:20 Pure1 menu path: not verified.
+    release-notes.md is a template table, not evidence.
+  - Cert research (2026-11-25): no exam centres on Evergreen//One. Minor objectives:
+    Cloud Specialist 1.03 (E//One consumption models, EUC), FAIS 2.02 (configure the
+    E//One entitlement), Cyber Resilience Professional 3.04 (cyber recovery SLA,
+    snapshot add-on), PAE 1.01 (EUC reference guide). DSA/FASP/FBSP have none.
+    Fallback bar: the Evergreen//One Product Guide and Terms of Use, plus the
+    Knowledge Portal E//One pages (overview, getting started: Entitlement Agent via
+    Pure1 Edge Services on Purity 6.7+, Resource/Org Admin; UBF tier table; PPR FAQ).
+    Verified as listed below.
+    Sources (primary, vendor):
+    https://www.everpuredata.com/products/evergreen-staas.html
+    https://www.everpuredata.com/products/evergreen-staas/pricing.html
+    https://www.everpuredata.com/legal/evergreen-one-product-guide.html
+    https://www.everpuredata.com/legal/evergreen-one-terms-of-use.html
+    https://www.everpuredata.com/content/dam/pdf/en/solution-briefs/sb-evergreen-one-advanced-slas.pdf
+    https://www.everpuredata.com/content/dam/pdf/en/solution-briefs/sb-evergreen-one-storage-as-a-service.pdf
+      (downloaded, not read in detail)
+    https://support.everpuredata.com/api/khub/maps/C9usWXiYSubggXwtxw_5QA/topics
+      (+ topic content: evergreenone-02, getting-started, UBF/UFFO/UDR service,
+      PPR FAQ, cyber resiliency SLA report)
+    https://static.pure1.purestorage.com/api-swagger/Pure1-1.latest.spec.yaml
+    https://support.everpuredata.com/api/khub/maps/SzT0h9SShXLlgrV2VEVyLw/topics
+      (cert objective topics)
+    Target bar: size, contract-read and operate an E//One license: tier choice,
+    reserve vs on-demand billing, EUC metering, buffer, Overdrive, all 10 SLAs with
+    credit math, PPR, entitlement agent, Pure1 subscription API.
+  - Gap vs blueprint (pages mentioning each term, out of 19): Zero coverage: Everpure,
+    EUC/Effective Used Capacity, Effective Usable, Ultra, Adaptive, UBF, UFFO, UDR,
+    buffer capacity/25%, energy efficiency, Paid Power & Rack, zero planned downtime,
+    no data migration, zero data loss, service activation, cyber recovery, site
+    rebalance, Overdrive, Entitlement Agent/Edge Services, Workload Planner, reserve
+    commit(ment), in arrears, Product Guide/Terms of Use. Thin: premium 1,
+    on-demand 1, service credit 1, capacity tier 2; "burst" 12 (wrong term);
+    99.9999 7 (ok). Phase B should: rebuild architecture/lifecycle from the Product
+    Guide and ToU (tier tables, guaranteed performance formula, SLA/credit tables,
+    billing cadence, EUC definition, buffer and notice periods, Overdrive, PPR,
+    add-ons); replace "burst tier" with On-Demand; rewrite scripts against the real
+    Pure1 /api/1.latest/subscription-licenses and subscription-assets schema; add an
+    Entitlement Agent onboarding procedure; merge in or remove the duplicate nested
+    page under evergreen/; adopt Everpure naming.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/pure/flasharray
+  - Audit (2026-11-25): 28 pages, 10,460 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). Largest: cli-reference
+    1,292, scripts 1,216, troubleshooting/common-issues 1,009. "Applies to:" tally:
+    22x "FlashArray Purity 6.x", 3x "Pure Storage FlashArray", 2x "Purity//FA 6.x".
+    Purity versions named reach only 6.6.x; the newest is 6.4.10. No mention of
+    6.7-6.12. operations/faq.md:20 says "6.5.x is the current recommendation".
+    The install-upgrade.md:31-33 lifecycle table (6.4-6.6, dates marked "est.")
+    has not been verified. Hardware is stale: the only hardware refs are //X,
+    //X70R4, //C, //E and //XL, with zero R5 / XR5 / CR5 / XL R5 mentions.
+    "Everpure" brand: 0 pages.
+    CLI accuracy, checked against public Everpure KB articles in
+    support.everpuredata.com search plus py-pure-client. Disproved (the real
+    command is documented):
+    - `puresyslog`: real is `purelog create --uri`. Lines:
+      security/authentication.md:531-537, security/hardening.md:510-516 and 723,
+      troubleshooting/diagnostics.md:937.
+    - `puredirectoryservice setattr`: real is `pureds setattr` and
+      `pureds role setattr`. Lines: security/authentication.md:113, 218, 225, 290
+      and 294, security/hardening.md:103 and 153.
+    - `puretime set --timezone`: NTP is `purearray setattr --ntpserver`.
+      Lines: deploy/index.md:126-127.
+    - `puredns set --servers`: documented syntax is
+      `puredns setattr --nameservers`. Line: deploy/index.md:121.
+    - `puresnap list/eradicate/recover`: snapshots are listed with
+      `purevol list --snap`, `purevol snap` and `purepgroup snap`. Lines:
+      operations/backup-restore.md:180, 328, 515-581 and 643,
+      troubleshooting/common-issues.md:615-689, troubleshooting/diagnostics.md:832,
+      operations/scripts.md:411 and 1123, operations/common-issues.md:36,
+      security/access-control.md:218-245 (audit-filter sample output).
+    - REST: security/authentication.md:367-369 sends the raw API token as
+      `x-auth-token`. In REST 2.x, POST /api/2.x/login takes an `api-token` header
+      and `x-auth-token` is the session token (py-pure-client
+      authorization_api_v_2_47.py). Lines 371-378 also use a cookie jar, which is
+      misleading.
+    Found in no public Everpure doc (likely invented, unconfirmed because the
+    FA CLI Reference is login-gated):
+    - `purediag --send/--output`: troubleshooting/escalation.md:214, 217 and 358,
+      troubleshooting/diagnostics.md:133 and 880-883, troubleshooting/common-issues.md:985
+    - `puresnmptrap`: security/access-control.md:356, security/hardening.md:301-362
+    - `purekms`: security/encryption.md:80-90
+    - `purectl`: troubleshooting/escalation.md:60
+    - `purerepl`: learning-path/index.md:64
+    - `pureadmin global ...` and its sample output (api-token-ttl etc.):
+      security/hardening.md:164-180, security/authentication.md:298 and 446-458,
+      operations/cli-reference.md:47-53
+    Confirmed real: purevol create --size, purevol list --space/--snap, purehost
+    create --iqnlist/--wwnlist/--nqnlist, purehost setattr --personality, purepod
+    create/add --array/replica-link, purepgroup snap --replicate-now, purearray
+    list --space/--controller, purearray connect, purealert list, pureds list,
+    pureport list, purehw list, puredrive list, pureadmin create/list --api-token
+    [--expose], pureaudit list, pureapp list, purepolicy, purevgroup, puremessage,
+    pureconfig list. The 5 pypureclient calls in scripts.md (get_alerts, arrays,
+    drives, hardware, pods) exist in FA_2_26. scripts.md:570 /api/2.26/login is valid
+    but old; current REST is 2.59.
+  - Cert research (2026-11-25): Pure Storage rebranded to Everpure. Exams are on
+    the Everpure Academy, still under academy.purestorage.com. The admin-level
+    target is "Everpure Certified FlashArray Storage Professional" (FASP). Format:
+    60 scored MCQ plus ~20 unscored, 120 min, $300 USD, online proctored
+    (ExamStudio/Honorlock, webcam, closed book). Valid 3 years; renew by retaking
+    or with CEE/CPE credits. Retake waits are 14 days, then 60 days after 3
+    fails. Recommended experience is 6-12 months on FA (the academy page says
+    12-24). New questions are written to Purity//FA 6.7, and older questions
+    stay where still valid.
+    FASP domains and weights:
+    - D1 Administration 30%: volume config and system space, array config and
+      management incl. upgrades and release notes, 3rd-party integrations, host
+      connections (FC/iSCSI, SAN design, jumbo frames, VMware host settings),
+      security/authentication (API tokens, zoning).
+    - D2 Monitoring 20%: Pure1, Meta forecasting, data reduction ratio,
+      Pure1/GUI/CLI reports, storage-relevant capacity.
+    - D3 Troubleshooting 20%: troubleshooting resources (ActiveCluster checklist,
+      directory services, VM Analytics), port identification, alerts and
+      predictive support, incorrect config (async replication).
+    - D4 Data Resilience 17%: snapshots, replication config, policy management,
+      SafeMode, replication technologies (ActiveDR, async, bandwidth).
+    - D5 FlashArray File 13%: configuration and DNS, AD join, protocol access.
+    No exam code and no pass score are published (CertMetrics score report only).
+    Sibling exam "FlashArray Implementation Specialist" (FAIS): 60 scored plus ~15
+    unscored, 120 min, $300, written to Purity//FA 6.11.x. Domains: Pre-Install
+    27%, Install 27%, Upgrade 28%, Post-Install 18%. It targets root-level
+    implementers and covers XR4/XR5/CR5/XL R5, DirectFlash Shelf, HWNDU, Fusion
+    and EG1.
+    Current Purity//FA: the newest line in Everpure's REST table is 6.12.4 (REST
+    2.59, which matches py-pure-client FA_2_59, v1.99.0 of 2026-11-11). 6.10.x
+    ships REST 2.47-2.54. 6.11.x exists (cited by the FAIS guide).
+    Current hardware: FA//X R5 (X20/X50/X70/X90), //XL R5 (XL130/170/190), //C,
+    //E. //CR5 is named in the FAIS guide. //ST is not on the product page and
+    was not verified.
+    Retired exams (validity ended Nov 1 2024 at the latest): Administration
+    Associate, Implementation Associate, FA Implementation Professional, Support
+    Associate, FA Support Professional. The architect track (FAAP_004) is
+    partner-only, so it is not the target here.
+    Sources (primary, vendor):
+    academy.purestorage.com/student/activity/2164505-certification-fasp;
+    academy.purestorage.com/student/activity/2133577-it-certifications;
+    academy.purestorage.com/student/activity/2164533-certification-fais;
+    everpuredata.com/content/dam/pdf/en/course-descriptions/flasharray-storage-professional-course-description.pdf;
+    everpuredata.com/content/dam/pdf/en/course-descriptions/peak-certification-guide.pdf;
+    support.everpuredata.com/api/khub/maps/SzT0h9SShXLlgrV2VEVyLw/topics/{dQ8i9Zup73d3oUgL6e~LTw,
+    veVu5nPY0eqfmaxSqnFI3A,MCl34ZIQ8MXcpfit9pkLrA,7bslVND9Ylhz~b_7pIB1mg,
+    OtM2F29TQKPl0v5myf21sg}/content (FASP/FAIS guides and objectives, archived
+    exams);
+    support.everpuredata.com/api/khub/maps/rtT95j~_523s5ozUAoVkRg/topics/YA0HfNTsds7sLgR9qpqjEg/content
+    (REST versions);
+    .../maps/8SmdZy_23DWXM8POgAGGeg/topics/k2jGG14NqI5SWbRTVd~FjQ/content (puresw
+    upgrade); support.everpuredata.com/api/khub/clustered-search (CLI checks);
+    everpuredata.com/products/block-file-object-storage.html; ds-flasharray-x.pdf;
+    ds-flasharray-xl.pdf; github.com/PureStorage-OpenConnect/py-pure-client.
+    Target bar: pass FASP (Purity//FA 6.7+ blueprint, 5 domains) from the KB alone,
+    with the CLI and REST commands correct against current 6.12 / REST 2.59.
+  - Gap vs blueprint (pages mentioning each term, out of 28):
+    Zero coverage:
+    - FA File / AD join / protocol access (13% domain; only 2 pages mention
+      SMB/NFS in passing, 0 config)
+    - CloudSnap
+    - VM Analytics
+    - jumbo frames / MTU (5 pages mention MTU but none cover jumbo-frame design)
+    - puresw / self-service upgrade
+    - Fusion, realms
+    - purepolicy / policy management
+    - SafeMode retention lock
+    - Everpure rebrand
+    - R5 hardware (XR5/CR5/XL R5)
+    - Purity 6.7-6.12
+    Thin:
+    - vVols 1
+    - Meta forecasting 2
+    - NVMe-TCP 3
+    - snapshot offload 3
+    - host personality 3
+    - NDU 4
+    - async replication 6
+    - QoS 6
+    - ActiveDR 8
+    - SafeMode 8
+    - LDAP/pureds 8
+    - zoning 7
+    - hosts/host groups 10
+    Adequate (>=13): volumes 19, snapshots 19, Pure1 20, ActiveCluster 17, pods
+    15, mediator 13, pgroups 16, iSCSI 15, FC 17, alerts 17, RBAC 14, API token 13,
+    space 13.
+    Phase B should:
+    (1) Fix every disproved CLI command listed above (puresnap, puresyslog,
+        puredirectoryservice, puretime, puredns set, x-auth-token), then remove
+        or source-check purediag, puresnmptrap, purekms, purectl, purerepl and
+        pureadmin global.
+    (2) Re-baseline "Applies to" on Purity//FA 6.7+ (6.11 LLR / 6.12 FR) and REST
+        2.x. Rewrite faq.md:20 and the install-upgrade.md lifecycle table from
+        vendor data.
+    (3) Add a FlashArray File section (config, DNS, AD join, SMB/NFS, export and
+        snapshot policies via purepolicy).
+    (4) Add Pure1 Meta forecasting, capacity planning, VM Analytics and reports.
+    (5) Add a puresw self-service upgrade procedure, plus SafeMode retention lock
+        and pgroup SafeMode.
+    (6) Expand ActiveDR, async replication, CloudSnap/offload and replication
+        bandwidth.
+    (7) Add host config depth: personality, jumbo frames, zoning, NVMe-TCP.
+    (8) Update hardware to R5 and the Everpure naming.
+    (9) Add a FASP domain-mapped study page with weights.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/pure/flashblade
+  - Audit (2026-11-25): 28 pages, 9,194 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" 27 hits:
+    20x "FlashBlade Purity//FB 4.x", 4x "Pure Storage FlashBlade", 3 other
+    4.x variants. Highest Purity//FB release named is 4.4 (release-notes.md:25,
+    operations/install-upgrade.md:35); exams are written to 4.5.x and cite User
+    Guide 4.5.6. "Everpure" appears on 0 pages; "Pure Storage" 79 times.
+    Hardware: FlashBlade//S named on 5 pages, //E on 2, //EXA 0, S100/S200 R2/
+    S500 R2 model line 0 (one "S200" throughput aside, deploy/index.md:670);
+    DFM/XFM/FIOM 0. release-notes.md is template-generated ("Unverified version
+    history", line 18) -- not evidence.
+    CLI is largely INVENTED: a "purefb <noun>" CLI appears on 681 lines across 18
+    pages (operations/cli-reference.md 197 lines, e.g. :41 "purefb array show",
+    :45 "purefb hardware show"; operations/procedures.md 64 lines;
+    security/access-control.md:46-56 "purefb admin create --role ..."; "purefb
+    login" on 9 pages, e.g. security/hardening.md:572; "pureflashblade" 7 lines).
+    Everpure docs show purefs/puresubnet/purenetwork vip/purehw/puredrive/
+    puresupport/pureobj* -- "purefb" appears there only as a file system name.
+    Real commands are nearly absent: purefs 4 lines/1 page, purebucket 2/1,
+    pureobjaccount/pureobjuser/puresubnet 0. REST: security/authentication.md:470
+    uses /api/2.12/filesystems (the real path is /file-systems);
+    architecture/integrations.md:172,224 filter alerts on state='unflagged'
+    (valid states: open/closing/closed/waiting to downgrade; flagged is a
+    boolean); integrations.md uses a literal "/api/2.x/" in its paths. The
+    pypureclient calls in the KB (get_arrays/get_file_systems/get_blades/
+    get_alerts/get_buckets/get_hardware/get_file_system_replica_links) exist in
+    FB_2_30.
+  - Cert research (2026-11-25): Everpure Academy has 3 FlashBlade exams: FB
+    Storage Professional (FBSP), FB Implementation Specialist (FBIS), FB Support
+    Specialist (FBSS; partner/support-oriented, objectives not pulled). FBSP: 60
+    scored MCQ + ~20 unscored, 120 min, $300, online-proctored (webcam), closed
+    book, valid 3 yr; new items written to Purity//FB 4.5.x; 6-12 mo FB
+    experience. Domains: 1 Array Admin 20% (Fusion fleet create/join/leave,
+    Servers, maintenance windows, identity services and built-in roles,
+    networking incl. LAG/SMTP-TLS/NTP, REST API tokens and API clients,
+    architecture: blades/DFM/XFM/FIOM, models, Zero Move Tiering); 2 Protocol
+    Admin 30% (NFS incl. RapidFile Toolkit, SMB, S3 incl. lifecycle,
+    data-path identity, S3 IdP, Servers vs identity services); 3 Monitoring 10%
+    (Pure1 Manage assessment/reporting, on-box perf/capacity, shared metadata
+    space); 4 Cyber Resilience 20% (file snapshots and policies, S3 versioning,
+    SafeMode capacity/modify/disable, file replication failover/failback,
+    fan-in/fan-out, object replication active-passive/active-active/cascading,
+    erasure-coding parity overhead, encryption); 5 Troubleshooting 20% (perf/
+    capacity, quotas, Always-on QoS, iperf, LAG/TCP/authority load balancing,
+    POSIX/SMB ACL/NFSv4.1 ACL, LDAP/AD, alerts, purehw/puredrive/puresupport,
+    phone home). FBIS: 60 scored + ~15 unscored, 120 min, $300, 4.5.x;
+    implementation engineers, 3-5 yr storage + 6-12 mo Everpure + NAS.
+    Domains: 1 Pre-install/upgrade 18% (power/rack/cable/uplink, PER/IWB
+    validation, subnets/LAG/proxy/DNS/NTP/SMTP, OOB vs in-band mgmt); 2
+    Single/multi-chassis install 22% (XFM 3200 vs 8400, //E EC vs EX chassis,
+    heterogeneous DFM rules, upgrade "hops", data VIP); 3 Upgrades/conversions/
+    expansions 38% (SC->MC, MC->6+ chassis, first-gen->//S NDU, blade/DFM
+    add, evacuate, DFM consolidation); 4 Post-install (weight not printed, 22%
+    by subtraction: healthchecks, VIP/LAG/VLAN, FEC, Fusion fleet, LDAP,
+    LACP/LLDP/FEC troubleshooting). Current hardware: FlashBlade//S in
+    //S100, //S200 R2, //S500 R2 (5U chassis, up to 12 PB raw), plus
+    FlashBlade//E and FlashBlade//EXA. Latest REST in py-pure-client 1.99.0
+    (2026-11-11) is FB 2.30. The newest GA Purity//FB release (4.6?) was not
+    verified: release notes are not reachable through the public API.
+    Sources (primary, vendor): support.everpuredata.com/api/khub/maps/
+    SzT0h9SShXLlgrV2VEVyLw/topics (+ topic content PbCS0s29xcGptN8kNqjYFQ,
+    me~z82n1PgLkppT43VOHLg, fIsjpeuReSXmVyd6ZXCW3g, rK3~p9jde9lj2F78sOIYTQ,
+    ghotNMreap~HvXgoWaaanA, GhoGpC1DsLan8GZohvf6Dw, OtM2F29TQKPl0v5myf21sg);
+    academy.purestorage.com/student/activity/2133577-it-certifications,
+    .../2164506-certification-fbsp, .../2164787-certification-fbis; khub maps
+    e_ocElfFXJDZdhWUpZlqQA (FB//S), WAuawOL9YY9Gp1puVzgosA (FB//EXA),
+    ophqrikZf8p16y~nVCrUpw (FB REST API); topics V2wr2BIKrQgyJINkDTLSbg/
+    ydnsDTy6U~J~tedVNxmkqw (Oracle FB config: purefs/purenetwork) and
+    5fTkiPrPk30cfqHrJ~QswA/u1~JCgny3mc9KFXMgucihg (NVIDIA data VIP: puresubnet,
+    purenetwork vip, purefs); khub clustered-search; github.com/
+    PureStorage-OpenConnect/py-pure-client (FB_2_30 client, file_systems/alerts
+    APIs, alert_v_2_20 model).
+    Target bar: pass FBSP (admin, 4.5.x) with FBIS install/expansion depth as a
+    stretch; every CLI/REST example is real Purity//FB syntax.
+  - Gap vs blueprint (pages mentioning each term, out of 28): Zero coverage:
+    Everpure 0, Fusion/fleet 0, Servers (FB object) 0, Zero Move Tiering 0,
+    DFM/XFM/FIOM 0, //EXA 0, multi-chassis 0, erasure coding 0, QoS 0,
+    fan-in/fan-out/cascading 0, FEC 0, iperf 0, RapidFile Toolkit 0.
+    Thin: realms/multi-tenancy 1, EC/EX chassis 1, quotas 2, //E 2, Rapid
+    Restore 2, object replication 3, S3 versioning 3, data reduction 3,
+    lifecycle 4, maintenance window 4, SafeMode 5, snapshot policy 5, SAML/SSO
+    5, //S 5, phone home 6, file replication 7, object store account 8, NDU 8.
+    Broad but shallow: NFS 23, SMB 22, S3 22, file systems 20, snapshots 18,
+    buckets 18, REST 24, Pure1 16, LAG 14, VIP 14, directory services 12.
+    Phase B should: (1) rewrite operations/cli-reference.md and every "purefb"
+    block (681 lines, 18 pages) to real Purity//FB syntax from CLI Reference
+    4.5.x (confirmed: purefs, puresubnet, purenetwork, purehw, puredrive,
+    puresupport, pureobj*; still to confirm: purebucket, pureobjaccount,
+    purepolicy etc.); (2) fix the REST paths (file-systems, alert filters, a
+    concrete version via GET /api/api_version); (3) rebrand to
+    Everpure and move Applies-to to Purity//FB 4.5.x; (4) add architecture
+    pages: blades/DFM/XFM/FIOM, //S100/S200 R2/S500 R2 vs //E (EC/EX) vs //EXA,
+    erasure-coding overhead, encryption, Zero Move Tiering; (5) add Fusion fleet,
+    Servers, realms and maintenance windows; (6) cover SafeMode capacity and
+    disable, file and object replication topologies (fan-in, fan-out,
+    cascading, active-active), failover/failback; (7) add S3 lifecycle,
+    versioning, IdP, Always-on QoS, quotas, ACL models, RapidFile Toolkit; (8)
+    give FBIS SC->MC/first-gen->//S/DFM evacuation procedures their own pages;
+    (9) add a per-domain practice-question bank weighted 20/30/10/20/20.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered this item
+    and the 9 others done alongside it, none touched docs/). Queue file only.
+- [x] storage/products/pure/pure1
+  - Audit (2026-11-25): 25 pages, 2,167 lines, 16 subdirs (alerts, architecture,
+    capacity, cli-reference, deploy, design-standards, health, integration,
+    learning-path, lifecycle, operations, performance, scripts, security, support,
+    troubleshooting, vendor-support). "Applies to:" tally: "Pure1" x16, "Pure
+    Storage" x2, "Pure1 cloud portal" x1, "Pure1 (cloud portal - no on-premises
+    install)" x1. Uses "Pure Storage" throughout; "Everpure" on 0 pages (vendor
+    rebranded; API spec and Knowledge Portal now say Everpure). No invented "pure1"
+    CLI found (cli-reference is curl + PyJWT). API errors vs Pure1-1.latest spec
+    (v1.7): subject_token_type is "urn:ietf:params:oauth:token-type:json_web_token"
+    at security/index.md:87 and scripts/index.md:32 - spec requires
+    "...token-type:jwt" (cli-reference/index.md:21 is correct). JWT payload at
+    security/index.md:74-80 and scripts/index.md:18-23 sets aud="pure1:auth:mfa",
+    sub, jti - spec: for Pure1 only iss (Application ID), iat, exp are required;
+    aud/sub/kid are FlashArray/FlashBlade-only (aud = client id, not that string);
+    spec says iat/exp in milliseconds, KB uses seconds (all 3 snippets incl.
+    cli-reference/index.md:15). scripts/index.md:48 calls "/workloads" with
+    anomaly_state/anomaly_type fields - no such endpoint or fields; real ones are
+    /assessment/security/anomalies (+ /assessment/security/insights/arrays, /cves).
+    cli-reference/index.md:35,38 use "?fields=name,capacity,space" - spec has no
+    "fields" parameter and Array has no capacity/space (capacity comes from
+    /metrics, /metrics/history). lifecycle/index.md:20 claims a v2 API at
+    /api/2.x/ for tags/subscriptions - spec is single 1.x line (1.0-1.7 +
+    1.latest; Pure1-2.0 spec URL 403); tags at /arrays/tags, subscriptions at
+    /subscriptions in 1.latest. operations/faq.md:31 and lifecycle/index.md:30
+    "API Registration" path is legacy-real (vSphere plugin docs) but exam now
+    teaches API keys registered in Everpure IAM with role + scope.
+    Features: "Pure1 Meta" (5 pages) and "Workload Planner" (1) do exist in
+    Everpure docs (Cloud Dedicated Azure features page) but are not exam terms.
+    release-notes.md:25,29 rows (2024.3 "AI-driven anomaly detection", 2022.3
+    "ransomware assessment module GA") are template-generated, unverified.
+    Not verified: SCIM provisioning (security/index.md:60,127), "Rotate Key"
+    menu (lifecycle/index.md:30, troubleshooting/index.md:55), OIDC SSO
+    (learning-path/index.md:80), Admin/Read-only role names (security/index.md:51-52).
+  - Cert research (2026-11-25): Everpure Certified Pure1 Professional (P1P),
+    Professional tier, no prerequisite; recommended 3-5 yrs industry + 2-3 yrs
+    Everpure. Study-guide pages created 2026-10-12..20, revised 2026-10-23; new
+    questions written to Purity//FA 6.9. Domains: 1 Mastering Unified
+    Observability 30% (1.01 Fusion fleet mgmt/Fleet Administration/Topology View;
+    1.02 alerts, notifications, health, SafeMode mgmt, Executive Dashboard; 1.03
+    Resources/Performance/Capacity/Analytics/VM Analytics; 1.04 App/Data
+    Intelligence, Assessments, AI Copilot, sustainability; 1.05 Mobile App,
+    public APIs + auth, Reporting); 2 Managing Storage and Subscription
+    Lifecycles 30% (2.01 appliance + subscription genealogy; 2.02 subscriptions;
+    2.03 proactive recommendations; 2.04 Planning page, reserve-level
+    simulations; 2.05 quotes/orders/install scheduling; 2.06 self-service Purity
+    upgrades, Support Center); 3 Securing and Protecting Storage Environments
+    20% (3.01 Everpure IAM unified roles; 3.02 Security + Data Protection
+    Assessments; 3.03 anomaly detection incl. multi-dimensional admin-ops
+    anomalies; 3.04 Protection pages: Snapshots, Periodic/Continuous Replication,
+    ActiveCluster, ActiveDR; 3.05 Log Center, SIEM/OpenTelemetry); 4 Driving IT
+    Automation 20% (4.01 AI Copilot; 4.02 Workflow Orchestration - triggers,
+    Test recipe, run logs; 4.03 heterogeneous automation, Pure1 Manage MCP
+    Server, On-Prem Agent). 20 public sample questions. Format (program-wide FAQ):
+    multiple-choice, online-proctored with webcam, closed book; Professional
+    exams $300 USD; valid 3 years, renew by retaking. Question count, duration,
+    passing score: not published in the P1P guide (not verified). Note: the
+    academy IT-certifications page as fetched by curl lists 12 certs and does not
+    name Pure1 Professional (may be JS-rendered or not yet on the storefront).
+    Sources (primary, vendor):
+    https://support.everpuredata.com/api/khub/maps/SzT0h9SShXLlgrV2VEVyLw
+    https://support.everpuredata.com/api/khub/maps/SzT0h9SShXLlgrV2VEVyLw/topics
+    .../topics/aKhlbEwC9F~LoTcmmoMh2w/content (P1P study guide)
+    .../topics/RTWJxvjJo6lujOIomJE1hQ/content (exam objectives)
+    .../topics/GCRLl6Y4V38ojYrxA6cPww/content (study resources)
+    .../topics/odSl9xbwv5PZJrwb0t6hpw/content (sample questions)
+    .../topics/ZZtNzLlG8VZxt4OEY1pbvQ/content (recert, 3 years)
+    https://academy.purestorage.com/student/activity/2133577-it-certifications
+    https://static.pure1.purestorage.com/api-swagger/Pure1-1.latest.spec.yaml
+    https://support.everpuredata.com/api/khub/clustered-search (feature lookups)
+    Target bar: pass Everpure Certified Pure1 Professional (P1P, Oct-2026 guide).
+  - Gap vs blueprint (pages mentioning each term, out of 25): Zero coverage:
+    Topology View, Executive Dashboard, SafeMode, VM Analytics/VM Collector,
+    App/Data Intelligence, AI Copilot, mobile app, appliance/subscription
+    genealogy, Evergreen//One reserve, orders/install scheduling, Everpure IAM /
+    unified roles, Security Assessment / security score, Data Protection
+    Assessment, ActiveCluster/ActiveDR/replication pages, Workflow
+    Orchestration, MCP server, Edge Services, "Everpure" name; self-service
+    upgrade 1 (unrelated snapshot-restore line only). Thin: Fusion/fleet 1,
+    sustainability 1, Log Center/SIEM/OpenTelemetry 1, subscriptions 2,
+    recommendations 2, reporting 4, planning/simulation 6, anomaly 6 (mostly
+    learning-path prose + a fake /workloads script). Phase B should: fix the 3
+    auth snippets (token-type:jwt, iss/iat/exp in ms, drop aud/sub/jti for
+    Pure1), replace /workloads with /assessment/security/anomalies, remove
+    fields= and the v2 API claim, use /metrics(/history) for capacity; rebrand
+    to Everpure where vendor UI does; build new pages per domain: fleet/Fusion
+    + Topology View, alerts/notifications + SafeMode mgmt, Analytics/VM
+    Analytics, AI Copilot, Assessments (security, data protection,
+    sustainability), anomaly detection, Protection pages, Everpure IAM + API
+    keys, subscriptions/genealogy/planning/reserve simulation/recommendations,
+    orders + self-service upgrades, Log Center/OpenTelemetry SIEM, Workflow
+    Orchestration + On-Prem Agent, Pure1 Manage MCP Server, mobile/Reporting;
+    add a P1P exam-prep page mapping objectives 1.01-4.03 to KB pages.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered this item
+    and the 9 others done alongside it, none touched docs/). Queue file only.
 
 ### Virtualization
-- [ ] virtualization/openshift
-- [ ] virtualization/vmware/products/aria-automation
-- [ ] virtualization/vmware/products/aria-operations
+- [x] virtualization/openshift
+  - Audit (2026-11-25): 27 pages, 9,889 lines, 22 subdirs (architecture/{design-
+    standards,how-it-works,integrations}, deploy, learning-path, operations/{backup-
+    restore,cli-reference,health-checks,install-upgrade,procedures,scripts},
+    security/{access-control,authentication,encryption,hardening}, troubleshooting/
+    {common-issues,diagnostics,escalation}). Focus is general OpenShift Container
+    Platform admin (IPI/UPI, oc, RBAC/OAuth, MCO, etcd, must-gather), NOT OpenShift
+    Virtualization: 0/27 pages mention kubevirt/virtctl/VirtualMachineInstance/
+    "OpenShift Virtualization" (0 pages in all of docs/ either). "Applies to:" =
+    25x "OpenShift 4.x", 1x "OpenShift Container Platform 4.x", 1x "OCP 4.12-4.16"
+    (troubleshooting/known-issues.md). Highest version cited anywhere is 4.16
+    (mentions span 4.3-4.16; upgrade example uses 4.14.5) -> STALE: latest 4.x is
+    4.22 (GA 2026-06-09, EUS to 2028-06-30/2029-06-30) and OCP 5.0 went GA
+    2026-11-03; docs.redhat.com OCP landing now redirects to /5.0. 4.16 left EUS
+    Term 1 on 2026-06-27. release-notes.md is template-generated, not evidence.
+    CLI accuracy (checked vs OCP 4.22 "CLI tools" oc/oc adm reference):
+    * security/authentication/index.md:287 `oc adm create-api-client-config` (with
+      kubeadm path /etc/kubernetes/pki/ca.crt) -> not in the 4.22 oc adm reference
+      (only create-bootstrap-project-template / create-error-template /
+      create-login-template / create-provider-selection-template exist). Remove.
+    * troubleshooting/known-issues.md:52 `oc get csr | grep Pending | oc certificate
+      approve` -> no `oc certificate` command; it is `oc adm certificate approve`,
+      and names must be passed (e.g. via xargs), not piped on stdin.
+    * operations/install-upgrade/index.md:399 `oc patch co <op> --type=json` removing
+      /status/conditions -> unsupported hack (status is operator-owned); no doc
+      basis found; drop or mark as RH-support-only with no command.
+    * ICSP: 5 pages use ImageContentSourcePolicy, 0 pages mention
+      ImageDigestMirrorSet/ImageTagMirrorSet; 4.22 disconnected docs say ICSP is a
+      deprecated feature. Rewrite to IDMS/ITMS.
+    * Verified OK in 4.22 reference: oc adm certificate approve, oc adm groups sync
+      (--sync-config/--confirm), oc adm top images, oc secrets link, oc create
+      token, oc set data, oc policy scc-subject-review, oc import-image, oc adm
+      upgrade --to-image (+ --allow-explicit-upgrade, in disconnected docs),
+      project.config.openshift.io projectRequestTemplate patch.
+  - Cert research (2026-11-25): Target = EX280, now titled "Red Hat Certified System
+    Administrator in OpenShift" (renamed 2026-05-11 from "Red Hat Certified
+    OpenShift Administrator"; Red Hat blog: only names changed, content/difficulty
+    identical). Exam page: based on OCP 4.22, 3.0 h hands-on, product docs provided
+    during exam; multiple exam versions in use (designated version objectives via
+    LMS). Old URL .../ex280-red-hat-certified-openshift-administrator-exam returns
+    404; live page is .../red-hat-certified-openshift-administrator-exam (the
+    .../ex280-red-hat-certified-specialist-openshift-administration-exam URL
+    redirects there). Objective domains: Manage OCP (web console, CLI, projects,
+    images tags/digests, query/format/filter resources, events/alerts/logs, cluster
+    health, troubleshooting, use product docs, + all Technologist-in-OpenShift
+    tasks); Declarative resource mgmt (YAML manifests, Kustomize + overlays,
+    secrets, configmaps); Deploy apps (templates, Helm charts, replica sets,
+    labels/selectors, services, external access); AuthN/AuthZ (HTPasswd IdP,
+    users, passwords, groups, permissions); Network security (SDN troubleshooting,
+    routes, ingress, TLS internal/external, NetworkPolicy, non-HTTP/SNI apps,
+    LoadBalancer service); Developer self-service (cluster resource quotas, project
+    quotas, resource requirements, limit ranges, project templates); Operators
+    (install/uninstall/delete); App security (service accounts, privileged apps,
+    SCCs, secrets, app access to Kubernetes APIs, Jobs, CronJobs).
+    Other: EX316 "Red Hat Certified Specialist in OpenShift Virtualization" (title
+    unchanged, not in rename table), based on OCP 4.18, 4 h; objectives cover the
+    virt operator via OLM, VM provisioning/access/RBAC, UDN/ClusterIP/NodePort/
+    routes, Multus + NMState, storage/disk attach/detach, OADP backup/restore,
+    templates + cloud-init, snapshots, OVA import, cloning via DataVolumes, live
+    migration, node maintenance/drain, run strategy, probes/watchdog, eviction
+    strategy, affinity/taints. Not a fit for this section's current content.
+    Sources (primary, vendor):
+    https://www.redhat.com/en/services/training/red-hat-certified-openshift-administrator-exam
+    https://www.redhat.com/en/services/training/ex280-red-hat-certified-specialist-openshift-administration-exam
+    https://www.redhat.com/en/services/training/red-hat-certified-specialist-openshift-virtualization-ex316
+    https://www.redhat.com/en/blog/validate-targeted-expertise-major-updates-red-hat-certification
+    https://access.redhat.com/product-life-cycles/api/v1/products?name=Openshift%20Container%20Platform%204
+    https://access.redhat.com/support/policy/updates/openshift
+    https://docs.redhat.com/en/documentation/openshift_container_platform/
+    https://docs.redhat.com/en/documentation/openshift_container_platform/4.22/html-single/cli_tools/index
+    https://docs.redhat.com/en/documentation/openshift_container_platform/4.22/html-single/disconnected_environments/index
+    Target bar: pass EX280 (OCP 4.22) hands-on - every objective doable from KB
+    pages alone, with oc commands valid on 4.22.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    Kustomize 0, Helm 0, ClusterResourceQuota 0, route termination types
+    (edge/passthrough/reencrypt) 0, `oc expose`/`oc create route` 0, Operator
+    install via Subscription/OperatorGroup 0, batch Job 0, liveness/readiness
+    probes 0, skopeo 0, ImageDigestMirrorSet 0, OpenShift Virtualization 0. Thin:
+    Templates/oc process/new-app 1, oc adm groups 1, user create/delete + groups
+    new/add-users 1, ResourceQuota 1, LimitRange 1, project request template 1,
+    LoadBalancer svc 1, MetalLB 1, ImageStream 1, ReplicaSet 1, kind: Route/oc get
+    route 1, CSV/operator uninstall 1, PrometheusRule/alerting 1, HTPasswd 2,
+    CronJob 2, TLS service-ca/serving-cert 2, SCC 3, oc rollout 3. OK: NetworkPolicy
+    4, OperatorHub/OLM 5, Alertmanager 5, oc create secret 6, image digests 6,
+    selectors/matchLabels 6, must-gather 7, cluster-admin 9, ServiceAccount 13,
+    jsonpath/custom-columns 13, ConfigMap 14.
+    Phase B should: (1) bump all "Applies to:" to OCP 4.22 (note 5.0 GA) and drop
+    4.12-4.16 examples; (2) fix the 3 invalid/unsupported commands above and move
+    ICSP -> IDMS/ITMS; (3) add exam-shaped pages: Kustomize base/overlays, Helm +
+    templates, routes (edge/passthrough/reencrypt, custom certs) + ingress +
+    non-HTTP/SNI + LoadBalancer/MetalLB, HTPasswd IdP end-to-end (users, password
+    change, groups, role bindings), quotas/ClusterResourceQuota/LimitRange/project
+    template, operator install/uninstall/delete via OLM CLI+console, SA + SCC +
+    privileged pods + API access, Jobs/CronJobs, probes, image tags vs digests;
+    (4) add an EX280 objective-to-page map in learning-path/; (5) decide whether
+    OpenShift Virtualization (EX316) needs its own section - the virtualization/
+    parent implies it but none exists anywhere in the KB.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered this item
+    and the 9 others done alongside it, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/aria-automation
+  - Audit (2026-11-25): 27 pages, 5,631 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" tally:
+    18 "Aria Automation 8.x", 5 "VMware Aria 8.x", 1 "8.x (vRealize Automation)",
+    1 "8.x / 9.x" (troubleshooting/escalation.md:15), 1 "8.x / 8.16+",
+    1 "8.x / 2403+". Version mentions: 8.10-8.18 only; "VCF Automation" on 0 pages,
+    so the whole section presents Aria Automation 8.x as current. 8.x
+    constructs (cloud zones, flavor/image mappings, ABX, vIDM, Aria Suite
+    Lifecycle) are covered; no VCF 9 construct is.
+    Invented or unverified CLI/API (no Broadcom source found):
+    `vracli restore list|start|status` operations/backup-restore.md:89-107 and
+    `vracli backup status` operations/install-upgrade.md:94,119. Broadcom backup
+    guidance is snapshot/image-based (KB 343821).
+    `vracli cloud-account list|sync` deploy/index.md:184-185,204-205,316.
+    `vracli cluster health` deploy/index.md:280, install-upgrade.md:148.
+    `vracli rcs restart`, `vracli pg password set` operations/procedures.md:509-520.
+    `vracli vidm config --host`, `proxy set --http`, `ntp set --servers`
+    operations/cli-reference.md:148,193,204. KB 326114 documents
+    `ntp show-config|status` instead.
+    `/iaas/api/cloud-accounts/<id>/data-collection` architecture/integrations.md:34,
+    `/iaas/api/data-collector-registrations` integrations.md:167, and
+    `.../schedule-data-collection` cli-reference.md:643 are not in the IaaS API
+    reference (it has `/iaas/api/data-collectors`).
+    Auth flow: security/authentication.md:34,56 (jq `.token`),
+    cli-reference.md:419-432 and diagnostics.md:103 (`.cspAuthToken`) take the token
+    straight from /csp/gateway/am/api/login, and the pages disagree on the field
+    name. Documented flow (KB 346005): `login?access_token` -> `refresh_token` ->
+    POST /iaas/api/login {refreshToken} -> `.token`.
+    authentication.md:50 says "8 hours"; KB 346005 says 25 min idle.
+    Fabricated-looking ConfigMap `aria-automation-config` cli-reference.md:383-400.
+    release-notes.md is a template ("Not yet verified").
+  - Cert research (2026-11-25): In VCF 9 the product is "VCF Automation" (VCFA).
+    Per the VCF 9.0 RN, the Assembler, Service Broker and Orchestrator UIs are
+    merged into Consume / Design / Content & Policies menus. Orchestrator is now
+    "VCF Operations orchestrator (previously known as VMware Aria Automation
+    Orchestrator)". Org admins integrate IdPs of their choice. Org types are
+    All Apps (Supervisor/VPC-based) and VM Apps (classic Aria-style cloud zones).
+    Aria Automation 8.18.1 (2024-10-09) is the last 8.x release in the Broadcom
+    build table; it still gets cumulative updates (8.18.1 CU #5 KB exists). EOGS
+    for 8.18.x is 2027-10-11, and Broadcom recommends moving to VCF 9 / VVF 9.
+    There is a dedicated exam: Advanced VMware Cloud Foundation 9 Automation
+    (3V0-21.25), credential VCAP-VCF Automation. Guide dated Nov 2026: 60 items,
+    pass 300 scaled, 135 min, Pearson VUE, $250, no VCP prerequisite listed.
+    Objectives: 2.1 Supervisor and Supervisor NSX components; 3.1 tenancy
+    deployment models, org types (All Apps vs VM Apps), regions / cloud zones /
+    quotas / flavors / VM classes / images / extensibility.
+    4.1 Provider Mgmt: portal, IdP, Regions, provider content libraries, rights
+    bundles for Orchestrator, system/global roles, VCF Data Services, provider
+    certs, org branding, create/delete org, Provider Consumption Org (PCO).
+    4.2 Org Mgmt (All Apps): IdP, access control, integrations (Orchestrator,
+    Git), certs and secrets, projects, governance policies, Namespace Class, VPCs
+    and connectivity profiles, Private Transit Gateway IP blocks and IP quotas.
+    4.3 Consumption: org content library, images, subscriptions, resource types,
+    custom property groups, custom resources and resource actions, blueprints,
+    Service Catalog, Day 2 actions, deploy/configure VCF Ops orchestrator,
+    workflows, actions, plug-ins.
+    5.1 monitor VCFA via VCF Operations, Provider Mgmt and All Apps orgs.
+    Also: 2V0-17.25 Obj 4.4 "VCF: Consume and Automate" (12 VCFA bullets).
+    The old 2V0-31.23 (Aria Automation 8.10, VCP-CMA 2024) is absent from the
+    2026 VCF cert-paths PDF but not on the Jul-2025 retired list; current status
+    not verified. 2V0-31.21 retired 2024-01-31.
+    Sources (primary, vendor): docs.broadcom.com/doc/VCAP-Automation-exam-guide;
+    broadcom.com/support/education/vmware/certification/Automation-9.0;
+    docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide;
+    docs.broadcom.com/doc/vmw-certification-paths;
+    docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges;
+    docs.broadcom.com/doc/vmware-vcp-cma-8.10-exam-preparation-guide;
+    techdocs.broadcom.com VCF 9.0 RN (platform-whats-new, whats-new-vcf-automation,
+    bill-of-materials); knowledge.broadcom.com KB 318130, 456708, 426100, 343821,
+    326114, 346005, 389217; developer.broadcom.com VM Apps org /iaas/api/login
+    (9.0) and Cloud Assembly IaaS API Cloud-Account / Data-Collector pages.
+    Target bar: 3V0-21.25 VCAP-VCF Automation objectives (superset of 2V0-17.25
+    Obj 4.4), keeping 8.18 content as a legacy/migration track to EOGS 2027-10-11.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: VCF
+    Automation, provider management/portal, All Apps/VM Apps, Supervisor, rights
+    bundle, Namespace Class, transit gateway, VM class, VKS, Data Services, org
+    branding, Content Hub, VCF Operations orchestrator. Thin: organization/tenant
+    2, region 2, VPC 1, VCF/Aria Operations 1, property group 2, custom form 1,
+    IdP/OIDC/SAML 4, resource/Day-2 action 4, content source/library 5, Git
+    integration 3, quota 7, provider 8. Legacy-heavy: cloud template/blueprint
+    20, project 15, approval 15, policy 14, ABX 13, vIDM/WS1 Access 13,
+    Orchestrator 10, cloud zone 9.
+    Phase B should: (1) add VCF Automation 9.x pages: provider portal, regions,
+    provider networking, orgs (All Apps vs VM Apps, PCO), IdP, VPC / transit
+    gateway / IP quotas, namespace classes, content libraries, governance
+    policies, blueprints and catalog, Day 2, VCF Ops orchestrator, monitoring via
+    VCF Operations; (2) relabel existing pages as Aria Automation 8.18 (EOGS
+    2027-10-11) and add an 8.x -> VCFA import/migration page (KB 426100); (3) fix
+    or remove the invented vracli commands and IaaS paths listed above, rewrite
+    auth to the KB 346005 refresh-token flow, and drop fabricated ConfigMaps and
+    expected outputs; (4) replace the template release-notes table with the KB
+    318130 build table.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered this item
+    and the 9 others done alongside it, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/aria-operations
+  - Audit (2026-11-25): 38 pages, 6,598 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). Largest: procedures.md
+    682, troubleshooting/diagnostics.md 533, operations/health-checks.md 507,
+    deploy/index.md 422. "Applies to:" all 8.x: "Aria Ops 8.x" 19, "VMware Aria
+    8.x" 10, "Aria Operations 8.x" 6, 3 variants 1 each. Versions cited: 8.10-8.18
+    only; zero pages mention VCF Operations, VCF 9, or Fleet Management (only 1
+    says "Cloud Foundation"). Presents 8.x as current; no 9.0 rename/upgrade note.
+    release-notes.md is the template "Unverified version history" table.
+    Invented/wrong CLI and API (verified against Broadcom primary sources):
+    - `vracli` (Aria Automation/Orchestrator appliance CLI, not Ops) used as the
+      Ops CLI on 42 lines in 7 files: operations/cli-reference.md:25,28,31,68,74,
+      123,126,158,164,199,202,228,275 (section headed "vcops-admin CLI" :19);
+      operations/backup-restore.md:24-129 (12 lines); operations/scripts.md:43,47,
+      51,84; troubleshooting/common-issues.md:17,60,141,182;
+      operations/procedures.md:347,360,377; operations/health-checks.md:46,96;
+      learning-path/index.md:56.
+    - `vcops-cli.sh cluster-status|adapter-status` deploy/index.md:146,172,202,
+      256,335,342,348,372,399 and `/usr/lib/vmware-vcopssuite/python/bin/
+      vcops-admin` troubleshooting/escalation.md:143,146,166,173,283,293,297 are not
+      in KB 413798; documented tools are `vrops-status` + `service vmware-vcops|
+      api|analytics|collector|gemfire|vpostgres|vmware-casa ...` (vrops-status on
+      0 pages). Cluster tool is sliceConfiguration/bin/vcopsClusterManager.py
+      (KB 313533, located by search, not fetched).
+    - Suite API paths absent from the VCF Operations 9.0 API reference:
+      /suite-api/api/health troubleshooting/diagnostics.md:23,194,529;
+      /api/analytics + /api/analytics/run troubleshooting/common-issues.md:117,123;
+      /api/adapterinstances troubleshooting/diagnostics.md:209; /api/backups
+      operations/backup-restore.md:85,89; /api/resources/count
+      operations/health-checks.md:473; /api/notifications/test
+      operations/procedures.md:303; /api/notifications/<id>/actions/test
+      troubleshooting/common-issues.md:222; /api/auth/userquery
+      security/access-control.md:97. Confirmed real: auth/token/acquire (11 uses,
+      body username/password/authSource OK), deployment/node/status,
+      auth/usergroups, alerts, alertdefinitions, adapters, adapterkinds,
+      resources, resources/query, notifications/rules, versions/current.
+    - Header `Authorization: vRealizeOpsToken` on 32 lines; 9.0 header scheme
+      (OpsToken?) not verified from primary source.
+  - Cert research (2026-11-25): Dedicated live exam exists: Advanced VMware Cloud
+    Foundation 9 Operations (3V0-22.25) -> VCAP-VCF Operations; exam guide dated
+    November 2026; 60 items, pass 300 scaled, 135 min, Pearson VUE; content based
+    on VCF 9; only Section 4 testable (16 objectives); courses VCF Operations:
+    Advanced Design / Advanced Configuration / Advanced Troubleshooting [V9.0].
+    Objectives: 4.1 Day-2 tasks (Unified Cloud Proxies/Collector Groups, scale
+    Ops/Logs/Networks, Automation Central jobs, RBAC, new integration); 4.2
+    capacity (allocation vs demand models, reclamation: powered-off/idle VMs,
+    snapshots, orphaned disks, exclusions; rightsizing policy; custom profiles);
+    4.3 What-If (add/remove workloads, hosts, HCI hosts; migrate to VMware Cloud
+    or public cloud; commit multiple); 4.4 cost (currency, provider/consumer,
+    cost vs price, cost drivers, rate card, chargeback, billing); 4.5 policies
+    (create/apply, hierarchy, assign to object); 4.6 workload optimization
+    (business vs operational intent, host/cluster intent, Moderate/Consolidate/
+    Balanced, buffer, Advanced Workload Placement w/ VCF Automation); 4.7 apps
+    (custom groups, Service Discovery vs Managed vs open-source Telegraf, Business
+    Applications); 4.8 management packs (install/configure, Kubernetes, MP
+    Builder); 4.9 alerts, outbound plugins, notifications, custom alerts,
+    troubleshooting workbench, Log Assist; 4.10 dashboards/views/reports; 4.11
+    super metrics; 4.12 Ops for Logs (alert queries, dashboards, content packs);
+    4.13 Ops for Networks; 4.14 Fleet Management (lifecycle scale/upgrade, cert
+    mgmt, password mgmt, VCF SSO/Identity & Access); 4.15 license mgmt; 4.16
+    compliance benchmarks, config drift, Audit Users. Baseline: 2V0-17.25
+    Obj 4.2/4.3 (coordinator-verified). Legacy: VCP-CO 2V0-32.24 (vROps 8.x +
+    Log Insight + vRSLCM; guide last updated 8/1/2025) — not the target; Broadcom
+    retired list (July 2025) shows VCP-CO 2023 retired, 2V0-32.24 status not
+    stated. Product: Aria Operations 8.18 EoGS 2027-10-11, Broadcom recommends
+    upgrading to VCF Operations 9.0 (KB 422643). 9.0 sizing (KB 397782): XS/S/M/
+    L/XL nodes, all nodes same size, HA tolerates 1 node failure, CA tolerates 1
+    fault-domain failure + 1 witness node (2 vCPU/8 GB), CP/UCP Small/Standard.
+    Sources (primary, vendor): docs.broadcom.com/doc/VCAP-Operation-exam-guide;
+    docs.broadcom.com/doc/vmw-certification-paths;
+    docs.broadcom.com/doc/vmw-vcp-co-8-x-exam-guide;
+    docs.broadcom.com/doc/vcp-co-certification-details;
+    docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges;
+    docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide;
+    knowledge.broadcom.com/external/article/422643 (8.18 EoGS);
+    knowledge.broadcom.com/external/article/397782 (9.0 sizing);
+    knowledge.broadcom.com/external/article/413798 (service CLI);
+    knowledge.broadcom.com/external/article/389225 (token acquire);
+    developer.broadcom.com/xapis/vcf-operations-api/9.0/ (endpoint pages +
+    api-security-schema)
+    Target bar: VCAP-VCF Operations 3V0-22.25 (all 16 Section-4 objectives), with
+    2V0-17.25 Obj 4.2/4.3 as the VCP-level floor; content must be VCF Operations 9.
+  - Gap vs blueprint (pages mentioning each term, out of 38): Zero coverage: VCF
+    Operations, VCF 9, Fleet Management, Unified Cloud Proxy, Automation Central,
+    Log Assist, orphaned disk, chargeback/showback, currency, business intent,
+    operational intent, buffer, custom profile, Business Applications, Management
+    Pack Builder, compliance benchmark, troubleshooting workbench, witness, fault
+    domain, VCF SSO/Identity & Access, Service Discovery, configuration drift,
+    custom views (as a feature), vrops-status. Thin: what-if 1, rightsizing 1,
+    telegraf 1, rate card 1, content pack 1, allocation 2, demand 2, cost driver 2,
+    policy hierarchy 2, custom group 3, compliance 3, cloud proxy 3, license 3,
+    super metric 4, reclaim 4, lifecycle 4, symptom 6. Moderate: management pack
+    10, remote collector 10 (legacy term), collector group 5, dashboard 16,
+    report 11, notification 8, outbound 9, certificate 15, password 12, vSAN 12.
+    Ops for Logs/Networks overlap (4.12/4.13) -> sibling queue items.
+    Phase B should: (1) reframe section as VCF Operations 9 (8.18 as legacy, EoGS
+    2027-10-11) and fix all Applies-to lines; (2) purge vracli / vcops-cli.sh /
+    vcops-admin content and rebuild CLI page on vrops-status + service commands
+    + vcopsClusterManager.py, verified per KB; (3) remove/replace the 8 unlisted
+    Suite API paths and verify the 9.0 auth header; (4) add pages for capacity
+    models + reclamation + rightsizing, What-If (all 6 scenario types), cost/
+    rate cards/chargeback, policies + hierarchy, business/operational intent,
+    app monitoring (Service Discovery, Telegraf, Business Applications), MP
+    install + MP Builder, alerts/symptoms/notifications/outbound + workbench +
+    Log Assist, custom views/reports/dashboards, super metrics, Fleet Management
+    (lifecycle, certs, passwords, VCF SSO, licensing), compliance benchmarks +
+    config drift + Audit Users; (5) architecture: node sizes, HA vs CA + witness,
+    cloud proxy/UCP + collector groups per KB 397782; (6) exam-style scenario
+    labs mapped to 3V0-22.25 objective numbers.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered this item
+    and the 9 others done alongside it, none touched docs/). Queue file only.
 - [ ] virtualization/vmware/products/aria-operations-for-logs
 - [ ] virtualization/vmware/products/aria-operations-for-networks
 - [ ] virtualization/vmware/products/aria-suite-lifecycle
