@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Component States", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/architecture/component-states/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "How vSAN classifies each object component's health — from the initial ABSENT state through DEGRADED and STALE to REBUILDING — and what each state means...", "dateModified": "2026-07-13", "datePublished": "2026-06-02"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Component States", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/architecture/component-states/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "How vSAN classifies each object component's health — from the initial ABSENT state through DEGRADED and STALE to REBUILDING — and what each state means...", "dateModified": "2026-11-26", "datePublished": "2026-06-02"}</script>
   
 
   
@@ -9191,7 +9191,7 @@
 <div class="kb-summary">
 How vSAN classifies each object component's health — from the initial ABSENT state through DEGRADED and STALE to REBUILDING — and what each state means operationally for data protection and admin action.
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <hr />
@@ -9205,20 +9205,13 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 - Temporary power interruption to a single host</p>
 <p><strong>What vSAN does:</strong> Nothing yet. The <code>clomRepairDelay</code> timer starts counting. Default is 60 minutes.</p>
 <p><strong>What you should do:</strong> If the outage is planned and short (reboot, patch), do nothing — let the timer run. If the host doesn't return within the timer window, investigate.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check for absent components</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>component<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>absent
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Objects with absent components (components are listed per object)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>absent
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check which objects own absent components</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>absent
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Object health summary (counts per health state)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>health<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Name                                    Health Status
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vsan-health-check-vsan-cluster-health   absent
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vsan-health-check-vsan-physical-disk    absent
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vsan-health-check-vsan-object-health    absent
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Object UUID                              Owner Node    Status
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>52e4c8f1-a2b4-4d7e-9c1f-8b3a2e5d6f9a   esx-node-02   absent
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>7f9d2c1e-5a3b-4c6d-8e9f-1a2b3c4d5e6f   esx-node-04   absent
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9232,10 +9225,10 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 <tbody>
 <tr>
 <td><code>grep: (standard input): No such file or directory</code></td>
-<td>Verify the ESXi host is vSAN-enabled and the vSAN service is running with <code>systemctl status vsanvpd</code>.</td>
+<td>Verify the ESXi host is vSAN-enabled with <code>esxcli vsan cluster get</code>; restart any stopped vSAN daemon per <a href="https://knowledge.broadcom.com/external/article/318410">Broadcom KB 318410</a>.</td>
 </tr>
 <tr>
-<td><code>Error: Unknown command or namespace vsan.debug</code></td>
+<td><code>Error: Unknown command or namespace vsan debug</code></td>
 <td>Ensure you are running the command on a vSAN cluster member; this command is not available on non-vSAN hosts.</td>
 </tr>
 </tbody>
@@ -9295,7 +9288,7 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </tr>
 <tr>
 <td><code>Resync Queue Summary: (empty)</code></td>
-<td>This is normal if no objects are degraded; check actual object health with <code>esxcli vsan object list</code> to confirm cluster state.</td>
+<td>This is normal if no objects are degraded; check actual object health with <code>esxcli vsan debug object list</code> to confirm cluster state.</td>
 </tr>
 </tbody>
 </table>
@@ -9377,14 +9370,13 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </table>
 </div>
 <p><strong>Throttle rebuild during business hours:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Limit rebuild to 500 IOPS (reduce VM impact)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">500</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Limit resync traffic to 500 Mbps (range 0-512; reduces VM impact)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="w"> </span><span class="m">500</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Remove throttle during off-hours for faster completion</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Remove throttle during off-hours for faster completion (0 = no throttling)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(no output — command completes silently)
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(no output — command completes silently)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9397,7 +9389,7 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Unknown command or namespace vsan debug resync</code></td>
+<td><code>Error: Unknown command or namespace vsan resync</code></td>
 <td>Verify vSAN is licensed and enabled on the cluster; this command requires vSAN to be active on the host.</td>
 </tr>
 <tr>
@@ -9496,17 +9488,10 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Identify inaccessible objects</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>inaccessible
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Check which components are involved</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>component<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>inaccessible
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Detail (components, hosts, disks) for one inaccessible object</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>-u<span class="w"> </span>&lt;object-uuid&gt;
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Object UUID                              Inaccessible Components
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>52a4c8f1-2b3e-4a9c-b1d2-7f8e9c0a1b2c    1
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>7c9d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f    2
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c    3
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Component UUID                           Inaccessible Count
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>a1b2c3d4-e5f6-7a8b-9c0d-1e2f-3a4b5c6d   1
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>d4e5f6a7-b8c9-d0e1-f2a3-b4c5-d6e7f8a9   2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9552,7 +9537,7 @@ How vSAN classifies each object component's health — from the initial ABSENT s
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

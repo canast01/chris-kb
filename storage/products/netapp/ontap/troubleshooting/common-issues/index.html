@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Common Issues", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Common Issues reference covering Incident Triage Decision Tree, Quick Reference, Volume Full / Write Errors, Aggregate Capacity Critical, SnapMirror Lag /...", "dateModified": "2026-11-23", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Common Issues", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Common Issues reference covering Incident Triage Decision Tree, Quick Reference, Volume Full / Write Errors, Aggregate Capacity Critical, SnapMirror Lag /...", "dateModified": "2026-11-26", "datePublished": "2026-05-06"}</script>
   
 
   
@@ -8805,7 +8805,7 @@
 <div class="kb-summary">
 Common Issues reference covering Incident Triage Decision Tree, Quick Reference, Volume Full / Write Errors, Aggregate Capacity Critical, SnapMirror Lag / Unhealthy Relationship and 6 more sections.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 <p><img alt="ONTAP — Common Issues" src="../../../../../../assets/storage-netapp-ontap-troubleshooting-common-issues.svg" /></p>
 <p><img alt="ONTAP — Common Issues diagram: Diagnostic Flow, Incident Triage Decision Tree, Quick Reference, Volume Full / Write Errors, Aggregate Capacity Critical" src="kroki-generated-846ef92c-f8fb-3b75-ada8-a18f9ce5ad08.svg" /></p>
@@ -8822,7 +8822,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </ul>
 <hr />
 <h2 id="incident-triage-decision-tree">Incident Triage Decision Tree<a class="headerlink" href="#incident-triage-decision-tree" title="Permanent link">&para;</a></h2>
-<p><img alt="Incident Triage Decision Tree diagram: Incident Reported, cluster show All nodes healthy?, storage failover show HA takeover active?" src="kroki-generated-35e0270f-3398-3f3f-aad1-71d9e88e1e94.svg" /></p>
+<p><img alt="Incident Triage Decision Tree diagram: Incident Reported, cluster show All nodes healthy?, storage failover show HA takeover active?" src="kroki-generated-b6144c58-6836-3d38-a8fb-23c4a64ec09b.svg" /></p>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8836,7 +8836,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <tr>
 <td>Volume full / write errors to hosts</td>
 <td>Volume space exhausted; autogrow not configured or hit max</td>
-<td><code>volume show -fields used-percent,autosize-mode</code>; increase max-autosize or delete old snapshots with <code>snapshot delete</code></td>
+<td><code>volume show -fields used-percent,autosize-mode</code>; increase max-autosize or delete old snapshots with <code>volume snapshot delete</code></td>
 </tr>
 <tr>
 <td>Aggregate nearly full (&gt;90%)</td>
@@ -8846,7 +8846,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <tr>
 <td>SnapMirror lag exceeding RPO</td>
 <td>Network bandwidth contention, dedupe/SnapMirror scheduling conflict, or throttle active</td>
-<td><code>snapmirror show -fields lag-time,transfer-bytes</code>; adjust schedule; check <code>snapmirror config-replication show</code></td>
+<td><code>snapmirror show -fields lag-time,total-transfer-bytes</code>; adjust schedule; check <code>snapmirror show -fields current-throttle</code></td>
 </tr>
 <tr>
 <td>NFS mount hangs after SP takeover</td>
@@ -8856,7 +8856,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <tr>
 <td>iSCSI session dropped</td>
 <td>LIF failover changed IP; host iSCSI initiator did not reconnect</td>
-<td><code>iscsi session show</code>; confirm LIF IP stability; rescan iSCSI on host; verify multipath (<code>multipath -ll</code> on Linux)</td>
+<td><code>vserver iscsi session show</code>; confirm LIF IP stability; rescan iSCSI on host; verify multipath (<code>multipath -ll</code> on Linux)</td>
 </tr>
 <tr>
 <td>Node takeover not auto-triggering</td>
@@ -8866,7 +8866,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <tr>
 <td>SMB/CIFS shares inaccessible</td>
 <td>CIFS server stopped or Kerberos ticket issue with Active Directory</td>
-<td><code>vserver cifs show</code>; <code>vserver cifs domain info -vserver &lt;svm&gt;</code>; verify AD connectivity and DNS resolution</td>
+<td><code>vserver cifs show</code>; <code>vserver cifs domain discovered-servers show -vserver &lt;svm&gt;</code>; verify AD connectivity and DNS resolution</td>
 </tr>
 <tr>
 <td>Slow NFS performance</td>
@@ -8968,7 +8968,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-autosize-mode<span class="w"> </span>grow_shrink<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-max-autosize<span class="w"> </span>1T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-autosize-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Option 3 — Delete old or unnecessary snapshots</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
@@ -8986,7 +8986,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cluster1::&gt; volume size -vserver svm_prod -volume vol_data -new-size 500G
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Volume modify successful: volume "vol_data" size set to 500GB.
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cluster1::&gt; volume modify -vserver svm_prod -volume vol_data -autosize-mode grow_shrink -max-autosize 1T -grow-threshold-percent 85
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cluster1::&gt; volume modify -vserver svm_prod -volume vol_data -autosize-mode grow_shrink -max-autosize 1T -autosize-grow-threshold-percent 85
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Volume modify successful: volume "vol_data" autogrow enabled.
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>cluster1::&gt; volume snapshot show -vserver svm_prod -volume vol_data
@@ -9130,8 +9130,8 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Option 3 — Reduce snapshot reserves across volumes in the aggregate</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span><span class="m">5</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Option 4 — Run storage efficiency on all volumes in the aggregate</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Option 4 — Run storage efficiency on a volume in the aggregate</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cluster1::&gt; volume move start -vserver svm1 -volume vol_data01 -destination-aggregate aggr2
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Operation started successfully.
@@ -9155,8 +9155,8 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>cluster1::&gt; volume modify -vserver svm1 -volume vol_data01 -percent-snapshot-space 5
 <a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>Volume modify successful.
 <a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>cluster1::&gt; volume efficiency start -aggregate aggr1
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>Efficiency operation started on 6 volumes.
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>cluster1::&gt; volume efficiency start -vserver svm1 -volume vol_data01
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>(output varies; see https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-start.html)
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9197,13 +9197,13 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state,last-transfer-size
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Show only unhealthy relationships</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-healthy<span class="w"> </span><span class="nb">false</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check transfer history for failures</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>snapmirror<span class="w"> </span>show-history<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check for throttle limiting transfer speed</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>snapmirror<span class="w"> </span>config-replication<span class="w"> </span>show
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>current-throttle
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Check intercluster LIF connectivity between clusters</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
@@ -9222,32 +9222,25 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>------------------------   ------------------------   --------
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>svm3:vol_archive           svm4:vol_archive_mirror    broken-off
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>Snapshot              Bytes Transferred  Duration   Result
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>-------------------  -----------------  ---------  ------
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>2024.01.15_0200       5.2GB              00:18:32   Success
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>2024.01.14_1400       0B                 00:02:15   Failed
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>2024.01.14_0600       4.8GB              00:16:47   Success
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>Vserver              Policy              Throttle (KB/s)  RPO (minutes)
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>-------------------  -----------------  ---------------  ---------------
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>svm1                 DPDefault           Unlimited        60
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>svm3                 DPDefault           51200            60
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>snapmirror show-history / snapmirror show -fields current-throttle: output varies; see
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>https://docs.netapp.com/us-en/ontap-cli/snapmirror-show-history.html
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Interface Name       IP Address          Role         Status
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>-------------------  ------------------  -----------  ------
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>cluster1_ic_lif1     192.168.100.45      intercluster up
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>cluster1_ic_lif2     192.168.100.46      intercluster up
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>cluster2_ic_lif1     192.168.101.50      intercluster up
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>cluster2_ic_lif2     192.168.101.51      intercluster down
 <a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>Interface Name       IP Address          Role         Status
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>-------------------  ------------------  -----------  ------
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>cluster1_ic_lif1     192.168.100.45      intercluster up
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>cluster1_ic_lif2     192.168.100.46      intercluster up
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>cluster2_ic_lif1     192.168.101.50      intercluster up
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>cluster2_ic_lif2     192.168.101.51      intercluster down
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>Peer Cluster         Peer Address        Status
-<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>-------------------  ------------------  --------
-<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>cluster2             192.168.101.50      available
-<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>
-<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>PING 192.168.101.50 (192.168.101.50): 56 data bytes
-<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>64 bytes from 192.168.101.50: icmp_seq=0 ttl=64 time=2.341 ms
-<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>64 bytes from 192.168.101.50: icmp_seq=1 ttl=64 time=2.287 ms
-<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>64 bytes from 192.168.101.50: icmp_seq=2 ttl=64 time=2.415 ms
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>Peer Cluster         Peer Address        Status
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>-------------------  ------------------  --------
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>cluster2             192.168.101.50      available
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>PING 192.168.101.50 (192.168.101.50): 56 data bytes
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>64 bytes from 192.168.101.50: icmp_seq=0 ttl=64 time=2.341 ms
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>64 bytes from 192.168.101.50: icmp_seq=1 ttl=64 time=2.287 ms
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>64 bytes from 192.168.101.50: icmp_seq=2 ttl=64 time=2.415 ms
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9344,11 +9337,11 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>lif,home-node,home-port,curr-node,curr-port
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Check NFS grace period state (clients waiting for lock reclaim)</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Grace period is typically 45 seconds after failover</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>grace-period
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># (NFSv4 grace period setting, in seconds)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>v4-grace-seconds
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Check for connected NFS clients</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>connected-clients<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Check export policy — did it change during failover?</span>
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
@@ -9365,24 +9358,17 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>nfs_svm     nfs_lif_01     node-01         e0d       node-02         e0c
 <a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>nfs_svm     nfs_lif_02     node-02         e0d       node-02         e0d
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>cluster1::&gt; nfs show -vserver nfs_svm -fields grace-period
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>Vserver Grace-Period
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>------- ---------------
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>nfs_svm 0 seconds
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>cluster1::&gt; vserver nfs show -vserver nfs_svm -fields v4-grace-seconds
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>cluster1::&gt; vserver nfs connected-clients show -vserver nfs_svm
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>(output varies; see https://docs.netapp.com/us-en/ontap-cli/vserver-nfs-show.html and
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>https://docs.netapp.com/us-en/ontap-cli/vserver-nfs-connected-clients-show.html)
 <a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>cluster1::&gt; nfs connected-client show -vserver nfs_svm
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>Vserver Client-IP       Protocol Version State
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>------- --------------- -------- ------- -------
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>nfs_svm 10.50.12.88     tcp      nfs3    connected
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>nfs_svm 10.50.12.89     tcp      nfs4    connected
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>nfs_svm 10.50.12.90     tcp      nfs4    connected
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>cluster1::&gt; vserver export-policy show -vserver nfs_svm
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>Vserver         Policy Name
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>--------------- ----------------
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>nfs_svm         default
-<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>nfs_svm         prod_exports
-<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>nfs_svm         backup_exports
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>cluster1::&gt; vserver export-policy show -vserver nfs_svm
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>Vserver         Policy Name
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>--------------- ----------------
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>nfs_svm         default
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>nfs_svm         prod_exports
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>nfs_svm         backup_exports
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9504,8 +9490,8 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </ul>
 <h3 id="diagnosis_4">Diagnosis<a class="headerlink" href="#diagnosis_4" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check iSCSI sessions from ONTAP side</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>initiator-name,tpgroup,lif
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>initiator-name,tpgroup
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Check iSCSI LIFs are operational</span>
 <a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi
@@ -9554,7 +9540,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <tbody>
 <tr>
 <td><code>Error: "No iSCSI sessions found for Vserver &lt;svm&gt;"</code></td>
-<td>Verify the initiator is connected and the target portal group is reachable using <code>iscsi connection show</code>.</td>
+<td>Verify the initiator is connected and the target portal group is reachable using <code>vserver iscsi connection show</code>.</td>
 </tr>
 <tr>
 <td><code>Error: "LUN is offline"</code></td>
@@ -9569,13 +9555,13 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </div>
 <h3 id="resolution_4">Resolution<a class="headerlink" href="#resolution_4" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Bring a LUN back online if it went offline</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>lun<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>/vol/&lt;vol&gt;/&lt;lun_name&gt;
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>lun<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>/vol/&lt;vol&gt;/&lt;lun_name&gt;<span class="w"> </span>-state<span class="w"> </span>online
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Verify iSCSI service is running on the SVM</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>iscsi<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-is-admin-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-status-admin<span class="w"> </span>up
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>LUN /vol/data_vol/lun_prod_01 brought online.
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>lun modify -state online: see https://docs.netapp.com/us-en/ontap-cli/lun-modify.html
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Vserver: svm_prod_01
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>Admin Enabled: true
@@ -9803,7 +9789,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <h3 id="diagnosis_6">Diagnosis<a class="headerlink" href="#diagnosis_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Check CIFS server status and domain join health</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>discovered-servers<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 <a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>
 <a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="c1"># Check for Active Directory connectivity issues</span>
 <a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
@@ -9879,8 +9865,8 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;netbios_name&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="w">    </span>-domain<span class="w"> </span>&lt;domain.corp&gt;<span class="w"> </span>-ou<span class="w"> </span><span class="s2">"OU=Servers,DC=domain,DC=corp"</span>
 <a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
-<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># Reset the CIFS machine account password (requires Domain Admin)</span>
-<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>password<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># Reset the CIFS machine account password (requires domain credentials)</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>password<span class="w"> </span>reset<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 <a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>
 <a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a><span class="c1"># Verify DNS resolution from the SVM</span>
 <a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
@@ -9891,7 +9877,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>SVM "svm_prod_01" started successfully.
 <a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>CIFS configuration deleted for SVM "svm_prod_01".
 <a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>CIFS server "NETAPP-SVM01" created successfully for domain "domain.corp".
-<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>CIFS machine account password reset for SVM "svm_prod_01".
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>vserver cifs domain password reset: see https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-domain-password-reset.html
 <a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>Vserver "svm_prod_01" DNS Check
 <a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>    Vserver Name: svm_prod_01
 <a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>    Nameserver: 10.20.30.40
@@ -9918,7 +9904,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </tr>
 <tr>
 <td><code>Error: DNS name resolution failed for domain.corp</code></td>
-<td>Verify DNS nameservers are configured on the SVM with <code>vserver services name-service dns modify -vserver &lt;svm&gt; -servers &lt;ip1&gt;,&lt;ip2&gt;</code> and that the domain controller is reachable.</td>
+<td>Verify DNS nameservers are configured on the SVM with <code>vserver services name-service dns modify -vserver &lt;svm&gt; -name-servers &lt;ip1&gt;,&lt;ip2&gt;</code> and that the domain controller is reachable.</td>
 </tr>
 <tr>
 <td><code>Error: Failed to reset CIFS machine account password: Access Denied</code></td>
@@ -10014,8 +10000,8 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </div>
 <h3 id="resolution_7">Resolution<a class="headerlink" href="#resolution_7" title="Permanent link">&para;</a></h3>
 <p>ONTAP will automatically initiate RAID reconstruction when a spare disk is available. No manual intervention is needed for reconstruction to start.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Confirm reconstruction is underway</span>
-<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Show RAID layout and disk status for the aggregate</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
 <a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
 <a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Mark a disk as failed if ONTAP has not done so automatically</span>
 <a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>storage<span class="w"> </span>disk<span class="w"> </span>fail<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_id&gt;
@@ -10061,10 +10047,10 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Capture current cluster state: <code>cluster show</code>, <code>storage failover show</code>, <code>system health alert show</code></li>
-<li>Collect EMS events for the relevant timeframe: <code>event log show -time-range &lt;start&gt;..&lt;end&gt;</code></li>
+<li>Collect EMS events for the relevant timeframe: <code>event log show -time "&lt;start&gt;".."&lt;end&gt;"</code> (MM/DD/YYYY HH:MM:SS)</li>
 <li>Generate an AutoSupport: <code>system node autosupport invoke -node * -type all -message "case &lt;number&gt;"</code></li>
-<li>Note the exact ONTAP version: <code>system image show</code></li>
-<li>Record the hardware platform and serial numbers: <code>system node show -fields model,serial-number</code></li>
+<li>Note the exact ONTAP version: <code>system node image show</code></li>
+<li>Record the hardware platform and serial numbers: <code>system node show -fields model,serialnumber</code></li>
 <li>Describe the timeline of the issue — when it started, what changed (upgrade, config change, load change)</li>
 <li>Have the NetApp support site login ready: <a href="https://mysupport.netapp.com">https://mysupport.netapp.com</a></li>
 </ol>
@@ -10104,7 +10090,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 11:06:56 UTC"><span class="timeago" datetime="2026-11-23T11:06:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 11:06:56 UTC">2026-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

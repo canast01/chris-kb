@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Health Checks", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/health-checks/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Health Checks reference covering Health Check Decision Flow, Daily Checks, Health Check, Cluster Health, Pre-Change Checklist and 1 more sections.", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Health Checks", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/health-checks/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Health Checks reference covering Health Check Decision Flow, Daily Checks, Health Check, Cluster Health, Pre-Change Checklist and 1 more sections.", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -8654,7 +8654,7 @@
 <div class="kb-summary">
 Health Checks reference covering Health Check Decision Flow, Daily Checks, Health Check, Cluster Health, Pre-Change Checklist and 1 more sections.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8669,12 +8669,12 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 <ol>
 <li><strong>Cluster health</strong> — <code>cluster show -health true</code> — all nodes should return Healthy</li>
 <li><strong>Node status</strong> — <code>system node show</code> — all nodes should be Online</li>
-<li><strong>Volume health</strong> — <code>volume show -health-status degraded</code> — should return no entries</li>
-<li><strong>Aggregate status</strong> — <code>aggr show -state !online</code> — should return no entries</li>
-<li><strong>Disk health</strong> — <code>disk show -state !present</code> and <code>disk show -broken-count</code> — count should be 0</li>
-<li><strong>SVM status</strong> — <code>vserver show -state !running</code> — all SVMs should be Running</li>
-<li><strong>SnapMirror health</strong> — <code>snapmirror show -health false</code> — should return empty</li>
-<li><strong>NVRAM battery</strong> — <code>system node show -fields nvram-battery-status</code> — all should show Ok</li>
+<li><strong>Volume health</strong> — <code>volume show -state !online</code> — should return no entries</li>
+<li><strong>Aggregate status</strong> — <code>storage aggregate show -state !online</code> — should return no entries</li>
+<li><strong>Disk health</strong> — <code>storage disk show -broken</code> — should return no entries</li>
+<li><strong>SVM status</strong> — <code>vserver show -operational-state !running</code> — all SVMs should be Running</li>
+<li><strong>SnapMirror health</strong> — <code>snapmirror show -healthy false</code> — should return empty</li>
+<li><strong>NVRAM battery</strong> — <code>system node environment sensors show -type battery-life</code> — no sensor outside its normal range</li>
 </ol>
 <h2 id="health-check-decision-flow">Health Check Decision Flow<a class="headerlink" href="#health-check-decision-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Health Check Decision Flow" src="../../../../../../assets/storage-netapp-ontap-hc-health-check-decision-flow.svg" /></p>
@@ -8726,8 +8726,8 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 <td>confirm all volumes are online and below threshold</td>
 </tr>
 <tr>
-<td>[ ] Run <code>event log show -messagename callhome.*</code></td>
-<td><code>event log show -messagename callhome.*</code></td>
+<td>[ ] Run <code>event log show -message-name callhome.*</code></td>
+<td><code>event log show -message-name callhome.*</code></td>
 <td>check for any callhome EMS events since last check</td>
 </tr>
 </tbody>
@@ -8742,7 +8742,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 <li>[ ] No active health alerts with severity <code>error</code> or higher</li>
 <li>[ ] All SVMs are running: <code>svm show -state running</code></li>
 <li>[ ] Network interfaces all online: <code>network interface show -status-oper down</code> returns no results</li>
-<li>[ ] AutoSupport last sent within expected interval: <code>autosupport history show</code></li>
+<li>[ ] AutoSupport last sent within expected interval: <code>system node autosupport history show</code></li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cluster node and HA status</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show
@@ -8764,7 +8764,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Recent callhome EMS events</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>callhome.*
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-message-name<span class="w"> </span>callhome.*
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># SVM and LIF status</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>svm<span class="w"> </span>show
@@ -8890,7 +8890,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 <tbody>
 <tr>
 <td><code>Node prod-node-02 health: false</code></td>
-<td>Check node logs with <code>system node run -node prod-node-02 syslog tail</code> and resolve hardware or software faults before proceeding.</td>
+<td>Check node logs with <code>system node run -node prod-node-02 -command syslog tail</code> and resolve hardware or software faults before proceeding.</td>
 </tr>
 <tr>
 <td><code>Eligibility: false for prod-node-03</code></td>
@@ -9099,7 +9099,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 </tr>
 <tr>
 <td><code>Error: invalid field name "state"</code></td>
-<td>Verify the field name is correct for your ONTAP version; use <code>volume show -help</code> to list available fields.</td>
+<td>Verify the field name is correct for your ONTAP version; use <code>volume show -fields ?</code> to list available fields.</td>
 </tr>
 </tbody>
 </table>
@@ -9146,7 +9146,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 </div>
 <h3 id="ems-events-recent-errors">EMS Events (Recent Errors)<a class="headerlink" href="#ems-events-recent-errors" title="Permanent link">&para;</a></h3>
 <p><img alt="EMS Events (Recent Errors)" src="../../../../../../assets/storage-netapp-ontap-hc-ems-events-recent-errors.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">"1h"</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time<span class="w"> </span>&gt;1h
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Time                Severity Event
@@ -9270,7 +9270,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP Morning Health-Check Runbook", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/morning-health-check/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every morning before starting any operational work.", "dateModified": "2026-07-13", "datePublished": "2026-06-21"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP Morning Health-Check Runbook", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/morning-health-check/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every morning before starting any operational work.", "dateModified": "2026-11-26", "datePublished": "2026-06-21"}</script>
   
 
   
@@ -8809,7 +8809,7 @@ Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every 
 <p>Expected output: no rows. Any broken disk must be replaced immediately. Open a case with NetApp if the disk is under support contract. Do not start any workload migrations until broken disks are replaced.</p>
 <hr />
 <p><strong>Step 10 — Recent error events (last hour)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">"1h"</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time<span class="w"> </span>&gt;1h
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Time                 Severity Event
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>-------------------- -------- -----------------------------------------------
@@ -8843,7 +8843,7 @@ Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every 
 <p>Expected output: no rows, or only informational entries. Review any <code>error</code>-severity events. Cross-reference with steps 3–9 to determine if they are already captured by an alert. Events not tied to an existing alert need investigation.</p>
 <hr />
 <p><strong>Step 11 — AutoSupport delivery</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Node: cluster1-01
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Sequence Number: 1847
@@ -8885,7 +8885,7 @@ Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every 
 </tr>
 <tr>
 <td><code>Error: This command is not supported on this release</code></td>
-<td>Check your ONTAP version with <code>version</code> command; autosupport history show requires ONTAP 9.6 or later.</td>
+<td>Check your ONTAP version with <code>version</code> command; system node autosupport history show requires ONTAP 9.6 or later.</td>
 </tr>
 </tbody>
 </table>
@@ -8972,7 +8972,7 @@ Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

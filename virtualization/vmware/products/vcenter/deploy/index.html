@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Deploy", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers pre-deployment DNS/NTP checks, Stage 1 OVA deployment, Stage 2 SSO and...", "dateModified": "2026-11-23", "datePublished": "2026-06-03"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Deploy", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers pre-deployment DNS/NTP checks, Stage 1 OVA deployment, Stage 2 SSO and...", "dateModified": "2026-11-26", "datePublished": "2026-06-03"}</script>
   
 
   
@@ -8873,7 +8873,7 @@
 <div class="kb-summary">
 End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers pre-deployment DNS/NTP checks, Stage 1 OVA deployment, Stage 2 SSO and network configuration, Active Directory integration, host inventory build, and post-deployment hardening.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <p><img alt="vCenter Deploy Stages" src="../../../../../assets/vcenter-deploy-stages.svg" /></p>
@@ -9168,7 +9168,7 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Expected: no output (all services running)</span>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Confirm vpxd is healthy</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vpxd
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-vpxd
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Expected: Running</span>
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Check disk usage</span>
@@ -9180,16 +9180,15 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Connected to vcenter.example.local.
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>(no output — command completes silently)
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>vpxd                                    Running
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Filesystem      Size  Used Avail Use% Mounted on
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>/dev/sda1        50G   28G   19G  58% /
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>/dev/sda2       100G   67G   28G  69% /storage
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>/dev/sda3        20G    8G   11G  42% /var/log
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>tmpfs           16G  512M  15G   4% /dev/shm
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>                                 Dload  Upload   Total   Spent    Left  Speed
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>100  8234  100  8234    0     0   2847      0  --:-- --:-- --:--  100%
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;title&gt;VMware vSphere Client&lt;/title&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Filesystem      Size  Used Avail Use% Mounted on
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>/dev/sda1        50G   28G   19G  58% /
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>/dev/sda2       100G   67G   28G  69% /storage
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>/dev/sda3        20G    8G   11G  42% /var/log
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>tmpfs           16G  512M  15G   4% /dev/shm
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>                                 Dload  Upload   Total   Spent    Left  Speed
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>100  8234  100  8234    0     0   2847      0  --:-- --:-- --:--  100%
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;title&gt;VMware vSphere Client&lt;/title&gt;
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9309,7 +9308,7 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 <h3 id="configure-file-based-backup">Configure File-Based Backup<a class="headerlink" href="#configure-file-based-backup" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>VAMI: https://vcenter.example.local:5480
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  → Backup → Configure
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    Protocol: SCP (or SFTP / HTTP)
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    Protocol: SFTP (or FTP / FTPS / HTTP / HTTPS / NFS / SMB — KB 322371; SCP was 6.5/6.7 only)
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    Server: backup.example.local
 <a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    Port: 22
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    Directory: /vcenter-backups
@@ -9327,9 +9326,9 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 <a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>--text<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Alias|Issuer|Not After"</span>
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># If CA-signed cert required, use certificate-manager:</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>/usr/lib/vmware-vmcad/certificate-manager
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Option 1: Replace MACHINE_SSL_CERT with custom certificate</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># If CA-signed cert required, use vSphere Certificate Manager (KB 318946):</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Option 1: Replace the Machine SSL certificate with a Custom CA Certificate</span>
 <a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1"># Follow prompts; provide signed cert, private key, and CA chain</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Connected to vcenter.example.local.
@@ -9341,7 +9340,7 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 <a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>Alias: __MACHINE_CERT
 <a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>Issuer: CN=CA,O=Example Corp,C=US
 <a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Not After: 2026-03-15 14:32:18 UTC
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>root@vcenter [ ~ ]# /usr/lib/vmware-vmcad/certificate-manager
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>root@vcenter [ ~ ]# /usr/lib/vmware-vmca/bin/certificate-manager
 <a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>...
 </code></pre></div>
 <div class="admonition warning">
@@ -9356,11 +9355,11 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 <tbody>
 <tr>
 <td><code>vecs-cli: command not found</code></td>
-<td>Ensure you are running the command as root and the vmafd service is running with <code>systemctl status vmware-vmafd</code>.</td>
+<td>Run it as root with the full path <code>/usr/lib/vmware-vmafd/bin/vecs-cli</code>; check the authentication framework service with <code>service-control --status vmafdd</code> (KB 344633).</td>
 </tr>
 <tr>
 <td><code>certificate-manager: command not found</code></td>
-<td>Verify the vmcad package is installed with <code>rpm -qa | grep vmcad</code> and reinstall if missing.</td>
+<td>Use the full path <code>/usr/lib/vmware-vmca/bin/certificate-manager</code> as root (KB 318946).</td>
 </tr>
 </tbody>
 </table>
@@ -9400,11 +9399,11 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 <tbody>
 <tr>
 <td><code>service-control: command not found</code></td>
-<td>Use the full path <code>/usr/lib/vmware-vmafd/bin/service-control</code> or source the VCSA environment setup script.</td>
+<td>Run it from the VCSA Bash shell as root (SSH, then <code>shell</code>) — see KB 344633.</td>
 </tr>
 <tr>
 <td><code>"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local" not found</code></td>
-<td>Verify VCSA is fully initialized and the Lightweight Directory Access Service (LSASS) is running with <code>service-control --status --all | grep vmafdd</code>.</td>
+<td>Verify VCSA is fully initialized and the VMware Authentication Framework (<code>vmafdd</code>) is running with <code>service-control --status vmafdd</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -9513,7 +9512,7 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 10:48:15 UTC"><span class="timeago" datetime="2026-11-23T10:48:15+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 10:48:15 UTC">2026-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

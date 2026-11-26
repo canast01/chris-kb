@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Procedures", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Procedures", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -10156,7 +10156,7 @@
 <div class="kb-summary">
 Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -10481,23 +10481,10 @@ Operational how-to guides for day-to-day vSAN management. Each section covers a 
 <p><img alt="Put a Host in Maintenance Mode" src="../../../../../../assets/vsan-proc-put-a-host-in-maintenance-mode.svg" /></p>
 <p>Always use vCenter, not the ESXi shell — vSAN health validation runs automatically before maintenance begins.</p>
 <p><strong>Step 1 — Confirm cluster is healthy and resync is at zero</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Cluster Status: HEALTHY
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Cluster UUID: 52d4a8c1-7f2e-4c9a-b1e3-9a2c5d8f1b4e
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Cluster Name: VSAN-Cluster-01
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Member Count: 4
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Disk Groups: 4
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Physical Disks: 16
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Capacity: 5.45 TB
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Used Capacity: 2.18 TB
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Free Capacity: 3.27 TB
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Resync Objects: 12
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>Resync Data Size: 847.3 GB
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Resync Rate: 125.4 MB/s
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>Estimated Time Remaining: 1h 52m
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10573,7 +10560,7 @@ Right-click host → Maintenance Mode → Enter Maintenance Mode</p>
 <tbody>
 <tr>
 <td><code>Could not connect to the vSAN health service</code></td>
-<td>Ensure the vSAN service is running on the ESXi host with <code>systemctl status vsanvpd</code> and restart if needed.</td>
+<td>Ensure the vSAN management daemon is running on the ESXi host; restart it with <code>/etc/init.d/vsanmgmtd restart</code> if needed (<a href="https://knowledge.broadcom.com/external/article/318410">Broadcom KB 318410</a>).</td>
 </tr>
 <tr>
 <td><code>Permission denied</code></td>
@@ -10756,7 +10743,7 @@ Right-click VM → VM Policies → Edit VM Storage Policies → select policy �
 <tbody>
 <tr>
 <td><code>Error: Could not connect to the local vSAN service</code></td>
-<td>Ensure vSAN is enabled on the host and the vSAN service is running with <code>systemctl status vsand</code>.</td>
+<td>Ensure vSAN is enabled on the host (<code>esxcli vsan cluster get</code>); restart any stopped vSAN daemon per <a href="https://knowledge.broadcom.com/external/article/318410">Broadcom KB 318410</a>.</td>
 </tr>
 <tr>
 <td><code>Error: Permission denied</code></td>
@@ -10864,7 +10851,8 @@ Cluster → Monitor → vSAN → Virtual Objects → filter by Non-compliant</p>
 </table>
 </div>
 <p><strong>Step 3 — PowerCLI view</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="nb">Get-VsanResyncStatus</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="nb">Get-VsanResyncingOverview</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="nb">Get-VsanResyncingComponent</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Step 4 — UI view</strong></p>
 <p><strong>From vCenter UI:</strong>
@@ -10872,15 +10860,9 @@ Cluster → Monitor → vSAN → Resyncing Objects</p>
 <h3 id="throttle-resync-during-production-hours">Throttle Resync During Production Hours<a class="headerlink" href="#throttle-resync-during-production-hours" title="Permanent link">&para;</a></h3>
 <p><img alt="Throttle Resync During Production Hours" src="../../../../../../assets/vsan-proc-throttle-resync-during-production-hours.svg" /></p>
 <p><strong>Step 1 — Check the current throttle setting</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Resync Throttle Configuration:
-<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>  Throttle Enabled: true
-<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>  Max Outstanding Resync Operations: 128
-<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>  Max Resync Network Bandwidth (MB/s): 500
-<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>  Resync Task Concurrency: 4
-<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>  Resync Priority: normal
-<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>  Last Modified: 2024-01-15 14:32:18 UTC
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10893,7 +10875,7 @@ Cluster → Monitor → vSAN → Resyncing Objects</p>
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Unknown command or namespace path: vsan debug resync throttle get</code></td>
+<td><code>Error: Unknown command or namespace path: vsan resync throttle get</code></td>
 <td>Verify the vSAN cluster is properly initialized and the ESXCLI vSAN plugin is installed by running <code>esxcli vsan cluster get</code>.</td>
 </tr>
 <tr>
@@ -10903,14 +10885,15 @@ Cluster → Monitor → vSAN → Resyncing Objects</p>
 </tbody>
 </table>
 </div>
-<p>0 = unlimited. Any positive value = IOPS cap per host.</p>
+<p>The level is in Mbps (0-512); 0 means no throttling.</p>
 <p><strong>Step 2 — Apply throttle during business hours</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">500</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="w"> </span><span class="m">500</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="nb">Set-VsanResyncThrottle</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="n">-IopsForResync</span> <span class="n">500</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c"># Cluster-wide: resync traffic limit in Mbps per disk group (1-512; 0 = no limit)</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-Configuration</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="n">-ResyncThrottlingMbps</span> <span class="n">500</span>
 </code></pre></div>
 <p><strong>Step 3 — Remove throttle during maintenance window</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>(no output — command completes silently)
 </code></pre></div>
@@ -10925,12 +10908,12 @@ Cluster → Monitor → vSAN → Resyncing Objects</p>
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Unknown option or subcommand 'debug'</code></td>
-<td>Verify the vSAN plugin is installed and loaded with <code>esxcli plugin list | grep vsan</code>.</td>
+<td><code>Error: Missing required parameter --level</code></td>
+<td>The level is required: <code>--level &lt;0-512&gt;</code> (Mbps; 0 = no throttling).</td>
 </tr>
 <tr>
 <td><code>Error: The VSAN service is not running</code></td>
-<td>Start the vSAN service with <code>systemctl start vsanvpd</code> or enable it in the vSphere Client.</td>
+<td>Restart the stopped vSAN daemon on the host per <a href="https://knowledge.broadcom.com/external/article/318410">Broadcom KB 318410</a> (for example <code>/etc/init.d/vsanmgmtd restart</code>).</td>
 </tr>
 </tbody>
 </table>
@@ -11104,15 +11087,10 @@ Right-click VM → Snapshots → Delete All Snapshots</p>
 <p><strong>From vCenter UI:</strong>
 Cluster → Configure → vSAN → Disk Management → select new host → Claim Disks</p>
 <p><strong>Step 4 — Monitor rebalance</strong></p>
-<p>vSAN rebalances data automatically. To trigger manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>rebalance<span class="w"> </span>start
+<p>vSAN rebalances data automatically. To trigger manually (PowerCLI; <code>esxcli</code> has no rebalance command):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a><span class="nb">Start-VsanClusterRebalance</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>Rebalance operation started on cluster domain-c8
-<a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>Cluster UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
-<a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a>Rebalance task ID: task-1847
-<a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a>Initial data movement estimate: 2.3 TB
-<a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a>Estimated completion time: 4 hours 32 minutes
-<a id="__codelineno-58-6" name="__codelineno-58-6" href="#__codelineno-58-6"></a>Current cluster capacity utilization: 78%
+<div class="highlight"><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>Output varies; see the cmdlet help in VMware.VimAutomation.Storage: https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -11130,7 +11108,7 @@ Cluster → Configure → vSAN → Disk Management → select new host → Claim
 </tr>
 <tr>
 <td><code>Error: Rebalance operation already in progress on this cluster.</code></td>
-<td>Wait for the current rebalance to complete using <code>esxcli vsan cluster rebalance status</code> or cancel it with <code>esxcli vsan cluster rebalance stop</code>.</td>
+<td>Wait for the current rebalance to complete (<code>Get-VsanResyncingOverview -Cluster &lt;cluster&gt;</code>) or stop it with <code>Stop-VsanClusterRebalance -Cluster &lt;cluster&gt;</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -11213,28 +11191,13 @@ Cluster → Configure → vSAN → Disk Management → select new host → Claim
 <p><strong>Step 1 — Check fault domain configuration</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="nb">Get-VsanFaultDomainConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="nb">Get-VsanFaultDomain</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Step 2 — Test witness host connectivity</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a><span class="c1"># The witness must appear in the unicast agent list of every data host</span>
+<a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>unicastagent<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>Unicast Ping Test
-<a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a>=================
-<a id="__codelineno-66-3" name="__codelineno-66-3" href="#__codelineno-66-3"></a>Target: 192.168.1.45
-<a id="__codelineno-66-4" name="__codelineno-66-4" href="#__codelineno-66-4"></a>Packets sent: 10
-<a id="__codelineno-66-5" name="__codelineno-66-5" href="#__codelineno-66-5"></a>Packets received: 10
-<a id="__codelineno-66-6" name="__codelineno-66-6" href="#__codelineno-66-6"></a>Min latency: 0.234 ms
-<a id="__codelineno-66-7" name="__codelineno-66-7" href="#__codelineno-66-7"></a>Max latency: 1.842 ms
-<a id="__codelineno-66-8" name="__codelineno-66-8" href="#__codelineno-66-8"></a>Avg latency: 0.687 ms
-<a id="__codelineno-66-9" name="__codelineno-66-9" href="#__codelineno-66-9"></a>
-<a id="__codelineno-66-10" name="__codelineno-66-10" href="#__codelineno-66-10"></a>Multicast Test
-<a id="__codelineno-66-11" name="__codelineno-66-11" href="#__codelineno-66-11"></a>==============
-<a id="__codelineno-66-12" name="__codelineno-66-12" href="#__codelineno-66-12"></a>Group: 224.1.1.1
-<a id="__codelineno-66-13" name="__codelineno-66-13" href="#__codelineno-66-13"></a>Packets sent: 10
-<a id="__codelineno-66-14" name="__codelineno-66-14" href="#__codelineno-66-14"></a>Packets received: 10
-<a id="__codelineno-66-15" name="__codelineno-66-15" href="#__codelineno-66-15"></a>Loss: 0%
-<a id="__codelineno-66-16" name="__codelineno-66-16" href="#__codelineno-66-16"></a>
-<a id="__codelineno-66-17" name="__codelineno-66-17" href="#__codelineno-66-17"></a>Network connectivity test completed successfully.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -11302,25 +11265,10 @@ Cluster → Configure → vSAN → Fault Domains</p>
 <h3 id="site-failover-test-planned">Site Failover Test (Planned)<a class="headerlink" href="#site-failover-test-planned" title="Permanent link">&para;</a></h3>
 <p><img alt="Site Failover Test (Planned)" src="../../../../../../assets/vsan-proc-site-failover-test-planned.svg" /></p>
 <p><strong>Step 1 — Confirm cluster health before starting</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
 <a id="__codelineno-69-2" name="__codelineno-69-2" href="#__codelineno-69-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>Cluster Health Status
-<a id="__codelineno-70-2" name="__codelineno-70-2" href="#__codelineno-70-2"></a>   Overall Health: yellow
-<a id="__codelineno-70-3" name="__codelineno-70-3" href="#__codelineno-70-3"></a>   Cluster Status: degraded
-<a id="__codelineno-70-4" name="__codelineno-70-4" href="#__codelineno-70-4"></a>   Memory Health: green
-<a id="__codelineno-70-5" name="__codelineno-70-5" href="#__codelineno-70-5"></a>   Network Health: green
-<a id="__codelineno-70-6" name="__codelineno-70-6" href="#__codelineno-70-6"></a>   Physical Disk Health: yellow
-<a id="__codelineno-70-7" name="__codelineno-70-7" href="#__codelineno-70-7"></a>   Data Health: yellow
-<a id="__codelineno-70-8" name="__codelineno-70-8" href="#__codelineno-70-8"></a>   Connectivity Health: green
-<a id="__codelineno-70-9" name="__codelineno-70-9" href="#__codelineno-70-9"></a>
-<a id="__codelineno-70-10" name="__codelineno-70-10" href="#__codelineno-70-10"></a>Resync Summary
-<a id="__codelineno-70-11" name="__codelineno-70-11" href="#__codelineno-70-11"></a>   Bytes to Sync: 1247483648
-<a id="__codelineno-70-12" name="__codelineno-70-12" href="#__codelineno-70-12"></a>   Bytes Synced: 892341760
-<a id="__codelineno-70-13" name="__codelineno-70-13" href="#__codelineno-70-13"></a>   Resync Rate (MB/s): 45.2
-<a id="__codelineno-70-14" name="__codelineno-70-14" href="#__codelineno-70-14"></a>   Time Remaining (minutes): 420
-<a id="__codelineno-70-15" name="__codelineno-70-15" href="#__codelineno-70-15"></a>   Objects Waiting for Resync: 12
-<a id="__codelineno-70-16" name="__codelineno-70-16" href="#__codelineno-70-16"></a>   Resync Operations In Progress: 3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -11334,7 +11282,7 @@ Cluster → Configure → vSAN → Fault Domains</p>
 <tbody>
 <tr>
 <td><code>Error: Could not connect to the vSAN health service</code></td>
-<td>Ensure the vSAN health service is running on all cluster nodes with <code>systemctl status vsanvpd</code> and restart if needed.</td>
+<td>Ensure the vSAN management daemon is running on all cluster nodes; restart it with <code>/etc/init.d/vsanmgmtd restart</code> if needed (<a href="https://knowledge.broadcom.com/external/article/318410">Broadcom KB 318410</a>).</td>
 </tr>
 <tr>
 <td><code>Error: vSAN cluster is not configured</code></td>
@@ -11489,35 +11437,10 @@ Cluster → Monitor → vSAN → Performance → select a view (Cluster, Host, D
 </tbody>
 </table>
 </div>
-<p><strong>Disk-level stats — IOPS, latency, errors:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>stats<span class="w"> </span>get
+<p><strong>Disk-level detail — health, capacity, congestion</strong> (per-disk IOPS and latency come from the vSAN performance service: vSphere Client or PowerCLI <code>Get-VsanStat</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>disk<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>Virtual SAN Storage Statistics
-<a id="__codelineno-80-2" name="__codelineno-80-2" href="#__codelineno-80-2"></a>==============================
-<a id="__codelineno-80-3" name="__codelineno-80-3" href="#__codelineno-80-3"></a>
-<a id="__codelineno-80-4" name="__codelineno-80-4" href="#__codelineno-80-4"></a>Node: esx-01.lab.local
-<a id="__codelineno-80-5" name="__codelineno-80-5" href="#__codelineno-80-5"></a>  Physical Capacity: 10.95 TB
-<a id="__codelineno-80-6" name="__codelineno-80-6" href="#__codelineno-80-6"></a>  Used Capacity: 7.32 TB
-<a id="__codelineno-80-7" name="__codelineno-80-7" href="#__codelineno-80-7"></a>  Free Capacity: 3.63 TB
-<a id="__codelineno-80-8" name="__codelineno-80-8" href="#__codelineno-80-8"></a>  Reservation: 512.00 GB
-<a id="__codelineno-80-9" name="__codelineno-80-9" href="#__codelineno-80-9"></a>  Deduplication Ratio: 1.8x
-<a id="__codelineno-80-10" name="__codelineno-80-10" href="#__codelineno-80-10"></a>  Compression Ratio: 2.1x
-<a id="__codelineno-80-11" name="__codelineno-80-11" href="#__codelineno-80-11"></a>
-<a id="__codelineno-80-12" name="__codelineno-80-12" href="#__codelineno-80-12"></a>Node: esx-02.lab.local
-<a id="__codelineno-80-13" name="__codelineno-80-13" href="#__codelineno-80-13"></a>  Physical Capacity: 10.95 TB
-<a id="__codelineno-80-14" name="__codelineno-80-14" href="#__codelineno-80-14"></a>  Used Capacity: 6.89 TB
-<a id="__codelineno-80-15" name="__codelineno-80-15" href="#__codelineno-80-15"></a>  Free Capacity: 4.06 TB
-<a id="__codelineno-80-16" name="__codelineno-80-16" href="#__codelineno-80-16"></a>  Reservation: 512.00 GB
-<a id="__codelineno-80-17" name="__codelineno-80-17" href="#__codelineno-80-17"></a>  Deduplication Ratio: 1.7x
-<a id="__codelineno-80-18" name="__codelineno-80-18" href="#__codelineno-80-18"></a>  Compression Ratio: 2.0x
-<a id="__codelineno-80-19" name="__codelineno-80-19" href="#__codelineno-80-19"></a>
-<a id="__codelineno-80-20" name="__codelineno-80-20" href="#__codelineno-80-20"></a>Node: esx-03.lab.local
-<a id="__codelineno-80-21" name="__codelineno-80-21" href="#__codelineno-80-21"></a>  Physical Capacity: 10.95 TB
-<a id="__codelineno-80-22" name="__codelineno-80-22" href="#__codelineno-80-22"></a>  Used Capacity: 7.15 TB
-<a id="__codelineno-80-23" name="__codelineno-80-23" href="#__codelineno-80-23"></a>  Free Capacity: 3.80 TB
-<a id="__codelineno-80-24" name="__codelineno-80-24" href="#__codelineno-80-24"></a>  Reservation: 512.00 GB
-<a id="__codelineno-80-25" name="__codelineno-80-25" href="#__codelineno-80-25"></a>  Deduplication Ratio: 1.9x
-<a id="__codelineno-80-26" name="__codelineno-80-26" href="#__codelineno-80-26"></a>  Compression Ratio: 2.2x
+<div class="highlight"><pre><span></span><code><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -11662,25 +11585,9 @@ Cluster → Configure → vSAN → Fault Domains → assign witness host → sel
 </table>
 </div>
 <p><strong>Step 2 — Confirm witness appears in unicast agent list</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ipconfig<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>unicastagent<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a>vmnic0
-<a id="__codelineno-86-2" name="__codelineno-86-2" href="#__codelineno-86-2"></a>   IPv4 Address: 192.168.1.42
-<a id="__codelineno-86-3" name="__codelineno-86-3" href="#__codelineno-86-3"></a>   Subnet Mask: 255.255.255.0
-<a id="__codelineno-86-4" name="__codelineno-86-4" href="#__codelineno-86-4"></a>   Default Gateway: 192.168.1.1
-<a id="__codelineno-86-5" name="__codelineno-86-5" href="#__codelineno-86-5"></a>   MAC Address: 00:50:56:c0:00:01
-<a id="__codelineno-86-6" name="__codelineno-86-6" href="#__codelineno-86-6"></a>
-<a id="__codelineno-86-7" name="__codelineno-86-7" href="#__codelineno-86-7"></a>vmnic1
-<a id="__codelineno-86-8" name="__codelineno-86-8" href="#__codelineno-86-8"></a>   IPv4 Address: 192.168.100.42
-<a id="__codelineno-86-9" name="__codelineno-86-9" href="#__codelineno-86-9"></a>   Subnet Mask: 255.255.255.0
-<a id="__codelineno-86-10" name="__codelineno-86-10" href="#__codelineno-86-10"></a>   Default Gateway: 192.168.100.1
-<a id="__codelineno-86-11" name="__codelineno-86-11" href="#__codelineno-86-11"></a>   MAC Address: 00:50:56:c0:00:02
-<a id="__codelineno-86-12" name="__codelineno-86-12" href="#__codelineno-86-12"></a>
-<a id="__codelineno-86-13" name="__codelineno-86-13" href="#__codelineno-86-13"></a>vmnic2
-<a id="__codelineno-86-14" name="__codelineno-86-14" href="#__codelineno-86-14"></a>   IPv4 Address: 192.168.200.42
-<a id="__codelineno-86-15" name="__codelineno-86-15" href="#__codelineno-86-15"></a>   Subnet Mask: 255.255.255.0
-<a id="__codelineno-86-16" name="__codelineno-86-16" href="#__codelineno-86-16"></a>   Default Gateway: 192.168.200.1
-<a id="__codelineno-86-17" name="__codelineno-86-17" href="#__codelineno-86-17"></a>   MAC Address: 00:50:56:c0:00:03
+<div class="highlight"><pre><span></span><code><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -11716,7 +11623,7 @@ Cluster → Configure → vSAN → Fault Domains — witness site must show as c
 <p><strong>From vCenter UI:</strong>
 Cluster → Configure → vSAN → Fault Domains → Edit → select the witness site → replace the witness host with the new appliance</p>
 <p><strong>Step 3 — Verify fault domain configuration</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-87-1" name="__codelineno-87-1" href="#__codelineno-87-1"></a><span class="nb">Get-VsanFaultDomainConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-87-1" name="__codelineno-87-1" href="#__codelineno-87-1"></a><span class="nb">Get-VsanFaultDomain</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Step 4 — Test connectivity from both data sites</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-88-1" name="__codelineno-88-1" href="#__codelineno-88-1"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;new_witness_vsan_vmk_ip&gt;
@@ -11758,30 +11665,9 @@ Cluster → Configure → vSAN → Fault Domains → Edit → select the witness
 </table>
 </div>
 <p><strong>Step 5 — Verify cluster health</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-90-1" name="__codelineno-90-1" href="#__codelineno-90-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-90-1" name="__codelineno-90-1" href="#__codelineno-90-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-91-1" name="__codelineno-91-1" href="#__codelineno-91-1"></a>Cluster Health Status
-<a id="__codelineno-91-2" name="__codelineno-91-2" href="#__codelineno-91-2"></a>   Overall Health: yellow
-<a id="__codelineno-91-3" name="__codelineno-91-3" href="#__codelineno-91-3"></a>   Cluster Status: degraded
-<a id="__codelineno-91-4" name="__codelineno-91-4" href="#__codelineno-91-4"></a>   Groups Affected: 1
-<a id="__codelineno-91-5" name="__codelineno-91-5" href="#__codelineno-91-5"></a>
-<a id="__codelineno-91-6" name="__codelineno-91-6" href="#__codelineno-91-6"></a>Cluster Information
-<a id="__codelineno-91-7" name="__codelineno-91-7" href="#__codelineno-91-7"></a>   Cluster UUID: 52d4a8c1-7f2e-4c9a-b1e3-9a2c5d8f1b4a
-<a id="__codelineno-91-8" name="__codelineno-91-8" href="#__codelineno-91-8"></a>   Cluster Name: VSAN-Prod-Cluster
-<a id="__codelineno-91-9" name="__codelineno-91-9" href="#__codelineno-91-9"></a>   Node Count: 4
-<a id="__codelineno-91-10" name="__codelineno-91-10" href="#__codelineno-91-10"></a>
-<a id="__codelineno-91-11" name="__codelineno-91-11" href="#__codelineno-91-11"></a>Health Groups
-<a id="__codelineno-91-12" name="__codelineno-91-12" href="#__codelineno-91-12"></a>   Group Name: vsan-cluster-connectivity
-<a id="__codelineno-91-13" name="__codelineno-91-13" href="#__codelineno-91-13"></a>   Status: yellow
-<a id="__codelineno-91-14" name="__codelineno-91-14" href="#__codelineno-91-14"></a>   Description: One or more hosts have network connectivity issues
-<a id="__codelineno-91-15" name="__codelineno-91-15" href="#__codelineno-91-15"></a>
-<a id="__codelineno-91-16" name="__codelineno-91-16" href="#__codelineno-91-16"></a>   Group Name: vsan-disk-health
-<a id="__codelineno-91-17" name="__codelineno-91-17" href="#__codelineno-91-17"></a>   Status: green
-<a id="__codelineno-91-18" name="__codelineno-91-18" href="#__codelineno-91-18"></a>   Description: All disks are healthy
-<a id="__codelineno-91-19" name="__codelineno-91-19" href="#__codelineno-91-19"></a>
-<a id="__codelineno-91-20" name="__codelineno-91-20" href="#__codelineno-91-20"></a>   Group Name: vsan-memory-health
-<a id="__codelineno-91-21" name="__codelineno-91-21" href="#__codelineno-91-21"></a>   Status: green
-<a id="__codelineno-91-22" name="__codelineno-91-22" href="#__codelineno-91-22"></a>   Description: Memory usage is normal
+<div class="highlight"><pre><span></span><code><a id="__codelineno-91-1" name="__codelineno-91-1" href="#__codelineno-91-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -11858,7 +11744,7 @@ Cluster → Configure → vSAN → On-disk Format Upgrade → Pre-check</p>
 <p>The pre-check validates cluster health and capacity. Resolve all failures before proceeding.</p>
 <p><strong>Step 2 — Check upgrade eligibility via PowerCLI (optional)</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span>
-<a id="__codelineno-94-2" name="__codelineno-94-2" href="#__codelineno-94-2"></a><span class="nb">Get-VsanDiskFormatVersion</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
+<a id="__codelineno-94-2" name="__codelineno-94-2" href="#__codelineno-94-2"></a><span class="nb">Get-VsanDiskGroup</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DiskFormatVersion</span>
 </code></pre></div>
 <p><strong>Step 3 — Start the upgrade</strong></p>
 <p><strong>From vCenter UI:</strong>
@@ -12039,7 +11925,7 @@ Cluster → Configure → vSAN → On-disk Format Upgrade → Upgrade</p>
 </tr>
 <tr>
 <td><code>Error: Could not get interface tag information</code></td>
-<td>Ensure you have root or administrative privileges and the vSAN service is running with <code>systemctl status vsanvpd</code>.</td>
+<td>Ensure you have root or administrative privileges and the host management agent is running (<code>/etc/init.d/hostd restart</code>, <a href="https://knowledge.broadcom.com/external/article/320280">Broadcom KB 320280</a>).</td>
 </tr>
 </tbody>
 </table>
@@ -12455,7 +12341,7 @@ Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Enab
 </tr>
 <tr>
 <td><code>vSAN service is not running</code></td>
-<td>Restart the vSAN service with <code>systemctl restart vsand</code> or reboot the ESXi host.</td>
+<td>Restart the stopped vSAN daemon on the host per <a href="https://knowledge.broadcom.com/external/article/318410">Broadcom KB 318410</a> (for example <code>/etc/init.d/vsanmgmtd restart</code>).</td>
 </tr>
 </tbody>
 </table>
@@ -12467,9 +12353,12 @@ Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Enab
 <p><strong>From vCenter UI:</strong>
 Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Rekey</p>
 <p><strong>Step 2 — Initiate via PowerCLI</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-128-1" name="__codelineno-128-1" href="#__codelineno-128-1"></a><span class="nb">Invoke-VsanEncryptionRekey</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="n">-DeepRekey</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-128-1" name="__codelineno-128-1" href="#__codelineno-128-1"></a><span class="c"># Shallow rekey: new key encryption key (KEK)</span>
+<a id="__codelineno-128-2" name="__codelineno-128-2" href="#__codelineno-128-2"></a><span class="nb">Start-VsanEncryptionConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="n">-ShallowRekey</span>
+<a id="__codelineno-128-3" name="__codelineno-128-3" href="#__codelineno-128-3"></a><span class="c"># Deep rekey: all disks re-encrypted with new data encryption keys (DEKs)</span>
+<a id="__codelineno-128-4" name="__codelineno-128-4" href="#__codelineno-128-4"></a><span class="nb">Start-VsanEncryptionConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="n">-DeepRekey</span>
 </code></pre></div>
-<p><code>-DeepRekey</code> re-encrypts all data. Without it, only the DEK is rotated, not the KEK.</p>
+<p>A shallow rekey changes only the key encryption key (KEK) and rewraps the DEKs; a deep rekey re-encrypts all disks with new DEKs and takes a long time to finish.</p>
 <p><strong>Step 3 — Verify rekey completed</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-129-1" name="__codelineno-129-1" href="#__codelineno-129-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
@@ -12496,7 +12385,7 @@ Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Reke
 </tr>
 <tr>
 <td><code>grep: (standard input) has no matches</code></td>
-<td>VSAN encryption is not enabled; this is normal if encryption was never configured, so verify with <code>esxcli vsan storage get</code>.</td>
+<td>VSAN encryption is not enabled; this is normal if encryption was never configured, so verify with <code>esxcli vsan encryption info get</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -12733,8 +12622,11 @@ Cluster → Configure → vSAN → Fault Domains → Add Fault Domain</p>
 <h3 id="verify-fault-domain-configuration">Verify Fault Domain Configuration<a class="headerlink" href="#verify-fault-domain-configuration" title="Permanent link">&para;</a></h3>
 <p><img alt="Verify Fault Domain Configuration" src="../../../../../../assets/vsan-proc-verify-fault-domain-configuration.svg" /></p>
 <p><strong>Step 1 — List domains and member hosts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-145-1" name="__codelineno-145-1" href="#__codelineno-145-1"></a><span class="nb">Get-VsanFaultDomainConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-145-2" name="__codelineno-145-2" href="#__codelineno-145-2"></a>    <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">'Hosts'</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Hosts</span><span class="p">.</span><span class="n">Name</span> <span class="n">-join</span> <span class="s1">', '</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-145-1" name="__codelineno-145-1" href="#__codelineno-145-1"></a><span class="c"># Fault domains, then the fault domain of each host</span>
+<a id="__codelineno-145-2" name="__codelineno-145-2" href="#__codelineno-145-2"></a><span class="nb">Get-VsanFaultDomain</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
+<a id="__codelineno-145-3" name="__codelineno-145-3" href="#__codelineno-145-3"></a><span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-145-4" name="__codelineno-145-4" href="#__codelineno-145-4"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Host</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span> <span class="n">FaultDomain</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-VsanFaultDomain</span> <span class="n">-VMHost</span> <span class="nv">$_</span><span class="p">).</span><span class="n">Name</span> <span class="p">}</span>
+<a id="__codelineno-145-5" name="__codelineno-145-5" href="#__codelineno-145-5"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>Step 2 — Verify in vCenter UI</strong></p>
 <p><strong>From vCenter UI:</strong>
@@ -12746,9 +12638,9 @@ Cluster → Configure → vSAN → Fault Domains — verify each host is in a na
 Cluster → Configure → vSAN → Fault Domains → drag host to correct domain</p>
 <p>A host in the "Default" domain is treated as its own single-host fault domain and causes non-compliance warnings on FTT policies.</p>
 <p><strong>Step 2 — Verify no hosts remain in the Default domain</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-146-1" name="__codelineno-146-1" href="#__codelineno-146-1"></a><span class="nb">Get-VsanFaultDomainConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-146-2" name="__codelineno-146-2" href="#__codelineno-146-2"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">"Default"</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-146-3" name="__codelineno-146-3" href="#__codelineno-146-3"></a>    <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">'Hosts'</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Hosts</span><span class="p">.</span><span class="n">Name</span> <span class="n">-join</span> <span class="s1">', '</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-146-1" name="__codelineno-146-1" href="#__codelineno-146-1"></a><span class="c"># Hosts with no fault domain assigned</span>
+<a id="__codelineno-146-2" name="__codelineno-146-2" href="#__codelineno-146-2"></a><span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-146-3" name="__codelineno-146-3" href="#__codelineno-146-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="o">-not</span> <span class="p">(</span><span class="nb">Get-VsanFaultDomain</span> <span class="n">-VMHost</span> <span class="nv">$_</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
 <a id="__codelineno-146-4" name="__codelineno-146-4" href="#__codelineno-146-4"></a><span class="c"># Expected: no output</span>
 </code></pre></div>
 <hr />
@@ -12757,30 +12649,11 @@ Cluster → Configure → vSAN → Fault Domains → drag host to correct domain
 <h3 id="step-1-cluster-health">Step 1 — Cluster Health<a class="headerlink" href="#step-1-cluster-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 1 — Cluster Health" src="../../../../../../assets/vsan-proc-step-1-cluster-health.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-147-1" name="__codelineno-147-1" href="#__codelineno-147-1"></a><span class="c1"># Run from any host in the cluster</span>
-<a id="__codelineno-147-2" name="__codelineno-147-2" href="#__codelineno-147-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-147-2" name="__codelineno-147-2" href="#__codelineno-147-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
 <a id="__codelineno-147-3" name="__codelineno-147-3" href="#__codelineno-147-3"></a>
 <a id="__codelineno-147-4" name="__codelineno-147-4" href="#__codelineno-147-4"></a><span class="c1"># All tests must pass. Investigate any failures before proceeding.</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-148-1" name="__codelineno-148-1" href="#__codelineno-148-1"></a>Cluster Health Status
-<a id="__codelineno-148-2" name="__codelineno-148-2" href="#__codelineno-148-2"></a>   Overall Health: green
-<a id="__codelineno-148-3" name="__codelineno-148-3" href="#__codelineno-148-3"></a>   Cluster Status: Healthy
-<a id="__codelineno-148-4" name="__codelineno-148-4" href="#__codelineno-148-4"></a>
-<a id="__codelineno-148-5" name="__codelineno-148-5" href="#__codelineno-148-5"></a>   Object Repair Timer: 0
-<a id="__codelineno-148-6" name="__codelineno-148-6" href="#__codelineno-148-6"></a>   Reduced Redundancy Objects: 0
-<a id="__codelineno-148-7" name="__codelineno-148-7" href="#__codelineno-148-7"></a>   Orphaned Objects: 0
-<a id="__codelineno-148-8" name="__codelineno-148-8" href="#__codelineno-148-8"></a>   Physical Disk Issues: 0
-<a id="__codelineno-148-9" name="__codelineno-148-9" href="#__codelineno-148-9"></a>
-<a id="__codelineno-148-10" name="__codelineno-148-10" href="#__codelineno-148-10"></a>   Network Connectivity: green
-<a id="__codelineno-148-11" name="__codelineno-148-11" href="#__codelineno-148-11"></a>   Component Metadata Health: green
-<a id="__codelineno-148-12" name="__codelineno-148-12" href="#__codelineno-148-12"></a>   Memory Pool Health: green
-<a id="__codelineno-148-13" name="__codelineno-148-13" href="#__codelineno-148-13"></a>
-<a id="__codelineno-148-14" name="__codelineno-148-14" href="#__codelineno-148-14"></a>   Host Status:
-<a id="__codelineno-148-15" name="__codelineno-148-15" href="#__codelineno-148-15"></a>      esx-prod-01.lab.local: green
-<a id="__codelineno-148-16" name="__codelineno-148-16" href="#__codelineno-148-16"></a>      esx-prod-02.lab.local: green
-<a id="__codelineno-148-17" name="__codelineno-148-17" href="#__codelineno-148-17"></a>      esx-prod-03.lab.local: green
-<a id="__codelineno-148-18" name="__codelineno-148-18" href="#__codelineno-148-18"></a>      esx-prod-04.lab.local: green
-<a id="__codelineno-148-19" name="__codelineno-148-19" href="#__codelineno-148-19"></a>
-<a id="__codelineno-148-20" name="__codelineno-148-20" href="#__codelineno-148-20"></a>   Last Health Check: 2024-01-15 14:32:18 UTC
+<div class="highlight"><pre><span></span><code><a id="__codelineno-148-1" name="__codelineno-148-1" href="#__codelineno-148-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -12890,18 +12763,9 @@ Cluster → Updates → Run Pre-check — reports any blockers for the target ve
 <h3 id="step-1-check-vsan-cluster-health">Step 1 — Check vSAN Cluster Health<a class="headerlink" href="#step-1-check-vsan-cluster-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 1 — Check vSAN Cluster Health" src="../../../../../../assets/vsan-proc-step-1-check-vsan-cluster-health.svg" /></p>
 <p>Rule out infrastructure-level issues first:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-155-1" name="__codelineno-155-1" href="#__codelineno-155-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-155-1" name="__codelineno-155-1" href="#__codelineno-155-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fail
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-156-1" name="__codelineno-156-1" href="#__codelineno-156-1"></a>Cluster: vsan-cluster-prod
-<a id="__codelineno-156-2" name="__codelineno-156-2" href="#__codelineno-156-2"></a>Health Status: Degraded
-<a id="__codelineno-156-3" name="__codelineno-156-3" href="#__codelineno-156-3"></a>Component: vSAN Object Repair Timer
-<a id="__codelineno-156-4" name="__codelineno-156-4" href="#__codelineno-156-4"></a>Status: FAILED
-<a id="__codelineno-156-5" name="__codelineno-156-5" href="#__codelineno-156-5"></a>Component: vSAN Disk Balance
-<a id="__codelineno-156-6" name="__codelineno-156-6" href="#__codelineno-156-6"></a>Status: FAILED
-<a id="__codelineno-156-7" name="__codelineno-156-7" href="#__codelineno-156-7"></a>Component: vSAN Network Connectivity
-<a id="__codelineno-156-8" name="__codelineno-156-8" href="#__codelineno-156-8"></a>Status: OK
-<a id="__codelineno-156-9" name="__codelineno-156-9" href="#__codelineno-156-9"></a>Component: vSAN Memory Usage
-<a id="__codelineno-156-10" name="__codelineno-156-10" href="#__codelineno-156-10"></a>Status: WARNING
+<div class="highlight"><pre><span></span><code><a id="__codelineno-156-1" name="__codelineno-156-1" href="#__codelineno-156-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -12914,12 +12778,12 @@ Cluster → Updates → Run Pre-check — reports any blockers for the target ve
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Unknown command or namespace vsan health cluster get</code></td>
-<td>Verify vSAN is licensed and enabled on the cluster, then run <code>esxcli vsan cluster list</code> to confirm vSAN cluster membership.</td>
+<td><code>Error: Unknown command or namespace vsan health cluster list</code></td>
+<td>Verify vSAN is licensed and enabled on the cluster, then run <code>esxcli vsan cluster get</code> to confirm vSAN cluster membership.</td>
 </tr>
 <tr>
 <td><code>Error: Unable to connect to Management Agent on localhost.localdomain</code></td>
-<td>Ensure the ESXi host is powered on and the Management Agent service is running with <code>systemctl status hostd</code>.</td>
+<td>Ensure the ESXi host is powered on; restart the management agent with <code>/etc/init.d/hostd restart</code> (<a href="https://knowledge.broadcom.com/external/article/320280">Broadcom KB 320280</a>).</td>
 </tr>
 </tbody>
 </table>
@@ -13023,7 +12887,7 @@ Cluster → Monitor → vSAN → Performance → Disk Group view → Congestion 
 <tbody>
 <tr>
 <td><code>Error: Could not connect to the vSAN cluster</code></td>
-<td>Verify the ESXi host is part of an active vSAN cluster and the vSAN service is running with <code>systemctl status vsand</code>.</td>
+<td>Verify the ESXi host is part of an active vSAN cluster (<code>esxcli vsan cluster get</code>); restart any stopped vSAN daemon per <a href="https://knowledge.broadcom.com/external/article/318410">Broadcom KB 318410</a>.</td>
 </tr>
 <tr>
 <td><code>Error: Permission denied</code></td>
@@ -13462,7 +13326,7 @@ Monitor → vSAN → Virtual Machines — all VMs should remain running</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

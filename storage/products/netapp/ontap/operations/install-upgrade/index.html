@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Install &amp; Upgrade", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tracking, Refresh Planning.", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Install &amp; Upgrade", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tracking, Refresh Planning.", "dateModified": "2026-11-26", "datePublished": "2026-05-06"}</script>
   
 
   
@@ -8538,7 +8538,7 @@
 <div class="kb-summary">
 Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tracking, Refresh Planning.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 <p><img alt="ONTAP — Install &amp; Upgrade" src="../../../../../../assets/storage-netapp-ontap-operations-install-upgrade.svg" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8554,69 +8554,63 @@ Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tr
 <thead>
 <tr>
 <th>Release</th>
-<th>GA Date</th>
-<th>Full Support End</th>
-<th>Limited Support End</th>
+<th>Released</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>ONTAP 9.10.1</td>
-<td>Dec 2021</td>
-<td>Dec 2023</td>
-<td>Dec 2025</td>
-<td>P4 — limited support only</td>
+<td>ONTAP 9.20.1</td>
+<td>November 2026</td>
+<td>Current release</td>
 </tr>
 <tr>
-<td>ONTAP 9.11.1</td>
-<td>Jun 2022</td>
-<td>Jun 2024</td>
-<td>Jun 2026</td>
-<td>P4 — limited support only</td>
+<td>ONTAP 9.19.1</td>
+<td>July 2026</td>
+<td>Latest ONTAP CLI reference release</td>
 </tr>
 <tr>
-<td>ONTAP 9.12.1</td>
-<td>Dec 2022</td>
-<td>Dec 2024</td>
-<td>Dec 2026</td>
-<td>P4 — approaching end</td>
+<td>ONTAP 9.18.1</td>
+<td>November 2025</td>
+<td></td>
 </tr>
 <tr>
-<td>ONTAP 9.13.1</td>
-<td>Jun 2023</td>
-<td>Jun 2025</td>
-<td>Jun 2027</td>
-<td>Active — full support</td>
+<td>ONTAP 9.17.1</td>
+<td>September 2025</td>
+<td></td>
 </tr>
 <tr>
-<td>ONTAP 9.14.1</td>
-<td>Dec 2023</td>
-<td>Dec 2025</td>
-<td>Dec 2027</td>
-<td>Active — recommended baseline</td>
+<td>ONTAP 9.16.1</td>
+<td>January 2025</td>
+<td></td>
 </tr>
 <tr>
 <td>ONTAP 9.15.1</td>
-<td>Jun 2024</td>
-<td>Jun 2026</td>
-<td>Jun 2028</td>
-<td>Active — current latest</td>
+<td>July 2024</td>
+<td></td>
+</tr>
+<tr>
+<td>ONTAP 9.14.1</td>
+<td>January 2024</td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<p>Verify exact dates on the <a href="https://mysupport.netapp.com/">NetApp Product Lifecycle page</a> before planning any upgrade.</p>
+<p>Release dates are from NetApp's <a href="https://docs.netapp.com/us-en/ontap/release-notes/release-support-reference.html">ONTAP 9 release support</a> page. Support for each release moves from Full support to Limited support and then Self-service support: per that page, P-releases and vulnerability alerts are provided in years 1–3, technical support and software downloads in years 1–5, and online documentation in years 1–8. Releases before 9.10.1 are likely on Limited or Self-Service support. Verify the support level for your release on the <a href="https://mysupport.netapp.com/">NetApp Support Site</a>.</p>
 <h2 id="upgrade-paths">Upgrade Paths<a class="headerlink" href="#upgrade-paths" title="Permanent link">&para;</a></h2>
-<p>ONTAP follows a major.minor.patch versioning model. Upgrade rules:</p>
+<p>Per NetApp's <a href="https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html">supported ONTAP upgrade paths</a> page:</p>
 <ul>
-<li><strong>Within the same minor release</strong>: patch upgrades are always supported (e.g., 9.14.1 → 9.14.1P4)</li>
-<li><strong>Adjacent minor releases</strong>: direct upgrade supported (e.g., 9.13.1 → 9.14.1)</li>
-<li><strong>Skipping minor releases</strong>: generally not supported; must step through intermediate versions (e.g., 9.11.1 → 9.12.1 → 9.13.1)</li>
-<li><strong>Automated Non-Disruptive Upgrade (ANDU)</strong>: preferred method; orchestrated by ONTAP itself, upgrades one node at a time via takeover/giveback</li>
-<li>Always check the <a href="https://bluexp.netapp.com">ONTAP Upgrade Advisor in BlueXP</a> for the exact recommended path and any pre-upgrade blockers before beginning</li>
+<li><strong>Direct</strong>: you can always upgrade directly to the next adjacent release family; for many releases a single image can also go up to four releases later (e.g., 9.17.1 → 9.18.1, or 9.15.1 → 9.19.1)</li>
+<li><strong>Direct multi-hop</strong>: for some ANDU upgrades to non-adjacent releases you install the intermediate and the target image; ONTAP upgrades through the intermediate release automatically</li>
+<li><strong>Multi-stage</strong>: when no direct path exists, upgrade to a supported intermediate release first (e.g., 9.14.1 → 9.18.1, then 9.18.1 → 9.19.1)</li>
+<li><strong>Automated Non-Disruptive Upgrade (ANDU)</strong>: recommended whenever possible; upgrades one node at a time via takeover/giveback</li>
+<li>Best practice: upgrade to the latest patch release of the running version before a major upgrade</li>
+<li>Check hardware support in the NetApp Hardware Universe and the exact path on the <a href="https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html">upgrade paths page</a> before beginning</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>9.10.1 → 9.11.1 → 9.12.1 → 9.13.1 → 9.14.1 → 9.15.1
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>         (patch updates within each minor release are always allowed)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Examples from the vendor page:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>9.17.1 → 9.18.1                   (direct, adjacent)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>9.15.1 → 9.19.1                   (direct, up to four releases later)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>9.14.1 → 9.18.1 → 9.19.1          (multi-stage)
 </code></pre></div>
 <p><strong>Pre-upgrade checks:</strong>
 1. All SnapMirror relationships healthy; lag within RPO
@@ -8698,7 +8692,7 @@ Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tr
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

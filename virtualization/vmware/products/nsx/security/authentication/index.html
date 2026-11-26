@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Authentication", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Authentication", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9067,10 +9067,10 @@
 
 
 <h1 id="nsx-authentication">NSX — Authentication<a class="headerlink" href="#nsx-authentication" title="Permanent link">&para;</a></h1>
-<p><em>Applies to: VMware NSX-T 3.x / 4.x</em>
+<p><em>Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line</em>
 <img alt="NSX — Authentication" src="../../../../../../assets/virtualization-vmware-nsx-security-authentication.svg" /></p>
 <h2 id="api-authentication-flow">API Authentication Flow<a class="headerlink" href="#api-authentication-flow" title="Permanent link">&para;</a></h2>
-<p><img alt="API Authentication Flow diagram: API Client, NSX Manager, VIDM / LDAP (external IdP)" src="kroki-generated-c8d8a44b-f8d0-303e-96ed-a53dadab9233.svg" /></p>
+<p><img alt="API Authentication Flow diagram: API Client, NSX Manager, VIDM / LDAP (external IdP)" src="kroki-generated-2606909b-aafb-380f-b8bf-444c153bfd0a.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
@@ -9084,26 +9084,7 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/node/aaa/auth-policy"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  "api_failed_auth_lockout_period": 900,
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  "api_failed_auth_reset_period": 900,
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  "api_max_requests": 100,
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  "cli_failed_auth_lockout_period": 900,
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  "cli_max_auth_failures": 5,
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  "minimum_password_length": 20,
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  "resource_type": "AuthenticationPolicy",
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  "_self": {
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    "href": "/api/v1/node/aaa/auth-policy",
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    "rel": "self"
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  },
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  "_links": [
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    {
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>      "href": "https://nsx-mgr-01.lab.local/api/v1/node/aaa/auth-policy",
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>      "rel": "self"
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    }
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  ],
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  "_schema": "/api/v1/schema/AuthenticationPolicy"
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9132,27 +9113,11 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"search_query": "nsxadmin", "cursor": "0"}'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/aaa/ldap/search"</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expected: returns the matching user object from AD</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/policy/api/v1/aaa/ldap-identity-sources/&lt;ldap-source-id&gt;/search?filter_value=nsxadmin"</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Expected: returns the matching user object from AD</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "result_count": 1,
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  "results": [
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    {
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      "resource_type": "LdapUser",
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      "display_name": "nsxadmin",
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      "username": "nsxadmin",
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      "email": "nsxadmin@corp.local",
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      "full_name": "NSX Administrator",
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      "distinguished_name": "CN=nsxadmin,OU=Service Accounts,DC=corp,DC=local",
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      "object_sid": "S-1-5-21-3623811015-3361044348-30300820-1234"
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    }
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  ],
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  "cursor": "0"
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9230,7 +9195,7 @@
 </tr>
 <tr>
 <td><code>{"httpStatus":400,"error_code":10001,"error_message":"Invalid identity_source_id"}</code></td>
-<td>Confirm the LDAP source ID exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/api/v1/aaa/identity-sources</code> and use the correct ID.</td>
+<td>Confirm the LDAP source ID exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/policy/api/v1/aaa/ldap-identity-sources</code> and use the correct ID.</td>
 </tr>
 <tr>
 <td><code>{"httpStatus":404,"error_code":10002,"error_message":"Role 'enterprise_admin' not found"}</code></td>
@@ -9302,54 +9267,28 @@
 </tbody>
 </table>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create session (returns Set-Cookie header)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:Password123!'</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create session (returns Set-Cookie and X-XSRF-TOKEN headers)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-c<span class="w"> </span>/tmp/nsx-session.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/v1/aaa/session"</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Use session cookie for subsequent requests</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>-b<span class="w"> </span>/tmp/nsx-session.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/v1/cluster/status"</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Invalidate session when done</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:Password123!'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>-b<span class="w"> </span>/tmp/nsx-session.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/v1/aaa/session"</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'j_username=admin&amp;j_password=Password123!'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>-c<span class="w"> </span>/tmp/nsx-session.txt<span class="w"> </span>-D<span class="w"> </span>/tmp/nsx-headers.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/session/create"</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Use session cookie and the X-XSRF-TOKEN value for subsequent requests</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>-b<span class="w"> </span>/tmp/nsx-session.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"X-XSRF-TOKEN: &lt;token-from-nsx-headers.txt&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/v1/cluster/status"</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Invalidate session when done</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span>-b<span class="w"> </span>/tmp/nsx-session.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"X-XSRF-TOKEN: &lt;token-from-nsx-headers.txt&gt;"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/session/destroy"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "session_timeout": 1800,
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  "user": "admin",
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  "roles": ["enterprise_admin"],
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  "session_id": "a7f3c2e1-9b4d-47e8-b2f6-8c1d5a9e3f2b"
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>}
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>{
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  "cluster_status": "STABLE",
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  "node_count": 3,
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  "nodes": [
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    {
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>      "uuid": "550e8400-e29b-41d4-a716-446655440001",
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      "hostname": "nsx-node-01.example.local",
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>      "status": "UP",
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>      "role": "MASTER"
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    },
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    {
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>      "uuid": "550e8400-e29b-41d4-a716-446655440002",
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>      "hostname": "nsx-node-02.example.local",
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>      "status": "UP",
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>      "role": "FOLLOWER"
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>    },
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>    {
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>      "uuid": "550e8400-e29b-41d4-a716-446655440003",
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>      "hostname": "nsx-node-03.example.local",
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>      "status": "UP",
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>      "role": "FOLLOWER"
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>    }
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>  ]
-<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>}
-<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>(no output — command completes silently)
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9400,7 +9339,7 @@
 <a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="s1">    "certificate_id": "&lt;cert-id-from-above&gt;",</span>
 <a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="s1">    "is_protected": true</span>
 <a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/v1/aaa/principal-identities"</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/v1/trust-management/principal-identities"</span>
 <a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>
 <a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="c1"># Use certificate for API calls (no password needed)</span>
 <a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
@@ -9408,37 +9347,7 @@
 <a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="w">  </span>--key<span class="w"> </span>nsx-automation.key<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="w">  </span><span class="s2">"https://nsx-manager.example.local/api/v1/cluster/status"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Generating RSA private key, 2048 bit long modulus (2 primes)
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>.......................................................................+++++
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>.......................+++++
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>e is 65537 (0x010001)
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>{
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  "resource_type": "Certificate",
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  "id": "8f4c2a91-7e3d-4b6f-9c1a-5d8e2f7b4a9c",
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  "pem_encoded": "-----BEGIN CERTIFICATE-----\nMIIDXTCCAkWgAwIBAgIJAKp7...",
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  "used_by_system": false,
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  "used_by_services": []
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>}
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>{
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  "resource_type": "PrincipalIdentity",
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  "id": "automation-account",
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>  "node_id": "automation-host-01",
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>  "role": "network_engineer",
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  "certificate_id": "8f4c2a91-7e3d-4b6f-9c1a-5d8e2f7b4a9c",
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>  "is_protected": true,
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>  "creation_time": 1704067200000
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>}
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>{
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>  "resource_type": "ClusterStatus",
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>  "cluster_status": "STABLE",
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>  "node_count": 3,
-<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>  "online_node_count": 3,
-<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>  "offline_node_count": 0,
-<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>  "degraded_node_count": 0
-<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9467,14 +9376,9 @@
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable audit log export (NSX Manager CLI)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>nsxcli
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-01<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>TLS<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">6514</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">set</span><span class="w"> </span>logging-server<span class="w"> </span><span class="m">10</span>.0.0.100:6514<span class="w"> </span>proto<span class="w"> </span>tls<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>serverca<span class="w"> </span>&lt;siem-ca-file&gt;
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NSX CLI (build 22.1.2.0.0)
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Copyright (c) 2023 VMware, Inc. All rights reserved.
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>nsx&gt; set service syslog exporter siem-01 level info protocol TLS server 10.0.0.100 port 6514
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Syslog exporter 'siem-01' configured successfully.
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>nsx&gt; exit
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9487,8 +9391,8 @@
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Syslog exporter 'siem-01' already exists</code></td>
-<td>Use a different exporter name or delete the existing one with <code>delete service syslog exporter siem-01</code> first.</td>
+<td>Duplicate logging server entry</td>
+<td>Check existing entries with <code>get logging-servers</code>; remove an entry by repeating its host, port, proto and level in the delete command.</td>
 </tr>
 <tr>
 <td><code>Error: Unable to resolve hostname or IP address 10.0.0.100</code></td>
@@ -9496,7 +9400,7 @@
 </tr>
 <tr>
 <td><code>Error: TLS certificate validation failed for server 10.0.0.100:6514</code></td>
-<td>Import the SIEM server's CA certificate into NSX Manager's trust store using <code>set service syslog exporter siem-01 ca-cert &lt;cert-path&gt;</code>.</td>
+<td>Copy the SIEM server's CA certificate to the node and pass it with the <code>serverca &lt;filename&gt;</code> option of <code>set logging-server</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -9569,7 +9473,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

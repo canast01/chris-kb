@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Encryption", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Encryption", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -8666,7 +8666,7 @@
 <div class="kb-summary">
 ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for management interfaces and Kerberos/IPsec for data protocols.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 <p><img alt="ONTAP — Encryption" src="../../../../../../assets/storage-netapp-ontap-security-encryption.svg" /></p>
 <p>Key management is handled by the Onboard Key Manager (OKM) or an external KMIP key manager.</p>
@@ -8771,7 +8771,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </tr>
 <tr>
 <td><code>Error: command failed: Cannot create volume on aggregate aggr1: aggregate does not support encryption</code></td>
-<td>Use an aggregate with Self-Encrypting Drives (SEDs) or enable software encryption; check aggregate encryption capability with <code>storage aggregate show -fields encrypt</code>.</td>
+<td>Use an aggregate with Self-Encrypting Drives (SEDs) or enable software encryption; check aggregate encryption capability with <code>storage aggregate show -fields encrypt-with-aggr-key</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -8811,7 +8811,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <tbody>
 <tr>
 <td><code>Error: command failed: volume encryption conversion is not supported on this volume</code></td>
-<td>Verify the volume is not a SnapMirror destination, MetroCluster volume, or using an unsupported aggregate encryption type with <code>storage aggregate show -fields encrypt</code>.</td>
+<td>Verify the volume is not a SnapMirror destination, MetroCluster volume, or using an unsupported aggregate encryption type with <code>storage aggregate show -fields encrypt-with-aggr-key</code>.</td>
 </tr>
 <tr>
 <td><code>Error: Vserver "svm1" does not exist</code></td>
@@ -8828,8 +8828,8 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show encryption status for all volumes</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>encrypt,encryption-state
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show the key ID protecting a volume</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>encryption<span class="w"> </span>show-key-id<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show the key ID protecting a volume (key-id field of volume show)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-fields<span class="w"> </span>key-id
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Rekey a volume (rotate the DEK)</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>volume<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
@@ -8843,16 +8843,14 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>svm_dev   vol_test          true     encrypted
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>svm_dev   vol_logs          false    none
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Key ID protecting volume vol_data_01:
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Vserver: svm_prod
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Volume: vol_data_01
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Key ID: 47a8c9f2-1b3d-4e5f-9a2c-8d7e6f5g4h3i
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>volume show -fields key-id: output varies; see
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>https://docs.netapp.com/us-en/ontap-cli/volume-show.html
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Rekey operation started for volume vol_data_01.
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Rekey operation started for volume vol_data_01.
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Vserver   Volume            Rekey-State  Rekey-Progress
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>--------- ----------------- ------------ ---------------
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>svm_prod  vol_data_01       in-progress  45%
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Vserver   Volume            Rekey-State  Rekey-Progress
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>--------- ----------------- ------------ ---------------
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>svm_prod  vol_data_01       in-progress  45%
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8870,7 +8868,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </tr>
 <tr>
 <td><code>Error: This operation is not supported on unencrypted volumes</code></td>
-<td>Ensure the volume has encryption enabled; enable it first with <code>volume encryption enable -vserver &lt;svm&gt; -volume &lt;vol_name&gt;</code>.</td>
+<td>Ensure the volume has encryption enabled; encrypt it first with <code>volume encryption conversion start -vserver &lt;svm&gt; -volume &lt;vol_name&gt;</code>.</td>
 </tr>
 <tr>
 <td><code>Error: Rekey operation already in progress for this volume</code></td>
@@ -8922,16 +8920,14 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </table>
 </div>
 <h3 id="converting-an-existing-aggregate-to-nae">Converting an Existing Aggregate to NAE<a class="headerlink" href="#converting-an-existing-aggregate-to-nae" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Start NAE conversion (background, non-disruptive)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>start<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Convert a non-NAE aggregate to an NAE aggregate</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>modify<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-encrypt-with-aggr-key<span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>encryption<span class="w"> </span>rekey<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify the aggregate is enabled for aggregate-level encryption</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>encrypt-with-aggr-key
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Aggregate encryption rekey operation started for aggregate "aggr_ssd_01".
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Aggregate         Rekey Status      Progress  Estimated Time Remaining
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>aggr_ssd_01       In Progress       45%       2h 15m
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Output varies; see the vendor procedure:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>https://docs.netapp.com/us-en/ontap/encryption-at-rest/enable-aggregate-level-encryption-nve-license-task.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8946,10 +8942,6 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <tr>
 <td><code>Error: aggregate &lt;aggr_name&gt; not found</code></td>
 <td>Verify the aggregate name with <code>storage aggregate show</code> and use the correct name.</td>
-</tr>
-<tr>
-<td><code>Error: Rekey operation already in progress on aggregate &lt;aggr_name&gt;</code></td>
-<td>Wait for the current rekey to complete or cancel it with <code>storage aggregate encryption rekey abort</code> before starting a new one.</td>
 </tr>
 </tbody>
 </table>
@@ -9055,33 +9047,29 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># CRITICAL: Store the passphrase in a secure vault (CyberArk, HashiCorp Vault, or password manager)</span>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Without the passphrase, encrypted data is unrecoverable after a cluster loss</span>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Show OKM status</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Show configured key managers (keystores) and their state</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>security<span class="w"> </span>key-manager<span class="w"> </span>keystore<span class="w"> </span>show
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Show key IDs managed by OKM</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query<span class="w"> </span>-key-manager-type<span class="w"> </span>onboard
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Display OKM backup information (store it securely with the passphrase)</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show-backup
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Synchronize OKM keys to a new node added to the cluster</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>sync
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Show key IDs in the configured key managers</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Synchronize OKM keys to a new node added to the cluster</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>sync
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Enter a passphrase for onboard key management: ****
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Re-enter the passphrase: ****
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Onboard Key Management has been enabled successfully.
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Cluster: prod-cluster-01
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Onboard Key Management Status: enabled
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Key Manager Type: onboard
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Passphrase Set: yes
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Last Key Rotation: 2024-01-15 09:32:15
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Key ID                                    Key Type      Status
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>----------------------------------------  -----------   --------
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>550e8400-e29b-41d4-a716-446655440000     NSE-256       available
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>550e8400-e29b-41d4-a716-446655440001     NSE-256       available
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>550e8400-e29b-41d4-a716-446655440002     NSE-256       available
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>Synchronizing OKM keys to node2...
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>Node2: Key synchronization completed successfully (3 keys synced)
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>keystore show / onboard show-backup / key query: output varies; see
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-keystore-show.html
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-show-backup.html
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>Synchronizing OKM keys to node2...
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Node2: Key synchronization completed successfully (3 keys synced)
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9095,7 +9083,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <tbody>
 <tr>
 <td><code>Error: Onboard Key Management is already enabled on this cluster</code></td>
-<td>Run <code>security key-manager onboard show</code> first to verify current status before attempting re-enablement.</td>
+<td>Run <code>security key-manager keystore show</code> first to verify current status before attempting re-enablement.</td>
 </tr>
 <tr>
 <td><code>Error: Failed to synchronize keys to node2: Authentication failed</code></td>
@@ -9115,7 +9103,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span>-type<span class="w"> </span>client-ca
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Install the KMS server CA certificate</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span>-type<span class="w"> </span>server-ca<span class="w"> </span>-server-name<span class="w"> </span>&lt;kmip-server&gt;
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span>-type<span class="w"> </span>server-ca
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Enable external KMIP key manager</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
@@ -9131,11 +9119,10 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
 <a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="c1"># Verify KMS connectivity</span>
 <a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>check
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="c1"># Expected: connectivity: available</span>
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="c1"># Show keys managed by external KMS</span>
-<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query<span class="w"> </span>-key-manager-type<span class="w"> </span>external
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show-status
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="c1"># Show keys in the configured key managers</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Installing client certificate...
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Certificate installed successfully.
@@ -9157,19 +9144,9 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Server CA Certificates: kmip-server-ca
 <a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>Status: configured
 <a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Checking KMS connectivity...
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>Key Server: 10.45.12.88:5696
-<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>  Connectivity: available
-<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>Key Server: 10.45.12.89:5696
-<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>  Connectivity: available
-<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>
-<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>Vserver: cluster1-admin
-<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>Key Manager Type: external
-<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>Key ID                           Status
-<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>-------------------------------- --------
-<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>550e8400-e29b-41d4-a716-446655440001  available
-<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>550e8400-e29b-41d4-a716-446655440002  available
-<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>550e8400-e29b-41d4-a716-446655440003  available
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>external show-status / key query: output varies; see
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-show-status.html
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9199,49 +9176,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <h3 id="key-manager-decision">Key Manager Decision<a class="headerlink" href="#key-manager-decision" title="Permanent link">&para;</a></h3>
 <p><img alt="Key Manager Decision diagram: Compliance mandate PCI / HIPAA / FedRAMP?, External KMS available?, External KMIP Thales / IBM / Entrust" src="kroki-generated-84dc4b64-f794-3e3f-9394-22e34be4bbfe.svg" /></p>
 <h3 id="key-manager-health-checks">Key Manager Health Checks<a class="headerlink" href="#key-manager-health-checks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Show overall key manager status</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show-key-query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Show key IDs and whether they are restored on each node</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Show key manager type and status</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Show key manager (keystore) type and state</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>security<span class="w"> </span>key-manager<span class="w"> </span>keystore<span class="w"> </span>show
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># For OKM</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># For OKM: confirm backup information is available</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show-backup
 <a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># For KMIP</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># For KMIP: server configuration and connectivity</span>
 <a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>check
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show-status
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Key Manager Status:
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  Key Manager Type: onboard
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  Key Manager Status: available
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  Node: cluster1-01
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  Key Store Status: available
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  Key Store Type: NSE
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Key Manager Configuration:
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  Key Manager Type: onboard
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  Status: available
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  Nodes: 2
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  Node cluster1-01: available
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>  Node cluster1-02: available
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Onboard Key Manager Status:
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  Status: available
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  Backup Status: completed
-<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>  Backup Date: 2024-01-15 14:32:18 UTC
-<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>  Node cluster1-01: available
-<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>  Node cluster1-02: available
-<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>
-<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>External Key Manager (KMIP) Configuration:
-<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>  Status: not configured
-<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>  KMIP Server: not configured
-<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>  Connection Status: N/A
-<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>
-<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>External Key Manager Check:
-<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>  KMIP Server: not configured
-<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>  Status: N/A
-<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>  Last Check: never
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Output varies; see
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-keystore-show.html
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-show-backup.html
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-show-status.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9255,15 +9207,15 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <tbody>
 <tr>
 <td><code>Error: Key manager is not configured</code></td>
-<td>Run <code>security key-manager onboard create</code> to initialize onboard key management or configure KMIP servers with <code>security key-manager external add-servers</code>.</td>
+<td>Run <code>security key-manager onboard enable</code> to initialize onboard key management or configure KMIP servers with <code>security key-manager external add-servers</code>.</td>
 </tr>
 <tr>
 <td><code>Error: Connection failed to KMIP server &lt;ip&gt;:5696</code></td>
-<td>Verify network connectivity to the KMIP server, confirm firewall rules allow port 5696, and check that the KMIP server certificate is valid with <code>security key-manager external check</code>.</td>
+<td>Verify network connectivity to the KMIP server, confirm firewall rules allow port 5696, and check server status with <code>security key-manager external show-status</code>.</td>
 </tr>
 <tr>
-<td><code>Error: Backup status is failed</code></td>
-<td>Manually trigger an onboard key manager backup with <code>security key-manager onboard create-backup</code> and verify sufficient disk space is available.</td>
+<td>OKM backup not recorded</td>
+<td>Display the OKM backup data with <code>security key-manager onboard show-backup</code> and store it, with the passphrase, outside the cluster.</td>
 </tr>
 </tbody>
 </table>
@@ -9272,7 +9224,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <h2 id="tls-and-ssh-hardening">TLS and SSH Hardening<a class="headerlink" href="#tls-and-ssh-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="enforce-tls-12-minimum">Enforce TLS 1.2 Minimum<a class="headerlink" href="#enforce-tls-12-minimum" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Set minimum TLS version for HTTPS management</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>HTTPS<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-supported-protocols<span class="w"> </span>TLSv1.3,TLSv1.2
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Show current TLS/SSL configuration</span>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>security<span class="w"> </span>config<span class="w"> </span>show
@@ -9346,7 +9298,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span>-ciphers<span class="w"> </span>aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">    </span>-macs<span class="w"> </span>hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">    </span>-mac-algorithms<span class="w"> </span>hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Verify SSH configuration</span>
 <a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>security<span class="w"> </span>ssh<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
@@ -9355,7 +9307,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">    </span>-key-exchange-algorithms<span class="w"> </span>ecdh-sha2-nistp256,ecdh-sha2-nistp384,diffie-hellman-group14-sha256
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>cluster1::&gt; security ssh modify -vserver cluster1 -ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com -macs hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>cluster1::&gt; security ssh modify -vserver cluster1 -ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com -mac-algorithms hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>(no output — command completes silently)
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>cluster1::&gt; security ssh show -vserver cluster1
@@ -9610,7 +9562,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Generate a new CSR, get it signed, and install as above</span>
 <a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>
 <a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="c1"># Activate the new certificate for HTTPS</span>
-<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>security<span class="w"> </span>ssl<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-certificate-name<span class="w"> </span>&lt;new-cert-common-name&gt;
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>security<span class="w"> </span>ssl<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-common-name<span class="w"> </span>&lt;new-cert-common-name&gt;<span class="w"> </span>-ca<span class="w"> </span>&lt;issuing-ca&gt;<span class="w"> </span>-serial<span class="w"> </span>&lt;serial&gt;
 <a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
 <a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># Verify the active SSL certificate</span>
 <a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>security<span class="w"> </span>ssl<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
@@ -9618,8 +9570,8 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>cluster1::&gt; security certificate delete -vserver svm1 -common-name ontap.example.com -type server
 <a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>(no output — command completes silently)
 <a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
-<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>cluster1::&gt; security ssl modify -vserver svm1 -certificate-name ontap.example.com
-<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>(no output — command completes silently)
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>cluster1::&gt; security ssl modify -vserver svm1 -common-name ontap.example.com -ca &lt;issuing-ca&gt; -serial &lt;serial&gt;
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>(output varies; see https://docs.netapp.com/us-en/ontap-cli/security-ssl-modify.html)
 <a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
 <a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>cluster1::&gt; security ssl show -vserver svm1
 <a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>Vserver: svm1
@@ -9655,13 +9607,14 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 <h3 id="certificate-monitoring">Certificate Monitoring<a class="headerlink" href="#certificate-monitoring" title="Permanent link">&para;</a></h3>
 <p>Set up EMS alerting for certificate expiry:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Check if any EMS events fire for certificate expiry</span>
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>sslcert.expired*
-<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>sslcert.expiring*
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-message-name<span class="w"> </span>sslcert.expired*
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-message-name<span class="w"> </span>sslcert.expiring*
 <a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>
 <a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c1"># Configure email alert for certificate expiry events</span>
 <a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>cert-alerts<span class="w"> </span>-email<span class="w"> </span>ops@corp.local
-<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter<span class="w"> </span>-destinations<span class="w"> </span>cert-alerts
-<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-messagename<span class="w"> </span>sslcert.*
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter<span class="w"> </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span>sslcert.*
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>cert-filter<span class="w"> </span>-destinations<span class="w"> </span>cert-alerts
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>There are no entries matching your query.
 <a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>
@@ -9723,7 +9676,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Deploy", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from physical rack-and-stack through cluster initialisation, network...", "dateModified": "2026-07-13", "datePublished": "2026-06-21"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Deploy", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from physical rack-and-stack through cluster initialisation, network...", "dateModified": "2026-11-26", "datePublished": "2026-06-21"}</script>
   
 
   
@@ -8151,9 +8151,9 @@
 
 <h1 id="ontap-deploy">ONTAP — Deploy<a class="headerlink" href="#ontap-deploy" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from physical rack-and-stack through cluster initialisation, network configuration, storage provisioning, data protection setup, and final validation. It follows a seven-phase sequence designed for AFF and FAS HA pairs running ONTAP 9.12 or later, and assumes a greenfield installation against a prepared data-centre environment.
+This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from physical rack-and-stack through cluster initialisation, network configuration, storage provisioning, data protection setup, and final validation. It follows a seven-phase sequence designed for AFF and FAS HA pairs running ONTAP 9.18.1–9.20.1, and assumes a greenfield installation against a prepared data-centre environment.
 
-*Applies to: ONTAP 9.12+*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 <hr />
@@ -8201,8 +8201,8 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># After initial network config, reach the SP via SSH:
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh admin@&lt;SP-IP&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Check SP firmware version:
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sp show-firmware
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Check SP firmware version (from the cluster shell):
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>system service-processor image show -node &lt;node&gt;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Update SP firmware if required:
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>system service-processor image update -node &lt;node&gt; -package &lt;package-url&gt;
@@ -8233,7 +8233,7 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># At the boot menu prompt, boot from the network image:
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Esc+5   → Boot menu
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Select option 7 (Install new software first)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Enter the URL of the ONTAP image package: http://&lt;http-server&gt;/ontap-9.12.1-image.tgz
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Enter the URL of the ONTAP image package: http://&lt;http-server&gt;/&lt;ontap-image-package&gt;.tgz
 </code></pre></div>
 <p>Allow the node to complete the installation and reboot automatically.</p>
 <h3 id="running-the-cluster-setup-wizard">Running the Cluster Setup Wizard<a class="headerlink" href="#running-the-cluster-setup-wizard" title="Permanent link">&para;</a></h3>
@@ -8348,7 +8348,7 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <h3 id="autosupport-configuration">AutoSupport Configuration<a class="headerlink" href="#autosupport-configuration" title="Permanent link">&para;</a></h3>
 <p>AutoSupport sends diagnostic data to NetApp support and feeds the Active IQ Digital Advisor dashboard. Configure it before production traffic begins.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># Enable AutoSupport on all nodes with SMTP transport:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>autosupport modify -node * \
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>system node autosupport modify -node * \
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  -state enable \
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  -transport smtp \
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  -mail-hosts smtp.corp.example.com \
@@ -8357,20 +8357,20 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  -support enable
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a># Verify AutoSupport config:
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>autosupport show -node *
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>system node autosupport show -node *
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a># Send a test AutoSupport message:
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>autosupport invoke -node * -type test -message "ONTAP deployment test"
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>system node autosupport invoke -node * -type test -message "ONTAP deployment test"
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
 <a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a># Confirm delivery:
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>autosupport history show -node * -type test
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>system node autosupport history show -node *
 </code></pre></div>
 <h3 id="active-iq-registration">Active IQ Registration<a class="headerlink" href="#active-iq-registration" title="Permanent link">&para;</a></h3>
 <p>Register the cluster with the NetApp Active IQ Digital Advisor portal to receive health and risk advisories:</p>
 <ol>
 <li>Navigate to <a href="https://activeiq.netapp.com">https://activeiq.netapp.com</a></li>
 <li>Sign in with your NetApp Support credentials.</li>
-<li>Select <strong>Add System</strong> and enter the cluster serial number (found via <code>system node show -fields serial-number</code>).</li>
+<li>Select <strong>Add System</strong> and enter the cluster serial number (found via <code>system node show -fields serialnumber</code>).</li>
 <li>Allow 24 hours for the first AutoSupport bundle to populate the dashboard.</li>
 </ol>
 <hr />
@@ -8379,17 +8379,14 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <h3 id="cluster-interconnect-verification">Cluster Interconnect Verification<a class="headerlink" href="#cluster-interconnect-verification" title="Permanent link">&para;</a></h3>
 <p>For switchless two-node clusters, verify the cluster interconnect is healthy:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># Confirm cluster ports are up:
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>network port show -role cluster
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>network port show -ipspace Cluster
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># Check cluster interconnect health:
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>cluster interconnect show
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># Check cluster interconnect connectivity between nodes:
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>cluster ping-cluster -node &lt;node&gt;
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Node           Link  Speed(Mbps)  IsPartial  IsPresent
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>-------------- ----  -----------  ---------  ---------
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>node1:e0a      up    100000       false      true
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>node1:e0b      up    100000       false      true
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>node2:e0a      up    100000       false      true
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>node2:e0b      up    100000       false      true
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a># Output varies; see
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a># https://docs.netapp.com/us-en/ontap-cli/network-port-show.html
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a># https://docs.netapp.com/us-en/ontap-cli/cluster-ping-cluster.html
 </code></pre></div>
 <h3 id="management-lif-configuration">Management LIF Configuration<a class="headerlink" href="#management-lif-configuration" title="Permanent link">&para;</a></h3>
 <p>Node management LIFs provide per-node SSH access, separate from the cluster management LIF created during setup:</p>
@@ -8525,8 +8522,8 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>vserver add-protocols -vserver svm_iscsi -protocols iscsi
 <a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
 <a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a># Start the iSCSI service:
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>iscsi create -vserver svm_iscsi
-<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>iscsi start -vserver svm_iscsi
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>vserver iscsi create -vserver svm_iscsi
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>vserver iscsi start -vserver svm_iscsi
 <a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>
 <a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a># Verify SVM list:
 <a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>vserver show
@@ -8557,7 +8554,7 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># Create an export policy allowing the ESXi management subnet:
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>vserver export-policy create -vserver svm_nfs -policyname prod_nfs_policy
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>export-policy rule create \
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>vserver export-policy rule create \
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  -vserver svm_nfs \
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  -policyname prod_nfs_policy \
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  -clientmatch 10.10.20.0/24 \
@@ -8579,7 +8576,7 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>  -ostype linux
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
 <a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a># Create an initiator group for Linux hosts:
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>igroup create \
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>lun igroup create \
 <a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>  -vserver svm_iscsi \
 <a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>  -igroup igrp_linux_db \
 <a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>  -protocol iscsi \
@@ -8587,10 +8584,10 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>  -initiator iqn.1994-05.com.redhat:hostname01
 <a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>
 <a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a># Add additional initiators if needed:
-<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>igroup add -vserver svm_iscsi -igroup igrp_linux_db -initiator iqn.1994-05.com.redhat:hostname02
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>lun igroup add -vserver svm_iscsi -igroup igrp_linux_db -initiator iqn.1994-05.com.redhat:hostname02
 <a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>
 <a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a># Map the LUN to the initiator group:
-<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>lun map \
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>lun mapping create \
 <a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>  -vserver svm_iscsi \
 <a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>  -volume vol_lun_01 \
 <a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>  -lun lun_db_01 \
@@ -8705,10 +8702,10 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>cluster show
 <a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
 <a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a># Node-level hardware health:
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>system node show -fields health,model,serial-number,uptime
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>system node show -fields health,model,serialnumber,uptime
 <a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
 <a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a># Check for any active EMS alerts:
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>event log show -severity ERROR -time-range 1h
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>event log show -severity ERROR -time &gt;1h
 <a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
 <a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a># Confirm no disks are in failed or unassigned state:
 <a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>storage disk show -broken
@@ -8843,10 +8840,10 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 </code></pre></div>
 <h3 id="autosupport-validation">AutoSupport Validation<a class="headerlink" href="#autosupport-validation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a># Send a test AutoSupport message:
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>autosupport invoke -node * -type test -message "ONTAP deployment complete — validation test"
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>system node autosupport invoke -node * -type test -message "ONTAP deployment complete — validation test"
 <a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
 <a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a># Check delivery status:
-<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>autosupport history show -node * -type test
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>system node autosupport history show -node *
 <a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
 <a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a># Log in to https://activeiq.netapp.com and confirm:
 <a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a># - Both nodes appear in the system inventory
@@ -8900,7 +8897,7 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

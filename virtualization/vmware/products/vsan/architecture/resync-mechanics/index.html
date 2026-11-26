@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Resync Mechanics", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/architecture/resync-mechanics/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives resync throughput and duration, and the capacity headroom requirement...", "dateModified": "2026-07-13", "datePublished": "2026-06-02"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Resync Mechanics", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/architecture/resync-mechanics/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives resync throughput and duration, and the capacity headroom requirement...", "dateModified": "2026-11-26", "datePublished": "2026-06-02"}</script>
   
 
   
@@ -9302,7 +9302,7 @@
 <div class="kb-summary">
 Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives resync throughput and duration, and the capacity headroom requirement that makes rebuilds possible.
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <hr />
@@ -9319,16 +9319,10 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 <p><strong>Example:</strong> A VM with FTT=1 RAID-1 (2 components + witness) is changed to FTT=2 RAID-6. CLOM must create 5 components (a 4+2 erasure code stripe) and rebuild all existing data into that layout.</p>
 <h3 id="trigger-3-rebalance">Trigger 3 — Rebalance<a class="headerlink" href="#trigger-3-rebalance" title="Permanent link">&para;</a></h3>
 <p>When a new host is added to the cluster or the distribution of components across hosts becomes uneven, vSAN rebalances by migrating components to equalise utilisation. This is proactive and non-urgent — it runs in the background with lower priority than failure-driven rebuilds.</p>
-<p>Rebalance can also be triggered manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>rebalance<span class="w"> </span>start
+<p>Rebalance can also be triggered manually from PowerCLI (<code>esxcli</code> has no rebalance command):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Start-VsanClusterRebalance</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">"&lt;cluster&gt;"</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Rebalance operation started on cluster domain-c8.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Cluster UUID: 522e3d4a-1b2c-4d8f-9e7a-3c5b8f2a1d9e
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Rebalance task ID: task-12847
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Status: RUNNING
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Estimated time remaining: 2 hours 15 minutes
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Data to rebalance: 847.3 GB
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Current throughput: 12.5 MB/s
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Output varies; see the cmdlet help in VMware.VimAutomation.Storage: https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9346,7 +9340,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 </tr>
 <tr>
 <td><code>Error: Rebalance operation already in progress</code></td>
-<td>Wait for the current rebalance to complete or cancel it with <code>esxcli vsan cluster rebalance stop</code> before starting a new one.</td>
+<td>Wait for the current rebalance to complete or stop it with <code>Stop-VsanClusterRebalance -Cluster &lt;cluster&gt;</code> before starting a new one.</td>
 </tr>
 <tr>
 <td><code>Error: Insufficient resources to start rebalance</code></td>
@@ -9515,19 +9509,17 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 </div>
 <hr />
 <h2 id="the-throttle-trading-speed-for-vm-stability">The Throttle: Trading Speed for VM Stability<a class="headerlink" href="#the-throttle-trading-speed-for-vm-stability" title="Permanent link">&para;</a></h2>
-<p>The resync throttle limits the IOPS consumed by rebuild operations per host. It protects VM performance during production hours at the cost of slower recovery.</p>
+<p>The resync throttle limits the bandwidth (in Mbps) consumed by resync traffic on each host. It protects VM performance during production hours at the cost of slower recovery.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check current throttle</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set to 500 IOPS per host (business-hours safe)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set to 500 Mbps (valid range 0-512)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="w"> </span><span class="m">500</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Remove throttle — run at full speed (maintenance windows)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Remove throttle — run at full speed (0 = no throttling)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Current resync throttle setting: 100 IOPS
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(no output — command completes silently)
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>(no output — command completes silently)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9540,12 +9532,12 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Unknown command or namespace vsan debug resync</code></td>
-<td>Verify the ESXi host is vSAN-enabled and running vSAN 6.6 or later; check with <code>esxcli vsan cluster get</code>.</td>
+<td><code>Error: Unknown command or namespace vsan resync</code></td>
+<td>Verify the ESXi host is vSAN-enabled; check with <code>esxcli vsan cluster get</code>.</td>
 </tr>
 <tr>
-<td><code>Error: Invalid --throttle value: 500. Must be between 0 and 100000</code></td>
-<td>Adjust the throttle value to fall within the valid range (typically 0–100000 IOPS depending on vSAN version).</td>
+<td>Value rejected for <code>--level</code></td>
+<td>The level is an integer in Mbps from 0 to 512 (0 = no throttling).</td>
 </tr>
 </tbody>
 </table>
@@ -9562,7 +9554,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 <tbody>
 <tr>
 <td>Business hours (9–17)</td>
-<td>500 IOPS</td>
+<td>500 Mbps</td>
 <td>Protect VM latency</td>
 </tr>
 <tr>
@@ -9577,7 +9569,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 </tr>
 </tbody>
 </table>
-<p><strong>Important:</strong> A throttled resync extends the window during which the cluster has reduced redundancy. A DEGRADED object under a 500-IOPS throttle might take 3× longer to rebuild. If another failure occurs during that window, you have a data loss event.</p>
+<p><strong>Important:</strong> A throttled resync extends the window during which the cluster has reduced redundancy. A DEGRADED object under a throttle takes longer to rebuild. If another failure occurs during that window, you have a data loss event.</p>
 <p>If a disk has failed and FTT=1 objects are DEGRADED, set throttle to 0 and accept the I/O impact.</p>
 <hr />
 <h2 id="delta-sync-vs-full-rebuild">Delta-Sync vs Full Rebuild<a class="headerlink" href="#delta-sync-vs-full-rebuild" title="Permanent link">&para;</a></h2>
@@ -9683,7 +9675,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

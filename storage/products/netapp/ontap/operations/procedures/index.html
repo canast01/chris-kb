@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Procedures", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and LUN provisioning, SVM management, snapshot and SnapMirror operations...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Procedures", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and LUN provisioning, SVM management, snapshot and SnapMirror operations...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -8897,7 +8897,7 @@
 <div class="kb-summary">
 ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and LUN provisioning, SVM management, snapshot and SnapMirror operations, capacity management, and incident triage.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8916,9 +8916,9 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <li>[ ] HA failover is operational on both nodes (<code>storage failover show</code> shows <code>true</code> for takeover-enabled)</li>
 <li>[ ] SnapMirror lag is within RPO on all critical relationships before quiescing</li>
 <li>[ ] No active volume move or aggregate rebalance jobs: <code>volume move show</code> and <code>storage aggregate relocation show</code></li>
-<li>[ ] AutoSupport is working — send a start-of-maintenance message: <code>autosupport invoke -node * -type all -message "Starting maintenance"</code></li>
+<li>[ ] AutoSupport is working — send a start-of-maintenance message: <code>system node autosupport invoke -node * -type all -message "Starting maintenance"</code></li>
 <li>[ ] No open disk rebuild operations: <code>storage disk show -broken</code> is clean</li>
-<li>[ ] Snapshots taken of affected volumes before change: <code>snapshot create -volume &lt;vol&gt; -snapshot pre-change</code></li>
+<li>[ ] Snapshots taken of affected volumes before change: <code>volume snapshot create -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot pre-change</code></li>
 </ul>
 <table>
 <thead>
@@ -8957,17 +8957,17 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 </tbody>
 </table>
 <h2 id="rolling-node-upgrade-sequence">Rolling Node Upgrade Sequence<a class="headerlink" href="#rolling-node-upgrade-sequence" title="Permanent link">&para;</a></h2>
-<p><img alt="Rolling Node Upgrade Sequence diagram" src="kroki-generated-8340cdf9-b228-398d-8266-aa40de781fba.svg" /></p>
+<p><img alt="Rolling Node Upgrade Sequence diagram" src="kroki-generated-4821ef22-3ad4-31cc-9ee8-f7cc9ae95b6d.svg" /></p>
 <h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Send AutoSupport start-of-maintenance: <code>autosupport invoke -node * -type all -message "Maintenance window starting"</code></li>
+<li>Send AutoSupport start-of-maintenance: <code>system node autosupport invoke -node * -type all -message "Maintenance window starting"</code></li>
 <li>Quiesce SnapMirror relationships on volumes involved in the change: <code>snapmirror quiesce -destination-path &lt;svm:vol&gt;</code></li>
 <li>For rolling node upgrade — upgrade the non-epsilon node first; initiate takeover on the partner: <code>storage failover takeover -ofnode &lt;node&gt;</code></li>
 <li>Monitor takeover completion: <code>storage failover show</code> should show <code>In Takeover</code> then the node comes back up</li>
 <li>Run <code>storage failover giveback -ofnode &lt;node&gt;</code> after the upgraded node is back online; confirm <code>Waiting for Giveback</code> transitions to normal</li>
 <li>Validate cluster health after each node: <code>cluster show</code>, <code>system health alert show</code></li>
 <li>Resume SnapMirror relationships after all changes are complete: <code>snapmirror resume -destination-path &lt;svm:vol&gt;</code></li>
-<li>Send AutoSupport close-of-maintenance: <code>autosupport invoke -node * -type all -message "Maintenance window complete"</code></li>
+<li>Send AutoSupport close-of-maintenance: <code>system node autosupport invoke -node * -type all -message "Maintenance window complete"</code></li>
 </ol>
 <h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8987,7 +8987,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <li>[ ] Run <code>storage disk show -broken</code> — identify any disk failures driving the incident</li>
 <li>[ ] Run <code>storage failover show</code> — check whether any HA takeover has occurred</li>
 <li>[ ] Run <code>snapmirror show -fields lag-time,healthy</code> — check if replication is healthy or contributing to the symptom</li>
-<li>[ ] Check specific protocol: <code>network interface show</code>, <code>iscsi session show</code>, or <code>fcp show initiator</code></li>
+<li>[ ] Check specific protocol: <code>network interface show</code>, <code>vserver iscsi session show</code>, or <code>vserver fcp initiator show</code></li>
 <li>[ ] Review recent EMS events for the affected node: <code>event log show -node &lt;nodename&gt; -severity error</code></li>
 </ul>
 <table>
@@ -9068,7 +9068,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <h3 id="svm-health">SVM Health<a class="headerlink" href="#svm-health" title="Permanent link">&para;</a></h3>
 <p><img alt="SVM Health" src="../../../../../../assets/ontap-proc-svm-health.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm all SVMs are running</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!running
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-operational-state<span class="w"> </span>!running
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check SVM root volume health</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;svm_name&gt;_root
@@ -9154,7 +9154,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span>-data-protocol<span class="w"> </span>nfs,cifs
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Migrate a LIF to a different port</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-dest-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-destination-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-destination-port<span class="w"> </span>&lt;port&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Vserver          Interface      IP Address      Status   Home Node/Port    Current Node/Port
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>--------         ---------      ----------      ------   ---------------   -----------------
@@ -9183,7 +9183,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 </tr>
 <tr>
 <td><code>Error: command failed: Cannot migrate LIF "nfs_lif_01" because it is currently hosting an active connection.</code></td>
-<td>Migrate during a maintenance window or use <code>network interface migrate -force-administrative-vlan true</code> if necessary.</td>
+<td>Migrate during a maintenance window; see the <a href="https://docs.netapp.com/us-en/ontap-cli/network-interface-migrate.html">network interface migrate reference</a> for the <code>-force</code> option.</td>
 </tr>
 </tbody>
 </table>
@@ -9775,13 +9775,13 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <h3 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h3>
 <p><img alt="NFS" src="../../../../../../assets/ontap-proc-nfs.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Check NFS service status per SVM</span>
-<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 <a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
 <a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># List NFS exports</span>
-<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 <a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
 <a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Show NFS clients connected</span>
-<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>connected-clients<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Vserver: prod-svm-01
 <a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>NFS Enabled: true
@@ -9807,11 +9807,8 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a>RW Rule: sys
 <a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a>Superuser Security: none
 <a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a>
-<a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a>Vserver: prod-svm-01
-<a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a>Client IP: 10.42.10.45
-<a id="__codelineno-35-27" name="__codelineno-35-27" href="#__codelineno-35-27"></a>Protocol: nfs3
-<a id="__codelineno-35-28" name="__codelineno-35-28" href="#__codelineno-35-28"></a>Access Time: 2024-01-15 14:32:18 +00:00
-<a id="__codelineno-35-29" name="__codelineno-35-29" href="#__codelineno-35-29"></a>Idle Time: 45 seconds
+<a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a>vserver nfs connected-clients show: output varies; see
+<a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a>https://docs.netapp.com/us-en/ontap-cli/vserver-nfs-connected-clients-show.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9829,7 +9826,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 </tr>
 <tr>
 <td><code>Error: command not found: nfs</code></td>
-<td>Ensure you are connected to the ONTAP cluster CLI (not the node shell); use <code>system node run -node &lt;nodename&gt; -command "nfs show"</code> if needed.</td>
+<td>Ensure you are connected to the ONTAP cluster CLI (not the node shell) and use the full path <code>vserver nfs show -vserver &lt;svm_name&gt;</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -9837,13 +9834,13 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <h3 id="smbcifs">SMB/CIFS<a class="headerlink" href="#smbcifs" title="Permanent link">&para;</a></h3>
 <p><img alt="SMB/CIFS" src="../../../../../../assets/ontap-proc-smb-cifs.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Check CIFS server status</span>
-<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 <a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
 <a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># List CIFS shares</span>
 <a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 <a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
 <a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="c1"># Show active CIFS sessions</span>
-<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Vserver: prod-svm-01
 <a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>CIFS Server Name: PROD-FS-01
@@ -9886,7 +9883,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 </tr>
 <tr>
 <td><code>Error: command not found: cifs</code></td>
-<td>Use the full command path <code>vserver cifs show -vserver &lt;svm_name&gt;</code> instead of the shorthand <code>cifs show</code>.</td>
+<td>Use the full command path <code>vserver cifs show -vserver &lt;svm_name&gt;</code>; CIFS commands live under the <code>vserver cifs</code> directory.</td>
 </tr>
 </tbody>
 </table>
@@ -9894,16 +9891,16 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <h3 id="iscsi">iSCSI<a class="headerlink" href="#iscsi" title="Permanent link">&para;</a></h3>
 <p><img alt="iSCSI" src="../../../../../../assets/ontap-proc-iscsi.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Check iSCSI service status</span>
-<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 <a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
 <a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># List iSCSI LIFs</span>
 <a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi
 <a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>
 <a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="c1"># Show connected iSCSI initiators</span>
-<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>iscsi<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 <a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>
-<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="c1"># Show iSCSI target portal groups</span>
-<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>iscsi<span class="w"> </span>tpgroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="c1"># Show iSCSI LIFs with their target portal groups (TPGroup column)</span>
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Vserver: svm-prod-01
 <a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>  Target Name: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr.svm-prod-01:target.lun0
@@ -9922,10 +9919,8 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a>svm-prod-01  iqn.1991-05.com.example:host-db-02.local         CHAP
 <a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a>svm-prod-01  iqn.1991-05.com.example:host-app-03.local        none
 <a id="__codelineno-39-17" name="__codelineno-39-17" href="#__codelineno-39-17"></a>
-<a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a>Vserver      Target Name                                       TPGT  Portals
-<a id="__codelineno-39-19" name="__codelineno-39-19" href="#__codelineno-39-19"></a>-----------  ------------------------------------------------  ----  -------
-<a id="__codelineno-39-20" name="__codelineno-39-20" href="#__codelineno-39-20"></a>svm-prod-01  iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr...    1     10.20.30.41:3260
-<a id="__codelineno-39-21" name="__codelineno-39-21" href="#__codelineno-39-21"></a>svm-prod-01  iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr...    1     10.20.30.42:3260
+<a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a>vserver iscsi interface show: output varies; see
+<a id="__codelineno-39-19" name="__codelineno-39-19" href="#__codelineno-39-19"></a>https://docs.netapp.com/us-en/ontap-cli/vserver-iscsi-interface-show.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9951,13 +9946,13 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <h3 id="fcp-fibre-channel">FCP (Fibre Channel)<a class="headerlink" href="#fcp-fibre-channel" title="Permanent link">&para;</a></h3>
 <p><img alt="FCP (Fibre Channel)" src="../../../../../../assets/ontap-proc-fcp-fibre-channel.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Check FCP service status</span>
-<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>fcp<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>vserver<span class="w"> </span>fcp<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 <a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
 <a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># List FCP LIFs (FC target ports)</span>
 <a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>fcp
 <a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>
 <a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="c1"># Show connected FC initiators</span>
-<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>vserver<span class="w"> </span>fcp<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 <a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a>
 <a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="c1"># Show FC target adapter status</span>
 <a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a>system<span class="w"> </span>node<span class="w"> </span>hardware<span class="w"> </span>unified-connect<span class="w"> </span>show
@@ -10004,7 +9999,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 </tr>
 <tr>
 <td><code>Error: No FC target adapters found</code></td>
-<td>Confirm FC adapters are installed and licensed with <code>system license show</code> and <code>storage port show -type FC</code>.</td>
+<td>Confirm FC adapters are installed and licensed with <code>system license show</code> and <code>network fcp adapter show</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -10035,10 +10030,6 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 </thead>
 <tbody>
 <tr>
-<td><code>Error: unknown field "data-protocol"</code></td>
-<td>Use <code>network interface show -fields protocols</code> instead, as <code>data-protocol</code> is not a valid ONTAP field name.</td>
-</tr>
-<tr>
 <td><code>Error: command not found</code></td>
 <td>Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI; this command runs only in cluster or admin SVM context.</td>
 </tr>
@@ -10050,23 +10041,20 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Enable NFS</span>
 <a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
 <a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
-<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># Enable CIFS (requires AD join)</span>
-<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>cifs<span class="w"> </span>setup<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># Enable CIFS (creates the CIFS server and joins it to AD)</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;netbios_name&gt;<span class="w"> </span>-domain<span class="w"> </span>&lt;ad_domain_fqdn&gt;
 <a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>
 <a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="c1"># Enable iSCSI</span>
-<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>vserver nfs create -vserver prod_svm -v3 enabled -v4.1 enabled
 <a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>(no output — command completes silently)
 <a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>
-<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>cifs setup -vserver prod_svm
-<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>This command will create a CIFS server and join it to the domain.
-<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>Enter the username to authenticate with Active Directory: admin
-<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>Enter the password: 
-<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>CIFS server "PROD_SVM01" created successfully and joined to domain "corp.example.com"
-<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>
-<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a>iscsi create -vserver prod_svm
-<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>(no output — command completes silently)
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>vserver cifs create: prompts for AD credentials; output varies; see
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-create.html
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>vserver iscsi create -vserver prod_svm
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>(no output — command completes silently)
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10079,8 +10067,8 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 </thead>
 <tbody>
 <tr>
-<td><code>Error: command failed: CIFS setup requires Active Directory domain to be configured</code></td>
-<td>Configure DNS and domain settings on the SVM with <code>dns create</code> and <code>active-directory create</code> before running CIFS setup.</td>
+<td>CIFS server cannot join the domain</td>
+<td>Configure DNS on the SVM with <code>vserver services name-service dns create</code> so the AD domain resolves, then rerun <code>vserver cifs create</code>.</td>
 </tr>
 <tr>
 <td><code>Error: command failed: iSCSI cannot be created on a vserver with no data aggregates</code></td>
@@ -10158,7 +10146,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

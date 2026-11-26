@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Escalation", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/troubleshooting/escalation/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "How to escalate VMware vSAN issues to Broadcom support: what data to collect, how to run vm-support and cmmds-tool, step-by-step case creation on...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Escalation", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/troubleshooting/escalation/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "How to escalate VMware vSAN issues to Broadcom support: what data to collect, how to run vm-support and cmmds-tool, step-by-step case creation on...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9212,7 +9212,7 @@
 <div class="kb-summary">
 How to escalate VMware vSAN issues to Broadcom support: what data to collect, how to run vm-support and cmmds-tool, step-by-step case creation on support.broadcom.com, and the escalation path when progress stalls.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 <p><img alt="vSAN — Escalation" src="../../../../../../assets/virtualization-vmware-vsan-troubleshooting-escalation.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── vSAN — Escalation ──────────────────────────────────────────┐
@@ -9286,7 +9286,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </tr>
 <tr>
 <td>Resync status</td>
-<td><code>esxcli vsan resync get</code> (any host) or vSphere Client → Monitor → vSAN → Resync</td>
+<td><code>esxcli vsan debug resync summary get</code> (any host) or vSphere Client → Monitor → vSAN → Resync</td>
 <td>No stalled resync; total remaining bytes ≠ stuck at same value</td>
 </tr>
 <tr>
@@ -9473,8 +9473,8 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <h3 id="4-capture-vsan-health-checks-and-resync-state">4. Capture vSAN health checks and resync state<a class="headerlink" href="#4-capture-vsan-health-checks-and-resync-state" title="Permanent link">&para;</a></h3>
 <p>In vSphere Client: navigate to the vSAN cluster → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Health</strong>.</p>
 <p>Export the health check results (click <strong>Export</strong> at the top right of the Health view).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From ESXi CLI: resync status (shows remaining bytes by priority)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From ESXi CLI: resync summary (objects and bytes left to resync)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Disk health</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
@@ -9485,39 +9485,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Object accessibility</span>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"inaccessible\|degraded\|absent"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Resync Status:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Resync Completion Percentage: 87
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Bytes Remaining (High Priority): 2147483648
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Bytes Remaining (Low Priority): 536870912
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  Estimated Time Remaining: 3600 seconds
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Storage Health:
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  Disk Group 1:
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    UUID: 52e0e3d4-8f2a-4c1b-9e7a-1a2b3c4d5e6f
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    Health State: Healthy
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    Capacity: 1099511627776 bytes
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    Free Space: 274877906944 bytes
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  Disk Group 2:
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    UUID: 7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    Health State: Degraded
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    Capacity: 1099511627776 bytes
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    Free Space: 68719476736 bytes
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>Network Health:
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>  vmk1 (vSAN vmkernel):
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    Peer: esx-node-02.lab.local (192.168.100.12)
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    Latency: 0.45 ms
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>    Packet Loss: 0%
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>  vmk1 (vSAN vmkernel):
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>    Peer: esx-node-03.lab.local (192.168.100.13)
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>    Latency: 0.52 ms
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>    Packet Loss: 0%
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>Object Accessibility:
-<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>  Object UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
-<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>  State: degraded
-<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>  Component Count: 3
-<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>  Accessible Components: 2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9556,7 +9524,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  - 14:35: 3 VMs on that host show I/O errors
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Steps already taken:
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  - cmmds-tool: several components show "absent" on esxi-04 disk groups
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  - esxcli vsan resync get: 450 GB stuck at same byte count for 2 hours
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  - esxcli vsan debug resync summary get: 450 GB stuck at same byte count for 2 hours
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  - Did NOT power off esxi-04 or pull disks
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  - Did NOT remove disk groups
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>Blast radius: 3 VMs on esxi-04 have I/O errors; FTT=1 — one more failure = data loss
@@ -9574,7 +9542,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <p>Under <strong>Product</strong>, select <strong>VMware vSAN</strong>. If your issue is also vSphere-related (ESXi host panic, vCenter issue), select the appropriate product.</p>
 </li>
 <li>
-<p>Under <strong>Version</strong>, select your vSAN version (7.x or 8.x).</p>
+<p>Under <strong>Version</strong>, select your vSAN version (9.x or 8.x).</p>
 </li>
 <li>
 <p>Under <strong>Severity</strong>, select:</p>
@@ -9667,7 +9635,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <td>Only remove disk groups when GSS has confirmed the data is fully resync'd elsewhere</td>
 </tr>
 <tr>
-<td>Run <code>esxcli vsan debug object repair-objects</code> without GSS</td>
+<td>Trigger an immediate object repair (e.g. PowerCLI <code>Add-VsanObjectToRepairQueue</code>) without GSS</td>
 <td>May trigger unnecessary resync that changes the state GSS is analysing</td>
 <td>Let GSS direct the exact repair command with parameters</td>
 </tr>
@@ -9694,7 +9662,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>cmmds-tool<span class="w"> </span>find<span class="w"> </span>-t<span class="w"> </span>LSOM_OBJECT<span class="w"> </span>-f<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Resync progress</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>resync<span class="w"> </span>get
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Object accessibility</span>
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"inaccessible\|degraded\|absent"</span>
@@ -9702,48 +9670,11 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Network health (run on one host)</span>
 <a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
 <a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Performance data (latency snapshot)</span>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>perf
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># VMDKs on the local vSAN datastore (per-VMDK latency comes from the</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># vSAN performance service in the vSphere Client)</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Cluster UUID: 52d4a8f1-7c3e-4a2b-9e1f-3b8c2a5d6e9f
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Cluster mode: Enabled
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Health state: Healthy
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Storage device list:
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  Device: naa.5001405a1b2c3d4e
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    Capacity: 1.7 TB
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    Used: 892.3 GB
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    Health: Healthy
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>  Device: naa.5001405a1b2c3d4f
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    Capacity: 1.7 TB
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    Used: 887.1 GB
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    Health: Healthy
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>DOM_OBJECT health: HEALTHY
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>DOM_OBJECT state: ACTIVE
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>LSOM_OBJECT health: HEALTHY
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>LSOM_OBJECT state: ACTIVE
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>LSOM_OBJECT health: HEALTHY
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>LSOM_OBJECT state: ACTIVE
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>Resync progress: 0%
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>Resync objects: 0
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>Resync bytes: 0 B
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>Object list:
-<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>  Object UUID: 8f2e1a3c-5b7d-4e9f-a1b2-c3d4e5f6a7b8
-<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>  State: ACCESSIBLE
-<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>  Redundancy: SATISFIED
-<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>
-<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>Network health: HEALTHY
-<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>Partition: CONNECTED
-<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>Quorum: QUORUM_PRESENT
-<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>Network latency: 2.3 ms
-<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>
-<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>VMDK perf snapshot:
-<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>  Read latency: 1.2 ms
-<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>  Write latency: 2.8 ms
-<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>  Outstanding IOs: 45
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9761,7 +9692,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </tr>
 <tr>
 <td><code>Error: CMMDS server is not running</code></td>
-<td>Restart the CMMDS service with <code>systemctl restart cmmds</code> or reboot the host if the service fails to start.</td>
+<td>Restart the CMMDS daemon with <code>/etc/init.d/cmmdsd restart</code> (<a href="https://knowledge.broadcom.com/external/article/318410">Broadcom KB 318410</a>); open a case if it keeps failing.</td>
 </tr>
 <tr>
 <td><code>Error: Network partition detected - Quorum: QUORUM_ABSENT</code></td>
@@ -9812,7 +9743,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Run <code>esxcli vsan resync get</code> and confirm remaining bytes is 0 (resync complete)</li>
+<li>Run <code>esxcli vsan debug resync summary get</code> and confirm remaining bytes is 0 (resync complete)</li>
 <li>Check vSphere Client → Monitor → vSAN → Health: all health checks show green</li>
 <li>Check vSphere Client → Monitor → vSAN → Virtual Objects: all objects show <code>Healthy</code></li>
 <li>Check vSphere Client → Configure → vSAN → Disk Management: no disks in Failed or Degraded state</li>
@@ -9842,7 +9773,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

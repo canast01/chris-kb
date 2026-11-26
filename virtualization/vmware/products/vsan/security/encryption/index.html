@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Encryption", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE) and data-in-transit encryption. Both are optional and independently...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Encryption", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE) and data-in-transit encryption. Both are optional and independently...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9313,7 +9313,7 @@
 <div class="kb-summary">
 vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE) and data-in-transit encryption. Both are optional and independently configurable. This page covers architecture, KMS integration, enabling procedures, and operational considerations.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 <p><img alt="vSAN — Encryption" src="../../../../../../assets/virtualization-vmware-vsan-security-encryption.svg" /></p>
 <hr />
@@ -9467,17 +9467,16 @@ vSphere Client → vCenter → Configure → Key Providers → Add Standard Key 
 </div>
 <hr />
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
-<p>Regular key rotation limits exposure if keys are compromised. Rotate KEKs (not DEKs — DEK rotation would require full disk reformat).</p>
+<p>Regular key rotation limits exposure if keys are compromised. Routine rotation is a shallow rekey (new KEK); a deep rekey (new DEKs) re-encrypts all disks and takes much longer.</p>
 <h3 id="rotate-keks">Rotate KEKs<a class="headerlink" href="#rotate-keks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Trigger KEK rotation on the cluster</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Trigger KEK rotation (shallow rekey) on the cluster</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">"VSAN-LON-01"</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Invoke-VsanClusterKeyRotation</span> <span class="n">-Configuration</span> <span class="nv">$vsanConfig</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Start-VsanEncryptionConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span> <span class="n">-ShallowRekey</span>
 </code></pre></div>
 <p><strong>From vCenter UI:</strong>
 Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
-<p>KEK rotation is a rolling operation — each host requests a new KEK from the KMS, re-encrypts its local DEK, and updates the stored encrypted DEK. No disk reformatting occurs. No impact to running VMs.</p>
-<p><strong>Deep rekey (DEK rotation):</strong> Deep rekey rotates the DEKs themselves, which requires a disk group reformat equivalent to initial encryption enablement. Only perform deep rekey if DEKs are suspected to be compromised. Schedule an extended maintenance window.</p>
+<p>In a shallow rekey only the key encryption key (KEK) is changed and the data encryption keys (DEKs) are rewrapped with the new KEK; data is not re-encrypted.</p>
+<p><strong>Deep rekey (DEK rotation):</strong> <code>Start-VsanEncryptionConfiguration -Cluster $cluster -DeepRekey</code> re-encrypts all disks with new data encryption keys and takes a long time to finish. Only perform a deep rekey if DEKs are suspected to be compromised, and schedule an extended maintenance window.</p>
 <hr />
 <h2 id="encryption-and-deduplication-compression">Encryption and Deduplication / Compression<a class="headerlink" href="#encryption-and-deduplication-compression" title="Permanent link">&para;</a></h2>
 <p>vSAN deduplication and compression must be evaluated alongside encryption:</p>
@@ -9649,7 +9648,7 @@ Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Hardening", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Security hardening for ONTAP focuses on reducing attack surface, enforcing strong authentication, encrypting management and data traffic, and enabling...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ONTAP — Hardening", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Security hardening for ONTAP focuses on reducing attack surface, enforcing strong authentication, encrypting management and data traffic, and enabling...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -8666,7 +8666,7 @@
 <div class="kb-summary">
 Security hardening for ONTAP focuses on reducing attack surface, enforcing strong authentication, encrypting management and data traffic, and enabling comprehensive audit logging. Apply this baseline to all production clusters at build and validate quarterly.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 <p><img alt="ONTAP — Hardening" src="../../../../../../assets/storage-netapp-ontap-security-hardening.svg" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8686,12 +8686,12 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <li>[ ] Built-in <code>diag</code> account locked: <code>security login lock -username diag</code></li>
 <li>[ ] All service/automation accounts use minimum-privilege custom RBAC roles</li>
 <li>[ ] No shared accounts; each administrator has an individual named account</li>
-<li>[ ] SSH idle session timeout configured: <code>security session timeout modify -timeout 600</code></li>
+<li>[ ] SSH idle session timeout configured: <code>system timeout modify -timeout 10</code> (value is in minutes)</li>
 <li>[ ] SSH host key type restricted to Ed25519 or RSA-4096+</li>
 </ul>
 <h3 id="protocol-security">Protocol Security<a class="headerlink" href="#protocol-security" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] TLS 1.2 minimum enforced for HTTPS management: <code>security config modify -interface HTTPS -min-protocol-version TLSv1.2</code></li>
+<li>[ ] TLS 1.2 minimum enforced for HTTPS management: <code>security config modify -supported-protocols TLSv1.3,TLSv1.2</code></li>
 <li>[ ] Telnet and RSH disabled: <code>security protocol show</code> confirms both are <code>false</code></li>
 <li>[ ] SNMPv1 and SNMPv2c community strings deleted; SNMPv3 only</li>
 <li>[ ] SMB1 disabled on all CIFS SVMs: <code>vserver cifs options modify -smb1-enabled false</code></li>
@@ -8729,10 +8729,10 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># ssh -i /path/to/key admin@&lt;cluster-mgmt-ip&gt;</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Remove password-based SSH login for admin</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-authentication-method<span class="w"> </span>password
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-user-or-group-name<span class="w"> </span>admin<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-authentication-method<span class="w"> </span>password
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Confirm only publickey method remains</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-user-or-group-name<span class="w"> </span>admin
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Vserver: cluster1
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Username: admin
@@ -8786,7 +8786,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>diag<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify it is locked</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>diag<span class="w"> </span>-fields<span class="w"> </span>is-account-locked
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-user-or-group-name<span class="w"> </span>diag<span class="w"> </span>-fields<span class="w"> </span>is-account-locked
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Expected: is-account-locked: true</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(no output — command completes silently)
@@ -8811,23 +8811,20 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </tr>
 <tr>
 <td><code>Error: This operation is not permitted: User "admin" does not have permission to execute the command "security login lock"</code></td>
-<td>Confirm your user account has the "admin" or equivalent security role by running <code>security login show -username &lt;your-user&gt;</code>.</td>
+<td>Confirm your user account has the "admin" or equivalent security role by running <code>security login show -user-or-group-name &lt;your-user&gt;</code>.</td>
 </tr>
 </tbody>
 </table>
 </div>
 <h3 id="session-timeout">Session Timeout<a class="headerlink" href="#session-timeout" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Set CLI SSH idle timeout to 10 minutes (600 seconds)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>security<span class="w"> </span>session<span class="w"> </span>timeout<span class="w"> </span>modify<span class="w"> </span>-timeout<span class="w"> </span><span class="m">600</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Set CLI session idle timeout to 10 minutes (-timeout is in minutes; 0 disables)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>system<span class="w"> </span>timeout<span class="w"> </span>modify<span class="w"> </span>-timeout<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify timeout</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>security<span class="w"> </span>session<span class="w"> </span>timeout<span class="w"> </span>show
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>system<span class="w"> </span>timeout<span class="w"> </span>show
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(no output — command completes silently)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Session Timeout
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>---------------
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Idle Timeout: 600 seconds
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>system timeout show: output varies; see
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>https://docs.netapp.com/us-en/ontap-cli/system-timeout-show.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -8840,12 +8837,8 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </thead>
 <tbody>
 <tr>
-<td><code>Error: "security session timeout modify" is not a valid command.</code></td>
-<td>Verify you are running ONTAP 9.1 or later, as this command was introduced in that version.</td>
-</tr>
-<tr>
-<td><code>Error: Invalid value "600" for parameter "timeout".</code></td>
-<td>Use a value between 0 and 86400 seconds; 600 seconds is valid, so check for typos or ensure the parameter name matches your ONTAP version exactly.</td>
+<td>Timeout far longer than expected</td>
+<td><code>-timeout</code> is in minutes, not seconds (<code>-timeout 10</code> = 10 minutes; <code>0</code> disables the timeout) per the <a href="https://docs.netapp.com/us-en/ontap-cli/system-timeout-modify.html">system timeout modify reference</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -8853,7 +8846,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <h3 id="account-lockout-policy">Account Lockout Policy<a class="headerlink" href="#account-lockout-policy" title="Permanent link">&para;</a></h3>
 <p>ONTAP does not have a configurable account lockout after N failed attempts in the same way as Active Directory. Enforce this compensating control:</p>
 <ul>
-<li>Monitor failed login events via EMS: <code>event log show -messagename security.authentication.failed</code></li>
+<li>Monitor failed login events via EMS: <code>event log show -message-name security.authentication.failed</code></li>
 <li>Use LDAP/AD-integrated accounts where lockout is enforced at the IdP</li>
 <li>For local accounts, review <code>security audit log show</code> for repeated failed attempts</li>
 </ul>
@@ -8861,13 +8854,13 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <h2 id="protocol-hardening">Protocol Hardening<a class="headerlink" href="#protocol-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="tls-hardening">TLS Hardening<a class="headerlink" href="#tls-hardening" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enforce TLS 1.2 minimum for HTTPS management interfaces</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>HTTPS<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-supported-protocols<span class="w"> </span>TLSv1.3,TLSv1.2
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify current TLS configuration</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>security<span class="w"> </span>config<span class="w"> </span>show
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># For highest security environments, enforce TLS 1.2 only on both interfaces</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>SSL<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-supported-protocols<span class="w"> </span>TLSv1.3,TLSv1.2
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify with an external SSL test</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;cluster-mgmt-ip&gt;:443<span class="w"> </span>-tls1_1
@@ -8896,8 +8889,8 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Invalid value for "-min-protocol-version": "TLSv1.2"</code></td>
-<td>Verify the exact protocol version string supported by your ONTAP version (may be <code>TLSv1.2</code> or <code>TLSV1_2</code> depending on release); check the admin guide for valid enum values.</td>
+<td><code>security config modify</code> rejected</td>
+<td><code>-supported-protocols</code> is an advanced-privilege parameter (run <code>set -privilege advanced</code> first); valid values are TLSv1.3, TLSv1.2, TLSv1.1, TLSv1, SSLv3 per the <a href="https://docs.netapp.com/us-en/ontap-cli/security-config-modify.html">security config modify reference</a>.</td>
 </tr>
 <tr>
 <td><code>Error: command not found: openssl</code></td>
@@ -8915,7 +8908,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-ciphers<span class="w"> </span>aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-macs<span class="w"> </span>hmac-sha2-256,hmac-sha2-512
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-mac-algorithms<span class="w"> </span>hmac-sha2-256,hmac-sha2-512
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify SSH settings</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>security<span class="w"> </span>ssh<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
@@ -9054,24 +9047,17 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>show
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Expected: no entries</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Create an SNMPv3 user with authentication and privacy</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span>-username<span class="w"> </span>snmpv3monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span>-authmethod<span class="w"> </span>sha<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">    </span>-authpassword<span class="w"> </span>&lt;strong-auth-passphrase&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">    </span>-privmethod<span class="w"> </span>aes128<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span>-privpassword<span class="w"> </span>&lt;strong-priv-passphrase&gt;
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># Add the monitoring server as an SNMPv3 trap host</span>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-ipaddr<span class="w"> </span>&lt;monitoring-server-ip&gt;<span class="w"> </span>-username<span class="w"> </span>snmpv3monitor
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="c1"># Enable SNMP</span>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>system<span class="w"> </span>snmp<span class="w"> </span>modify<span class="w"> </span>-is-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="c1"># Verify SNMP configuration</span>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>system<span class="w"> </span>snmp<span class="w"> </span>show
-<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>show
-<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>show
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Create an SNMPv3 user (USM); ONTAP prompts for the authentication protocol</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># and password, then the privacy protocol (aes128) and password</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span>-user-or-group-name<span class="w"> </span>snmpv3monitor<span class="w"> </span>-application<span class="w"> </span>snmp<span class="w"> </span>-authentication-method<span class="w"> </span>usm
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># Add the monitoring server as an SNMPv3 trap host</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-peer-address<span class="w"> </span>&lt;monitoring-server-ip&gt;<span class="w"> </span>-usm-username<span class="w"> </span>snmpv3monitor
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># Verify SNMP configuration</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>system<span class="w"> </span>snmp<span class="w"> </span>show
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-application<span class="w"> </span>snmp
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>show
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>system snmp community delete -community-name public
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>(no output — command completes silently)
@@ -9080,32 +9066,15 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>system snmp community show
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>(no entries)
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>system snmp user create -username snmpv3monitor -authmethod sha -authpassword ••••••••••••••• -privmethod aes128 -privpassword •••••••••••••••
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>(no output — command completes silently)
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>system snmp traphost add -ipaddr 192.168.1.45 -username snmpv3monitor
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>(no output — command completes silently)
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>security login create -user-or-group-name snmpv3monitor -application snmp -authentication-method usm
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Enter the authoritative entity's EngineID [local EngineID]:
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Which authentication protocol do you want to choose (none, md5, sha, sha2-256, sha512) [none]:
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>(vendor example prompts; source:
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>https://docs.netapp.com/us-en/ontap/networking/configure_snmpv3_users_in_a_cluster.html)
 <a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>system snmp modify -is-enabled true
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>(no output — command completes silently)
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>system snmp show
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>SNMP Status: enabled
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>SNMP Traps: enabled
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>Authentication Traps: enabled
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Contact: admin@example.com
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>Location: Data Center 1
-<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
-<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>system snmp user show
-<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>User Name: snmpv3monitor
-<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>Auth Protocol: sha
-<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>Privacy Protocol: aes128
-<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>Engine ID: 80:00:1f:88:03:00:08:c0:a8:01:2d
-<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>
-<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>system snmp traphost show
-<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>IP Address: 192.168.1.45
-<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>Username: snmpv3monitor
-<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>Port: 162
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>system snmp show / system snmp traphost show: output varies; see
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>https://docs.netapp.com/us-en/ontap-cli/system-snmp-show.html
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>https://docs.netapp.com/us-en/ontap-cli/system-snmp-traphost-show.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9119,7 +9088,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <tbody>
 <tr>
 <td><code>Error: entry already exists.</code></td>
-<td>Verify the community string or user does not already exist before creation; use <code>system snmp community show</code> or <code>system snmp user show</code> to check.</td>
+<td>Verify the community string or user does not already exist before creation; use <code>system snmp community show</code> or <code>security login show -application snmp</code> to check.</td>
 </tr>
 <tr>
 <td><code>Error: Invalid IP address &lt;monitoring-server-ip&gt;</code></td>
@@ -9136,37 +9105,37 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <h2 id="autosupport-security">AutoSupport Security<a class="headerlink" href="#autosupport-security" title="Permanent link">&para;</a></h2>
 <p>AutoSupport transmits cluster telemetry to NetApp and optionally to internal addresses. Ensure HTTPS is used and that proxy configuration is in place if direct internet access is not available from the cluster management network.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Set all nodes to use HTTPS for AutoSupport delivery</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-transport<span class="w"> </span>https
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-transport<span class="w"> </span>https
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Configure a proxy if the cluster management LIF cannot reach the internet directly</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-proxy-url<span class="w"> </span>http://proxy.example.local:8080
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-proxy-url<span class="w"> </span>http://proxy.example.local:8080
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Set the internal notification address for callhome events</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-noteto<span class="w"> </span>ops-storage@corp.local
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-noteto<span class="w"> </span>ops-storage@corp.local
 <a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Verify HTTPS connectivity to NetApp AutoSupport endpoints</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>autosupport<span class="w"> </span>check<span class="w"> </span>show
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>check<span class="w"> </span>show
 <a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
 <a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Test AutoSupport delivery</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
 <a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
 <a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Confirm test message was delivered</span>
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-most-recent<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*
 <a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="c1"># Look for status: sent-successful</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>node-1::*&gt; autosupport modify -node * -transport https
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>node-2::*&gt; autosupport modify -node * -transport https
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>node-1::*&gt; system node autosupport modify -node * -transport https
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>node-2::*&gt; system node autosupport modify -node * -transport https
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>(no output — command completes silently)
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>node-1::*&gt; autosupport modify -node * -proxy-url http://proxy.example.local:8080
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>node-2::*&gt; autosupport modify -node * -proxy-url http://proxy.example.local:8080
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>node-1::*&gt; system node autosupport modify -node * -proxy-url http://proxy.example.local:8080
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>node-2::*&gt; system node autosupport modify -node * -proxy-url http://proxy.example.local:8080
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>(no output — command completes silently)
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>node-1::*&gt; autosupport modify -node * -noteto ops-storage@corp.local
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>node-2::*&gt; autosupport modify -node * -noteto ops-storage@corp.local
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>node-1::*&gt; system node autosupport modify -node * -noteto ops-storage@corp.local
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>node-2::*&gt; system node autosupport modify -node * -noteto ops-storage@corp.local
 <a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>(no output — command completes silently)
 <a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>node-1::*&gt; autosupport check show
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>node-1::*&gt; system node autosupport check show
 <a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>Node: node-1
 <a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>  Connectivity Status: PASSED
 <a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  HTTPS Connectivity: PASSED
@@ -9179,11 +9148,11 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>  Proxy Configuration: PASSED
 <a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>  DNS Resolution: PASSED
 <a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>
-<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>node-1::*&gt; autosupport invoke -node * -type test
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>node-1::*&gt; system node autosupport invoke -node * -type test
 <a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>node-1: AutoSupport test message queued for delivery
 <a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>node-2: AutoSupport test message queued for delivery
 <a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>
-<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>node-1::*&gt; autosupport history show -node * -most-recent 3
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>node-1::*&gt; system node autosupport history show -node *
 <a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>Node: node-1
 <a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>  Sequence Number: 4521
 <a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>  Subject: AutoSupport DAILY [node-1] 192.168.1.10
@@ -9226,8 +9195,8 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <td>Confirm port 443 is not blocked to NetApp AutoSupport endpoints by checking firewall rules and running <code>network traceroute -destination support.netapp.com</code>.</td>
 </tr>
 <tr>
-<td><code>Error: autosupport history show displays status: sent-failed</code></td>
-<td>Check the AutoSupport destination email address is correct and review logs with <code>autosupport history show -node &lt;node&gt; -fields subject,status,error-detail</code> to identify the delivery failure reason.</td>
+<td><code>Error: system node autosupport history show displays status: sent-failed</code></td>
+<td>Check the AutoSupport destination email address is correct and review logs with <code>system node autosupport history show -node &lt;node&gt; -fields subject,status,error</code> to identify the delivery failure reason.</td>
 </tr>
 </tbody>
 </table>
@@ -9240,13 +9209,13 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Filter by username</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-user<span class="w"> </span>admin
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin
 <a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Filter by time range (last 24 hours)</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">"24h"</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Filter by timestamp (vendor example format)</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-timestamp<span class="w"> </span><span class="s2">"Mon Jan 03 18:37:05 2022"</span>
 <a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Filter by command</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-cmdname<span class="w"> </span><span class="s2">"security login"</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Filter by command text</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-input<span class="w"> </span><span class="s2">"security login*"</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Time                     User   Vserver      Command                          Result
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>------------------------  -----  -----------  --------------------------------  ------
@@ -9292,8 +9261,8 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Invalid time range format "24h"</code></td>
-<td>Use valid ONTAP time format such as "2024-01-14T00:00:00" or specify "-time-range -24h" with a leading dash for relative time.</td>
+<td>No match for a timestamp filter</td>
+<td>Use the <code>-timestamp</code> date format shown in the <a href="https://docs.netapp.com/us-en/ontap-cli/security-audit-log-show.html">security audit log show reference</a>.</td>
 </tr>
 <tr>
 <td><code>Error: Access denied for user 'readonly' to command 'security audit log show'</code></td>
@@ -9398,9 +9367,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>
 <a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="c1"># Verify audit configuration</span>
 <a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>vserver<span class="w"> </span>audit<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>
-<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="c1"># Show audit log files</span>
-<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a>vserver<span class="w"> </span>audit<span class="w"> </span>event-log<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a><span class="c1"># Audit logs are written as files to the -destination path (see vserver audit create)</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Volume created successfully.
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
@@ -9414,14 +9381,6 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>                  Rotate Schedule Hour: 0
 <a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>              Rotate Schedule Dayofweek: 0
 <a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>                            Enabled: true
-<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>
-<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>Vserver Audit Event Log Files for SVM "prod-svm-01":
-<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>Index  Filename                          Size      Timestamp
-<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>-----  --------------------------------  --------  -------------------------
-<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>1      20240115_000000_audit.xml        12.4MB    Jan 15 2024 00:00:15 +0000
-<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>2      20240114_000000_audit.xml        50.0MB    Jan 14 2024 00:00:08 +0000
-<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>3      20240113_000000_audit.xml        50.0MB    Jan 13 2024 00:00:12 +0000
-<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>...
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9443,7 +9402,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </tr>
 <tr>
 <td><code>Error: Invalid event type "file-ops"</code></td>
-<td>Use valid event types such as <code>file-ops</code>, <code>cifs-logon-logoff</code>, <code>cap-staging</code>, or <code>file-share-access</code> separated by commas without spaces.</td>
+<td>Use valid event types such as <code>file-ops</code>, <code>cifs-logon-logoff</code>, <code>cap-staging</code>, or <code>file-share</code> separated by commas without spaces.</td>
 </tr>
 </tbody>
 </table>
@@ -9472,7 +9431,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>
 <a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="c1"># Create the monitoring service account</span>
 <a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="w">    </span>-username<span class="w"> </span>svc-monitoring<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="w">    </span>-user-or-group-name<span class="w"> </span>svc-monitoring<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="w">    </span>-authentication-method<span class="w"> </span>publickey<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a><span class="w">    </span>-role<span class="w"> </span>monitoring-ro<span class="w"> </span><span class="se">\</span>
@@ -9516,7 +9475,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a>(no output — command completes silently)
 <a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a>
 <a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a>cluster1::&gt; security login create \
-<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a>    -username svc-monitoring \
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a>    -user-or-group-name svc-monitoring \
 <a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a>    -application ssh \
 <a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a>    -authentication-method publickey \
 <a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a>    -role monitoring-ro \
@@ -9549,7 +9508,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </tr>
 <tr>
 <td><code>Error: User "svc-monitoring" already exists.</code></td>
-<td>Delete the existing user with <code>security login delete -username svc-monitoring -application ssh</code> before recreating it.</td>
+<td>Delete the existing user with <code>security login delete -user-or-group-name svc-monitoring -application ssh</code> before recreating it.</td>
 </tr>
 </tbody>
 </table>
@@ -9565,7 +9524,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">"lun show"</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
 <a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
 <a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="w">    </span>-username<span class="w"> </span>svc-snapcenter<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="w">    </span>-user-or-group-name<span class="w"> </span>svc-snapcenter<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="w">    </span>-application<span class="w"> </span>http<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="w">    </span>-role<span class="w"> </span>backup-role<span class="w"> </span><span class="se">\</span>
@@ -9585,7 +9544,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>(no output — command completes silently)
 <a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>cluster1::&gt; security login role create -role backup-role -cmddirname "lun show" -access readonly
 <a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>(no output — command completes silently)
-<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>cluster1::&gt; security login create -username svc-snapcenter -application http -authentication-method password -role backup-role -vserver cluster1
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>cluster1::&gt; security login create -user-or-group-name svc-snapcenter -application http -authentication-method password -role backup-role -vserver cluster1
 <a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>Please enter a password for user "svc-snapcenter":
 <a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>Please confirm the password:
 <a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>(no output — command completes silently)
@@ -9610,7 +9569,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </tr>
 <tr>
 <td><code>User "svc-snapcenter" already exists.</code></td>
-<td>Use <code>security login delete -username svc-snapcenter -application http</code> to remove the existing user first, or choose a different username.</td>
+<td>Use <code>security login delete -user-or-group-name svc-snapcenter -application http</code> to remove the existing user first, or choose a different username.</td>
 </tr>
 </tbody>
 </table>
@@ -9670,12 +9629,12 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 <tr>
 <td>Vulnerability management</td>
 <td>AutoSupport + Active IQ</td>
-<td><code>autosupport history show</code></td>
+<td><code>system node autosupport history show</code></td>
 </tr>
 <tr>
 <td>Change management</td>
 <td>AutoSupport maintenance messages</td>
-<td><code>autosupport invoke -type all</code></td>
+<td><code>system node autosupport invoke -type all</code></td>
 </tr>
 </tbody>
 </table>
@@ -9708,7 +9667,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

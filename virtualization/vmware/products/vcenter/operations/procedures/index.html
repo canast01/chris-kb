@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Procedures", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and storage migrations, snapshot management, tag management, HA reconfiguration...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Procedures", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and storage migrations, snapshot management, tag management, HA reconfiguration...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9502,7 +9502,7 @@
 <div class="kb-summary">
 Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and storage migrations, snapshot management, tag management, HA reconfiguration, content library, certificate replacement, file-based backup, roles/permissions, SSO identity sources, alarms, cluster config, and VCSA upgrade.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <p>Service restart order for manual recovery:
@@ -9764,51 +9764,18 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Method 1: Auto-renew machine SSL cert via VAMI (for VMCA-signed certs)</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># https://&lt;vcenter-fqdn&gt;:5480 → Certificate Management → Machine SSL Certificate → Renew</span>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Method 2: Replace with custom CA cert using certificate-manager</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Method 2: Replace certificates with vSphere Certificate Manager (KB 318946)</span>
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ssh<span class="w"> </span>root@&lt;vcenter-fqdn&gt;
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Option 1: Replace Machine SSL certificate with custom certificate</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Option 6: Replace Solution User certificates with custom certificate</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Provide: root CA cert, signed machine cert, private key</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c1"># Method 3: STS certificate renewal (required every 2 years for VMCA-signed)</span>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># STS certs do not auto-renew — check expiry:</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>python<span class="w"> </span>/usr/lib/vmware-vmafd/bin/lstool.py<span class="w"> </span>list<span class="w"> </span>--url<span class="w"> </span>http://localhost:7080/lookupservice/sdk<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>expire
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Renew STS cert (vSphere 7+):</span>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>TRUSTED_ROOTS
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c1"># Use certificate-manager → Option 8: Reset all certificates</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Option 1: Replace the Machine SSL certificate with a Custom CA Certificate</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Option 5: Replace the Solution User Certificates with Custom CA Certificates</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Option 8: Reset all certificates (use when Machine SSL and Solution User certificates have expired)</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Log: /var/log/vmware/vmcad/certificate-manager.log</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Check expiry of every VECS store entry (command from KB 318946)</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>store<span class="w"> </span>list<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>STORE<span class="w"> </span><span class="nv">$i</span><span class="p">;</span><span class="w"> </span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span><span class="nv">$i</span><span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>egrep<span class="w"> </span><span class="s2">"Alias|Not After"</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>root@vcenter.example.com [ ~ ]# /usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>     *** Welcome to Certificate Manager ***
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Please select an option [1-9]:
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>1. Replace Machine SSL certificate with Custom Certificate
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>2. Replace VMCA-signed Machine SSL certificate with VMCA signed certificate
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>3. Regenerate a new VMCA Root Certificate
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>4. Replace Solution User certificates with custom certificate
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>5. Replace Solution User certificates with VMCA signed certificate
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>6. Regenerate a new Solution User certificate
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>7. Reset all Certificates
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>8. Replace Machine SSL certificate with VMCA signed certificate
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>9. Exit
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>Option [1-9]: 1
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>Please provide a Certificate file [.crt/.cer]: /root/machine-cert.crt
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>Please provide a Private Key file [.key]: /root/machine-key.key
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>Please provide a Root CA Certificate file [.crt/.cer]: /root/root-ca.crt
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>Certificate replaced successfully. Please restart all services.
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>
-<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>root@vcenter.example.com [ ~ ]# python /usr/lib/vmware-vmafd/bin/lstool.py list --url http://localhost:7080/lookupservice/sdk 2&gt;/dev/null | grep -i expire
-<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>Expires: 2025-03-15T18:42:31.000Z
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>Expires: 2025-03-15T18:42:31.000Z
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>
-<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>root@vcenter.example.com [ ~ ]# /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS
-<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>Entry 0
-<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>    Alias: __MACHINE_CERT
-<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>    Type: X.509 Certificate
-<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>    Expires: 2026-03-14 18:42:31 UTC
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/318946/using-vsphere-certificate-manager-to-rep.html (the menu shows 8 options; required inputs per option are listed there).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9840,9 +9807,9 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Confirm NotAfter shows new expiry</span>
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Verify services are healthy after restart</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>vmon-cli<span class="w"> </span>--status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"RUNNING|STOPPED"</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># All critical services should be RUNNING</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Verify services are healthy after restart (KB 415673)</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>vmon-cli<span class="w"> </span>-l<span class="w">                 </span><span class="c1"># list services monitored by vmon</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>vmon-cli<span class="w"> </span>-s<span class="w"> </span>vpxd<span class="w">            </span><span class="c1"># RunState should be STARTED, HealthState HEALTHY</span>
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1"># Verify vCenter is accessible from vSphere Client</span>
 <a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Verify ESXi hosts still show Connected</span>
@@ -9850,14 +9817,15 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>notBefore=Jan 15 10:23:45 2024 GMT
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>notAfter=Jan 15 10:23:45 2025 GMT
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>subject=C = US, ST = California, L = San Francisco, O = Acme Corp, CN = vcenter.acme.local
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>vpxd                                    RUNNING
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vpxd:vpxd                               RUNNING
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>vpxd:vpostgres                          RUNNING
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>vsphere-ui                              RUNNING
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>vsphere-ui:vsphere-ui                   RUNNING
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>sps                                     RUNNING
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>sps:sps                                 RUNNING
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>netdump                                 RUNNING
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>root@vcsa01 [ ~ ]# vmon-cli -s vpxd
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Name: vpxd
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>Starttype: AUTOMATIC
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>RunState: STARTED
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>RunAsUser: vpxd
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>CurrentRunStateDuration(ms): 511
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>HealthState: HEALTHY
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>FailStop: N/A
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>MainProcessId: 6142
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9871,11 +9839,11 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <tbody>
 <tr>
 <td><code>connect: Connection refused</code></td>
-<td>Verify vCenter is running and port 443 is accessible; check firewall rules and vmon-cli --status output.</td>
+<td>Verify vCenter is running and port 443 is accessible; check firewall rules and <code>vmon-cli -s &lt;service&gt;</code> output (KB 415673).</td>
 </tr>
 <tr>
-<td><code>STOPPED</code></td>
-<td>Restart the stopped service using <code>vmon-cli --restart &lt;service-name&gt;</code> and wait 2–3 minutes for full initialization.</td>
+<td><code>RunState</code> not <code>STARTED</code></td>
+<td>Start the service with <code>service-control --start &lt;servicename&gt;</code> (KB 344633), then re-check with <code>vmon-cli -s &lt;service&gt;</code>.</td>
 </tr>
 <tr>
 <td><code>unable to load certificate</code></td>
@@ -9885,12 +9853,12 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 </table>
 </div>
 <h2 id="vcenter-file-based-backup">vCenter File-Based Backup<a class="headerlink" href="#vcenter-file-based-backup" title="Permanent link">&para;</a></h2>
-<p>vCenter supports scheduled file-based backups to NFS, SFTP, FTPS, HTTP, or HTTPS locations.</p>
+<p>vCenter file-based backups (VAMI on port 5480 or the Appliance Recovery Backup API) can target FTP, FTPS, HTTP, HTTPS, SFTP, NFS or SMB locations (SCP on 6.5/6.7 only) — see <a href="https://knowledge.broadcom.com/external/article/322371/common-ports-for-protocols-used-in-vami.html">KB 322371</a> for ports and the backup API <code>LocationType</code> enumeration.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Configure backup via VAMI: https://&lt;vcenter-fqdn&gt;:5480</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># Backup → Configure → set protocol, location, credentials, schedule, retention</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Trigger manual backup via API</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"https://&lt;vcenter-fqdn&gt;/api/vcenter/deployment/backup/schedules?vmw-task=true"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Trigger a manual backup via API (Appliance Recovery Backup Job create)</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"https://&lt;vcenter-fqdn&gt;/api/appliance/recovery/backup/job"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"vmware-api-session-id: &lt;session-id&gt;"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
@@ -9898,15 +9866,16 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="s1">    "location": "sftp://backup-srv/vcenter-backups",</span>
 <a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="s1">    "location_user": "vcbackup",</span>
 <a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="s1">    "location_password": "&lt;password&gt;",</span>
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="s1">    "parts": ["SEAT"]</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="s1">    "parts": ["&lt;part-id&gt;"]</span>
 <a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="s1">  }'</span>
 <a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="c1"># SEAT = Statistics, Events, Alarms, Tasks (recommended addition to core backup)</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="c1"># Optional parts: list valid IDs with GET /api/appliance/recovery/backup/parts</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="c1"># Reference: https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/appliance/recovery/backup/job/post/</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Monitor backup job status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># List backup jobs, then query one job by ID (GET /api/appliance/recovery/backup/job/{id})</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nv">$headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="s2">"vmware-api-session-id"</span> <span class="p">=</span> <span class="nv">$sessionId</span> <span class="p">}</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nb">Invoke-RestMethod</span> <span class="s2">"https://&lt;vcenter-fqdn&gt;/api/vcenter/deployment/backup/job"</span> <span class="n">-Headers</span> <span class="nv">$headers</span> <span class="p">|</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  <span class="nb">Select-Object</span> <span class="n">id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">messages</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nb">Invoke-RestMethod</span> <span class="s2">"https://&lt;vcenter-fqdn&gt;/api/appliance/recovery/backup/job"</span> <span class="n">-Headers</span> <span class="nv">$headers</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="nb">Invoke-RestMethod</span> <span class="s2">"https://&lt;vcenter-fqdn&gt;/api/appliance/recovery/backup/job/&lt;job-id&gt;"</span> <span class="n">-Headers</span> <span class="nv">$headers</span>
 </code></pre></div>
 <p>Backup includes: vCenter database, configuration, inventory, and optionally historical data (SEAT). Restore requires the vCenter ISO and backup archive.</p>
 <hr />
@@ -9947,7 +9916,7 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <ol>
 <li>vCenter → <strong>Administration</strong> → <strong>Single Sign On</strong> → <strong>Configuration</strong> → <strong>Identity Sources</strong></li>
 <li>Click <strong>Add Identity Source</strong></li>
-<li>Select <strong>Active Directory (Integrated Windows Authentication)</strong> for domain-joined VCSA, or <strong>Active Directory as an LDAP Server</strong> for explicit LDAP binding</li>
+<li>Select <strong>Active Directory over LDAP</strong> (use LDAPS, port 636 or Global Catalog 3269) or configure Identity Federation. Integrated Windows Authentication (IWA) was deprecated in 7.0 and is removed in vCenter 9.0 — on 8.x, leave the AD domain and migrate IWA sources to LDAPS before upgrading (<a href="https://knowledge.broadcom.com/external/article/314324/removal-of-integrated-windows-authentica.html">KB 314324</a>)</li>
 <li>For LDAP binding:</li>
 <li><strong>Domain name</strong>: <code>EXAMPLE.LOCAL</code></li>
 <li><strong>Domain alias</strong>: <code>EXAMPLE</code></li>
@@ -10086,22 +10055,13 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">"https://&lt;new-vcenter-fqdn&gt;:5480/rest/appliance/system/version"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">"administrator@vsphere.local:&lt;password&gt;"</span>
 <a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
-<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="c1"># Check all services running</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="c1"># Check all services running (KB 344633)</span>
 <a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>ssh<span class="w"> </span>root@&lt;new-vcenter-fqdn&gt;
-<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>vmon-cli<span class="w"> </span>--status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RUNNING
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
 <a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>
 <a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="c1"># Verify ESXi hosts still show Connected in the new vCenter</span>
 </code></pre></div></p>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>{
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>  "version": "7.0.3.00000",
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>  "product": "VMware vCenter Server",
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>  "build": "19480866",
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>  "type": "vcsa"
-<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>}
-<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>STOPPED  vmware-vpxd-svcs
-<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>STOPPED  vmware-mbcs
-<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>root@vcenter.lab.local [ ~ ]# vmon-cli --status | grep -v RUNNING
-<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>root@vcenter.lab.local [ ~ ]#
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html (version-to-build mapping).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10253,23 +10213,11 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <li>Navigate to <strong>Home → Inventory</strong> — both vCenter instances should appear in the inventory tree</li>
 <li>Click the second vCenter's tree — it should expand without re-authentication (single sign-on)</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Confirm SSO replication from vCenter CLI</span>
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>/usr/lib/vmware-vmafd/bin/vdcrepadmin<span class="w"> </span>-f<span class="w"> </span>showservers<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-u<span class="w"> </span>administrator<span class="w"> </span>-w<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="c1"># Output should list both vCenters as replication partners</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Confirm SSO (vmdir) replication partner status from the vCenter shell (KB 410816)</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>/usr/lib/vmware-vmdir/bin/vdcrepadmin<span class="w"> </span>-f<span class="w"> </span>showpartnerstatus<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-u<span class="w"> </span>administrator
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="c1"># Each partner should report "Host available: Yes"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Replication Partners:
-<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>    CN=vcenter-01.corp.local,OU=Domain Controllers,DC=vsphere,DC=local
-<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>    CN=vcenter-02.corp.local,OU=Domain Controllers,DC=vsphere,DC=local
-<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
-<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>Partner: vcenter-01.corp.local
-<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>    Status: Up
-<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>    Last Heartbeat: 2024-01-15T14:32:18.456Z
-<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
-<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>Partner: vcenter-02.corp.local
-<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>    Status: Up
-<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>    Last Heartbeat: 2024-01-15T14:32:15.123Z
-<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>
-<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>Replication Latency: 3ms
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Output varies by environment; see https://knowledge.broadcom.com/external/article/410816/error-cannot-see-replication-partner-whe.html (use `-u administrator`, not the full UPN).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10283,7 +10231,7 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 <tbody>
 <tr>
 <td><code>Error: Cannot connect to localhost:389 (Connection refused)</code></td>
-<td>Verify the vCenter SSO service is running with <code>systemctl status vmware-vmafd</code> and restart if needed.</td>
+<td>Verify the VMware Directory Service is running with <code>service-control --status vmdird</code> (KB 344633) and start it if needed.</td>
 </tr>
 <tr>
 <td><code>Error: Authentication failed for user 'administrator' (Invalid credentials)</code></td>
@@ -10291,7 +10239,7 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 </tr>
 <tr>
 <td><code>Error: vdcrepadmin: command not found</code></td>
-<td>Ensure you are running this command directly on a vCenter Server appliance (not a remote host) where the vmafd tools are installed.</td>
+<td>Ensure you are running this command directly on a vCenter Server appliance (not a remote host) and use the full path <code>/usr/lib/vmware-vmdir/bin/vdcrepadmin</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -10342,7 +10290,7 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Health Checks", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/operations/health-checks/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Health Checks reference covering Disk Partition Usage, SSO and Lookup Service Health, DNS and NTP Validation, PowerCLI Health Checks, Daily Checks and 2...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Health Checks", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/operations/health-checks/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Health Checks reference covering Disk Partition Usage, SSO and Lookup Service Health, DNS and NTP Validation, PowerCLI Health Checks, Daily Checks and 2...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9231,7 +9231,7 @@
 <div class="kb-summary">
 Health Checks reference covering Disk Partition Usage, SSO and Lookup Service Health, DNS and NTP Validation, PowerCLI Health Checks, Daily Checks and 2 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -9244,15 +9244,15 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 <hr />
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <p>Run these commands in sequence for a complete vCenter health snapshot. Each block can be pasted directly into an SSH session on the VCSA appliance shell.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. VCSA service health — list all services, filter out stopped ones</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>STOPPED
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. VCSA service health — status of all services (KB 344633)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. vCenter version and build number</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vpxd<span class="w"> </span>--version
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># VAMI https://&lt;vcenter&gt;:5480 → Summary, or GET /api/appliance/system/version</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. SSO / Lookup Service health</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-sts
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-lookupsvc
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. SSO / Lookup Service health (service names per KB 344633)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-stsd
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>service-control<span class="w"> </span>--status<span class="w"> </span>lookupsvc
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 4. Certificate store list — inspect VECS stores for expiring certs</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>store<span class="w"> </span>list
@@ -9260,69 +9260,28 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># 5. Disk usage — key VCSA partitions: DB, logs, seat data</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db<span class="w"> </span>/storage/log<span class="w"> </span>/storage/seat
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># 6. vCenter HA state (run only if VCHA is deployed)</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>python3<span class="w"> </span>/usr/lib/vmware-vcha/VcHaMgr.py<span class="w"> </span>state
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># 6. vCenter HA state (only if VCHA is deployed)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># vSphere Client → vCenter → Configure → vCenter HA, or POST /api/vcenter/vcha/cluster?action=get</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># 7. NTP sync status — confirm clock is synchronised</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>timedatectl<span class="w"> </span>status
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># 8. Connected host count via REST API</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># 8. Connected host count via REST API — create a session first (POST /api/session)</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Replace credentials before running</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'administrator@vsphere.local:password'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>https://localhost/api/vcenter/host<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>connection_state
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># 9. Recent vpxd errors — last 100 lines of the main vCenter log</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1"># 10. Backup job status — check VAMI file-based backup schedule</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># Verify via VAMI at https://&lt;vcenter&gt;:5480 → Backup, or inspect cron</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>crontab<span class="w"> </span>-l<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>backup
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'administrator@vsphere.local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>https://localhost/api/session<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">'"'</span><span class="k">)</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>https://localhost/api/vcenter/host<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>connection_state
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># 9. Recent vpxd errors — last 100 lines of the main vCenter log</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1"># 10. Backup schedule — file-based backups are scheduled in VAMI (https://&lt;vcenter&gt;:5480 → Backup)</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="c1"># (KB 318731 recommends VAMI) or with the Appliance Recovery Backup Schedules API</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span>https://localhost/api/appliance/recovery/backup/schedules
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>SERVICE vmware-vpxd RUNNING
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>SERVICE vmware-vsan-health RUNNING
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SERVICE vmware-eam RUNNING
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>SERVICE vmware-mbcs RUNNING
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>SERVICE vmware-sts RUNNING
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>SERVICE vmware-lookupsvc RUNNING
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>SERVICE vmware-rhttpproxy RUNNING
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>SERVICE vmware-netdumper RUNNING
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>SERVICE vmware-content-library RUNNING
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>...
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>VMware vCenter Server 8.0.1 build-21495797
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>SERVICE vmware-sts RUNNING
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>SERVICE vmware-lookupsvc RUNNING
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>VECS store list:
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    APPLIANCE_SSL_CERT
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    MACHINE_SSL_CERT
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    TRUSTED_ROOTS
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    TRUSTED_ROOT_CRLS
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Filesystem     Size  Used Avail Use% Mounted on
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>/storage/db    500G  387G  113G  78% /storage/db
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>/storage/log   100G   34G   66G  34% /storage/log
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>/storage/seat   50G   12G   38G  24% /storage/seat
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>HA Enabled: true
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>HA State: HEALTHY
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Node Role: ACTIVE
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>Cluster Mode: ENABLED
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>               Local time: Wed 2024-01-17 14:32:18 UTC
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>           Universal time: Wed 2024-01-17 14:32:18 UTC
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>                 RTC time: Wed 2024-01-17 14:32:18 UTC
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>                Time zone: UTC (UTC, +0000)
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>System clock synchronized: yes
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>              NTP service: active
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>5
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>2024-01-17T14:28:43.421Z [vpxd 7654] [Originator@6876 sub=Default] [error] Connection timeout to host 192.168.1.45
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>2024-01-17T14:15:12.089Z [vpxd 7654] [Originator@6876 sub=Default] [error] Failed to retrieve datastore inventory
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>0 2 * * * /usr/lib/vmware-vami/scripts/backup.sh &gt;&gt; /var/log/vmware-vami/backup.log 2&gt;&amp;1
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/appliance/recovery/backup/schedules/get/ (backup schedules API).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9339,10 +9298,6 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 <td>Add <code>-k</code> flag to skip certificate verification (already present in example; if still failing, verify curl is installed with <code>which curl</code>).</td>
 </tr>
 <tr>
-<td><code>python3: command not found</code></td>
-<td>Install Python 3 with <code>apt-get install python3</code> on Debian-based VCSA or use the full path <code>/usr/bin/python3</code>.</td>
-</tr>
-<tr>
 <td><code>/var/log/vmware/vpxd/vpxd.log: No such file or directory</code></td>
 <td>Verify vpxd service is running with <code>service-control --status vmware-vpxd</code> and check log location with <code>find /var/log -name vpxd.log</code>.</td>
 </tr>
@@ -9355,13 +9310,11 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 - <code>/storage/core</code> — core appliance data</p>
 <h2 id="sso-and-lookup-service-health">SSO and Lookup Service Health<a class="headerlink" href="#sso-and-lookup-service-health" title="Permanent link">&para;</a></h2>
 <p><img alt="SSO and Lookup Service Health" src="../../../../../../assets/virtualization-vmware-vcenter-hc-sso-and-lookup-service-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-sts
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-lookupsvc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-stsd
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>lookupsvc
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-eam
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vmware-sts is running
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vmware-lookupsvc is running
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vmware-eam is running
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service names and service-control usage).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9378,8 +9331,8 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 <td>Ensure you are running this command on the vCenter Server appliance (VCSA) with root privileges, as <code>service-control</code> is only available in the vCenter environment.</td>
 </tr>
 <tr>
-<td><code>vmware-sts is stopped</code></td>
-<td>Restart the STS service with <code>service-control --start vmware-sts</code> and wait 30-60 seconds for dependent services to recover.</td>
+<td><code>vmware-stsd</code> reported as stopped</td>
+<td>Start the Security Token Service with <code>service-control --start vmware-stsd</code> (KB 344633).</td>
 </tr>
 </tbody>
 </table>
@@ -9459,8 +9412,9 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Stale snapshots</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># vCenter REST API health</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">curl </span><span class="n">-sk</span> <span class="n">-u</span> <span class="s1">'administrator@vsphere.local'</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">vcenter</span><span class="p">&gt;/</span><span class="n">api</span><span class="p">/</span><span class="n">vcenter</span><span class="p">/</span><span class="n">health</span><span class="p">/</span><span class="n">system</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Appliance health via REST API (returns green / yellow / orange / red / gray)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># Session token from POST /api/session; reference: https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/appliance/health/system/get/</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">curl </span><span class="n">-sk</span> <span class="n">-H</span> <span class="s2">"vmware-api-session-id: &lt;session-id&gt;"</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">vcenter</span><span class="p">&gt;/</span><span class="n">api</span><span class="p">/</span><span class="n">appliance</span><span class="p">/</span><span class="n">health</span><span class="p">/</span><span class="n">system</span>
 </code></pre></div>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <p><img alt="Daily Checks" src="../../../../../../assets/virtualization-vmware-vcenter-hc-daily-checks.svg" /></p>
@@ -9565,7 +9519,7 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

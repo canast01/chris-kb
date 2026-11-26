@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ESXi CLI Reference", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/esxi/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Datastores & VMDK, SAN Connectivity (iSCSI / FC), VM Management (vim-cmd) and 6...", "dateModified": "2026-11-23", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ESXi CLI Reference", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/esxi/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Datastores & VMDK, SAN Connectivity (iSCSI / FC), VM Management (vim-cmd) and 6...", "dateModified": "2026-11-26", "datePublished": "2026-05-06"}</script>
   
 
   
@@ -9275,24 +9275,21 @@
 <div class="kb-summary">
 ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Datastores & VMDK, SAN Connectivity (iSCSI / FC), VM Management (vim-cmd) and 6 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 <p><img alt="ESXi CLI Reference" src="../../../../../../assets/virtualization-vmware-esxi-operations-cli-reference.svg" /></p>
 <p>ESXi CLI Tool Map</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Maintenance mode</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span>get
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Via vim-cmd</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vim-cmd<span class="w"> </span>hostsvc/maintenance_mode_enter
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vim-cmd<span class="w"> </span>hostsvc/maintenance_mode_exit
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>false
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>(no output — command completes silently)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>(no output — command completes silently)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Entering maintenance mode. This may take a few moments...
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Exiting maintenance mode. This may take a few moments...
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Output varies by host and release. See the ESXCLI reference:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_system.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9458,7 +9455,7 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Paths</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;device_id&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba0
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-p<span class="w"> </span>&lt;path_name&gt;
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Adapters</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
@@ -9475,83 +9472,16 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 <a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># VMFS / filesystems</span>
 <a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
 <a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>mount<span class="w"> </span>-v<span class="w"> </span>&lt;uuid&gt;
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>unmount<span class="w"> </span>-v<span class="w"> </span>&lt;uuid&gt;
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>mount<span class="w"> </span>-u<span class="w"> </span>&lt;uuid&gt;
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>unmount<span class="w"> </span>-u<span class="w"> </span>&lt;uuid&gt;
 <a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>rescan
 <a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
 <a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Legacy</span>
 <a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>esxcfg-scsidevs<span class="w"> </span>-l
 <a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>esxcfg-scsidevs<span class="w"> </span>-m
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Device t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd:
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>   Display Name: Local ATA Disk (t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>   Has Settable Display Name: true
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>   Size: 20480
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>   Device Type: Direct-Access
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   Multipath Plugin: NMP
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>   Devfs Path: /vmfs/devices/disks/t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   Vendor: QEMU
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>   Model: HARDDISK
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>   Revision: 2.5+
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>   SCSI Level: 5
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>   Is SSD: false
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>   Is Local: true
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>   Is Removable: false
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>   Is RDM Capable: false
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>   Is Shared Clusterwide: false
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>   Is SAS: false
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>   Is USB: false
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>   Is Boot Device: true
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Adapter: vmhba0
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>   Driver: ahci
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>   Channel: 0
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>   Path State: active
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>   Target: 0
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>   LUN: 0
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>   Adapter Identifier: vmhba0
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>   Target Identifier: vmhba0:C0:T0:L0
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>   Adapter Display Name: AHCI Controller
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>vmhba0 Rescan: Adapter scan completed successfully.
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>NMP Device: t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
-<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>   Storage Array Type: SATA
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>   Device Max Queue Depth: 32
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>   Paths: vmhba0:C0:T0:L0
-<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>   Active Paths: 1
-<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>
-<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>SATP Rule: SATA
-<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>   Vendor: ATA
-<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>   Model: QEMU
-<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>   PSP: VMW_PSP_RR
-<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>   Options: iops=1
-<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>
-<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>VMFS-6 UUID: 5a3e8c2f-9b1d-4e7a-b2c1-8f3d6a9e2b4c
-<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>   Blocksize: 1048576
-<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>   Capacity: 10737418240
-<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>   Free Space: 8589934592
-<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>   Mounted: true
-<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>   Mount Path: /vmfs/volumes/5a3e8c2f-9b1d-4e7a-b2c1-8f3d6a9e2b4c
-<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>
-<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>Filesystem rescan completed successfully.
-<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>
-<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>Device t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
-<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>   Display Name: Local ATA Disk (t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd)
-<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>   Devfs Path: /vmfs/devices/disks/t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
-<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>   Partition Table: msdos
-<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a>   Partition: 1
-<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>   Partition Table: gpt
-<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a>   Partition: 1
-<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a>   Partition: 2
-<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a>   Partition: 3
-<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a>   Partition: 4
-<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a>   Partition: 5
-<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a>   Partition: 6
-<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a>   Partition: 7
-<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a>   Partition: 8
-<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a>   Partition: 9
-<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a>   Partition: 10
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Output varies by host and release. See the ESXCLI reference:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_storage.html
 </code></pre></div>
 <h2 id="datastores-vmdk">Datastores &amp; VMDK<a class="headerlink" href="#datastores-vmdk" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all datastores visible to the host</span>
@@ -9923,79 +9853,28 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 <h2 id="vsan-commands">vSAN Commands<a class="headerlink" href="#vsan-commands" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Cluster status</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>summary<span class="w"> </span>get
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"GREEN\|green"</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Storage and disk groups</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>stats<span class="w"> </span>get
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Is SSD|Disk Group"</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Objects and resyncing</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"healthy"</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Total Bytes|Remaining"</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Networking</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ipconfig<span class="w"> </span>list
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="c1"># Datastore</span>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>datastore<span class="w"> </span>list
-<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>trace<span class="w"> </span>get
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>-i<span class="w"> </span><span class="s2">"green"</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Storage and disk groups</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Is SSD|Disk Group"</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Objects and resyncing</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"healthy"</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Total Bytes|Remaining"</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># Networking</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="c1"># Datastore</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>datastore<span class="w"> </span>list
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>trace<span class="w"> </span>get
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Cluster Information:
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>UUID: 52994049-1234-5678-abcd-ef1234567890
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Enabled: true
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Current Local Time: 2024-01-15T14:32:18Z
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Node UUID: 52994049-9876-5432-dcba-1234567890ef
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Health Status: HEALTHY
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Cluster Status: RUNNING
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Member Count: 4
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Storage Summary:
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>Total Capacity: 10.95 TB
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>Used Capacity: 7.23 TB
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>Free Capacity: 3.72 TB
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>Disk Groups: 4
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>Physical Disks: 16
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Disk Group 1:
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>  UUID: 52994049-aaaa-bbbb-cccc-111111111111
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>  Is SSD: true
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>  Status: HEALTHY
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>  Disk Count: 4
-<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
-<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>Object Summary:
-<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>Total Objects: 1247
-<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>Healthy Objects: 1245
-<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>Degraded Objects: 2
-<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>Inaccessible Objects: 0
-<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>
-<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>Resync Status:
-<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>Total Bytes: 524288000
-<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>Remaining Bytes: 0
-<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>Resync Rate: 0 B/s
-<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>Estimated Time: 0 seconds
-<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>
-<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>Network Configuration:
-<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>vmk0: 192.168.1.101/24
-<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>vmk1: 192.168.1.102/24
-<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>vmk2: 192.168.1.103/24
-<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>vmk3: 192.168.1.104/24
-<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>
-<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>Network Test Results:
-<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a>Unicast: PASS
-<a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a>Multicast: PASS
-<a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a>Latency: 0.5 ms
-<a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a>
-<a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a>Datastore: vsanDatastore
-<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>Capacity: 10.95 TB
-<a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a>Free Space: 3.72 TB
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Output varies by host and release. See the ESXCLI reference:
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10009,7 +9888,7 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 <tbody>
 <tr>
 <td><code>Could not connect to the host. The VSAN service may not be running.</code></td>
-<td>Restart the VSAN service with <code>esxcli system service restart vsanvpd</code> or verify VSAN is licensed and enabled on the cluster.</td>
+<td>Check the host services in the ESXi Host Client (Host → Manage → Services) and verify vSAN is licensed and enabled on the cluster. ESXCLI has no <code>system service</code> namespace.</td>
 </tr>
 <tr>
 <td><code>Unknown command or namespace vsan</code></td>
@@ -10074,30 +9953,10 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 <a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># Check for dropped packets</span>
 <a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>drop
 <a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="c1"># CPU ready</span>
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>esxcli<span class="w"> </span>sched<span class="w"> </span>group<span class="w"> </span>list
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="c1"># CPU ready: use esxtop (CPU view); ESXCLI has no 'sched group' command</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>World ID   Name                                   Group                  # vCPU Mem MB    State
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    512   ubuntu-web-01                          /                         4   8192    running
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    768   windows-dc-prod                        /                         8  16384    running
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>   1024   centos-app-02                          /                         2   4096    running
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Name                World ID   Group                  # vCPU Mem MB    State
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>ubuntu-web-01       512        /                         4   8192    running
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Packets Received: 15847293
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Packets Transmitted: 14923847
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Dropped RX Packets: 0
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>Dropped TX Packets: 0
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Collisions: 0
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>Group Name                                   CPU Affinity
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>/                                            0-15
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>/system                                      0-15
-<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>/system/host/console                         0-15
-<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>/system/host/hostd                           0-15
-<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>/system/host/iofilters                       0-15
-<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>...
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Output varies by host and release. See the ESXCLI reference:
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_network.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10239,72 +10098,11 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 <a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>ipmi<span class="w"> </span>fru<span class="w"> </span>list
 <a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>ipmi<span class="w"> </span>sel<span class="w"> </span>list
 <a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>
-<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="c1"># Sensors (temp, power, fan)</span>
-<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>sensor<span class="w"> </span>list
-<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>sensor<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>Temperature
-<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>sensor<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>Fan
-<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>sensor<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>Power
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="c1"># Sensors (temp, power, fan) via IPMI sensor data records</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>ipmi<span class="w"> </span>sdr<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Platform Info:
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>      Hardware Version: Dell PowerEdge R750
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>      System Serial Number: 1N23K4D
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>      BIOS Version: 2.14.2
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>      Vendor Name: Dell Inc.
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>   Current Clock Time: 2024-01-15T14:32:47Z
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>   Uptime: 45 days 3 hours
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>CPU Package 0:
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>   Vendor: GenuineIntel
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>   Brand: Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>   Hz: 2300000000
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>   Bus Hz: 100000000
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>   CPU Count: 2
-<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>   Core Count: 28
-<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>   Thread Count: 56
-<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>   TSC Frequency: 2299999000
-<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>
-<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>Memory:
-<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>   Physical Memory: 1048576 MB
-<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>   Usable Memory: 1046528 MB
-<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>
-<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>PCI Device List:
-<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>   0000:00:00.0  Intel Corporation 82599ES 10-Gigabit SFI Contrroller
-<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>   0000:00:01.0  Intel Corporation 82599ES 10-Gigabit SFI Contrroller
-<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>   0000:03:00.0  Dell PERC H840 Adapter
-<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>   0000:04:00.0  Broadcom NetXtreme BCM5720 Gigabit Ethernet
-<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>   ...
-<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>
-<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>BMC Info:
-<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>   Device ID: 0x20
-<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>   Device Revision: 0x01
-<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>   Firmware Revision: 1.86.45
-<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>   IPMI Version: 2.0
-<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>
-<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>FRU List:
-<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>   FRU Device Description : Builtin FRU Device (Internal Use)
-<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>   Board Mfg. Date/Time : Fri Jan 15 14:32:47 2024
-<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a>   Board Serial : 1N23K4D
-<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>
-<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a>SEL Records (last 5):
-<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a>   1 | 01/15/2024 | 14:30:22 | Power Supply #1 | Predictive Failure | Asserted
-<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a>   2 | 01/15/2024 | 13:45:10 | System Event | OEM Action | Asserted
-<a id="__codelineno-21-44" name="__codelineno-21-44" href="#__codelineno-21-44"></a>
-<a id="__codelineno-21-45" name="__codelineno-21-45" href="#__codelineno-21-45"></a>Temperature Sensors:
-<a id="__codelineno-21-46" name="__codelineno-21-46" href="#__codelineno-21-46"></a>   CPU0 Temp Sensor: 42.00 Celsius
-<a id="__codelineno-21-47" name="__codelineno-21-47" href="#__codelineno-21-47"></a>   CPU1 Temp Sensor: 44.00 Celsius
-<a id="__codelineno-21-48" name="__codelineno-21-48" href="#__codelineno-21-48"></a>   System Inlet Temp: 28.00 Celsius
-<a id="__codelineno-21-49" name="__codelineno-21-49" href="#__codelineno-21-49"></a>   System Exhaust Temp: 38.00 Celsius
-<a id="__codelineno-21-50" name="__codelineno-21-50" href="#__codelineno-21-50"></a>
-<a id="__codelineno-21-51" name="__codelineno-21-51" href="#__codelineno-21-51"></a>Fan Sensors:
-<a id="__codelineno-21-52" name="__codelineno-21-52" href="#__codelineno-21-52"></a>   Fan 1: 4200 RPM
-<a id="__codelineno-21-53" name="__codelineno-21-53" href="#__codelineno-21-53"></a>   Fan 2: 4150 RPM
-<a id="__codelineno-21-54" name="__codelineno-21-54" href="#__codelineno-21-54"></a>   Fan 3: 4180 RPM
-<a id="__codelineno-21-55" name="__codelineno-21-55" href="#__codelineno-21-55"></a>   Fan 4: 4220 RPM
-<a id="__codelineno-21-56" name="__codelineno-21-56" href="#__codelineno-21-56"></a>
-<a id="__codelineno-21-57" name="__codelineno-21-57" href="#__codelineno-21-57"></a>Power Sensors:
-<a id="__codelineno-21-58" name="__codelineno-21-58" href="#__codelineno-21-58"></a>   PS1 Input Power: 850 Watts
-<a id="__codelineno-21-59" name="__codelineno-21-59" href="#__codelineno-21-59"></a>   PS2 Input Power: 820 Watts
-<a id="__codelineno-21-60" name="__codelineno-21-60" href="#__codelineno-21-60"></a>   System Power: 1670 Watts
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Output varies by host and release. See the ESXCLI reference:
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_hardware.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -10516,7 +10314,7 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 11:06:56 UTC"><span class="timeago" datetime="2026-11-23T11:06:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 11:06:56 UTC">2026-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

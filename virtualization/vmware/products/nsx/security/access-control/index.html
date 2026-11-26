@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Access Control", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/security/access-control/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Access Control", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/security/access-control/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9056,7 +9056,7 @@
 
 
 <h1 id="nsx-access-control">NSX — Access Control<a class="headerlink" href="#nsx-access-control" title="Permanent link">&para;</a></h1>
-<p><em>Applies to: VMware NSX-T 3.x / 4.x</em>
+<p><em>Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line</em>
 <img alt="NSX — Access Control" src="../../../../../../assets/virtualization-vmware-nsx-security-access-control.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all role bindings (users and groups with assigned roles)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
@@ -9214,84 +9214,30 @@
 </tr>
 <tr>
 <td><code>{"httpStatus": 400, "error_code": 5000, "error_message": "Invalid project_id: project-tenant-a"}</code></td>
-<td>Confirm the project ID exists in NSX Manager by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/api/v1/projects</code> and use a valid project ID from the response.</td>
+<td>Confirm the project ID exists in NSX Manager by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/policy/api/v1/orgs/default/projects</code> and use a valid project ID from the response.</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to NSX Manager node</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nsxcli
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Allow API access only from admin jump hosts and monitoring</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">set</span><span class="w"> </span>firewall<span class="w"> </span>rule<span class="w"> </span><span class="m">1</span><span class="w"> </span>source-ip<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span>dest-port<span class="w"> </span><span class="m">443</span><span class="w"> </span>action<span class="w"> </span>allow
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">set</span><span class="w"> </span>firewall<span class="w"> </span>rule<span class="w"> </span><span class="m">2</span><span class="w"> </span>source-ip<span class="w"> </span><span class="m">10</span>.0.2.10/32<span class="w"> </span>dest-port<span class="w"> </span><span class="m">443</span><span class="w"> </span>action<span class="w"> </span>allow
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">set</span><span class="w"> </span>firewall<span class="w"> </span>rule<span class="w"> </span><span class="m">3</span><span class="w"> </span>dest-port<span class="w"> </span><span class="m">443</span><span class="w"> </span>action<span class="w"> </span>deny
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Allow SSH from jump hosts only</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">set</span><span class="w"> </span>firewall<span class="w"> </span>rule<span class="w"> </span><span class="m">10</span><span class="w"> </span>source-ip<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span>dest-port<span class="w"> </span><span class="m">22</span><span class="w"> </span>action<span class="w"> </span>allow
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">set</span><span class="w"> </span>firewall<span class="w"> </span>rule<span class="w"> </span><span class="m">11</span><span class="w"> </span>dest-port<span class="w"> </span><span class="m">22</span><span class="w"> </span>action<span class="w"> </span>deny
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>get<span class="w"> </span>firewall<span class="w"> </span>rules
+<p>The NSX CLI has no command for creating source-IP access rules on the NSX Manager itself, so restrict API (443) and SSH (22) access to the management interface with network controls in front of the managers. Command reference: <a href="https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html">NSX 9.1 CLI Guide</a>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List existing principal identities</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/trust-management/principal-identities"</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify certificate binding for an identity</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/trust-management/principal-identities/&lt;pi-id&gt;"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NSX CLI (build 20.0.3.1-18414822)
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Connected to NSX Manager at 192.168.100.15
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>firewall rule 1 configured: source-ip 10.0.1.0/24 dest-port 443 action allow
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>firewall rule 2 configured: source-ip 10.0.2.10/32 dest-port 443 action allow
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>firewall rule 3 configured: dest-port 443 action deny
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>firewall rule 10 configured: source-ip 10.0.1.0/24 dest-port 22 action allow
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>firewall rule 11 configured: dest-port 22 action deny
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Firewall Rules:
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Rule ID | Source IP      | Dest Port | Action | Protocol
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>--------|----------------|-----------|--------|----------
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>1       | 10.0.1.0/24    | 443       | allow  | tcp
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>2       | 10.0.2.10/32   | 443       | allow  | tcp
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>3       | any            | 443       | deny   | tcp
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>10      | 10.0.1.0/24    | 22        | allow  | tcp
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>11      | any            | 22        | deny   | tcp
+<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 </code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Common errors</p>
-<table>
-<thead>
-<tr>
-<th>Error</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Error: firewall rule 1 already exists</code></td>
-<td>Delete the existing rule with <code>delete firewall rule 1</code> before reconfiguring it.</td>
-</tr>
-<tr>
-<td><code>Error: Invalid source-ip format: 10.0.1.0/24</code></td>
-<td>Verify CIDR notation is correct and the NSX version supports subnet-based rules; use individual IPs if needed.</td>
-</tr>
-<tr>
-<td><code>Error: Access denied — insufficient privileges</code></td>
-<td>Ensure your NSX user account has admin role; check with <code>get user &lt;username&gt;</code>.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List existing principal identities</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/aaa/principal-identities"</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Verify certificate binding for an identity</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/aaa/principal-identities/&lt;pi-id&gt;"</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># PowerCLI — cross-check NSX role bindings against AD group membership</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c"># (runs from a machine with AD RSAT tools and NSX API access)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">$groups</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">"NSX-Admins"</span><span class="p">,</span> <span class="s2">"NSX-Network"</span><span class="p">,</span> <span class="s2">"NSX-Security"</span><span class="p">,</span> <span class="s2">"NSX-Ops"</span><span class="p">)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$g</span> <span class="k">in</span> <span class="nv">$groups</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="nv">$members</span> <span class="p">=</span> <span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="nv">$g</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">distinguishedName</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="nb">Write-Host</span> <span class="s2">"=== $g ==="</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="nv">$members</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">"  </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SamAccountName</span><span class="p">)</span><span class="s2">"</span> <span class="p">}</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — cross-check NSX role bindings against AD group membership</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># (runs from a machine with AD RSAT tools and NSX API access)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$groups</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">"NSX-Admins"</span><span class="p">,</span> <span class="s2">"NSX-Network"</span><span class="p">,</span> <span class="s2">"NSX-Security"</span><span class="p">,</span> <span class="s2">"NSX-Ops"</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$g</span> <span class="k">in</span> <span class="nv">$groups</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="nv">$members</span> <span class="p">=</span> <span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="nv">$g</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">distinguishedName</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="nb">Write-Host</span> <span class="s2">"=== $g ==="</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="nv">$members</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">"  </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SamAccountName</span><span class="p">)</span><span class="s2">"</span> <span class="p">}</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">}</span>
 </code></pre></div></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9328,7 +9274,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

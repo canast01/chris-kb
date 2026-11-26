@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Escalation", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/troubleshooting/escalation/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "How to escalate vCenter Server issues to Broadcom support: what data to collect, how to generate the VCSA support bundle, step-by-step SR submission on...", "dateModified": "2026-11-23", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Escalation", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/troubleshooting/escalation/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "How to escalate vCenter Server issues to Broadcom support: what data to collect, how to generate the VCSA support bundle, step-by-step SR submission on...", "dateModified": "2026-11-26", "datePublished": "2026-05-06"}</script>
   
 
   
@@ -9219,7 +9219,7 @@
 <div class="kb-summary">
 How to escalate vCenter Server issues to Broadcom support: what data to collect, how to generate the VCSA support bundle, step-by-step SR submission on the Broadcom portal, and the escalation path when progress stalls.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 <p><img alt="vCenter — Escalation" src="../../../../../../assets/virtualization-vmware-vcenter-troubleshooting-escalation.svg" /></p>
 <hr />
@@ -9250,7 +9250,7 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </tr>
 <tr>
 <td>VCSA services status</td>
-<td>SSH → <code>service-control --status</code></td>
+<td>SSH → <code>service-control --status --all</code></td>
 <td>All services show <code>Running</code></td>
 </tr>
 <tr>
@@ -9259,8 +9259,8 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 <td><code>Running</code></td>
 </tr>
 <tr>
-<td>SSO service</td>
-<td>SSH → <code>service-control --status vmware-sso</code></td>
+<td>SSO service (Security Token Service)</td>
+<td>SSH → <code>service-control --status vmware-stsd</code></td>
 <td><code>Running</code></td>
 </tr>
 <tr>
@@ -9391,8 +9391,8 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/log/vmware/vpxd/
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>cp<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span>/tmp/vpxd-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.log
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Also collect the SSO log if login is failing</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>cp<span class="w"> </span>/var/log/vmware/sso/vmware-sts-idmd.log<span class="w"> </span>/tmp/vmware-sts-idmd-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.log
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Also collect the SSO (STS) log if login is failing — log names per KB 310254</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>cp<span class="w"> </span>/var/log/vmware/sso/vmware-identity-sts.log<span class="w"> </span>/tmp/vmware-identity-sts-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.log
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># For upgrade failures, collect the installer log</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/log/vmware/install/
@@ -9403,13 +9403,9 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>-rw-r--r-- 1 root root 256M Jan 13 22:10 vpxd.log.2
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>-rw-r--r-- 1 root root 128M Jan 12 15:33 vpxd.log.3
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>-rw-r--r-- 1 root root  64M Jan 11 09:15 vpxd.log.4
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>total 1.8G
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>-rw-r--r-- 1 root root 1.2G Jan 15 10:45 vmware-sts-idmd.log
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>-rw-r--r-- 1 root root 512M Jan 14 19:20 vmware-sts-idmd.log.1
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>-rw-r--r-- 1 root root 256M Jan 13 23:05 vmware-sts-idmd.log.2
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>total 3.6G
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>-rw-r--r-- 1 root root 2.1G Jan 15 08:30 vmware-installer.log
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>-rw-r--r-- 1 root root 1.5G Jan 14 12:15 vmware-installer.log.1
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>total 3.6G
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>-rw-r--r-- 1 root root 2.1G Jan 15 08:30 vmware-installer.log
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>-rw-r--r-- 1 root root 1.5G Jan 14 12:15 vmware-installer.log.1
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9426,8 +9422,8 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 <td>Check available disk space with <code>df -h /tmp</code> and either clean up /tmp or redirect to a partition with sufficient space.</td>
 </tr>
 <tr>
-<td><code>cp: /var/log/vmware/sso/vmware-sts-idmd.log: No such file or directory</code></td>
-<td>Verify the SSO service is installed and running with <code>systemctl status vmware-sts-idmd</code>, or check the correct log path for your vCenter version.</td>
+<td><code>cp: /var/log/vmware/sso/vmware-identity-sts.log: No such file or directory</code></td>
+<td>List <code>/var/log/vmware/sso/</code> and check the SSO log names for your version in KB 310254; check the STS service with <code>service-control --status vmware-stsd</code>.</td>
 </tr>
 <tr>
 <td><code>Permission denied</code></td>
@@ -9485,37 +9481,18 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </div>
 <h3 id="5-check-service-status-and-recent-errors">5. Check service status and recent errors<a class="headerlink" href="#5-check-service-status-and-recent-errors" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all VCSA services and their state</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>service-control<span class="w"> </span>--status
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Show recent errors in the primary service log</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"ERROR\|FATAL\|Exception"</span><span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># If SSO/login is failing</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"ERROR\|FATAL"</span><span class="w"> </span>/var/log/vmware/sso/vmware-sts-idmd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># If SSO/login is failing (STS log, KB 310254)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"ERROR\|FATAL"</span><span class="w"> </span>/var/log/vmware/sso/vmware-identity-sts.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Database health check</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>/usr/lib/vmware-vpostgres/bin/psql<span class="w"> </span>-U<span class="w"> </span>vc<span class="w"> </span>-d<span class="w"> </span>VCDB<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT count(*) FROM vpx_task WHERE state = 'running';"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Service vmware-vpxd is running
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Service vmware-vpostgres is running
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Service vmware-sso is running
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Service vmware-rhttpproxy is running
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Service vmware-cm is running
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Service vmware-cis-license is running
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Service vmware-analytics is running
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>2024-01-15T09:42:31.847Z ERROR [vpxd] [140234567890] [vpxd.log] Failed to connect to inventory service: Connection timeout after 30s
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>2024-01-15T09:41:12.234Z FATAL [vpxd] [140234567890] [vpxd.log] Database connection pool exhausted, rejecting new connections
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>2024-01-15T09:39:45.123Z ERROR [vpxd] [140234567890] [vpxd.log] Task 'task-1234' failed: NFC connection lost to host esx-prod-01.lab.local
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>2024-01-15T09:38:22.456Z ERROR [vpxd] [140234567890] [vpxd.log] Unable to retrieve cluster configuration from host 192.168.1.45
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>2024-01-15T08:15:33.567Z ERROR [sso] [140123456789] [vmware-sts-idmd.log] LDAP bind failed for user administrator@vsphere.local: Invalid credentials
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>2024-01-15T08:14:12.234Z ERROR [sso] [140123456789] [vmware-sts-idmd.log] Token validation failed: Certificate expired on 2024-01-10
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a> count
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>-------
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>     12
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>(1 row)
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://knowledge.broadcom.com/external/article/310254/enabling-debug-logging-for-sso-and-authe.html (SSO log files).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9543,7 +9520,7 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </table>
 </div>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vCenter version: 8.0 U2c build 23477823
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vCenter version: 8.0 U2c build 23504390
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>VCSA hostname: vcenter-01.corp.local
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Issue first observed: 2026-06-14 14:30 UTC
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Last known good state: 2026-06-14 10:00 UTC
@@ -9683,7 +9660,7 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
 <p>Paste these into case replies to show Broadcom the current state.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># VCSA service status — paste into every case update</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>service-control<span class="w"> </span>--status
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Most recent vpxd errors (last 50 lines of ERROR-level entries)</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"ERROR\|FATAL"</span><span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
@@ -9694,51 +9671,13 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># NTP status</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>timedatectl<span class="w"> </span>status
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># vCSHA status (if configured)</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>vcha-util<span class="w"> </span>status<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"vCSHA not configured"</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># vCenter HA status (if configured): vSphere Client → vCenter → Configure → vCenter HA,</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># or POST /api/vcenter/vcha/cluster?action=get (vSphere Automation API)</span>
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Recent system logs</span>
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>journalctl<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>SERVICE STATUS
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Service                                    Running    Enabled
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>vmon                                       true       true
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>vpxd                                       true       true
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>vsphere-ui                                 true       true
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>vsan-health                                true       true
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>rhttpproxy                                 true       true
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>sps                                        true       true
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>psc                                        true       true
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>2024-01-15T09:47:32.891Z ERROR vpxd[7F2A4C1E] [Originator@6876 sub=Default] Failed to connect to inventory service: connection timeout after 30s
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>2024-01-15T09:48:15.442Z FATAL vpxd[7F2A4C1E] [Originator@6876 sub=Hostd] Host agent on esx-prod-04.lab.local unreachable
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>2024-01-15T09:49:02.156Z ERROR vpxd[7F2A4C1E] [Originator@6876 sub=VsanMgmt] VSAN cluster health check failed: quorum lost
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>2024-01-15T09:50:44.721Z ERROR vpxd[7F2A4C1E] [Originator@6876 sub=Default] License capacity exceeded: 512 VMs licensed, 518 running
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>Filesystem                Size  Used Avail Use% Mounted on
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>/dev/mapper/root_vol     100G   87G   13G  87% /
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>/dev/mapper/log_vol       50G   42G    8G  84% /var/log
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>/dev/mapper/db_vol       200G  156G   44G  78% /storage/db
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>tmpfs                     16G  2.1G   14G  13% /dev/shm
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>               Local time: Mon 2024-01-15 09:52:18 UTC
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>           Universal time: Mon 2024-01-15 09:52:18 UTC
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>                 RTC time: Mon 2024-01-15 09:52:18 UTC
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>                Time zone: UTC (UTC, +0000)
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>System clock synchronized: yes
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>              NTP service: active
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>       RTC in local TZ: no
-<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>
-<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>VCHA Cluster Status: HEALTHY
-<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>Node Role: ACTIVE
-<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>Partner Node: vcsa-02.lab.local (192.168.1.52)
-<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>Last Heartbeat: 2024-01-15T09:52:10Z
-<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>
-<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>Jan 15 09:51:42 vcsa-01 systemd[1]: Started VMware vCenter Server.
-<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>Jan 15 09:51:55 vcsa-01 vpxd[8234]: Inventory service initialized
-<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>Jan 15 09:52:03 vcsa-01 rhttpproxy[5621]: SSL handshake completed for client 192.168.1.100
-<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>Jan 15 09:52:10 vcsa-01 vcha-util[9876]: Heartbeat received from passive node
-<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>Jan 15 09:52:18 vcsa-01 kernel: audit: type=1400 audit(1705318338.123:456): apparmor="DENIED" operation="capable"
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/vcenter/vcha/cluster__action=get/post/ (vCenter HA status).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9802,7 +9741,7 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 <ul>
 <li>vSphere Client loads the login page and you can authenticate successfully</li>
 <li>All ESXi hosts show "Connected" in the vSphere Client</li>
-<li>Run <code>service-control --status</code> and confirm all services show <code>Running</code></li>
+<li>Run <code>service-control --status --all</code> and confirm all services show <code>Running</code></li>
 <li>Run <code>df -h</code> and confirm no partition is above 80%</li>
 <li>Perform the action that was failing (vMotion a test VM, add a host, provision a VM) and confirm it succeeds</li>
 <li>Monitor the vSphere Client Alarms view for 15 minutes and confirm no new vCenter-related alarms</li>
@@ -9829,7 +9768,7 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 11:06:56 UTC"><span class="timeago" datetime="2026-11-23T11:06:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 11:06:56 UTC">2026-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

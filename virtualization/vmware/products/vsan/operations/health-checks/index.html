@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Health Checks", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/operations/health-checks/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Health Checks reference covering Weekly Checks, Performance Baseline, Network Health, Stretched Cluster Checks, Change Readiness.", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Health Checks", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/operations/health-checks/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Health Checks reference covering Weekly Checks, Performance Baseline, Network Health, Stretched Cluster Checks, Change Readiness.", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9246,7 +9246,7 @@
 <div class="kb-summary">
 Health Checks reference covering Weekly Checks, Performance Baseline, Network Health, Stretched Cluster Checks, Change Readiness.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -9263,7 +9263,7 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Member|Master|Sub-Cluster UUID|Health"</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== 2. Overall health tests ==="</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"TestName|Health:"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"PASS"</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== 3. Disk group state ==="</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"Disk Group UUID|Is SSD|Health|State|Tier"</span>
@@ -9290,60 +9290,7 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Done ==="</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>=== 1. Cluster membership ===
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Member: esx-node-01.lab.local
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Member: esx-node-02.lab.local
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Member: esx-node-03.lab.local
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Master: esx-node-01.lab.local
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Sub-Cluster UUID: 52d4a8c1-7f2e-4a9b-b1c3-8e9f2d5c6a7b
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Health: Healthy
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>=== 2. Overall health tests ===
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>TestName: Network MTU
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Health: FAIL
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>TestName: Congestion
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Health: WARN
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>=== 3. Disk group state ===
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Disk Group UUID: 5a8c3f1e-2b9d-4c7a-9e1f-3d6b8a2c5e7f
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Is SSD: true
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Health: Healthy
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>State: Enabled
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Tier: All-Flash
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Disk Group UUID: 6b9d4g2f-3c0e-5d8b-0f2g-4e7c9b3d6f8g
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Is SSD: false
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Health: Healthy
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>State: Enabled
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Tier: Capacity
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>=== 4. Object health summary ===
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>3
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>unhealthy objects (0 = all good)
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>=== 5. Resync queue ===
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>Resync Queue Length: 12
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>Resync Rate (MB/s): 45.2
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>Estimated Time Remaining: 18 minutes
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>=== 6. Capacity ===
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>Used Capacity: 2.8 TB
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>Total Capacity: 8.6 TB
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>Free Capacity: 5.8 TB
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>=== 7. Non-compliant policy check ===
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>Object: vsan:6384e8c1-2f5a-b8d3-92c4-001569c3d8e1 - Policy: RAID-1 (Non-Compliant - 1 replica missing)
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>Object: vsan:7495f9d2-3g6b-c9e4-03d5-002670d4e9f2 - Policy: RAID-5 (Non-Compliant - degraded)
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>=== 8. Network MTU test (update IPs) ===
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>3 packets transmitted, 3 received, 0% loss
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>3 packets transmitted, 3 received, 0% loss
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>=== 9. NIC error check ===
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>Errors: 0
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>Dropped: 0
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>=== Done ===
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9531,40 +9478,15 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"Healthy"</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Show detail for a specific object (get UUID from above)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>get<span class="w"> </span>-u<span class="w"> </span>&lt;object-uuid&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>-u<span class="w"> </span>&lt;object-uuid&gt;
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># List all absent components (quick degradation indicator)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>component<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"absent"</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Objects with absent components (quick degradation indicator)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"absent"</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Resync detail — which objects are currently rebuilding</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>8 Healthy
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>      2 Degraded
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>      1 Absent
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Non-Healthy Objects:
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>52d4a8f0-1234-5678-abcd-ef0123456789 Degraded
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>7f8c9d1a-2345-6789-bcde-f01234567890 Absent
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Object UUID: 52d4a8f0-1234-5678-abcd-ef0123456789
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Health: Degraded
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Policy: raid1 (2 replicas)
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Components: 2
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Component 1: Present (Host: esx-prod-01.local)
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  Component 2: Absent (Host: esx-prod-02.local)
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Resync Progress: 45%
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Absent Components:
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>52d4a8f0-1234-5678-abcd-ef0123456789.1 Absent (esx-prod-02.local)
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>7f8c9d1a-2345-6789-bcde-f01234567890.0 Absent (esx-prod-03.local)
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Current Resync Operations:
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Object UUID: 52d4a8f0-1234-5678-abcd-ef0123456789
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Progress: 67%
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Estimated Time: 12m 34s
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>Object UUID: 9a1b2c3d-4567-89ab-cdef-0123456789ab
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>Progress: 23%
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Estimated Time: 45m 18s
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9684,7 +9606,7 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 </tr>
 </tbody>
 </table>
-<p>Run <code>Get-VsanClusterHealthSummary -Cluster (Get-Cluster "VSAN-LON-01") -FetchFromCache:$false</code> in PowerCLI for a full programmatic health report.</p>
+<p>Run <code>Test-VsanClusterHealth -Cluster (Get-Cluster "VSAN-LON-01")</code> in PowerCLI for a full programmatic health report (add <code>-UseCache</code> to return cached results).</p>
 <hr />
 <h2 id="performance-baseline">Performance Baseline<a class="headerlink" href="#performance-baseline" title="Permanent link">&para;</a></h2>
 <p><img alt="Performance Baseline" src="../../../../../../assets/virtualization-vmware-vsan-hc-performance-baseline.svg" /></p>
@@ -9735,61 +9657,7 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Per-host latency and IOPS from ESXi shell</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>perf<span class="w"> </span>query<span class="w"> </span>-e<span class="w"> </span>host-domclient<span class="w"> </span>-st<span class="w"> </span><span class="m">2024</span>-01-01T00:00:00
-</code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Host: esx-01.lab.local
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Timestamp: 2024-01-01T00:00:00Z
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Read Latency (ms): 2.34
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Write Latency (ms): 3.12
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Read IOPS: 8456
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Write IOPS: 5623
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Read Throughput (MB/s): 342.1
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Write Throughput (MB/s): 218.7
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Host: esx-02.lab.local
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  Timestamp: 2024-01-01T00:00:00Z
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  Read Latency (ms): 2.18
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  Write Latency (ms): 2.89
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  Read IOPS: 9124
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  Write IOPS: 6012
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  Read Throughput (MB/s): 365.4
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  Write Throughput (MB/s): 241.3
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Host: esx-03.lab.local
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  Timestamp: 2024-01-01T00:00:00Z
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  Read Latency (ms): 3.45
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  Write Latency (ms): 4.67
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  Read IOPS: 7234
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  Write IOPS: 4891
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  Read Throughput (MB/s): 289.6
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  Write Throughput (MB/s): 195.2
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Common errors</p>
-<table>
-<thead>
-<tr>
-<th>Error</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Error: vSAN performance service not ready</code></td>
-<td>Wait 2-3 minutes after cluster formation or reboot for the vSAN performance service to initialize, then retry the query.</td>
-</tr>
-<tr>
-<td><code>Error: Invalid entity type 'host-domclient'</code></td>
-<td>Verify the entity type with <code>esxcli vsan perf query --help</code> and use a valid option such as <code>host-domclient</code>, <code>host-storage-adapter</code>, or <code>vsan-cluster</code>.</td>
-</tr>
-<tr>
-<td><code>Error: No data available for the specified time range</code></td>
-<td>Ensure the timestamp is within the last 24 hours of collected metrics and that vSAN performance monitoring is enabled on the cluster.</td>
-</tr>
-</tbody>
-</table>
-</div>
+<p>Per-host latency and IOPS are not available from an <code>esxcli vsan</code> command; use the vSAN performance views in the vSphere Client, or PowerCLI <code>Get-VsanStat</code> (<a href="https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617">VMware.VimAutomation.Storage</a>).</p>
 <hr />
 <h2 id="network-health">Network Health<a class="headerlink" href="#network-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Network Health" src="../../../../../../assets/virtualization-vmware-vsan-hc-network-health.svg" /></p>
@@ -9824,27 +9692,27 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Run from each host — test against all other vSAN vmk IPs</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host2-vsan-ip&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host3-vsan-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Run from each host — test against all other vSAN vmk IPs</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host2-vsan-ip&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host3-vsan-ip&gt;
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>PING 192.168.100.52 (192.168.100.52): 8972 data bytes
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>8980 bytes from 192.168.100.52: icmp_seq=0 ttl=64 time=1.234 ms
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>8980 bytes from 192.168.100.52: icmp_seq=1 ttl=64 time=1.156 ms
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>8980 bytes from 192.168.100.52: icmp_seq=2 ttl=64 time=1.289 ms
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>8980 bytes from 192.168.100.52: icmp_seq=3 ttl=64 time=1.198 ms
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>--- 192.168.100.52 statistics ---
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>4 packets transmitted, 4 packets received, 0% packet loss
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>round-trip min/avg/max = 1.156/1.219/1.289 ms
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>PING 192.168.100.53 (192.168.100.53): 8972 data bytes
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>8980 bytes from 192.168.100.53: icmp_seq=0 ttl=64 time=2.412 ms
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>8980 bytes from 192.168.100.53: icmp_seq=1 ttl=64 time=2.367 ms
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>8980 bytes from 192.168.100.53: icmp_seq=2 ttl=64 time=2.445 ms
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>8980 bytes from 192.168.100.53: icmp_seq=3 ttl=64 time=2.389 ms
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>--- 192.168.100.53 statistics ---
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>4 packets transmitted, 4 packets received, 0% packet loss
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>round-trip min/avg/max = 2.367/2.403/2.445 ms
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PING 192.168.100.52 (192.168.100.52): 8972 data bytes
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>8980 bytes from 192.168.100.52: icmp_seq=0 ttl=64 time=1.234 ms
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>8980 bytes from 192.168.100.52: icmp_seq=1 ttl=64 time=1.156 ms
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>8980 bytes from 192.168.100.52: icmp_seq=2 ttl=64 time=1.289 ms
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>8980 bytes from 192.168.100.52: icmp_seq=3 ttl=64 time=1.198 ms
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>--- 192.168.100.52 statistics ---
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>round-trip min/avg/max = 1.156/1.219/1.289 ms
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>PING 192.168.100.53 (192.168.100.53): 8972 data bytes
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>8980 bytes from 192.168.100.53: icmp_seq=0 ttl=64 time=2.412 ms
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>8980 bytes from 192.168.100.53: icmp_seq=1 ttl=64 time=2.367 ms
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>8980 bytes from 192.168.100.53: icmp_seq=2 ttl=64 time=2.445 ms
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>8980 bytes from 192.168.100.53: icmp_seq=3 ttl=64 time=2.389 ms
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>--- 192.168.100.53 statistics ---
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>4 packets transmitted, 4 packets received, 0% packet loss
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>round-trip min/avg/max = 2.367/2.403/2.445 ms
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9911,8 +9779,8 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Check witness appliance connectivity</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">"VsanVcStretchedClusterSystem-vsan-stretched-cluster-system"</span> <span class="p">|</span> <span class="p">%{</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetWitnessHosts</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Check witness appliance connectivity</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">"VsanVcStretchedClusterSystem-vsan-stretched-cluster-system"</span> <span class="p">|</span> <span class="p">%{</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetWitnessHosts</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)}</span>
 </code></pre></div>
 <hr />
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
@@ -9929,7 +9797,7 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 <tr>
 <td>All health tests green</td>
 <td></td>
-<td><code>Get-VsanClusterHealthSummary</code></td>
+<td><code>Test-VsanClusterHealth -Cluster &lt;cluster&gt;</code></td>
 </tr>
 <tr>
 <td>No active resync</td>
@@ -10001,7 +9869,7 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

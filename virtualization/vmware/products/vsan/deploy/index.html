@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Deploy", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 1–3 cover the physical and hypervisor foundation; Phases 4–7 cover...", "dateModified": "2026-11-23", "datePublished": "2026-06-02"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Deploy", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 1–3 cover the physical and hypervisor foundation; Phases 4–7 cover...", "dateModified": "2026-11-26", "datePublished": "2026-06-02"}</script>
   
 
   
@@ -8877,7 +8877,7 @@
 <div class="kb-summary">
 End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 1–3 cover the physical and hypervisor foundation; Phases 4–7 cover vSAN-specific enablement, policy configuration, and end-to-end validation.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <p><img alt="vSAN Deploy Stages" src="../../../../../assets/vsan-deploy-stages.svg" /></p>
@@ -9380,23 +9380,10 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># All hosts should appear in the member list; one is Master</span>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Run initial health check</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># All tests should PASS</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># All tests should be green</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Cluster UUID: 52d4a8f1-7c2e-4f3a-9b1a-8e3d2c1f5a9b
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Cluster Master: esx-prod-01.lab.local
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Member UUIDs:
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  52d4a8f1-7c2e-4f3a-9b1a-8e3d2c1f5a9b (esx-prod-01.lab.local)
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  63e5b9g2-8d3f-5g4b-0c2b-9f4e3d2g6b0c (esx-prod-02.lab.local)
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  74f6c0h3-9e4g-6h5c-1d3c-0g5f4e3h7c1d (esx-prod-03.lab.local)
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Cluster Health Status: HEALTHY
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Test Results:
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  Cluster: PASS
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  Physical disk: PASS
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>  Memory: PASS
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  Network: PASS
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  Connectivity: PASS
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9414,7 +9401,7 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 </tr>
 <tr>
 <td><code>Cluster Health Status: DEGRADED</code></td>
-<td>Check individual host health with <code>esxcli vsan health host get</code> and verify network connectivity between cluster members.</td>
+<td>Check individual health checks with <code>esxcli vsan health cluster list</code> and verify network connectivity between cluster members.</td>
 </tr>
 </tbody>
 </table>
@@ -9464,8 +9451,12 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
 <p>Without this, performance metrics are not collected and the Performance view in Monitor is empty.</p>
 <hr />
 <h2 id="phase-6-aria-suite-lifecycle-and-monitoring-optional">Phase 6 — Aria Suite Lifecycle and Monitoring (Optional)<a class="headerlink" href="#phase-6-aria-suite-lifecycle-and-monitoring-optional" title="Permanent link">&para;</a></h2>
-<p><strong>Exit criterion:</strong> If Aria Operations is in scope, vSAN adapter configured and dashboards showing cluster data.</p>
-<p>This phase is optional — skip if not deploying Aria Operations.</p>
+<p><strong>Exit criterion:</strong> If VCF Operations (formerly Aria Operations) is in scope, vSAN adapter configured and dashboards showing cluster data.</p>
+<p>This phase is optional — skip if not deploying it.</p>
+<div class="admonition note">
+<p class="admonition-title">VCF/VVF 9.x naming</p>
+<p>In VCF 9.x the product is VCF Operations (formerly Aria Operations; <a href="https://knowledge.broadcom.com/external/article/438533">Broadcom KB 438533</a>). The Aria Suite Lifecycle steps below describe the 8.x (Aria Operations 8.x) path; Aria Operations 8.x can be upgraded to VCF Operations 9.0 through Aria Suite Lifecycle (<a href="https://knowledge.broadcom.com/external/article/433805">Broadcom KB 433805</a>).</p>
+</div>
 <h3 id="deploy-aria-suite-lifecycle-manager">Deploy Aria Suite Lifecycle Manager<a class="headerlink" href="#deploy-aria-suite-lifecycle-manager" title="Permanent link">&para;</a></h3>
 <p>Aria Suite Lifecycle (previously vRealize Suite Lifecycle Manager) is the deployment orchestrator for Aria Operations, Aria Log Insight, and Aria Automation.</p>
 <ol>
@@ -9530,10 +9521,10 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
 <a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>→ Resolve every warning before sign-off
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># CLI equivalent</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>PASS
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
 <a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1"># Expected: no output (all tests pass)</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>(no output — command completes silently)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9701,7 +9692,7 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
 <li>[ ] Performance baseline recorded</li>
 <li>[ ] vSAN HCL compliance confirmed for all disks</li>
 <li>[ ] Capacity headroom &gt; 30% confirmed</li>
-<li>[ ] Monitoring alerts configured (if Aria Operations deployed)</li>
+<li>[ ] Monitoring alerts configured (if VCF Operations / Aria Operations deployed)</li>
 <li>[ ] Runbook updated with cluster-specific IPs, VLANs, and disk NAAs</li>
 </ul>
 <hr />
@@ -9740,7 +9731,7 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 11:06:56 UTC"><span class="timeago" datetime="2026-11-23T11:06:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 11:06:56 UTC">2026-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

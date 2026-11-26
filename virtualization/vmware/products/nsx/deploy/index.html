@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Deploy", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 establish prerequisites and the NSX Manager cluster; Phases 3–4 prepare...", "dateModified": "2026-11-23", "datePublished": "2026-06-03"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Deploy", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 establish prerequisites and the NSX Manager cluster; Phases 3–4 prepare...", "dateModified": "2026-11-26", "datePublished": "2026-06-03"}</script>
   
 
   
@@ -8873,7 +8873,7 @@
 <div class="kb-summary">
 End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 establish prerequisites and the NSX Manager cluster; Phases 3–4 prepare transport zones, TEP profiles, and ESXi host transport nodes; Phases 5–6 deploy Edge nodes, configure T0/T1 gateways and overlay segments, then validate the full data path.
 
-*Applies to: NSX-T 3.x / NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 
 <p><img alt="NSX Deploy Stages" src="../../../../../assets/nsx-deploy-stages.svg" /></p>
@@ -8929,8 +8929,8 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </tr>
 <tr>
 <td>vCenter version</td>
-<td>7.0 U2+ for NSX 4.x</td>
-<td>Verify interop matrix</td>
+<td>Per the VCF BOM: vCenter 9.0 with NSX 9.0 (VCF 9.0); vCenter 8.0 U3a with NSX 4.2 (VCF 5.2)</td>
+<td>Verify interop matrix; see <a href="../architecture/design-standards/">Design Standards</a></td>
 </tr>
 <tr>
 <td>Host NIC firmware</td>
@@ -9075,7 +9075,7 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </tr>
 <tr>
 <td><code>join management-plane: Connection refused to 10.10.0.11:443</code></td>
-<td>Ensure node 1 is reachable and the NSX management service is running with <code>get service nsxd status</code>.</td>
+<td>Ensure node 1 is reachable and the NSX management service is running with <code>get services</code>.</td>
 </tr>
 <tr>
 <td><code>get cluster status: Cluster not yet formed</code></td>
@@ -9222,34 +9222,13 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 <h3 id="verify-transport-nodes">Verify Transport Nodes<a class="headerlink" href="#verify-transport-nodes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># From NSX Manager CLI</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>nsxcli
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>get<span class="w"> </span>transport-nodes
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>get<span class="w"> </span>transport-node-status
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># All hosts: state = UP</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Verify TEP IP assignment</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>port
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>get<span class="w"> </span>transport-nodes<span class="w"> </span>status
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># All hosts: status UP</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># On each ESXi host (nsxcli): status of logical switch ports on this host</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>get<span class="w"> </span>logical-switch-port<span class="w"> </span>status
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NSX CLI (build 17.0.1.0.0.17964471)
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Connected to NSX Manager 192.168.1.10
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>nsxcli&gt; get transport-nodes
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Transport Node ID                          Host Name              IP Address       State
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>tn-esx01-uuid-a1b2c3d4                     esx01.lab.local        10.0.1.51        UP
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>tn-esx02-uuid-e5f6g7h8                     esx02.lab.local        10.0.1.52        UP
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>tn-esx03-uuid-i9j0k1l2                     esx03.lab.local        10.0.1.53        UP
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>nsxcli&gt; get transport-node-status
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Transport Node ID                          State    TEP IP           Tunnel Status
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>tn-esx01-uuid-a1b2c3d4                     UP       172.16.10.101    UP
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>tn-esx02-uuid-e5f6g7h8                     UP       172.16.10.102    UP
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>tn-esx03-uuid-i9j0k1l2                     UP       172.16.10.103    UP
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>nsxcli&gt; get logical-switch port
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>Logical Switch                             Port ID              MAC Address          TEP IP
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>ls-prod-web                                lsp-uuid-001         00:50:56:a1:2b:3c    172.16.10.101
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>ls-prod-web                                lsp-uuid-002         00:50:56:a1:4d:5e    172.16.10.102
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>ls-prod-db                                 lsp-uuid-003         00:50:56:a1:6f:7g    172.16.10.103
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>ls-mgmt                                    lsp-uuid-004         00:50:56:a1:8h:9i    172.16.10.101
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9263,14 +9242,14 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 <tbody>
 <tr>
 <td><code>Error: Unable to connect to NSX Manager</code></td>
-<td>Verify NSX Manager IP/hostname is reachable and nsxcli is configured with correct credentials via <code>set api-server</code> command.</td>
+<td>Verify NSX Manager IP/hostname is reachable and the credentials are correct.</td>
 </tr>
 <tr>
 <td><code>Transport Node State: DOWN</code></td>
 <td>Check host connectivity to NSX Manager, verify vxlan kernel module is loaded with <code>vmkload_mod -l | grep vxlan</code>, and confirm TEP network is routable.</td>
 </tr>
 <tr>
-<td><code>No logical-switch port entries returned</code></td>
+<td>No logical switch ports listed</td>
 <td>Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch.</td>
 </tr>
 </tbody>
@@ -9357,25 +9336,12 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 <a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>  fp-eth1 → edge-uplink portgroup 2 (ToR VLAN — second path)
 </code></pre></div>
 <p>Repeat for edge-node-02 on a different host.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Verify Edge transport node status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Verify Edge transport node status (NSX Manager CLI)</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>nsxcli
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>get<span class="w"> </span>transport-nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>edge
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Both Edge nodes: state = UP</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>get<span class="w"> </span>transport-nodes<span class="w"> </span>status
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Both Edge nodes: status UP</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>NSX CLI (Build 20.0.3.1)
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Connected to: nsx-manager-01.lab.local (192.168.1.50)
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>transport-node-0 (edge-01.lab.local):
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>  state: UP
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>  status: READY
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>  host-switch-mode: VDS
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>transport-node-1 (edge-02.lab.local):
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>  state: UP
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>  status: READY
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>  host-switch-mode: VDS
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>2 edge transport nodes found, all UP
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9712,7 +9678,7 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </tr>
 <tr>
 <td>All transport nodes UP</td>
-<td><code>get transport-node-status</code></td>
+<td><code>get transport-nodes status</code></td>
 <td>All hosts: UP</td>
 </tr>
 <tr>
@@ -9793,7 +9759,7 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 11:06:56 UTC"><span class="timeago" datetime="2026-11-23T11:06:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 11:06:56 UTC">2026-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

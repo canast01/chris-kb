@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Integrations", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/architecture/integrations/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Integrations reference covering Host Transport Node Profiles, VMware Cloud Foundation (VCF) Integration, Physical Underlay Requirements, BGP Integration...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Integrations", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/architecture/integrations/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Integrations reference covering Host Transport Node Profiles, VMware Cloud Foundation (VCF) Integration, Physical Underlay Requirements, BGP Integration...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9226,7 +9226,7 @@
 <div class="kb-summary">
 Integrations reference covering Host Transport Node Profiles, VMware Cloud Foundation (VCF) Integration, Physical Underlay Requirements, BGP Integration with Physical Network, Active Directory / LDAP Integration and 2 more sections.
 
-*Applies to: NSX-T 3.x · NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 <p><img alt="NSX — Integrations" src="../../../../../../assets/virtualization-vmware-nsx-architecture-integrations.svg" /></p>
 <h2 id="physical-network-integration">Physical Network Integration<a class="headerlink" href="#physical-network-integration" title="Permanent link">&para;</a></h2>
@@ -9372,7 +9372,7 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 <tbody>
 <tr>
 <td><code>% Unknown command</code></td>
-<td>Verify the correct vrf ID with <code>get vrf</code> and ensure you are using the exact command syntax for your NSX-T version.</td>
+<td>Verify the correct vrf ID with <code>get logical-routers</code> and ensure you are using the exact command syntax for your NSX-T version.</td>
 </tr>
 <tr>
 <td><code>Peer 10.0.0.1 not found</code></td>
@@ -9422,48 +9422,20 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 </table>
 <p>Test connectivity before saving. NSX will validate the bind DN and base DN.</p>
 <h3 id="verify-ldap-integration-via-api">Verify LDAP Integration via API<a class="headerlink" href="#verify-ldap-integration-via-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List configured identity sources</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List configured LDAP identity sources</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/api/v1/aaa/vidm/status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/policy/api/v1/aaa/ldap-identity-sources
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Test LDAP search</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Test LDAP search against one identity source</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"search_query": "nsxadmin", "cursor": "0"}'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/aaa/ldap/search"</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/policy/api/v1/aaa/ldap-identity-sources/&lt;ldap-source-id&gt;/search?filter_value=nsxadmin"</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># VMware Identity Manager (vIDM) integration status, if used</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/api/v1/node/aaa/providers/vidm/status
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  "vidm_servers": [
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    {
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>      "server_address": "vidm.corp.local",
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>      "port": 443,
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>      "status": "UP",
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>      "thumbprint": "a1:b2:c3:d4:e5:f6:7g:8h:9i:0j:1k:2l:3m:4n:5o:6p",
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>      "last_heartbeat": "2024-01-15T14:32:18.456Z"
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    }
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  ],
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  "ldap_servers": [
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    {
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>      "server_address": "ldap.corp.local",
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>      "port": 389,
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>      "status": "UP",
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>      "bind_dn": "cn=nsx-bind,ou=service-accounts,dc=corp,dc=local"
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    }
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>  ]
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>}
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>{
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>  "results": [
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>    {
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>      "username": "nsxadmin",
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>      "full_name": "NSX Administrator",
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>      "email": "nsxadmin@corp.local",
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>      "distinguished_name": "cn=nsxadmin,ou=users,dc=corp,dc=local"
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>    }
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>  ],
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>  "cursor": "1",
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>  "result_count": 1
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9618,26 +9590,15 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 <p>NSX components forward syslog via the NSX Manager CLI or API:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Add syslog target on NSX Manager</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nsxcli
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-01<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>TLS<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">6514</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">set</span><span class="w"> </span>logging-server<span class="w"> </span><span class="m">10</span>.0.0.100:6514<span class="w"> </span>proto<span class="w"> </span>tls<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>serverca<span class="w"> </span>&lt;siem-ca-file&gt;
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>get<span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporters
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>get<span class="w"> </span>logging-servers
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Add syslog on Edge node (SSH to Edge)</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-01<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>UDP<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">514</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">set</span><span class="w"> </span>logging-server<span class="w"> </span><span class="m">10</span>.0.0.100:514<span class="w"> </span>proto<span class="w"> </span>udp<span class="w"> </span>level<span class="w"> </span>info
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>NSX CLI (build 21624528)
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>(no output — command completes silently)
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Syslog Exporters:
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  Exporter ID: siem-01
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  Level: info
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  Protocol: TLS
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  Server: 10.0.0.100
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  Port: 6514
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  Status: connected
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>(no output — command completes silently)
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9650,8 +9611,8 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 </thead>
 <tbody>
 <tr>
-<td><code>Error: Exporter siem-01 already exists</code></td>
-<td>Use <code>delete service syslog exporter siem-01</code> before re-adding, or modify with <code>set service syslog exporter siem-01</code> to update existing configuration.</td>
+<td>Duplicate logging server entry</td>
+<td>Check existing entries with <code>get logging-servers</code> and remove the old entry (same host, port, proto and level) before re-adding.</td>
 </tr>
 <tr>
 <td><code>Error: Connection refused to 10.0.0.100:6514</code></td>
@@ -9672,7 +9633,7 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 <tbody>
 <tr>
 <td>NSX Manager</td>
-<td><code>set service syslog exporter</code></td>
+<td><code>set logging-server</code></td>
 <td>API audit, policy changes, alarms</td>
 </tr>
 <tr>
@@ -9719,7 +9680,7 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

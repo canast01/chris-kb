@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ESXi Host Deployment", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/esxi/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Step-by-step guide to deploying a new ESXi host: hardware readiness, installation, network and storage configuration, vCenter join, and baseline hardening.", "dateModified": "2026-07-13", "datePublished": "2026-06-03"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ESXi Host Deployment", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/esxi/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Step-by-step guide to deploying a new ESXi host: hardware readiness, installation, network and storage configuration, vCenter join, and baseline hardening.", "dateModified": "2026-11-26", "datePublished": "2026-06-03"}</script>
   
 
   
@@ -8873,7 +8873,7 @@
 <div class="kb-summary">
 Step-by-step guide to deploying a new ESXi host: hardware readiness, installation, network and storage configuration, vCenter join, and baseline hardening.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 
 <p><img alt="ESXi Deploy Stages" src="../../../../../assets/esxi-deploy-stages.svg" /></p>
@@ -9144,7 +9144,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </tr>
 <tr>
 <td><code>Error: The portgroup 'vMotion' does not exist.</code></td>
-<td>Create the vMotion portgroup on the vSwitch before adding the interface using <code>esxcli vswitch standard portgroup add</code>.</td>
+<td>Create the vMotion portgroup on the vSwitch before adding the interface using <code>esxcli network vswitch standard portgroup add --portgroup-name vMotion --vswitch-name vSwitch0</code>.</td>
 </tr>
 <tr>
 <td><code>Error: The tag 'VMotion' is not a valid tag.</code></td>
@@ -9231,7 +9231,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </tr>
 <tr>
 <td><code>PING 10.20.1.1 (10.20.1.1): 8972 data bytes ... 100% packet loss</code></td>
-<td>Confirm the gateway IP is reachable and that the MTU is set to 9000 on both the ESXi interface and upstream switch port with <code>esxcli network ip interface get -i vmk2</code>.</td>
+<td>Confirm the gateway IP is reachable and that the MTU is set to 9000 on both the ESXi interface and upstream switch port with <code>esxcli network ip interface list</code> (shows the MTU of each VMkernel interface).</td>
 </tr>
 </tbody>
 </table>
@@ -9426,7 +9426,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </table>
 </div>
 <p><strong>VAAI plugin</strong></p>
-<p>Install the array vendor's VAAI plugin via VUM/LCM if the array supports hardware acceleration (XCOPY, ATS, WriteSame). Verify:</p>
+<p>Install the array vendor's VAAI plugin via vSphere Lifecycle Manager (add it to the cluster image) if the array supports hardware acceleration (XCOPY, ATS, WriteSame). Verify:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>vaai<span class="w"> </span>status<span class="w"> </span>get
 </code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Name                                    VAAI Status
@@ -9483,7 +9483,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 <tbody>
 <tr>
 <td><code>Error: Could not get list of filesystems</code></td>
-<td>Verify the esxcli service is running with <code>systemctl status esxcli</code> and check network connectivity to the ESXi host.</td>
+<td>Run the command in the ESXi Shell/SSH session on the host; if host management is unresponsive, restart hostd (<code>/etc/init.d/hostd restart</code>, Broadcom KB 320280: https://knowledge.broadcom.com/external/article/320280).</td>
 </tr>
 <tr>
 <td><code>Error: Permission denied</code></td>
@@ -9564,7 +9564,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 <tbody>
 <tr>
 <td><code>vmware-fdm is stopped</code></td>
-<td>Start the service with <code>/etc/init.d/vmware-fdm start</code> and verify cluster membership with <code>esxcli cluster get</code>.</td>
+<td>Check the host's vSphere HA state in the vSphere Client. ESXCLI has no HA-cluster namespace (<code>esxcli vsan cluster get</code> reports vSAN membership only).</td>
 </tr>
 <tr>
 <td><code>Command not found: /etc/init.d/vmware-fdm</code></td>
@@ -9726,6 +9726,10 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </table>
 </div>
 <p><strong>LCM baseline remediation</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Baselines are ESXi 8.x only</p>
+<p>From vSphere 9.0, vSphere Lifecycle Manager baselines (VUM) cannot patch 9.x ESX hosts, ISO import and ISO-based upgrades are blocked, Rollup bulletins are no longer released, and new clusters and standalone hosts are image-managed (vLCM) by default. 8.x hosts in a baseline-managed cluster can still be patched to any 8.x version. Use vLCM images for ESX 9.x — see <a href="https://knowledge.broadcom.com/external/article/379388">Broadcom KB 379388</a>.</p>
+</div>
 <ol>
 <li>vCenter → <strong>Menu → Lifecycle Manager</strong></li>
 <li>Attach the cluster baseline to the host</li>
@@ -9757,7 +9761,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 <tr>
 <td>NTP synced</td>
 <td><code>esxcli system ntp get</code></td>
-<td>NTP enabled, peers shown</td>
+<td>NTP enabled, servers listed</td>
 </tr>
 <tr>
 <td>Syslog forwarding</td>
@@ -9808,7 +9812,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 <li><strong>Host connected:</strong> vSphere Client → host status shows Connected (green)</li>
 <li><strong>NTP sync:</strong> <code>esxcli system time get</code> — time within 5 seconds of authoritative source</li>
 <li><strong>Network:</strong> <code>esxcli network ip interface list</code> — vmk0 (management) shows Up</li>
-<li><strong>SSH disabled:</strong> <code>esxcli system ssh get</code> — Policy: off (re-enable only when needed)</li>
+<li><strong>SSH disabled:</strong> ESXi Host Client → Host → Manage → Services shows the SSH service stopped (KB 320280 documents this view) (re-enable only when needed)</li>
 </ul>
 
 
@@ -9832,7 +9836,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

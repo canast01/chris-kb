@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NetApp ONTAP — Frequently Asked Questions", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/faq/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Common questions about NetApp ONTAP operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section.", "dateModified": "2026-11-22", "datePublished": "2026-06-21"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NetApp ONTAP — Frequently Asked Questions", "url": "https://chrisanastasiadis.com/storage/products/netapp/ontap/operations/faq/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Common questions about NetApp ONTAP operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section.", "dateModified": "2026-11-26", "datePublished": "2026-06-21"}</script>
   
 
   
@@ -8531,14 +8531,14 @@
 
 
 <h1 id="netapp-ontap-frequently-asked-questions">NetApp ONTAP — Frequently Asked Questions<a class="headerlink" href="#netapp-ontap-frequently-asked-questions" title="Permanent link">&para;</a></h1>
-<p><em>Applies to: NetApp ONTAP 9.x</em></p>
+<p><em>Applies to: NetApp ONTAP 9.18.1–9.20.1</em></p>
 <div class="kb-summary">
 Common questions about NetApp ONTAP operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
 </div>
 <p><img alt="NetApp ONTAP — Frequently Asked Questions" src="../../../../../../assets/storage-netapp-ontap-operations-faq.svg" /></p>
 <h2 id="general">General<a class="headerlink" href="#general" title="Permanent link">&para;</a></h2>
 <p><strong>Q: What ONTAP version is recommended for new deployments?</strong>
-A: ONTAP 9.14.1 or 9.15.1 (latest P-releases) are recommended. Check with <code>version</code> from ONTAP CLI or System Manager → Cluster → Software. Always apply the latest patch release.</p>
+A: The current release is ONTAP 9.20.1 (November 2026); 9.19.1 (July 2026) and 9.18.1 (November 2025) are the previous releases (<a href="https://docs.netapp.com/us-en/ontap/release-notes/release-support-reference.html">ONTAP 9 release support</a>). Choose a release supported on your hardware (NetApp Hardware Universe) and apply its latest patch release; NetApp publishes Minimum Recommended ONTAP releases on the NetApp Support Site. Check with <code>version</code> from ONTAP CLI or System Manager → Cluster → Software. Always apply the latest patch release.</p>
 <p><strong>Q: How do I check the current NetApp ONTAP version?</strong>
 A: <code>version</code></p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
@@ -8548,14 +8548,14 @@ A: Default is <code>volume</code> guarantee (thick provisioning). Switch to <cod
 A: <code>volume efficiency on -volume vol1</code> enables inline dedup and compression. Verify: <code>volume efficiency show -volume vol1</code>. For AFF arrays, both are enabled by default. Expected savings: 2-5x for typical workloads.</p>
 <h2 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h2>
 <p><strong>Q: How do I perform an ONTAP rolling upgrade without downtime?</strong>
-A: Use ONTAP automatic non-disruptive upgrade (ANDU): <code>system image update -package &lt;url&gt; -replace-package true</code>. ANDU upgrades nodes one at a time, taking over and giving back storage. Verify with <code>cluster image show</code>.</p>
+A: Use ONTAP automated non-disruptive upgrade (ANDU): download the image with <code>cluster image package get -url &lt;url&gt;</code>, then start the update with <code>cluster image update -version &lt;version&gt;</code>. ANDU upgrades nodes one at a time, taking over and giving back storage. Monitor with <code>cluster image show-update-progress</code> and verify with <code>cluster image show</code>.</p>
 <p><strong>Q: What is the correct procedure to create a new SVM and NFS export?</strong>
 A: <code>vserver create -vserver nfs_svm -rootvolume root -rootvolume-security-style unix</code>. Add data LIF. Create volume. Add export policy. Verify: <code>vserver show -vserver nfs_svm</code>. Test mount from a client.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <p><strong>Q: ONTAP shows 'Aggregate is nearly full'. What does it mean?</strong>
 A: Aggregate space usage is above 90%. ONTAP restricts new volume creation and thin-provisioned writes above 98%. Add drives, move volumes to another aggregate, or delete snapshots to reclaim space immediately.</p>
 <p><strong>Q: NFS/iSCSI latency increased — where do I start?</strong>
-A: Check <code>qos statistics performance show</code> for workload latency breakdown. Review <code>statistics show -object volume</code> for per-volume IOPS. Check aggregate disk busy % with <code>aggr show-space</code>. Review network with <code>network interface show</code>.</p>
+A: Check <code>qos statistics performance show</code> for workload latency breakdown. Review <code>statistics show -object volume</code> for per-volume IOPS. Check aggregate disk busy % with <code>storage aggregate show-space</code>. Review network with <code>network interface show</code>.</p>
 <h2 id="backup-and-recovery">Backup and Recovery<a class="headerlink" href="#backup-and-recovery" title="Permanent link">&para;</a></h2>
 <p><strong>Q: How often should I back up ONTAP configuration?</strong>
 A: ONTAP automatically backs up configuration to all nodes. Manual export: <code>system configuration backup upload</code>. For disaster recovery, configure SnapMirror for data and MetroCluster for HA. Test failover quarterly.</p>
@@ -8588,7 +8588,7 @@ A: Yes — access the <code>.snapshot</code> directory in any NFS mount (<code>l
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 22, 2026 18:38:48 UTC"><span class="timeago" datetime="2026-11-22T18:38:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 22, 2026 18:38:48 UTC">2026-11-22</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

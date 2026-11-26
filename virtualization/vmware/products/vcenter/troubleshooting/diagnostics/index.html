@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Diagnostics", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/troubleshooting/diagnostics/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "vCenter Server diagnostic commands: check disk partitions and service health with vmon-cli, tail vpxd.log and SSO logs, validate DNS and NTP, check...", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vCenter — Diagnostics", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vcenter/troubleshooting/diagnostics/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "vCenter Server diagnostic commands: check disk partitions and service health with vmon-cli, tail vpxd.log and SSO logs, validate DNS and NTP, check...", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9169,10 +9169,10 @@
 <div class="kb-summary">
 vCenter Server diagnostic commands: check disk partitions and service health with vmon-cli, tail vpxd.log and SSO logs, validate DNS and NTP, check certificate expiry with vecs-cli, diagnose SSO identity source with ldapsearch, query the vCenter REST API, run PowerCLI cluster health checks, and collect the VCSA support bundle.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 <p><img alt="vCenter — Diagnostics" src="../../../../../../assets/virtualization-vmware-vcenter-troubleshooting-diagnostics.svg" /></p>
-<p><img alt="vCenter — Diagnostics diagram: tail ssoAdminServer.log Check NTP: chronyc tracking, df -h /storage/db — check if &gt;80% ps aux to check vpxd CPU" src="kroki-generated-f83ee5ef-364b-35b3-9f47-ac1aade04056.svg" /></p>
+<p><img alt="vCenter — Diagnostics diagram: tail ssoAdminServer.log Check NTP: chronyc tracking, df -h /storage/db — check if &gt;80% ps aux to check vpxd CPU" src="kroki-generated-3a86307f-39f7-3305-bfda-5ac10339dac1.svg" /></p>
 <p><img alt="vCenter — Diagnostics diagram: Step 1 — Check disk partitions and service health, Step 2 — Review key log files, Step 3 — Validate DNS and NTP" src="kroki-generated-11c59cab-a475-35fe-8312-94c01841a034.svg" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9261,50 +9261,24 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All vCenter service status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Services monitored by vmon, then health of one service (KB 415673)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmon-cli<span class="w"> </span>-l
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: all services RUNNING</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Problem: any service STOPPED — note which service</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Recent service events (for any stopped service)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-vpxd<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fail\|crash"</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-stsd<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fail"</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Service-level status summary</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RUNNING
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Clear old compressed logs if /storage/log is full</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>find<span class="w"> </span>/var/log/vmware<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.gz"</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.gz"</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vmon-cli<span class="w"> </span>-s<span class="w"> </span>vpxd
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected: RunState: STARTED and HealthState: HEALTHY</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Problem: any other RunState / HealthState — note which service</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Recent service events (for any stopped service)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-vpxd<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fail\|crash"</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-stsd<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fail"</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Service-level status summary</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RUNNING
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Clear old compressed logs if /storage/log is full</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>find<span class="w"> </span>/var/log/vmware<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.gz"</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.gz"</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Service                                    Running  Enabled
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>applmgmt                                   true     true
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>certificatemanagement                      true     true
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>eam                                        true     true
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>envoy                                      true     true
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>imagebuilder                               true     true
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>netdumper                                  true     true
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>observability-client                       true     true
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>perfcharts                                 true     true
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>pschealth                                  true     true
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>statsmonger                                true     true
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>vapi-endpoint                              true     true
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>vcenter-ui                                 true     true
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vmware-vpxd                                true     true
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>vmware-stsd                                true     true
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>vmonapi                                    true     true
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>-- Logs begin at Wed 2024-01-10 14:22:31 UTC, end at Wed 2024-01-10 15:47:09 UTC --
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Jan 10 15:31:22 vcenter-01.corp.local vpxd[4521]: [error] Failed to connect to inventory service: timeout after 30s
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Jan 10 15:32:15 vcenter-01.corp.local vpxd[4521]: [warn] Retrying database connection pool initialization
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>Jan 10 15:33:44 vcenter-01.corp.local stsd[5892]: [error] Token validation failed for user admin@vsphere.local
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>Service                                    Status
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>applmgmt                                   RUNNING
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>eam                                        STOPPED
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>netdumper                                  STOPPED
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>---OUTPUT---
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/415673/checking-a-service-health-state-in-vcent.html (vmon-cli -l / -s output) and https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9340,7 +9314,7 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|fatal"</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># SSO login failures</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/sso/vmware-sts-idmd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"fail\|error\|bind"</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/sso/vmware-identity-sts.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"fail\|error\|bind"</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># SSO admin server (token issuance failures)</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/sso/ssoAdminServer.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"fail\|error"</span>
@@ -9351,15 +9325,7 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># vSphere Client errors</span>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|exception"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>2024-01-15T09:47:23.456Z [ERROR] vpxd[7F2A4C1E9B2D] Failed to connect to inventory service: Connection timeout after 30000ms
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2024-01-15T09:47:45.123Z [FATAL] vpxd[7F2A4C1E9B2D] Database connection pool exhausted, max connections: 100
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2024-01-15T09:48:12.789Z [ERROR] vpxd[7F2A4C1E9B2D] Task 'com.vmware.vc.vm.powerOn' failed: Host 'esx-prod-04.lab.local' is unreachable
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>2024-01-15T10:02:33.456Z [ERROR] vmware-sts-idmd[5E8F2C9A1B4D] LDAP bind failed for user admin@vsphere.local: Invalid credentials
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>2024-01-15T10:02:34.789Z [ERROR] ssoAdminServer[3C7E9F2A5B1D] Token issuance failed: Certificate validation error - cert expired on 2024-01-10
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>2024-01-15T10:03:01.234Z [INFO] certificate-manager: Issuing certificate for CN=vcenter.lab.local, validity: 365 days
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>2024-01-15T10:03:02.567Z [INFO] certificate-manager: Certificate installed successfully, thumbprint: A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>2024-01-15T10:15:44.890Z [ERROR] vsphere_client_virgo: Exception in com.vmware.vsphere.client.services.VmService: NullPointerException at line 342
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>2024-01-15T10:15:45.123Z [ERROR] vsphere_client_virgo: Failed to retrieve datastore inventory: HTTP 503 Service Unavailable
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/310254/enabling-debug-logging-for-sso-and-authe.html (SSO log files under /var/log/vmware/sso/ for 7.0/8.0/9.0).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9381,7 +9347,7 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </tr>
 <tr>
 <td><code>Certificate validation error - cert expired on 2024-01-10</code></td>
-<td>Regenerate and install a new vCenter certificate using <code>/usr/lib/vmware-vpx/bin/certificate-manager</code> or request a new one from your CA and import it.</td>
+<td>Regenerate and install a new vCenter certificate using <code>/usr/lib/vmware-vmca/bin/certificate-manager</code> (KB 318946) or request a new one from your CA and import it.</td>
 </tr>
 </tbody>
 </table>
@@ -9400,8 +9366,8 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 <td><code>/var/log/vmware/vpxd/vpxd.log</code></td>
 </tr>
 <tr>
-<td>SSO identity daemon</td>
-<td><code>/var/log/vmware/sso/vmware-sts-idmd.log</code></td>
+<td>SSO Security Token Service</td>
+<td><code>/var/log/vmware/sso/vmware-identity-sts.log</code></td>
 </tr>
 <tr>
 <td>SSO admin server</td>
@@ -9608,54 +9574,26 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 <h2 id="step-5-diagnose-sso-and-identity-source">Step 5 — Diagnose SSO and identity source<a class="headerlink" href="#step-5-diagnose-sso-and-identity-source" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SSO service health</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-stsd
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-sts-idmd
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># SSO domain info</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-domain-name<span class="w"> </span>--server-name<span class="w"> </span>localhost
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Lookup service endpoint (must be reachable for SSO to work)</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-ls-location<span class="w"> </span>--server-name<span class="w"> </span>localhost
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Test LDAP connectivity to AD domain controller from VCSA</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span>-b<span class="w"> </span><span class="s2">"DC=corp,DC=local"</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span>-D<span class="w"> </span><span class="s2">"svc-vcenter-ldap@corp.local"</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">    </span>-W<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">    </span><span class="s2">"(objectClass=*)"</span><span class="w"> </span>dn
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Error: LDAP_SERVER_DOWN = DC unreachable; LDAP_INVALID_CREDENTIALS = wrong svc account pw</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># Check vmdir (embedded LDAP for vsphere.local) health</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>ssogroup<span class="w"> </span>list<span class="w"> </span>--login<span class="w"> </span>administrator@vsphere.local
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># SSO domain info</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-domain-name<span class="w"> </span>--server-name<span class="w"> </span>localhost
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Lookup service endpoint (must be reachable for SSO to work)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-ls-location<span class="w"> </span>--server-name<span class="w"> </span>localhost
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Test LDAP connectivity to AD domain controller from VCSA</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>-b<span class="w"> </span><span class="s2">"DC=corp,DC=local"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span>-D<span class="w"> </span><span class="s2">"svc-vcenter-ldap@corp.local"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span>-W<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">    </span><span class="s2">"(objectClass=*)"</span><span class="w"> </span>dn
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Error: LDAP_SERVER_DOWN = DC unreachable; LDAP_INVALID_CREDENTIALS = wrong svc account pw</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Check vmdir (embedded LDAP for vsphere.local) health</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>ssogroup<span class="w"> </span>list<span class="w"> </span>--login<span class="w"> </span>administrator@vsphere.local
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>SERVICE vmware-stsd (pid 2847) is running.
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>SERVICE vmware-sts-idmd (pid 2851) is running.
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>vsphere.local
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>ldaps://ls.vsphere.local:636/dc=vsphere,dc=local
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Enter LDAP Password: 
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a># extended LDIF
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>#
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a># LDAPv3
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a># base &lt;DC=corp,DC=local&gt; with scope subtree
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a># filter: (objectClass=*)
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a># requesting: dn
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>#
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>dn: DC=corp,DC=local
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>dn: CN=Users,DC=corp,DC=local
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>dn: CN=Computers,DC=corp,DC=local
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>dn: CN=svc-vcenter-ldap,CN=Users,DC=corp,DC=local
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a># search result
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>search: 2
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>result: 0 Success
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a># numResponses: 5
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a># numEntries: 4
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>cn=Administrators,cn=Builtin,dc=vsphere,dc=local
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>cn=SystemConfiguration,cn=Builtin,dc=vsphere,dc=local
-<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>cn=DCAdmins,cn=Builtin,dc=vsphere,dc=local
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://knowledge.broadcom.com/external/article/318946/using-vsphere-certificate-manager-to-rep.html (vmafd-cli get-domain-name).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9676,8 +9614,8 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 <td>Confirm the svc-vcenter-ldap account password is correct and the account is not locked in Active Directory.</td>
 </tr>
 <tr>
-<td><code>SERVICE vmware-stsd (pid XXXX) is stopped.</code></td>
-<td>Restart the SSO service with <code>service-control --start vmware-stsd</code> and wait 60 seconds for dependent services to initialize.</td>
+<td><code>vmware-stsd</code> reported as stopped</td>
+<td>Start the Security Token Service with <code>service-control --start vmware-stsd</code> (KB 344633).</td>
 </tr>
 </tbody>
 </table>
@@ -9688,10 +9626,10 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'administrator@vsphere.local:&lt;password&gt;'</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span>https://vcenter.example.local/api/session<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">'"'</span><span class="k">)</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># System health</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Appliance system health (GET /api/appliance/health/system)</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>https://vcenter.example.local/api/vcenter/health/system
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Expected: GREEN</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>https://vcenter.example.local/api/appliance/health/system
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Expected: "green" (other values: yellow, orange, red, gray)</span>
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># List all hosts and their connection state</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
@@ -9707,13 +9645,10 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 <a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">"vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">    </span>-X<span class="w"> </span>DELETE<span class="w"> </span>https://vcenter.example.local/api/session
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  "status": "GREEN",
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  "messages": []
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>}
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>PROBLEM: esx-prod-02.dc1.local state=DISCONNECTED
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>PROBLEM: esx-backup-01.dc1.local state=NOT_RESPONDING
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>(no output — command completes silently)
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>"green"
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>PROBLEM: esx-prod-02.dc1.local state=DISCONNECTED
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>PROBLEM: esx-backup-01.dc1.local state=NOT_RESPONDING
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>(no output — command completes silently)
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9843,7 +9778,7 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </tr>
 <tr>
 <td>SSO log excerpt</td>
-<td><code>tail -200 /var/log/vmware/sso/vmware-sts-idmd.log</code></td>
+<td><code>tail -200 /var/log/vmware/sso/vmware-identity-sts.log</code></td>
 </tr>
 <tr>
 <td>Certificate expiry</td>
@@ -9880,8 +9815,8 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 <td>Task failures, API errors</td>
 </tr>
 <tr>
-<td>SSO identity</td>
-<td><code>/var/log/vmware/sso/vmware-sts-idmd.log</code></td>
+<td>SSO identity (STS)</td>
+<td><code>/var/log/vmware/sso/vmware-identity-sts.log</code></td>
 <td>LDAP bind errors, auth failures</td>
 </tr>
 <tr>
@@ -9914,9 +9849,9 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </ul>
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>vmon-cli -l</code> shows all services RUNNING with no STOPPED state</li>
+<li><code>vmon-cli -s &lt;service&gt;</code> shows <code>RunState: STARTED</code> and <code>HealthState: HEALTHY</code> for vpxd and the other critical services (KB 415673)</li>
 <li><code>df -h</code> shows all <code>/storage/*</code> partitions below 80% used</li>
-<li><code>GET /api/vcenter/health/system</code> returns GREEN</li>
+<li><code>GET /api/appliance/health/system</code> returns <code>green</code></li>
 <li>SSO login test: log out and log back in to vSphere Client — authentication succeeds</li>
 <li><code>nslookup &lt;vcenter-fqdn&gt;</code> and reverse PTR match; <code>chronyc tracking</code> shows time offset &lt; 1s</li>
 <li>The triggering event or alarm no longer appears in vCenter → Monitor → Events</li>
@@ -9943,7 +9878,7 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     

@@ -79,7 +79,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Common Issues", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-11-23", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Common Issues", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-11-26", "datePublished": "2026-05-08"}</script>
   
 
   
@@ -9078,7 +9078,7 @@
 
 
 <h1 id="nsx-common-issues">NSX — Common Issues<a class="headerlink" href="#nsx-common-issues" title="Permanent link">&para;</a></h1>
-<p><em>Applies to: VMware NSX-T 3.x / 4.x</em>
+<p><em>Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line</em>
 <img alt="NSX — Common Issues" src="../../../../../../assets/virtualization-vmware-nsx-troubleshooting-common-issues.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Confirm the VM's segment and gateway IP</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Check segment config in NSX Manager UI or API</span>
@@ -9146,66 +9146,24 @@
 </tbody>
 </table>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From NSX Manager CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsxcli
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Look for DOWN tunnels between specific TEP pairs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&lt;remote-tep-ip&gt;
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Identify which hosts have the affected TEPs</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>get<span class="w"> </span>tunnel<span class="w"> </span>endpoints
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># From the ESXi host — verify TEP IP is assigned</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmk
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Test TEP reachability</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk&lt;n&gt;<span class="w"> </span>&lt;remote-tep-ip&gt;
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Test with the right MTU</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk&lt;n&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From an NSX Edge node CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Tunnel endpoints (TEPs) on this node</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>vteps
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Tunnel ports and BFD sessions to remote TEPs — look for DOWN sessions</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>get<span class="w"> </span>tunnel-ports
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>get<span class="w"> </span>bfd-sessions
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># From the ESXi host — verify TEP IP is assigned</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmk
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Test TEP reachability</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk&lt;n&gt;<span class="w"> </span>&lt;remote-tep-ip&gt;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Test with the right MTU</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk&lt;n&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>nsxcli&gt; get tunnel status
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Tunnel Status:
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Source TEP       Destination TEP  Status    Last Status Change
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  192.168.100.45   192.168.100.46   UP        2024-01-15 14:32:18
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  192.168.100.45   192.168.100.47   DOWN      2024-01-15 13:45:02
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  192.168.100.46   192.168.100.45   UP        2024-01-15 14:32:19
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  192.168.100.46   192.168.100.47   DOWN      2024-01-15 13:44:55
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>nsxcli&gt; get tunnel status 192.168.100.47
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Tunnel Status for Remote TEP 192.168.100.47:
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Source TEP       Status    Packets Lost  Last Heartbeat
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  192.168.100.45   DOWN      1247          2024-01-15 13:45:02
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  192.168.100.46   DOWN      1089          2024-01-15 13:44:55
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>nsxcli&gt; get tunnel endpoints
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>TEP Configuration:
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  Host Name        TEP IP           VLAN  Segment ID
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  esx-host-01.lab  192.168.100.45   0     nsx-overlay-1
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  esx-host-02.lab  192.168.100.46   0     nsx-overlay-1
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  esx-host-03.lab  192.168.100.47   0     nsx-overlay-1
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>[esx-host-01:~] esxcli network ip interface ipv4 get | grep vmk
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>vmk0                 DHCP       true      192.168.1.50      255.255.255.0
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>vmk1                 DHCP       true      192.168.100.45    255.255.255.0
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>vmk10                DHCP       true      192.168.101.50    255.255.255.0
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>[esx-host-01:~] vmkping -I vmk1 192.168.100.47
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>PING 192.168.100.47 (192.168.100.47): 56 data bytes
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>Request timed out.
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>Request timed out.
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>Request timed out.
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>--- 192.168.100.47 statistics ---
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>3 packets transmitted, 0 packets received, 100% packet loss
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>[esx-host-01:~] vmkping -I vmk1 -d -s 1572 192.168.100.47
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>PING 192.168.100.47 (192.168.100.47): 1572 data bytes
-<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>Request timed out.
-<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>Request timed out.
-<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>Request timed out.
-<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>--- 192.168.100.47 statistics ---
-<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>3 packets transmitted, 0 packets received, 100% packet loss
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9321,51 +9279,13 @@
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nsxcli
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>get<span class="w"> </span>managers
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check services on this node</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>get<span class="w"> </span>services
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>get<span class="w"> </span>service<span class="w"> </span>http
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>get<span class="w"> </span>service<span class="w"> </span>manager
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Check services on this node</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>get<span class="w"> </span>services
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>get<span class="w"> </span>service<span class="w"> </span>http
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>get<span class="w"> </span>service<span class="w"> </span>manager
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NSX CLI (build 20.0.3.1)
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Connected to 192.168.1.10
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>cluster status:
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Cluster ID: 550e8400-e29b-41d4-a716-446655440000
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Status: STABLE
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Node Count: 3
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Leader: nsx-manager-01.corp.local (192.168.1.10)
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>managers:
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  UUID                                   Hostname              IP Address    Status   Version
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  550e8400-e29b-41d4-a716-446655440000   nsx-manager-01       192.168.1.10   UP       20.0.3.1
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  550e8400-e29b-41d4-a716-446655440001   nsx-manager-02       192.168.1.11   UP       20.0.3.1
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  550e8400-e29b-41d4-a716-446655440002   nsx-manager-03       192.168.1.12   UP       20.0.3.1
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>corfu-cluster status:
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  Status: HEALTHY
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  Node Count: 3
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  Quorum: ESTABLISHED
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>services:
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  Service Name          Status    PID      Uptime
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  manager               UP        4521     45d 12h
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  http                  UP        3847     45d 12h
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  cluster               UP        4102     45d 12h
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  messaging             UP        4203     45d 12h
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
-<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>service http:
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>  Status: UP
-<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>  Port: 443
-<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>  Connections: 1247
-<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>  Memory: 512 MB
-<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
-<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>service manager:
-<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>  Status: UP
-<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>  Port: 5480
-<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>  Memory: 2048 MB
-<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>  Threads: 156
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9387,7 +9307,7 @@
 </tr>
 <tr>
 <td><code>Error: Service manager is DOWN</code></td>
-<td>Restart the manager service with <code>restart service manager</code> and check system logs via <code>get log-file</code> if the service fails to come back up.</td>
+<td>Restart the manager service with <code>restart service manager</code> and check system logs via <code>get log-file manager.log</code> if the service fails to come back up.</td>
 </tr>
 </tbody>
 </table>
@@ -9405,43 +9325,9 @@
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Check IP pool has available IPs</span>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">'admin:password'</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations"</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="s2">"https://&lt;nsx-manager&gt;/policy/api/v1/infra/ip-pools/&lt;pool-id&gt;/ip-allocations"</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>{
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  "transport_node_id": "tn-12345678-abcd-ef01-2345-6789abcdef01",
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  "state": "FAILED",
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  "status": "DOWN",
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  "failure_details": {
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    "error_code": "INSTALL_FAILED",
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    "error_message": "NSX VIB installation failed on host esxi-prod-01.lab.local",
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    "failed_step": "VIB_INSTALL",
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    "timestamp": "2024-01-15T14:32:18.123Z"
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  }
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>}
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Name                                 Version                Install Date
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>nsx-vib-esx-vsip                     3.2.1.0-20456789       2024-01-10
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>nsx-vib-esx-nsx-lldp                 3.2.1.0-20456789       2024-01-10
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>{
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  "results": [
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>    {
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>      "ip_address": "192.168.100.45",
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>      "allocation_id": "alloc-uuid-001",
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>      "status": "ALLOCATED",
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>      "host_id": "esxi-prod-01"
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>    },
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>    {
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>      "ip_address": "192.168.100.46",
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>      "allocation_id": "alloc-uuid-002",
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>      "status": "ALLOCATED",
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>      "host_id": "esxi-prod-02"
-<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>    }
-<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>  ],
-<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>  "result_count": 2,
-<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>  "pool_size": 10,
-<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>  "available_ips": 8
-<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>}
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
@@ -9469,13 +9355,14 @@
 </table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SSH to Edge node</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>get<span class="w"> </span>node<span class="w"> </span>cpu-usage
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w"> </span>stats
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>get<span class="w"> </span>cpu-stats
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>get<span class="w"> </span>dataplane<span class="w"> </span>cpu<span class="w"> </span>stats
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Check active connections</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>status
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>virtual-servers
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>get<span class="w"> </span>nat<span class="w"> </span>translations<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Load balancer status and virtual servers on this Edge</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>get<span class="w"> </span>load-balancers<span class="w"> </span>status
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>&lt;lb-uuid&gt;<span class="w"> </span>virtual-servers<span class="w"> </span>stats
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 </code></pre></div>
 <p><img alt="NSX — Common Issues diagram: Diagnostic Flow, Verify resolution" src="kroki-generated-6c04bbc2-d8ba-32e4-bf06-7ec83159cc9f.svg" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
@@ -9527,7 +9414,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 11:06:56 UTC"><span class="timeago" datetime="2026-11-23T11:06:56+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 11:06:56 UTC">2026-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 26, 2026 04:50:39 UTC"><span class="timeago" datetime="2026-11-26T04:50:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 26, 2026 04:50:39 UTC">2026-11-26</span>
   </span>
 
     
