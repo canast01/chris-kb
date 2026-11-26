@@ -3482,13 +3482,512 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     (7) Rename CloudIQ to Dell AIOps.
   - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
     items). Queue file only.
-- [ ] storage/products/dell/vplex
+- [x] storage/products/dell/vplex
+  - Audit (2026-11-25): 27 pages, 7,275 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" tally:
+    21x "VPLEX", 2x "VPLEX GeoSynchrony 6.x", 2x "Dell EMC Storage", 1x "VPLEX
+    VS2 / VS6", 1x "VPLEX 6.x". Version claims are wrong or unsourced:
+    operations/install-upgrade.md:31 says GeoSynchrony 6.2.x released "2023-2024"
+    (Dell's manuals list the 6.2 CLI Reference Guide dated 2020-01-15).
+    install-upgrade.md:92 calls VS2 "current director hardware" (the exams cover
+    VS2->VS6 upgrades). install-upgrade.md:93 "GS400/GS200" and
+    release-notes.md:25 "6.2 2024-Q2 cloud provider metadata sync" look invented.
+    Neither matches anything in Dell's docs. Current code per Dell manuals page:
+    GeoSynchrony 6.2 SP2 Patch 1 (6.2.2.1), release notes updated 2026-07-21; the
+    KB never mentions SP2. security/hardening.md:139 sample output "6.2.1.0.0".
+    CLI checked against the 340-command index of Dell's VPLEX GeoSynchrony 6.2
+    SP2 CLI Reference Guide; KB commands missing from it: consistency-group
+    add-virtual-volume / remove-virtual-volume (singular; real ones are plural)
+    operations/procedures.md:186,204; consistency-group detach/attach :273,277;
+    consistency-group suspend/resume :694,702; device migrate :394; device suspend
+    :459; device rebuild :486 (also troubleshooting/common-issues.md:332); device
+    create :560,585; device extend/show :615,620; device resume
+    common-issues.md:412; data-migration show/create/start/commit/destroy
+    procedures.md:661, operations/cli-reference.md:517-534 (real: dm migration
+    *, batch-migrate *); storage-volume claim-storage-volumes procedures.md:551
+    (real: storage-volume claim); distributed-device create deploy/index.md:392
+    (real: ds dd create); extent expand / storage-volume rediscover
+    cli-reference.md:217-218; collect-support-log backup-restore.md:49 (11
+    pages; real: collect-diagnostics); storage-view create/add-ports/
+    add-initiator-ports/add-virtual-volumes and initiator-port register with no
+    "export" prefix security/access-control.md:117-203 (17 hits; real: export
+    storage-view create/addport/addinitiatorport/addvirtualvolume, export
+    initiator-port register). Not verified (only the command index was read, not
+    the syntax pages): "vplexcli -q -e" wrapper (203 hits, security/
+    hardening.md:132), "health-check --full" (29 hits, hardening.md:206), the
+    /distributed-storage/consistency-groups path (33 hits, troubleshooting/
+    common-issues.md:128), /distributed-storage/witness procedures.md:425.
+  - Cert research (2026-11-25): Dell's catalog lists 2 VPLEX Achievement exams.
+    D-VPX-OE-A-24 "VPLEX Operate" (EN/FR) domains: VPLEX Concepts 25%, Storage
+    Provisioning 35%, Volume Management and Protection 25%, Monitoring 15%.
+    D-VPX-DY-A-24 "VPLEX Deploy" (EN/FR/JA) domains: Concepts 13%, Installation
+    and Setup 23%, Storage Provisioning 20%, Volume Mgmt and Protection 20%,
+    Monitoring 10%, Upgrades and Troubleshooting 13%. Topics include VS2/VS6 and
+    VS2->VS6 upgrade, I/O operations, encapsulation, distributed devices,
+    device/extent mgmt, expansion, data migration, RecoverPoint/MetroPoint,
+    ESRS events, SNMP, performance monitors, VPLEX Witness install, data
+    collection, and topology expansion. Related: D-MN-OE-23 "Metro Node Operate"
+    (successor platform) is also listed. Lifecycle: no VPLEX end-of-sale or EOSL
+    notice found in a fetched vendor source. KB 000208328 (EOL security support
+    policy) does not mention VPLEX. GeoSynchrony 6.2 SP2 P1 docs published
+    2026-04 and 2026-07, so the platform is still maintained. Dell KB 000414580
+    (from search results only) says VPLEX SRA 6.1.0.126 is End of Support.
+    Sources (primary, vendor):
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-VPX-OE-A-24
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-VPX-DY-A-24
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-MN-OE-23
+      https://www.dell.com/support/product-details/en-us/product/vplex-vs6/resources/manuals
+      https://www.dell.com/support/product-details/en-us/product/vplex-geosynchrony/resources/manuals
+      https://www.dell.com/support/manuals/en-us/vplex-vs6/vplex_p_cli_guide_6.2sp2/Preface?guid=guid-34bc5f29-2b6e-4f6b-aa02-94915d3fad71&lang=en-us
+      https://www.dell.com/support/manuals/en-us/vplex-vs6/vplex_p_releasnotes_6.2.2p1/Release-Notes?guid=guid-dab7c0b6-9dba-463f-abb2-eac78c43ca56&lang=en-us
+      https://www.dell.com/support/kbdoc/en-us/000208328
+    Target bar: D-VPX-DY-A-24 VPLEX Deploy (superset of D-VPX-OE-A-24 Operate)
+    on GeoSynchrony 6.2 SP2 P1 (6.2.2.1), VS2/VS6.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    logging volumes, meta-volume/metadata volume, encapsulation, batch-migrate /
+    dm migration (real mobility CLI), performance monitors (monitor create /
+    report create-monitors), MetroPoint, detach rule-sets (ds rule-set /
+    consistency-group set-detach-rule), cluster-witness configure/enable,
+    collect-diagnostics, export storage-view, ds dd create, VPLEX Integrated
+    Array Services, VS2->VS6 upgrade. Thin: ESRS/Secure Connect Gateway 2, NDU
+    3 (1 for "ndu " CLI), VS6 3, VPLEX Local 4, winner/detach 2-4, Cluster
+    Witness 3 ("witness" 17), SNMP/syslog 6, mobility 6, SolVe 6, rebuild 8,
+    RecoverPoint 8, extents 9. Covered (but CLI largely wrong): Metro 22,
+    VPlexcli 20, director 18, distributed devices 16, storage views 16,
+    consistency groups 15, GeoSynchrony 15, health-check 15, virtual volumes 13,
+    Unisphere 11. Phase B should: (1) rewrite every CLI block against the 6.2
+    SP2 CLI Reference Guide (start with procedures.md, cli-reference.md,
+    access-control.md, common-issues.md, diagnostics.md, deploy/index.md);
+    remove the made-up device/data-migration/cg suspend commands and switch to
+    "export storage-view", "ds dd", "dm migration"/"batch-migrate",
+    "collect-diagnostics"; (2) replace the install-upgrade.md version matrix and
+    release-notes.md table with the dates on Dell's manuals page (6.2 2020 ->
+    6.2 SP1 2024 -> SP2 2026 -> SP2 P1 2026-07); drop GS400/GS200 and make
+    VS6 the current platform; (3) add pages for meta/logging volumes, detach
+    rules and winner selection, Witness install, encapsulation, mobility/batch
+    migration, performance monitoring/SNMP/ESRS, RecoverPoint/MetroPoint, NDU and
+    VS2->VS6; (4) add a lifecycle note: no EOL found; Metro node is the
+    successor exam track.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
 
 ### Storage — NetApp
-- [ ] storage/products/netapp/insightiq
-- [ ] storage/products/netapp/keystone
-- [ ] storage/products/netapp/ontap
-- [ ] storage/products/netapp/snapcenter
+- [x] storage/products/netapp/insightiq
+  - Audit (2026-11-25): 24 pages, 1,937 lines, 16 dirs (architecture/ capacity/
+    cli-reference/ deploy/ design-standards/ integration/ learning-path/ lifecycle/
+    operations/ performance/ reports/ scripts/ security/ troubleshooting/
+    vendor-support/ workloads/). "Applies to:" 16x "InsightIQ" (no version),
+    2x "NetApp ONTAP 9.x" (release-notes.md:8, operations/faq.md:10), 2x "NetApp
+    InsightIQ 4.x (formerly Isilon InsightIQ)" (architecture/ports.md:16,
+    troubleshooting/known-issues.md:14). MISFILED: InsightIQ is Dell PowerScale
+    software (Dell manuals page is product "powerscale-insight-iq"); 19/24 pages
+    mention OneFS, 15 PowerScale, 8 Isilon; all 24 carry the `netapp` tag. Move to
+    storage/products/dell/insightiq/ next to dell/powerscale/ (and retag).
+    (Aside: netapp/superna-eyeglass is also a PowerScale-ecosystem tool; check.)
+    NetApp-attribution errors: vendor-support/index.md:4,9,14,27,29 (support "by
+    NetApp", mysupport.netapp.com, NetApp IMT); lifecycle/index.md:35,42 and
+    architecture/how-it-works.md:135 (NetApp IMT for OneFS compat; Dell uses the
+    PowerScale OneFS Supportability and Compatibility Guide); operations/faq.md:20
+    ("NetApp PowerScale"); cli-reference/index.md sample output "NetApp InsightIQ
+    Service"; learning-path/index.md:32,36,38,78,91 (ONTAP data collection);
+    known-issues.md:59 and ports.md:95 link to netapp/ontap.
+    Versions STALE: content is InsightIQ 4.x-era (4.x/3.x on 6 pages; "4.2.x is the
+    latest release" operations/faq.md:20; lifecycle/index.md:40-41 4.x/OneFS
+    matrix; deploy/index.md:53). Zero pages mention InsightIQ 6.x; Dell's current
+    release is 6.4.0 (RN Sep 2026, IG Nov 2026). release-notes.md:25-29 rows
+    (3.2..5.1 with invented feature blurbs/dates) are template filler.
+    Disproved by Dell 6.4.0 docs (flag for rewrite):
+    - deploy/index.md:69,116 web UI on http :8080, default admin/insightiq -> UI is
+      port 8000 (API Gateway, HTTPS inbound); Simple OS user is "administrator".
+    - deploy/index.md:70 PAPI on 8083 -> OneFS connection is TCP 8080 (and
+      contradicts the KB's own ports.md:49). ports.md:42 "443 web UI" also wrong.
+    - deploy/index.md:72-109 node-locked .lic + `/usr/local/insight/bin/
+      iq_apply_license` + `systemctl restart insightiq`: no licence step in 6.4.0 IG
+      TOC (install -> EULA -> change password -> add cluster); invented.
+    - deploy/index.md:56 ISI_PRIV_LOGIN_PAPI/ISI_PRIV_STATISTICS custom user ->
+      Dell: built-in OneFS account `insightiq` (disabled by default; enable via
+      `isi auth users modify insightiq --enabled yes`), ISI_PRIV_PERFORMANCE read
+      needed for Partitioned Performance report.
+    - deploy/index.md:58-67 sizing 4 vCPU/8 GB/200 GB, "RHEL/CentOS 7" -> Simple:
+      8 vCPU, 16 GB, 1.5 TB thin, HW v15+, ESXi 8.0U3/9.0 or Workstation 17;
+      Scale: RHEL/SLES/Ubuntu via tar.gz script. CentOS not listed.
+    - deploy/index.md:150-156 retention 14d/90d/2y, configurable -> raw 24 h,
+      5 min 1 wk, 15 min 1 mo, 3 h indefinite; design-standards.md:31 "5-second
+      samples 14 days" also wrong.
+    - Services/logs: `systemctl status iiq|iiq-collector|insightiq`
+      (operations/index.md:42,93; troubleshooting/index.md:19,25; deploy:229;
+      cli-reference) and /var/log/insightiq/ (known-issues.md:39,
+      troubleshooting:22, vendor-support:21,28) -> 6.x is Docker containers
+      (iiq-datacollection, iiq-postgres, iiq-cassandra, iiq-gateway... on
+      iiq_network); logs in /usr/share/storagemonitoring/logs.
+    - pg_dump backups (operations/faq.md:36, security/index.md:63,
+      how-it-works.md:127) -> Dell method is datastore export/import (Admin
+      Guide "Manage the datastore"); host pg_dump not documented.
+    - REST paths `/api/json/v2/...` (cli-reference/index.md:59,62,99,102,105) and
+      `/api/v2` (scripts/index.md:15) -> not in Dell API chapter (components:
+      security-iam auth/login|logout|session, alerts, reporting, fsa, timeseries,
+      filters); treat as invented.
+    - integration/index.md:57,87 and security/index.md:101 rsyslog/apt-get on the
+      appliance: not documented; Simple limits sudo to `insightiq-sys-cmds` list.
+  - Cert research (2026-11-25): No Dell exam is InsightIQ-specific. D-PSC-DY-01
+    PowerScale Deploy (listed under Available Exams; active status not stated)
+    domain "Monitor and Troubleshoot Cluster Environment" 12%: monitor/optimize
+    performance; "install InsightIQ to discover and monitor the cluster"; cluster
+    health checks and event/alert notifications; basic troubleshooting; Job
+    Engine best practices. D-PSC-DS-01 PowerScale Design "Monitor and Workflow
+    Analysis Tools" 8%: choose tools to evaluate/monitor a PowerScale solution
+    (InsightIQ not named). Exam slice is thin, so the expert bar is Dell's InsightIQ
+    6.4.0 Installation + Administration Guides. IG: deployment options
+    (Simple = OVA, 1 VM, <=10 clusters/252 nodes; Scale = RHEL/SLES/Ubuntu script,
+    <=20 clusters/504 nodes), ports, datastore sizing incl. NFS datastore,
+    monitored-cluster reqs (OneFS 9.5.x and 9.7.x-9.15.x supported with
+    limitations, 9.6.x unsupported, FIPS/STIG-hardened clusters unsupported; FSA
+    needs NFS ports 111/300/302/304/2049), upgrade paths (6.2/6.3 -> 6.4 direct;
+    6.0.x -> 6.1 -> 6.2/6.3 -> 6.4), online Simple->Scale migration, datastore
+    migration, DR-failover behaviour. AG: dashboard/AI Assistant, cluster mgmt,
+    FSA, email, datastore export/import, local/LDAP/AD/SSO access control, anomaly
+    detection, Connectivity Services, flexible alerting (policies/rules/
+    notification rules), reports (Top Talkers, Performance, Partitioned
+    Performance, File System, Capacity, FSA, Dedupe, Quota, Data Reduction),
+    export/permalinks, maintenance (Docker architecture, sys commands, logs, log
+    collection script), REST API, troubleshooting. Info Hub lists docs for
+    4.2.0..6.4.0 (12 releases).
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-PSC-DY-01
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-PSC-DS-01
+    https://www.dell.com/support/kbdoc/en-us/000220129/powerscale-insightiq-info-hub
+    https://www.dell.com/support/product-details/en-us/product/powerscale-insight-iq/resources/manuals
+    https://www.dell.com/support/manuals/en-us/powerscale-insight-iq/iiq_pub_install_guide_640/ (TOC +
+      insightiq-deployment-options, insightiq-simple-requirements, insightiq-ports,
+      monitored-powerscale-cluster-requirements, upgrade-paths)
+    https://www.dell.com/support/manuals/en-us/powerscale-insight-iq/iiq_pub_admin_guide_640/ (TOC +
+      system-architecture, obtain-the-insightiq-account-credentials,
+      insightiq-rest-api-components, log-file-location,
+      list-insightiq-simple-system-commands,
+      downsampling-sample-lengths-and-data-retention)
+    https://www.dell.com/support/manuals/en-us/powerscale-insight-iq/iiq_pub_install_guide-50 (5.0.0 TOC)
+    Target bar: pass the D-PSC-DY-01 monitor slice and operate InsightIQ 6.4 at
+    Dell IG/AG level (deploy Simple/Scale, add clusters, alerts, reports, FSA, upgrade).
+  - Gap vs blueprint (pages mentioning each term, out of 24): Zero coverage:
+    InsightIQ 6.x, InsightIQ Simple, InsightIQ Scale, ESXi, port 8000, `insightiq`
+    OneFS account/isi auth users, ISI_PRIV_PERFORMANCE/StatisticsAdmin, File
+    System Analytics/FSA, Partitioned Performance, anomaly detection,
+    notification rules, Connectivity Services, datastore export/import, Top
+    Talkers, Data Reduction/dedupe reports, permalinks, Docker/containers,
+    /usr/share/storagemonitoring, Simple->Scale migration, Job Engine, AI
+    Assistant. Thin: InsightIQ 5.x 1, alert policy/rule 1, SSO 1, NFS datastore 1,
+    quota report 1, upgrade path 2, LDAP 3, AD 3, HealthCheck 3, FIPS/STIG 3,
+    OneFS 9.5+ 3, RHEL/SLES/Ubuntu 3 (as "RHEL/CentOS"), OVA 5. Wrong-not-thin:
+    port 8080 8 (correct for OneFS collection, wrong where used as UI port),
+    REST API 7 (invented paths), retention 7 (invented values), InsightIQ 4.x/3.x
+    6 (stale). Phase B should: (1) move section to storage/products/dell/insightiq/,
+    retag, strip all NetApp/ONTAP/IMT references, point support to Dell; (2)
+    rebase on InsightIQ 6.4.0: rewrite deploy/ as Simple (OVA) vs Scale (script)
+    from IG, ports from IG table, OneFS support matrix from IG/Supportability
+    Guide, upgrade/migration paths; (3) delete invented licence/iq_*/systemctl/
+    /var/log/pg_dump/`/api/json/v2` content, replace with Docker architecture,
+    insightiq-sys-cmds, log path + log collection script, datastore export/import,
+    documented REST API components; (4) add pages for FSA, flexible alerting,
+    anomaly detection, access control (local/LDAP/AD/SSO), Connectivity Services,
+    report catalogue incl. Partitioned Performance/Top Talkers; (5) add an exam
+    tie-in page for D-PSC-DY-01 monitor domain (InsightIQ + OneFS HealthCheck,
+    events/alerts, Job Engine) linking to dell/powerscale; (6) regenerate
+    release-notes.md from Dell RN titles only (4.2.0..6.4.0), no invented blurbs.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/netapp/keystone
+  - Audit (2026-11-25): 28 pages, 4,412 lines, 12 subdirs (architecture, cli-reference,
+    design-standards, integration, learning-path, lifecycle, operations, scripts,
+    security, service-levels, troubleshooting, usage-reporting, vendor-support).
+    "Applies to:" 20x "Keystone STaaS", 2x "NetApp Keystone STaaS", 4x "NetApp ONTAP
+    9.x". Names stale: "BlueXP" on 17/28 pages, "NetApp Console" on 0 (BlueXP was renamed
+    NetApp Console 06 Oct 2025 per Keystone release notes); "Digital Wallet" on 9 pages,
+    but the Keystone docs place the dashboard at Console Storage > Keystone and Digital
+    Advisor General > Keystone Subscriptions, and do not mention Digital Wallet anywhere.
+    Contradicts NetApp docs:
+    service-levels/index.md:35-38 (Extreme 12,000 IOPS/TB, Premium/Performance <1/<2 ms,
+    Value 64 / <17 ms) is a garbled mix of legacy v2 per-TiB numbers. v2 had
+    Extreme/Premium/Performance/Standard/Value at 12,288/4,096/2,048/512/128 IOPS per TiB
+    stored, <1/<2/<4/<4/<17 ms. Current docs list Extreme/Premium/Standard/Value per PSLI
+    (HA pair) with absolute targets, e.g. unified 1M/550K/250K/NA IOPS and <=1/<=1/<=4/>4 ms.
+    architecture/how-it-works.md:68-75 has the 4-tier table, "selected per volume", and
+    "Burst Up to 2x committed". The docs give a 20% default burst, with 40%/60% as an
+    add-on for unified and block-optimized storage only. how-it-works.md:84 says burst is
+    billed on the monthly "high-water mark", but the docs say a consumption record is made
+    at least every 5 minutes and burst reflects both amount and duration.
+    lifecycle/index.md:40 says committed capacity "cannot be decreased until the next
+    renewal". The docs allow on-prem reductions on Annual-in-Advance terms of 24+ months:
+    1 reduction on 2-3 yr terms, 2 on 4-5 yr terms, max 25% each, written 60 days ahead,
+    with a USD 200K/yr floor.
+    lifecycle/index.md:31 says terms are "1, 2, or 3 years"; the docs mention 2-5 yr terms
+    (not verified that 1 yr is offered).
+    Invented CLI/API: no `keystone-collector` systemd unit or CLI is documented. The real
+    tools are `keystone-collector-tui`, journald services ks-collector, ks-health and
+    ks-autoupdate, the health endpoint http://127.0.0.1:7777/uber/health, and upgrades
+    via yum/apt `keystone-collector` packages.
+    Invented `keystone-collector status|show-last-collection|collect --force|upgrade
+    --apply`: operations/install-upgrade.md:112-253, common-issues.md:33-78,
+    scripts.md:137. Invented `keystone-config export`: backup-restore.md:16,29.
+    `systemctl/journalctl -u keystone-collector` with /opt/keystone or /etc/keystone
+    paths appears in usage-reporting/index.md:52-77, troubleshooting/index.md:66-145 and
+    lifecycle/index.md:63-205.
+    cli-reference/index.md:9 uses an auth0 client_credentials token, but the docs use a
+    Digital Advisor refresh token -> POST api.activeiq.netapp.com/v1/tokens/accessToken.
+    cli-reference/index.md:35 and operations/health-checks.md:248 call
+    /v1/keystone/subscriptions/{id}/service-levels|usage, which does not exist. The real
+    endpoints are /v1/keystone/customers and /customer/subscriptions-info,
+    consumption-details and historical-consumption-details.
+    cli-reference/index.md:214-220 calls api.bluexp.netapp.com/marketplace/... (unverified,
+    likely invented).
+    AQoS policy-group checks (service-levels:64-67, procedures.md:34-146,
+    troubleshooting:60-74) apply only to v2; the docs say QoS policies are not applicable
+    to Keystone v3, and v3 appears on 0 pages. release-notes.md is template-generated
+    ("Unverified version history").
+  - Cert research (2026-11-25): No current NetApp exam covers Keystone was found.
+    netapp.com certification pages return HTTP 403 to curl and WebFetch (Akamai), so the
+    exam list was not fetched first-hand. Searches (netapp.com results only) surfaced
+    NCDA, NCIE tracks, NCSE, NCTSP, Hybrid Cloud, Cyber Resiliency and AI Expert, with no
+    Keystone exam, course or accreditation. A third-party claim that NCTSP covers
+    "consumption models" is not verified. Keystone is a commercial STaaS subscription
+    program, so the fallback bar is the official Keystone STaaS doc set
+    (docs.netapp.com/us-en/keystone-staas, full-site PDF generated 27 Oct 2026, 171 pp).
+    Its TOC covers: release notes and known Collector limits; offering, infrastructure
+    and data flow; operational models (customer-operated, partner-operated as service
+    provider (multi-tenant) or reseller); Collector requirements (vSphere 8+ OVA or Linux
+    Debian 12/RHEL 8.6+/9 with podman), install, configure (TUI, proxy, private-data
+    limits, custom CA, creating PSLs); ITOM Collector; AutoSupport alternative
+    (`autosupport trigger modify` subsystems); health monitoring and upgrade; Collector
+    security and data collected (ONTAP, StorageGRID, telemetry); private mode (dark
+    site); the dashboard in NetApp Console and Digital Advisor (subscriptions,
+    consumption, trends, timeline, MetroCluster, assets, alerts and monitors, health
+    reports, service requests, volumes/objects, performance metrics); concepts (metrics,
+    capacity types logical/physical/committed/consumed/burst, PSLs per storage type:
+    unified, block-optimized ASA, AFX, object, CVO; capacity minimums, increments,
+    increase/reduction rules, quarterly spend reallocation); add-ons (ADP/MetroCluster,
+    burst 40/60%, DII, data tiering, NRNVC+SnapLock, U.S. Protected Support); SLOs
+    (availability 99.999% with 5/10/25/50% credits, performance, sustainability,
+    Ransomware Recovery Guarantee); billing (schedules, volume-type rules); Digital
+    Advisor REST API; support.
+    Sources (primary, vendor): https://docs.netapp.com/us-en/keystone-staas/index.html ;
+    https://docs.netapp.com/us-en/keystone-staas/pdfs/fullsite-sidebar/Keystone_documentation.pdf ;
+    https://docs.netapp.com/us-en/keystone-staas/concepts/service-levels.html ;
+    https://docs.netapp.com/us-en/keystone-staas/concepts/burst-capacity.html ;
+    https://docs.netapp.com/us-en/keystone-staas/concepts/pricing.html ;
+    https://docs.netapp.com/us-en/keystone-staas/installation/vapp-installation.html ;
+    https://docs.netapp.com/us-en/keystone-staas/integrations/dashboard-access.html ;
+    https://docs.netapp.com/us-en/keystone-staas-2/concepts/service-levels.html (v2,
+    legacy). Attempted but blocked (403): netapp.com/support-and-training/certification/,
+    .../netapp-learning-services/certifications/ (+certified-technology-solutions/),
+    netapp.com/en/insight/certification/, .../certification-program-policies/.
+    Target bar: No Keystone exam exists, so the bar is expert command of the Keystone
+    STaaS doc set: PSL/PSLI sizing per storage type, capacity types, burst and billing
+    math, capacity change rules, Collector ops (standard/private/ASUP), Console dashboard,
+    SLO credits, add-ons, Digital Advisor API, and v2 vs v3 differences.
+  - Gap vs blueprint (pages mentioning each term, out of 28): Zero coverage: NetApp
+    Console, PSLI, AFX, ADP/MetroCluster, DII/Cloud Insights, NRNVC/SnapLock, U.S.
+    Protected Support, Ransomware Recovery Guarantee, sustainability SLO, private
+    mode/dark site, ITOM Collector, operational models (partner/customer-operated,
+    service provider/reseller), Keystone v3, health reports/alert monitors, the
+    7777 /uber/health endpoint. Thin: PSL as a term 2, block-optimized/ASA 1, logical vs
+    physical capacity 1, data tiering/FabricPool 1, AutoSupport 1, AIQUM 2, `keystone-
+    collector-tui` ~1, 99.999%/service credit 2, refresh-token API 1, 20% burst 1
+    (operations/faq.md:28 is correct), capacity reduction 4 (all wrong or vague).
+    Present but wrong: Digital Wallet 9, BlueXP 17, service-level tables 2, burst 17
+    (2x and high-water mark claims).
+    Phase B should: (1) rebuild service-levels and how-it-works from the current PSL
+    tables per storage type, with a clearly labelled v2 legacy table; (2) replace every
+    `keystone-collector` systemctl/CLI/`keystone-config` example with documented
+    TUI/journalctl ks-*/7777 health/yum-apt upgrade steps; (3) rewrite the API pages to
+    the real Digital Advisor endpoints and refresh-token flow, and delete the auth0 and
+    api.bluexp calls; (4) rename BlueXP to NetApp Console and Digital Wallet to Storage >
+    Keystone across 18 pages; (5) add pages for billing (5-min records, schedules,
+    volume-type rules), capacity change and reduction rules, add-ons, SLOs/credits,
+    private mode, AutoSupport alternative, operational models, and v3 vs v2 (AQoS);
+    (6) flag commercial numbers (USD 200K floor, credits) as contract-dependent.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/netapp/ontap
+  - Audit (2026-11-25): 28 pages / 13,467 lines in docs/storage/products/netapp/ontap/
+    (architecture 5, deploy 1, learning-path 1, operations 9 incl. morning-health-check,
+    security 5, troubleshooting 5, plus index.md + release-notes.md). Biggest: scripts.md
+    1,935, diagnostics.md 1,380, cli-reference.md 1,224, common-issues.md 1,138.
+    snapmirror/ (28p) and snapcenter/ (28p) are siblings under netapp/, separate queue
+    items; overlap only (SnapMirror named on 22/28 ONTAP pages). "Applies to:" on 27/28:
+    "ONTAP 9.x" x22, "NetApp ONTAP 9.x" x2, "9.12-9.15" x1, "9.12+" x1, "9.10+" x1.
+    Newest version cited anywhere: 9.15.1 (once); most cited 9.12 / 9.10 (5 each).
+    release-notes.md table stops at 9.15.1, every row "Not yet verified" (template).
+    Current ONTAP is 9.20.1 (docs.netapp.com release notes, PDF built 2026-11-24;
+    9.16.1-9.20.1 all published) -> KB is 5 releases behind; ONTAP CLI ref is at 9.19.1.
+    CLI disproven vs docs.netapp.com/us-en/ontap-cli (page 404 = not a current command):
+    operations/procedures.md:698 `vserver nfs export-policy rule show` (real: vserver
+    export-policy rule show); procedures.md:920,931 `cifs setup` (7-Mode; real: vserver
+    cifs create); nfs connected-client show at procedures.md:701, cli-reference.md:622,
+    common-issues.md:548,573, diagnostics.md:29,657, common-issues.md:115 (real: vserver
+    nfs connected-clients show); `snapmirror lag show` cli-reference.md:864,
+    diagnostics.md:33,941 (lag is a snapmirror show field); `vserver nfs check-client`
+    cli-reference.md:619; `volume clone split status` cli-reference.md:308 (real: volume
+    clone split show); `storage aggregate show-raidtree` cli-reference.md:233,
+    diagnostics.md:319; `system health node-connectivity show` cli-reference.md:116;
+    `storage failover interconnect show` diagnostics.md:24,261,296 (real: system ha
+    interconnect status show); `vserver cifs password` common-issues.md:969 (real: vserver
+    cifs domain password change/reset); `volume encryption show-key-id`
+    security/encryption.md:128; `storage aggregate encryption rekey start/show/abort`
+    encryption.md:202,205,220. Core stems checked OK (volume create, storage aggregate
+    show-status, volume quota resize, event filter rule add, cluster ring show, etc.).
+  - Cert research (2026-11-25): Target = NetApp Certified Data Administrator, ONTAP
+    (NCDA). CURRENT exam is NS0-165, based on ONTAP 9.18.1; it replaced NS0-164 (which
+    replaced NS0-163); NS0-164 only for candidates already scheduled (NetApp Learning
+    Services staff answer, NetApp Community, ~Mar 2026). NetApp hosts an "NS0-165"
+    practice test. 165 adds 9.18.1 topics: ANF/FSxN/GCNV, IPsec offload, S3 backup
+    concepts (snapshots/restores), HA/interconnect encryption, ONTAP personalities
+    (AFF vs ASA r2 vs AFX). Domains (staff-posted for NS0-163, 2023; "categories haven't
+    changed in a few years" per 2025 staff reply): Storage Platforms; Core ONTAP (system
+    mgmt, HA, SVM mgmt); ONTAP Storage (logical storage, efficiency); Networking;
+    Storage Protocols & Connectivity (SAN, NAS, ONTAP S3 + troubleshooting); Data
+    Protection (DP, business continuity, troubleshooting); Security (protocol security,
+    hardening, in-flight/at-rest encryption, anti-ransomware); Performance (monitoring,
+    troubleshooting). Delivery: Pearson VUE incl. OnVUE online. Cert valid 27 months
+    (2023 staff post). NOT VERIFIED: domain weights, question count, minutes, pass score,
+    price (www.netapp.com returns 403 to curl and WebFetch). Next tier: NCIE (Data
+    Protection, SAN ONTAP, MetroCluster specialists; NCDA prerequisite) and Hybrid Cloud
+    (NCHC) - current codes not verified (search snippets conflict: NS0-528/529,
+    NS0-521/522).
+    Sources (primary, vendor): https://community.netapp.com/community/discussion/464332/
+    ncda-ns0-163-has-it-been-retired-and-replaced-by-ns0-164 ;
+    https://community.netapp.com/community/discussion/445369/revamped-netapp-certified-
+    data-administrator-ontap-professional-ncda23/p1 ;
+    https://community.netapp.com/community/discussion/462449/ (NS0-163->164 thread) ;
+    https://learningcenter.netapp.com/content/public/production/extra/certification/
+    NS0-165-PRACTICE/story.html ; https://docs.netapp.com/us-en/ontap/release-notes/
+    index.html ; https://docs.netapp.com/us-en/ontap/pdfs/sidebar/Release_notes.pdf ;
+    https://docs.netapp.com/us-en/ontap/release-notes/whats-new-9181.html ;
+    https://docs.netapp.com/us-en/ontap-cli/<command>.html (~45 pages probed) ;
+    https://www.pearsonvue.com/us/en/netapp.html
+    Target bar: pass NCDA NS0-165 (ONTAP 9.18.1) across all 8 domains, with every CLI
+    example valid against the current ONTAP CLI reference.
+  - Gap vs blueprint (pages mentioning each term, out of 28): Zero coverage: multi-admin
+    verify, Active IQ Unified Manager, FlexCache, ASA r2 / AFX personalities,
+    tamperproof snapshots, SnapMirror Cloud / S3 snapshot backup, ADP/root-data
+    partitioning. Thin: FlexVol 1, SnapLock 1, FabricPool 1, ARP/anti-ransomware 1,
+    IPsec 1, consistency groups 1, FlexGroup 2, broadcast domain/IPspace 2, SM active
+    sync 2, FPolicy 2, ANF/FSxN/CVO/GCNV 2, qtree 3, quota 3, MetroCluster 3, NVE/NAE/NSE
+    3, ONTAP S3 4, FlexClone 4, SVM-DR 5, efficiency 7, QoS 7, NVMe 8, System Manager 9.
+    OK: SVM 22, SnapMirror 22, LIF 20, NFS 20, aggregate 19, SMB 18, AutoSupport 17,
+    snapshot 17, upgrade 16, iSCSI 15, EMS 15, HA/takeover 11, RBAC 10, FC 10.
+    Phase B should: fix the 12 disproven CLI stems above; retarget "Applies to" and
+    release-notes.md to 9.18.1 (exam) / 9.20.1 (current) from docs.netapp.com; add pages
+    for ONTAP personalities (AFF/ASA r2/AFX) + HA/interconnect & IPsec encryption,
+    ARP + MAV + tamperproof snapshots, ONTAP S3 + S3 snapshot backup, FlexGroup/FlexCache/
+    qtrees/quotas, networking (IPspaces, broadcast domains, failover groups),
+    MetroCluster/SVM-DR/SM active sync concepts (link snapmirror/ rather than duplicate),
+    FabricPool, AIQUM/Digital Advisor monitoring, cloud ONTAP (ANF/FSxN/GCNV);
+    build an 8-domain NCDA study map in learning-path/.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/netapp/snapcenter
+  - Audit (2026-11-25): 28 pages / 4,062 lines; subdirs architecture, deploy,
+    learning-path, operations, security, troubleshooting (+ index, release-notes).
+    "Applies to:" = SnapCenter 5.x (25), ONTAP 9.x (2). Version mentions top out at
+    6.0 (6x) / 6.1 (3x); zero mentions of 6.2, the current release (docs index =
+    6.2; release notes dated 10/28/2026 cover 6.2, 6.2.1, 6.2.2, 6.2.3). No cert
+    (NCDA/NCIE/NS0-) mentions. release-notes.md is template "Unverified version
+    history" (not evidence). STALE / CONTRADICTS NETAPP DOCS:
+    - Invented cmdlets: 16 of 40 distinct Sm cmdlets the KB uses are absent from
+      the SnapCenter 6.2 cmdlet reference (13 pages affected): Get-SmJob (20 uses;
+      first learning-path/index.md:62, also troubleshooting/escalation.md:105),
+      Get-SmJobDetails (escalation.md:108), Get-SmAuditLog (security/
+      hardening.md:280-308; real: Get-/Set-SmAuditSettings,
+      Start-SmAuditIntegrityCheck), Start-SmBackup (operations/
+      cli-reference.md:36), Invoke-SmBackup + Add-SmBackup (learning-path/
+      index.md:62; real: New-SmBackup), Get-SmSupportBundle (escalation.md:127;
+      real: Get-SmLogs), Invoke-SmDiagnostics (troubleshooting/
+      common-issues.md:7), Get-SmUser (security/authentication.md:58; real:
+      Get-SmUsersAndGroups), Get-SmResource (operations/scripts.md:79; real:
+      Get-SmResources), Add-SmResources (cli-reference.md:5; real:
+      Add-SmResource), Add-SmRole (security/access-control.md:46; real:
+      New-SmRole), Close-SmConnection (hardening.md:310), Set-SmEmailNotification
+      (architecture/integrations.md:68; real: Get-SmSMTPServer family),
+      Invoke-SmHostRefresh (security/encryption.md:231), Get-SmStorageResources.
+    - Ports: deploy/index.md:65 "TCP 9090: SnapCenter SMCore service" is wrong
+      (docs: 9090 = internal plug-in-host port, no firewall rule; SMCore =
+      8145). architecture/ports.md:36,58 WinRM 5985/5986 not in NetApp table
+      (docs: Windows plug-in install uses 135, 445 + MS dynamic RPC range).
+      ports.md omits 8154 (Scheduler), 5672 (RabbitMQ), 3306 (MySQL repo),
+      8147 (web app internal), 27216 (Oracle JDBC), 909 (Exchange NET.TCP).
+    - Platform: security/encryption.md:29 says the web tier is "IIS on Windows
+      Server" -- docs 6.2 also support SnapCenter Server on a Linux host
+      (services snapmanagerweb / smcore / scheduler); ports.md:94 `systemctl
+      status snapcenter` matches no documented service name.
+    - ONTAP protocol: encryption.md:169 says SnapCenter 6.x uses ONTAP REST API
+      -- docs 6.2: AFF/FAS/ASA connections use ZAPI by default, REST optional
+      per ONTAP version; REST mandatory only for ASA r2 (no ZAPI).
+    - diagnostics.md:188 `/api/3.0/version` -- docs' REST examples use
+      /api/4.9/... paths; 3.0 path not verified.
+  - Cert research (2026-11-25): No NetApp exam centres on SnapCenter. Closest is
+    NetApp Certified Implementation Engineer - Data Protection Specialist
+    (NCIE-DP): NetApp-issued Credly badge lists "SnapCenter", "Create backup
+    schedules and policies", "Implement interdependencies", "Translate business
+    requirements into policies", Data Replication, Disaster Recovery, System
+    Manager, BlueXP; requires NCDA first; >=12 months ONTAP DP experience.
+    Current NCIE-DP exam code NOT verified (netapp.com cert pages return 403 to
+    curl and WebFetch; third-party sources disagree NS0-528 vs NS0-529, and a
+    search snippet attributes NS0-529 to Hybrid Cloud Architect). NCDA is now
+    NS0-165 (ONTAP 9.18.1; replaced NS0-164) per NetApp staff, confirmed under the
+    sibling ontap item (coordinator-corrected; this agent found an older thread
+    citing NS0-164); NCDA domains/
+    weights not fetched (403). Overlap: sibling storage/products/netapp/ontap
+    targets NCDA (Snapshot/SnapMirror/SnapVault basics) -- keep ONTAP-side DP
+    there; this section owns app-consistent backup/restore/clone via SnapCenter.
+    Lifecycle: SnapCenter 6.2.x current and actively released (6.2.3, Oct 2026);
+    EOA/EOS dates not verified (support-site lifecycle needs login). NetApp
+    steers VMware users to NetApp Backup and Recovery: SCV 6.2 adds "one click,
+    non-disruptive migration from SnapCenter Plug-in for VMware to NetApp Backup
+    and Recovery"; B&R docs offer "Discover Microsoft SQL Server workloads &
+    optionally import SnapCenter resources". No SnapCenter Server EOA notice
+    found.
+    Sources (primary, vendor): docs.netapp.com/us-en/snapcenter/index.html;
+    .../snapcenter/release-notes/release-notes.html; .../snapcenter/get-started/
+    concept_snapcenter_overview.html; .../snapcenter/pdfs/fullsite-sidebar/
+    SnapCenter_software_documentation.pdf (port table, ZAPI/REST, Linux
+    services, TOC); docs.netapp.com/us-en/snapcenter-cmdlets/index.html +
+    .../pdfs/fullsite-sidebar/SnapCenter_6_2_cmdlets.pdf (Nov 4 2025);
+    docs.netapp.com/us-en/sc-plugin-vmware-vsphere/index.html +
+    scv_releasenotes_whats_new.html; docs.netapp.com/us-en/
+    data-services-backup-recovery/index.html; credly.com/org/netapp/badge/
+    netapp-certified-implementation-engineer-data-protection-specialist
+    (NetApp-issued); community.netapp.com ...m-p/462449 (older NS0-164 thread, NetApp
+    community); pearsonvue.com/us/en/netapp.html (no DP code listed).
+    Blocked (403): netapp.com/.../certifications/data-protection-specialist/,
+    .../data-administrator/, .../ontap-data-administration/,
+    netapp.com/insight/certification/.
+    Target bar: NCIE-DP SnapCenter slice (policies/schedules, SnapMirror/
+    SnapVault integration, restore/clone, DR) + SnapCenter 6.2 docs TOC as the
+    expert bar: Server install (Windows+Linux), F5 HA, Server DR, repository,
+    RBAC/certs/MFA, every plug-in (SQL, Oracle, HANA, Exchange, Windows/Unix FS,
+    Db2, PostgreSQL, MySQL, SCV), ASA r2, ANF, upgrade, tech refresh, REST API.
+  - Gap vs blueprint (pages mentioning each term, out of 28): Zero coverage: IBM
+    Db2, MySQL plug-in, ASA r2, consistency groups, F5 HA / load balancing,
+    SnapCenter Server DR, tech refresh, gMSA, Scheduler 8154 / RabbitMQ, Azure
+    NetApp Files, FSx for ONTAP, 6.2 features. Thin: PostgreSQL 1, Unix FS 1,
+    SnapMirror active sync 1, repository backup 2, backup verification 2,
+    SnapLock 3, StorageGRID/object 3, NetApp Backup and Recovery/BlueXP 3, MFA
+    3, Linux SnapCenter Server 4, CA certificate 4, log backup/PITR 5, SCV 7,
+    HANA 7, Exchange 7. Adequate: resource group 19, policy 18, SnapMirror 17,
+    Oracle 16, clone 13, SnapVault 13, REST 12, SQL 11, MySQL repo 11, RBAC 10.
+    Phase B should: (1) bump Applies-to to SnapCenter 6.2.x and add 6.2 what's
+    new; (2) rewrite cli-reference/scripts/escalation/hardening against the 6.2
+    cmdlet PDF, deleting the 16 non-existent cmdlets; (3) replace ports.md with
+    NetApp's table (fix 9090, add 8154/5672/3306/8147/27216/909/135/445/22);
+    (4) add Linux SnapCenter Server install/services, F5 HA, Server DR +
+    repository protection, tech refresh, upgrade paths; (5) add per-plug-in
+    pages for Db2, PostgreSQL, MySQL, Unix FS, ASA r2/consistency groups, ANF;
+    (6) fix ZAPI-vs-REST statement; (7) add a "SnapCenter vs NetApp Backup and
+    Recovery" page covering the SCV one-click migration; (8) map content to
+    NCIE-DP skills once the current exam code/objectives are verified (needs
+    browser access to netapp.com).
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
 - [ ] storage/products/netapp/snapmirror
 - [ ] storage/products/netapp/superna-eyeglass
 
