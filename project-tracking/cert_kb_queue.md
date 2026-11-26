@@ -2966,11 +2966,522 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     PowerScale/OneFS) - cross-link rather than duplicate; flag misfiling.
   - site_audit (2026-11-25): 72/72 clean (full run, 72 checks incl. new 71/72; one run
     covered these 7 items). Queue file only.
-- [ ] storage/products/dell/powerstore
-- [ ] storage/products/dell/recoverpoint
-- [ ] storage/products/dell/srdf-a
-- [ ] storage/products/dell/srdf-s
-- [ ] storage/products/dell/unity
+- [x] storage/products/dell/powerstore
+  - Audit (2026-11-25): 27 pages, 9,337 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" 26/27 pages:
+    23x "3.x", 3x "3.x / 4.x". STALE: PowerStoreOS matrix (kbdoc 000175213, mod.
+    20 Nov 2026) newest is 5.1.0.0 (29 Oct 2026), 5.0.0.x (Jul-Oct 2026) and
+    recommended 4.3.1.3 LTS2026 (17 Nov 2026). Zero mentions of PowerStoreOS 5.x,
+    Gen 3 or the Gen 3 models PowerStore 1500/5500/9500 (no T/Q suffix, per InfoHub
+    "What's new in PowerStoreOS 5.0"); only one 1200T and no 3200T/5200T/9200T/3200Q.
+    Disproved/contradicted by Dell docs:
+    - operations/faq.md:20 "3.5.x is the current recommendation" (matrix says
+      4.3.1.3 LTS2026).
+    - operations/install-upgrade.md:243,253,260,281-282 "4.5.x"/PowerStoreOS_4.5.2.1.bin
+      (the matrix's newest 4.x rows are 4.4.0.0 and 4.3.1.x; no 4.5 row seen).
+    - "500X" model at architecture/how-it-works.md:79, architecture/index.md:59,
+      operations/install-upgrade.md:312 (the matrix lists X models 1000X-9000X only).
+    - REST /api/rest/user/local (13 refs in 4 files: security/hardening.md:35,47;
+      security/authentication.md:43,52,56; security/access-control.md:53,64,107,
+      179,183; troubleshooting/common-issues.md:740,744). Dell's resource is
+      /api/rest/local_user (kbdoc 000202473).
+    - pstcli syntax: there are 4 incompatible styles. Dell CLI UG gives
+      `pstcli [-d] [-port] [-u] [-p] [-ssl] [-header] <object> <action>`. Wrong
+      forms: operations/cli-reference.md:60-277 (27x `-u admin "show /volume"`,
+      verb-before-REST-path); operations/procedures.md:801,997,1035 (`-server`,
+      `-user`, `volume list`); deploy/index.md:160,182 (`--address`, `--user`,
+      `--password`, `volume query`); none of these switches/verbs are in the UG.
+      cli-reference.md:271,274 `/appliance/<id>/metrics/...` is also wrong: Dell
+      metrics use POST /api/rest/metrics/generate. Treat release-notes.md as invented.
+  - Cert research (2026-11-25): Operate is still D-PST-OE-23 "Dell PowerStore
+    Operate". There is NO -01 Operate: the ?exam=D-PST-OE-01 page is an empty shell
+    and the -01 PDF is a 404. The catalog lists OE-23 alongside D-PST-DY-01 Deploy
+    (replaces DY-23), D-PST-DS-00 Design, D-PSTE-DY-00 "PowerStore 5.x Deploy"
+    (Elite), and achievements D-PST-MN-A-01 Maintenance, D-PST-DY-A-00 Gen3 Deploy
+    and D-PST-ST-A-00 Gen3 Support. OE-23 domains (the exam page and PDF agree):
+    Concepts & Features 5%, Administration 12%, Block Provisioning 17%, File
+    Provisioning 17%, VMware Provisioning 17%, Remote Protection 17%, Migration
+    15%. Format: 90 min; proctored at Pearson VUE/OnVUE; English and French.
+    Requirements as of 6 Feb 2023; PDF (c) 2024; recommended training is
+    PowerStore 3.0 courses (ESSTGD04768/04756/06766). Question count and passing
+    score are not published (not verified). The blueprint covers "All PowerStore
+    T and X models".
+    Sources (primary, vendor): learning.dell.com certificationandbadges.html;
+    available-exams.html?exam= D-PST-OE-23, D-PST-OE-01, D-PST-DY-23,
+    D-PST-DY-01, D-PST-DS-00, D-PSTE-DY-00, D-PST-DY-A-00, D-PST-MN-A-01,
+    D-PST-ST-A-00; .../D-PST-OE-23-Operate_PowerStore_Exam.pdf;
+    .../D-PST-DY-23-Deploy_PowerStore_Exam.pdf; dell.com kbdoc 000175213
+    (PowerStoreOS Matrix); dell.com/en-us/infohub/articles/what-s-new-in-
+    powerstoreos-5-0; kbdoc 000202473 (REST session); support/manuals
+    pwrstr-cliug "help-on-the-powerstore-cli-client"; pwrstr-apidevg
+    "obtaining-login-session-information".
+    Target bar: pass D-PST-OE-23 (7 domains above) using current PowerStoreOS
+    4.3 LTS / 5.x behaviour, with Gen 3 deltas flagged.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: thin
+    clones (0; 1 loose "thin-clone" hit), file system quotas 0, NDMP 0, vMotion /
+    intercluster VM migration 0, intercluster/internal migration 0, Gen 3 /
+    PowerStoreOS 5.x 0, File Metro 0, Multiparty Authorization 0. Thin: NVMe/TCP 1,
+    vVol replication 1, RBAC (the word) 3, metrics/monitoring 5, AppsON 5, VASA 5,
+    vVols 6, pstcli 6 (all mis-syntaxed), protection policy 7, host group 7, volume
+    group 7, D@RE 8, LDAP 8, SMB 9, data reduction 9, snapshot refresh/restore 9.
+    OK: replication 26, snapshot 20, PowerStore Manager 19, REST 19, migration/import
+    17, iSCSI 16, metro 15, NFS 12, FC 12, NAS server 11. Phase B should: (1)
+    rebase every "Applies to" on 4.3 LTS / 5.x and add a Gen 3 hardware page
+    (1500/5500/9500, Unified-only, mixed-cluster rules); (2) fix the model table
+    (drop 500X; add 1200T/3200T/5200T/9200T; 3200Q unverified) and the
+    upgrade-path table against the
+    matrix; (3) rewrite cli-reference.md in Dell's `<object> <action>` syntax and
+    normalise all pstcli lines; (4) swap /user/local for /local_user and the
+    metrics calls for /metrics/generate; (5) add exam-domain pages: thin clones +
+    snapshot refresh/restore, file quotas + NDMP, VMware provisioning (vVols,
+    VASA, VM protection policies, vMotion between clusters), block/file/vVol
+    replication, internal (intercluster) migration and import; (6) add an OE-23
+    domain map in learning-path/.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/dell/recoverpoint
+  - Audit (2026-11-25): 27 pages, 5,395 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" tally: 16
+    "RecoverPoint 5.x", 6 "Dell EMC Storage", 1 "RP4VM 5.x / RP Classic 5.x", 1
+    "RP4VM 5.x / 6.x", 1 "RecoverPoint 5.x / 6.x", 1 "Dell RecoverPoint 5.x / 6.x".
+    Scope is mixed and unlabelled: mostly classic (physical RPA + array splitter),
+    RP4VMs on 9/27 pages, vRPA on 4. Largest pages: operations/scripts.md (777),
+    procedures.md (647), cli-reference.md (533), install-upgrade.md (524).
+    Disproved against Dell docs:
+    - Invented versions: "5.4.2.1" at troubleshooting/diagnostics.md:386,438,
+      escalation.md:94,101, operations/install-upgrade.md:160,163,248,410,
+      health-checks.md:137-144, cli-reference.md:98 (RP4VMs Info Hub goes
+      5.3.4 -> 5.3.4.1 -> 6.0.1; there is no 5.4). "6.0.1.3 SP1" at
+      escalation.md:277,312 (Info Hub has 6.0.1, 6.0.1.1, 6.0.1.2 only).
+    - Splitter VIB "RecoverPoint-splitter-8.2.x" at install-upgrade.md:357-358,
+      339 and health-checks.md:137-138; the real VIB is named
+      RP-Splitter_RPESX-00.<rp-version> (KB 000225918), so `grep -i recoverpoint`
+      at install-upgrade.md:148 does not match it. install-upgrade.md:141 uses
+      --no-sig-check as a default step; Dell gives it only as a Secure Boot
+      workaround for 5.3.4.1 on vSphere 8.
+    - Made-up CLI: cli-reference.md:5,10 (get_all_rpas, get_rp_system_settings,
+      fail_over_group, test_links, get_journal_full_percentage, set_rp_volume)
+      and the menu-style "boxmgmt> enable image access / test failover / groups
+      suspend|resume" at cli-reference.md:72-93. None of these are in the RP4VMs
+      6.0.3 CLI guide. The real commands are get_rpa_states, get_system_settings,
+      set_image_access_mode, disable_image_access, suspend_group/resume_group,
+      pause_transfer/start_transfer and get_group_state. "boxmgmt cg
+      enable_image_access" at troubleshooting/common-issues.md:81 and
+      install-upgrade.md:462 is invented too. "rcpcli" at install-upgrade.md:5,10
+      is not in any source.
+    - release-notes.md:25-29 is the template table, all rows invented (it puts
+      "RecoverPoint 6.0" against PowerMax, but 6.0.x is an RP4VMs release line).
+      install-upgrade.md:35-40 version matrix and faq.md:20 ("5.3.x is the
+      current recommendation") are not verified for classic.
+    - REST paths /fapi/rest/5_1 and /fapi/rest/4_5 (scripts.md, cli-reference.md)
+      follow the real /fapi/rest/<ver> pattern, but only community and third-party
+      posts confirm it; no Dell REST guide was fetched.
+  - Cert research (2026-11-25): Dell's catalog lists three live RecoverPoint
+    Achievements (not full certifications): RecoverPoint Operate D-RP-OE-A-24,
+    RecoverPoint Deploy D-RP-DY-A-24 and RecoverPoint for Virtual Machines
+    D-RPVM-A-01.
+    - Operate (as of 2024-02-03; 90 min, ~60 Qs, pass 63): Architecture/Solutions
+      23%, Management 39% (CG planning, create/manage CGs, snap-based replication
+      with XtremIO, MetroPoint CGs, distributed CGs, integrations), Operation 22%
+      (snapshots, bookmarks, recovery in Unisphere for RP, modify protection),
+      System Analysis 16% (Unisphere system info collection, analysis tools, CLI
+      troubleshooting). Products named: RP 5.0, physical and virtual RPAs, RP4VMs,
+      VNX/VMAX/XtremIO, vCenter, Connectrix.
+    - Deploy (as of 2024-02-03; 90 min, ~60 Qs, pass 63): Concepts 7%, Cluster
+      Installation 27% (physical/virtual RPA, EX/CL, Deployment Manager), Configure
+      Arrays 27% (splitters for VNX, VPLEX, Unity and VMAX; XtremIO snap-based),
+      Management 14%, Operations 10%, System Analysis 7%, Cluster Maintenance 10%
+      (Deployment Manager: add RPAs, convert, change parameters).
+    - RP4VMs D-RPVM-A-01 (as of 2024-08-14): only four topics are published
+      (overview, deployment, administration, troubleshooting), with no weights.
+      Use the 6.0.3 HTML5 Plugin Admin Guide chapters as the detailed bar:
+      licensing, protect VMs/add copy, dashboard/alerts/limits/reports, bookmarks
+      incl. KVSS app-consistent, automation/orchestration, test a copy, failover,
+      recover production, vRPA clusters, CGs, group sets, email alerts, log
+      collection, VMDK add/remove/auto-expand, cluster disaster recovery,
+      VMkernel ports, load balancing, copy VM networking.
+    - Versions: RP4VMs newest is 6.0.3 (Info Hub 000376653, modified 2025-10-03,
+      lists 6.0.3, 6.0.2.1, 6.0.2, 6.0.1.2, 6.0.1.1, 6.0.1, 5.3.4.1, 5.3.4).
+      Classic: newest Dell admin guide found is 5.1.4.5 (chapters: Dashboard,
+      Protection, Recovery, RPA Clusters, Admin, Support, Troubleshooting, Events).
+      Classic 5.3.x version and EOL are not verified: the Dell manuals listing
+      showed no current docs, and the only Gen6 RPA hardware EOSL date
+      (2027-01-31; end of sale 2024-01-31) comes from third-party sites.
+    Sources (primary, vendor):
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-RP-OE-A-24DellRecoverPointOperate.pdf
+      https://education.dell.com/content/dam/dell-emc/documents/en-us/D-RP-DY-A-24DellRecoverPointDeploy.pdf
+      https://education.dell.com/content/dam/dell-emc/documents/en-us/Dell%20RecoverPoint%20for%20Virtual%20Machines%20Achievement%20Description.pdf
+      https://www.dell.com/support/kbdoc/en-us/000376653
+      https://www.dell.com/support/manuals/en-us/recoverpoint-for-virtual-machines/rp4vms_vsphere_html5_admin_guide_6_0_3
+      https://www.dell.com/support/manuals/en-us/recoverpoint-for-virtual-machines/rp_p_rp4vms_cli_guide_6_0_3
+      https://www.dell.com/support/manuals/en-us/recoverpoint-cl/rp_p_administration_guide/getting-started
+      https://www.dell.com/support/kbdoc/en-us/000225918
+    Target bar: Pass D-RP-OE-A-24 + D-RP-DY-A-24 (classic) and D-RPVM-A-01 (RP4VMs,
+    using the 6.0.3 Admin + CLI guides as the detailed objective list).
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    repository volume, snap-based replication (XtremIO), snapshot consolidation,
+    link policy, distributed CG, deduplication, MetroPoint. Thin: group sets 1,
+    recover production 1, test a copy 1, Deployment Manager 1, PowerStore 1,
+    orchestration 1, licensing 2, failback 3, CLR 3, compression 3, SRM/SRA 3,
+    log collection 3, CRR 4, vRPA 4, vCenter plugin 4, RPMA 4, production/replica
+    copies 4, VPLEX 5, CDP 6, Unity/XtremIO 6. Adequate by count: RPA 20, CG 21,
+    journal 21, splitter 16, image access 13, failover 12, Unisphere for RP 9,
+    bookmarks 8, REST 13, RPO 17, lag 14. Phase B should: (1) split the section
+    into classic and RP4VMs with accurate "Applies to" (RP 5.x classic; RP4VMs
+    5.3.4/6.0.x), or add an rp4vms/ subtree; (2) rewrite cli-reference.md from
+    the 6.0.3 CLI guide's real command groups, and drop the boxmgmt menus,
+    rcpcli and the six fake commands; (3) remove the 5.4.2.1, 6.0.1.3 and 8.2.x
+    splitter strings and fix the RP-Splitter VIB name; (4) replace release-notes
+    with the Info Hub version list; (5) add pages for Deployment Manager (install,
+    add RPA, convert), array splitter config per array (VNX/Unity/VMAX/
+    PowerMax/VPLEX), XtremIO snap-based replication, MetroPoint and distributed
+    CGs, copy/link policies (sync/async, compression, dedup, snapshot
+    consolidation), repository and journal sizing, test a copy / failover /
+    recover production / failback flows, group sets, RP4VMs plugin workflows
+    (protect VM, KVSS bookmarks, orchestration, VMkernel/networking), licensing,
+    and log collection; (6) verify classic 5.3.x docs and Gen6 EOSL from Dell
+    with entitled access.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/dell/srdf-a
+  - Audit (2026-11-25): 27 pages, 4,210 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting); 361 lines mention a sym*
+    command. Applies to: "SRDF/A" 15, "Dell EMC Storage" 7, 4 one-off variants
+    (1 says PowerMax 2500/8500 PowerMaxOS 10.x). Versions: only "PowerMaxOS 10"
+    x1; no Solutions Enabler / Unisphere version anywhere (current is 10.5 per
+    KB 000189115). release-notes.md is the template "9.0/9.1/9.2/10.0" table, not
+    evidence. Bulk is ops/troubleshooting (scripts 776, procedures 550, escalation
+    415, diagnostics 383, common-issues 327, cli-reference 323); architecture is
+    thin (how-it-works 95, design-standards 73). Accuracy problems vs Dell docs:
+    - Wrong cycle time: "default 30s"/"Default cycle time is 30 seconds (minimum)"
+      (index.md desc, architecture/how-it-works.md:28,42, operations/faq.md:28);
+      faq.md:28 also says raise to "60-300 seconds". SE SRDF CLI guide: -cycle_time
+      valid 1-60 s, default 15 s (Enginuity 5876 and later). design-standards.md
+      expected output "Minimum Cycle Time (ms): 3" is invented (unit and value).
+      escalation.md:221 / scripts.md:563,577 "Cycle Time: 2000 ms" likewise.
+    - Cycle model wrong/incomplete: how-it-works.md:44-51 describes a single
+      "active delta set" closed and sent; Dell (PowerMaxOS) = multicycle mode, one
+      capture cycle + queue of transmit cycles on R1, receive + apply cycles on R2.
+      Capture/transmit/receive/apply named on 0 pages (1 page only by "capture").
+    - DSE mis-expanded as "Dynamic Synchronization Enabler" (deploy/index.md:71,
+      operations/health-checks.md:63) and said to "throttle replication bandwidth"
+      (deploy/index.md:73). DSE = Delta Set Extension (procedures.md:5 has it
+      right): offloads SRDF/A cycle data to a Storage Resource Pool; auto-enabled
+      on PowerMaxOS. Real commands: symrdf ... activate|deactivate -rdfa_dse.
+    - "Journal"/"journal LUN" model invented (troubleshooting/known-issues.md:42,
+      43,49,50,56; operations/faq.md:36). SRDF/A has no journal; spill-over is
+      DSE to SRP.
+    - Invented SYMCLI (not in SE 9.2 SRDF CLI guide option/action list):
+      `symrdf createpair ... -rdfgtype asynch` used to create a group
+      (deploy/index.md:57; real = `symrdf addgrp -label -rdfg -dir -remote_sid
+      -remote_rdfg -remote_dir`); `symrdf addpair` (deploy/index.md:61,
+      procedures.md:490, faq.md:39 `-type async`; real = `symrdf createpair -type
+      R1 -rdf_mode async [-establish]`); `symrdf creategroup` (procedures.md:510);
+      `symrdf ... dse enable` / `dse query` (deploy/index.md:73,
+      health-checks.md:63); `dset show` (health-checks.md:61); `verifylink`
+      (health-checks.md:62); `perf` / `perf summary` (health-checks.md:64,
+      escalation.md:197); `showperf ... -delta_t` with DSE_LAG field
+      (diagnostics.md:138,147,292,381); `check` (diagnostics.md:124); `queryall
+      [-detail]` (procedures.md:286,296,299, cli-reference.md:46,152, scripts.md
+      34,420,533,539,626,681,728); `resync` (common-issues.md:285); `sync`
+      (procedures.md:270); `symcli -start` (common-issues.md:265); `-type RDF/A`
+      / `-type A` as a mode selector on suspend/resume/failover/restore/establish
+      (procedures.md:53,62,126-194,241) and `-planned` on failover
+      (procedures.md:241) - not in the option list.
+    - Witness referenced for SRDF/A (learning-path/index.md:38,46,81,84); witness
+      is an SRDF/Metro construct. "iSLR (IP Short Range)" link type
+      (how-it-works.md:85) not found in any Dell source read - not verified.
+    - Lag thresholds (how-it-works.md:75-77 "2-5x"/">5x cycle") and bandwidth
+      formula (+20%) are unsourced house rules.
+  - Cert research (2026-11-25): No SRDF-specific Dell exam - Dell certification
+    catalog lists PowerMax Operate D-PVM-OE-01, Design D-PVM-DS-01, Install
+    D-PM-IN-23, Maintenance D-PM-MN-23 and no SRDF item. Bar is inherited from
+    powermax (already verified): D-PVM-OE-01 Business Continuity Admin 20% (SRDF
+    ops in Unisphere + SYMCLI) and Local/Remote Replication Concepts 10% (SRDF
+    topologies); D-PVM-DS-01 Local/Remote Replication 19%. Dell doc facts
+    confirmed this run: SRDF/A = dependent-write consistent copy "across any
+    distance"; delta sets in timed cycles; single-session cycle switching by the
+    array vs MSC (multiple groups, host-software-controlled switching);
+    multicycle capture(N)/transmit queue/receive/apply; DSE offload to SRP, auto
+    enabled; transmit idle = still tracking changes but unable to transmit
+    (default on); `symrdf -sid -rdfg set rdfa [-cycle_time 1-60] [-priority 1-64,
+    default 33] [-transmit_idle on|off] [-both_sides]`; group-level write pacing
+    (5876+), enhanced group pacing paces to DSE rate (HYPERMAX OS R1),
+    device-level pacing not supported on HYPERMAX OS+; `set mode` values sync,
+    semi, acp_disk, acp_wp, acp_off, async (acp_wp unsupported with HYPERMAX OS+
+    R1); failover syntax and semantics; SRDF/CG for both SRDF/S and SRDF/A.
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+    https://www.dell.com/support/manuals/en-us/powermax-2000/esd_p_srdf_intro
+    .../esd_p_srdf_intro/asynchronous-mode?guid=guid-9a453bf2-6c1c-4323-bc65-8d3cd32bf6f0
+    .../esd_p_srdf_intro/powermaxos-or-hypermax-os?guid=guid-c48b7646-ad94-4956-b783-5cda60b438f1
+    .../esd_p_srdf_intro/powermaxos-or-hypermax-os?guid=guid-95d40276-315b-4d76-af9e-692961e6c702
+    .../esd_p_srdf_intro/transmit-idle?guid=guid-55d01927-45a7-4845-bba5-5d9912199140
+    .../esd_p_srdf_intro/srdf-consistency?guid=guid-d87ea858-4c6b-46af-a4ce-60847206ed8a
+    https://www.dell.com/support/manuals/en-us/solutions-enabler/esd_p_se_srdf_family_cli_user_guide/preface
+    .../esd_p_se_srdf_family_cli_user_guide/set-srdfa-group-cycle-time-priority-and-transmit-idle?guid=guid-c43c32dc-1ef5-4d14-82d6-d0405cb0ff72
+    .../esd_p_se_srdf_family_cli_user_guide/activatedeactivate-srdfa-dse?guid=guid-84b39e0b-0cdd-49e7-8535-a1f564a45b59
+    .../esd_p_se_srdf_family_cli_user_guide/manage-srdfa-write-pacing?guid=guid-eb870fcc-4fb7-4667-8b78-3c9be25d4b1a
+    .../esd_p_se_srdf_family_cli_user_guide/set-the-srdf-mode?guid=guid-5c68db00-4c4b-4aa8-8354-092bb91c9ae4
+    .../esd_p_se_srdf_family_cli_user_guide/symrdf-command-options?guid=guid-a9e9d226-0d0c-4156-8196-aff494ce3b72
+    .../esd_p_se_srdf_family_cli_user_guide/create-an-srdf-group-and-add-pairs?guid=guid-b4ca6fa6-b49c-45d6-bd10-34b28eed6d8b
+    .../esd_p_se_srdf_family_cli_user_guide/failover-to-target?guid=guid-f3481cd2-71c7-4556-8b66-e653bdfb7443
+    https://www.dell.com/support/kbdoc/en-us/000226820/ibmi-srdf-migration-procedure
+    Caveat: the online SRDF Family CLI guide is SE 9.2; no SE 10.x edition was
+    reachable (docu PDFs 403/timeout). Re-check syntax against SE 10.5 in Phase B.
+    Coordinator check (2026-11-25): Dell SE 10.0.0 SRDF Family CLI User Guide also
+    gives set rdfa -cycle_time 1-60, default 15 s; DSE is set via `set rdfa_dse`
+    (-autostart, -threshold 20-100). The SE 10.1 symrdf ref is on developer.dell.com.
+    Target bar: D-PVM-OE-01 SRDF ops (Unisphere + SYMCLI) and replication concepts
+    + D-PVM-DS-01 replication 19%, to the depth of Dell SRDF Introduction ch.
+    "SRDF/A resilience and performance features" + SE SRDF CLI "SRDF/Asynchronous
+    Operations".
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    multicycle/legacy mode 0, SRP (DSE pool) 0, MSC 0, tolerance mode 0, semi 0,
+    domino 0, addgrp/removegrp/modifygrp 0, invalid tracks 0, device bias 0,
+    SRDF/Star 0, cascaded/R21 0, Smart DR 0. Thin: capture/receive/apply cycle 1,
+    write pacing 1, compression 1, witness 1 (wrongly), concurrent 1, createpair
+    1 (wrong use), set mode 1, adaptive copy 2, SRDF/Metro 2, swap/personality
+    2, cycle_time option 3. Present: DSE 8 (2 mis-expanded), transmit idle 5,
+    consistency group 7, establish 10, failover 13, suspend/resume 16, Unisphere
+    13. Overlap: srdf-s duplicates the same template skeleton (27 pages, same
+    file names, same invented verifylink/addpair/createpair -rdfgtype/resync
+    patterns); powermax has 25/27 pages mentioning SRDF. Phase B should: (1)
+    purge invented commands above and rebuild cli-reference from SE SRDF CLI
+    (addgrp, createpair -rdf_mode async -establish, set rdfa, activate -rdfa_dse,
+    -rdfa_pace/-rdfa_wpace, query -rdfa, set mode, failover/failback/split/
+    restore/update/swap); (2) fix cycle time to 15 s default / 1-60 s range and
+    remove 30 s / ms values; (3) rewrite how-it-works around multicycle
+    capture/transmit/receive/apply, MSC vs single-session, DSE->SRP, transmit
+    idle, write pacing, write folding, SRDF/A Auto Recovery; (4) delete journal
+    and witness content; (5) add SRDF/A in concurrent/cascaded/Star topologies;
+    (6) decide canonical home: keep SRDF/A-specific mechanics here, link shared
+    SRDF basics (groups, pair states, failover/failback) to one page shared with
+    srdf-s/powermax; (7) add Unisphere 10 SRDF/A workflows and SE 10.x version
+    pinning.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/dell/srdf-s
+  - Audit (2026-11-25): 27 pages, 4,527 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting); 463 lines mention a sym*
+    command. Applies to: "SRDF/S" 17, "Dell EMC Storage" 5, 4 one-off variants
+    incl. "SRDF/S (Metro) on PowerMax 2500/8500 running PowerMaxOS 10.x"
+    (troubleshooting/escalation.md:14, conflates SRDF/S with SRDF/Metro).
+    Versions: "PowerMaxOS 10" x1, "SE 9" x1, "HYPERMAX OS 9.0" x1 (no such
+    HYPERMAX version); no current SE/Unisphere 10.5 mention. release-notes.md is
+    the template table (e.g. "10.1 - 1 ms synchronous replication target") - not
+    evidence. Bulk is procedures 1,126, health-checks 599, common-issues 427,
+    escalation 414, diagnostics 396; how-it-works only 77 lines. Accuracy problems
+    vs Dell docs:
+    - Distance/latency: Dell SRDF Introduction says recommended distance is 200 km
+      (125 miles) or less; it gives no RTT limit. KB invents and contradicts RTT
+      caps: <=10 ms (index.md:4,9, deploy/index.md:43,63, operations/faq.md:28,
+      health-checks.md:161-162, procedures.md:855) vs <=5 ms
+      (troubleshooting/known-issues.md:38,46, diagnostics.md:205-207,393,
+      architecture/ports.md:34,46,75) vs "typically <1 ms"
+      (escalation.md:70). faq.md:47 "adds ~2x RTT" contradicts diagnostics.md:206
+      "5 ms RTT adds 5 ms". The RTT/distance tables (how-it-works.md:56-61,
+      design-standards.md:22-27) are unsourced; procedures.md:736-737 shows
+      "Distance: 450 km / Latency: 2.3 ms" (beyond Dell's 200 km guidance).
+      design-standards.md has an orphan "Where 1.25 = 25% headroom" with no
+      formula.
+    - ports.md:46 gives TCP 3260 (iSCSI) for GigE SRDF - not verified as SRDF
+      port; treat as suspect.
+    - set mode syntax wrong: `set mode adaptivecopy` (operations/faq.md:31),
+      `set mode synchronous` (health-checks.md:581), `setmode -sync` /
+      `setmode -acp_disk` (cli-reference.md:124,127). Valid: `symrdf -g|-cg|-sg
+      |-f ... set mode sync|semi|acp_disk|acp_wp|acp_off|async` (-sg/-f also need
+      -sid -rdfg); procedures.md:477,526 use -sid -rdfg alone with no -g/-sg/-f.
+      health-checks.md:581 claims the array "temporarily switched to adaptive copy
+      due to link congestion" - no Dell support found; not verified, likely wrong.
+    - Invented SYMCLI (absent from SE 9.2 SRDF CLI option/action list):
+      `createpair ... -rdfgtype synchronous` to create a group
+      (deploy/index.md:51; real = `symrdf addgrp`); `addpair`
+      (deploy/index.md:55, procedures.md:1040, faq.md:39 `-type sync`; real =
+      `createpair -type R1 -rdf_mode sync -establish`); `creategroup`
+      (procedures.md:1064); `verifylink` (procedures.md:855,858,
+      health-checks.md:163); `check` (procedures.md:82, health-checks.md:317);
+      `resync` (cli-reference.md:75, common-issues.md:118,176); `perf summary`
+      (escalation.md:172); `symrdf start` (escalation.md:158); `wait -sync`
+      (backup-restore.md:60); `-type S` as a mode selector on
+      failover/resume/establish/restore (procedures.md:50,228-240,621,627,
+      health-checks.md:581). escalation.md:54 warns against "--force" (real flag
+      is -force).
+    - SRDF/Metro, witness, bias and Star appear only in passing (cli-reference.md
+      115-127 "Swap & Metro Operations" has no Metro commands).
+  - Cert research (2026-11-25): No SRDF-specific Dell exam (catalog lists only
+    PowerMax Operate D-PVM-OE-01, Design D-PVM-DS-01, Install D-PM-IN-23,
+    Maintenance D-PM-MN-23). Bar inherited from powermax (verified there):
+    D-PVM-OE-01 Business Continuity Admin 20% + Local/Remote Replication
+    Concepts 10%; D-PVM-DS-01 Local/Remote Replication 19%. Dell doc facts
+    confirmed this run: SRDF/S = real-time mirror, host ack only after data is in
+    cache on both arrays, recommended <=200 km (125 mi); SRDF modes sync, async,
+    active (Metro), adaptive copy disk / write-pending, domino modes; SRDF/CG
+    suspends all group mirroring on a failed R1->R2 write, available for SRDF/S
+    and SRDF/A; concurrent SRDF/S with ECA; Star needs SRDF/A recovery links,
+    symstar-only control, SE 10.0+ for PowerMaxOS 10 (6079), no Metro/
+    RecoverPoint overlap; SRDF/Metro witness = Array Witness or vWitness,
+    preferred-winner negotiation, Device Bias fallback, online SRDF/S->Metro
+    conversion, Smart DR; `set mode` values and acp_wp restriction;
+    `addgrp` syntax incl. -witness, -fibre|-gige; failover semantics (R1 WD, R2
+    RW, links suspended).
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+    https://www.dell.com/support/manuals/en-us/powermax-2000/esd_p_srdf_intro
+    .../esd_p_srdf_intro/synchronous-mode?guid=guid-c4260bfe-543b-4624-8f84-220c0f1e428e
+    .../esd_p_srdf_intro/srdf-consistency?guid=guid-d87ea858-4c6b-46af-a4ce-60847206ed8a
+    .../esd_p_srdf_intro/witness?guid=guid-9000ef02-adda-4d6c-aff0-c25d0a5334e9
+    .../esd_p_srdf_intro/srdfstar-restrictions?guid=guid-43a14336-9268-4f76-a49e-407b7f95ebd1
+    https://www.dell.com/support/manuals/en-us/solutions-enabler/esd_p_se_srdf_family_cli_user_guide/preface
+    .../esd_p_se_srdf_family_cli_user_guide/set-the-srdf-mode?guid=guid-5c68db00-4c4b-4aa8-8354-092bb91c9ae4
+    .../esd_p_se_srdf_family_cli_user_guide/symrdf-command-options?guid=guid-a9e9d226-0d0c-4156-8196-aff494ce3b72
+    .../esd_p_se_srdf_family_cli_user_guide/create-an-srdf-group-and-add-pairs?guid=guid-b4ca6fa6-b49c-45d6-bd10-34b28eed6d8b
+    .../esd_p_se_srdf_family_cli_user_guide/failover-to-target?guid=guid-f3481cd2-71c7-4556-8b66-e653bdfb7443
+    https://www.dell.com/support/kbdoc/en-us/000226820/ibmi-srdf-migration-procedure
+    Caveat: online SRDF CLI guide is SE 9.2; SE 10.x edition not reachable.
+    Coordinator check (2026-11-25): a Dell SE 10.0.0 SRDF Family CLI User Guide exists
+    (esd_p_se_srdf_family_cli_user_guide_10) and an SE 10.1 symrdf reference on
+    developer.dell.com; Phase B should verify syntax against those, not SE 9.2.
+    Target bar: D-PVM-OE-01 SRDF ops + replication concepts and D-PVM-DS-01
+    replication 19%, to the depth of Dell SRDF Introduction (modes, states,
+    consistency, 3/4-site topologies, Metro resilience) + SE SRDF CLI basic
+    control, dynamic, consistency group, concurrent, cascaded, Star, Metro ops.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    multicycle/cycle 0, DSE 0, write pacing 0, MSC 0, tolerance mode 0, semi 0,
+    addgrp/removegrp/modifygrp 0, cascaded/R21 0, Smart DR 0, compression 0.
+    Thin: domino 1, concurrent 1, transmit idle 1, swap/personality 1, witness
+    2, SRDF/Star 2, createpair/deletepair 2 (wrong use), 200 km 2, device bias
+    3, consistency group 4, adaptive copy 4 (wrong syntax), set mode 4.
+    Present: invalid tracks 5, SRDF/Metro 8 (mostly as a distance band, not the
+    product), establish 11, pair states 11, failover 19, suspend/resume 14,
+    Unisphere 11. Overlap: same 27-file template as srdf-a with near-identical
+    invented commands; powermax 25/27 pages mention SRDF; no SRDF/Metro section
+    exists, so Metro content has no home. Phase B should: (1) purge invented
+    commands and fix set mode syntax; (2) replace all RTT caps with Dell's
+    200 km recommendation plus a sourced latency method (or "not specified by
+    Dell"); (3) add a proper modes page (sync/semi/async/active/acp_disk/acp_wp,
+    domino, ECA, SRDF/CG); (4) add SRDF/Metro (witness types, bias, Smart DR,
+    online SRDF/S->Metro conversion, -metro createpair) or create a sibling
+    srdf-metro section and move "SRDF/S (Metro)" text there; (5) add
+    concurrent/cascaded/Star (symstar) with SRDF/S legs; (6) one shared SRDF
+    fundamentals page (groups via addgrp, pair states, failover/failback/
+    restore/swap) linked from srdf-a, srdf-s and powermax instead of three
+    copies; (7) Unisphere 10 SRDF workflows and SE 10.5 version pinning.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
+- [x] storage/products/dell/unity
+  - Audit (2026-11-25): 27 pages, 10,897 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" tally:
+    21 "Unity XT", 2 "Dell EMC Storage", 1 each "Unity XT 380F/480F/680F/880F OE 5.x",
+    "Unity XT / UnityVSA, OE 5.x", "Dell Unity XT / Unity 500 / UnityOS 5.x".
+    Bulk is in cli-reference.md (1,720), scripts.md (1,848), procedures.md (972),
+    diagnostics.md (816). Zero mentions of OE 5.5 anywhere; Dell's OE Matrix
+    (kbdoc 000020641) lists 5.5.5.0.5.073 (1 Oct 2026) as latest and 5.5.4.0.5.037
+    as Recommended (Target) since 24 Aug 2026.
+    Stale/wrong versions:
+    operations/install-upgrade.md:31 calls 5.4.x "Current recommended release";
+    :33-34 date 5.0.x to 2020 (5.0.0 GA 27 Jun 2019) and invent end-of-support
+    years Dell's matrix does not publish. :44 "any version within two major
+    versions back can typically upgrade directly" contradicts the OE Matrix note
+    that systems older than 5.1 must go to 5.4.1 before 5.5. The pre-5.5 TLS
+    1.0/1.1 disable prerequisite and the .LIC-to-.XML license conversion needed
+    before 5.5.3+ are absent; deploy/index.md:105 still says upload the `.lic` file.
+    release-notes.md:25-29 (template table) has wrong dates for every row:
+    5.4 "2024-Q2" (8 Feb 2024), 5.3 "2023-Q3" (5 May 2023), 5.2 "2022-Q4"
+    (29 Apr 2022), 5.1 "2022-Q1" (21 Jun 2021), 5.0 "2021-Q2" (27 Jun 2019); no 5.5.
+    security/hardening.md:414,416 show "OE 4.7.1.0"/"OE 4.8.0.1", which do not exist
+    (4.x ended at 4.5.1). Sample outputs use made-up builds 5.1.0.0.5.123/.999/.007
+    (cli-reference.md:53,224,1625; diagnostics.md:114,743; escalation.md:97).
+    Lifecycle: the KB says "Unity XT hardware is end-of-new-sales" for the whole
+    family (install-upgrade.md:38,59), with no dates. Dell's EOL Security Support
+    Policy (kbdoc 000208328) lists only "Dell Unity AFA" with EOL 2025-08-01 and
+    EoSecS 2030-07-31, plus UnityVSA EOL 2025-12-31 / EoSecS 2028-12-31. Hybrid
+    Unity XT is not listed there, so its sale status is not verified. The KB's
+    21 "Applies to: Unity XT" pages and index.md present Unity as current with no
+    lifecycle banner. The PowerStore migration content (install-upgrade.md:61-68)
+    lists VPLEX and host-based methods only. Native PowerStore import of Unity is
+    not mentioned (not verified this session).
+    Invented uemcli object paths, disproved by the Dell Unity Family Unisphere CLI
+    User Guide (unity_p_cli_user_guide), counts are occurrences:
+    `/sys/sw` x16 (e.g. install-upgrade.md:54-55, hardening.md:51,404); Dell uses
+    `/sys/soft/ver show` and `/sys/upgrade create -type software`, with upload done
+    by the `-upload` switch. `/env/health` x31 (install-upgrade.md:47,
+    escalation.md:67); Dell uses `/sys/general healthcheck`. `/stor/config/lun`
+    x31 and `/stor/config/lunacl` x19 (diagnostics.md:364, common-issues.md:98);
+    Dell uses `/stor/prov/luns/lun`. `/rep/session` x12 (install-upgrade.md:50,
+    procedures.md:31); Dell uses `/prot/rep/session`. `/user/ldap` x8
+    (authentication.md:54); Dell uses `/net/ldap`. `/nas/server` x14
+    (common-issues.md:114); Dell uses `/net/nas/server`. `/stor/config/fs` x13
+    (common-issues.md:113); Dell uses `/stor/prov/fs`. `/prac/alert` x16 and
+    `/sys/alert` x16 (authentication.md:377, escalation.md:68); Dell uses
+    `/event/alert/hist`. `/sys/security/keymanager` (encryption.md:173,490); for
+    D@RE Dell uses `/prot/encrypt`. The REST paths in the KB (/api/types/<type>/instances
+    form) were not checked against the REST API Reference Guide.
+  - Cert research (2026-11-25): Dell's live catalog (certificationandbadges.html)
+    lists two Unity exams, "Unity Operate" D-UN-OE-01 (EN/FR) and "Unity Deploy"
+    D-UN-DY-01 (EN/FR/JA). The per-exam pages carry blueprints but give no question
+    count, duration or retirement date. D-UN-OE-01 has 4 domains: Unity
+    Administration 30% (RBAC, perf monitoring/reporting, manage storage, HW/SW
+    update, service tasks), Block Provisioning 34% (block data protection, block
+    storage, host access), File Provisioning 24% (file data protection, file
+    storage), VMware Integration 12% (provision storage, host access types).
+    D-UN-DY-01 has 4 domains: Concepts/Features/Architecture 28%, Installation
+    and Preparedness 20%, Data Protection and Mobility 18%, Provisioning and Host
+    Access 34%. The predecessor D-UN-OE-23 PDF (as of 6 Feb 2023, 90 min) gives the
+    detailed objectives: dynamic vs traditional pools, dynamic pool expansion and
+    rebuild, block/file/VMware datastores, host and NAS (SMB/NFS) access, FAST
+    Cache, host I/O limits, File Level Retention, UFS64 and quotas, data reduction,
+    FAST VP, thin clones, local LUN Move and NAS server mobility, snapshots, and
+    sync/async replication. D-MSS-DS-23 (Midrange Design, Unity + PowerStore,
+    48 Q / 90 min) still has a PDF but no longer appears in the live catalog
+    (treat it as likely retired; no notice found). It is design and sizing
+    focused, so it is a poor fit. Pick D-UN-OE-01 as primary, with D-UN-DY-01 for
+    install/service objectives.
+    Sources (primary, vendor):
+    https://www.dell.com/support/kbdoc/en-us/000020641 (Unity OE Matrix);
+    https://www.dell.com/support/kbdoc/en-us/000208328 (EOL Security Support Policy);
+    https://www.dell.com/support/kbdoc/en-us/000126652 (Unity Info Hub);
+    https://www.dell.com/support/manuals/en-us/unity-480/unity_p_cli_user_guide
+    (+ topics view-system-software-versions, upgrade-the-system,
+    create-upgrade-sessions, create-luns, perform-a-system-health-check,
+    view-storage-processor, view-replication-sessions, create-snapshots,
+    view-file-systems, view-nas-servers, view-user-accounts, view-ldap-settings,
+    view-data-at-rest-encryption-settings-physical-deployments-only,
+    view-alert-history);
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html;
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-UN-OE-01;
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-UN-DY-01;
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams/unity-operate.html;
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-UN-OE-23-Operate_Unity_Exam.pdf;
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-UN-DY-23-Deploy_Unity_Exam.pdf;
+    https://learning.dell.com/content/dam/dell-emc/documents/en-english/D-MSS-DS-23-Design_Midrange_Exam.pdf
+    Target bar: Dell Unity Operate D-UN-OE-01 (+ D-UN-DY-01 install objectives),
+    with the D-UN-OE-23 PDF objectives as the detail layer; on OE 5.5.x.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: File
+    Level Retention/FLR 0, host I/O limits 0, UFS64 0, LUN Move 0, quotas 0,
+    traditional pool 0, multiprotocol 0, tenants 0, CEPA/CAVA 0, OE 5.5 0,
+    Dell AIOps 0 (CloudIQ 4), MetroSync 0. Thin: dynamic pool 1, thin clone 1,
+    NAS server mobility 1, consistency group 2, FAST VP 2, vVols 3, D@RE 4,
+    data reduction 4, UnityVSA 4, RBAC 4, datastore 5, sync 5 / async 4
+    replication, PowerStore 5, NDU 5. Adequate by mention: pool 21, LUN 20,
+    NFS 20, SMB/CIFS 17, snapshot 16, NAS server 14, iSCSI 18, FC 14, uemcli 21,
+    Unisphere 23, host access 12, LDAP 9, REST 10.
+    Phase B should: (1) add a lifecycle banner (Unity AFA EOL 2025-08-01,
+    EoSecS 2030-07-31; UnityVSA EOL 2025-12-31) and rewrite install-upgrade.md
+    from the OE Matrix (5.5.4 target, 5.5.5 latest, 5.1/5.4.1 hop, TLS and .XML
+    license prerequisites). (2) Replace every invented uemcli path with the CLI
+    User Guide object paths listed above, and regenerate the sample outputs with
+    real build strings. (3) Delete or rebuild the release-notes.md table.
+    (4) Write new pages for the zero-coverage exam objectives: FLR, host I/O
+    limits, UFS64 and quotas, LUN Move and NAS server mobility, thin clones,
+    dynamic vs traditional pools (expansion and rebuild), and VMware
+    datastores/vVols. (5) Expand sync/async replication (interfaces,
+    connections, failover/failback) and data reduction/FAST VP/FAST Cache.
+    (6) Verify the REST API paths against the REST API Reference Guide.
+    (7) Rename CloudIQ to Dell AIOps.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 5
+    items). Queue file only.
 - [ ] storage/products/dell/vplex
 
 ### Storage — NetApp
