@@ -1651,20 +1651,679 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     san/cisco/cisco-dcnm (researched separately); UCS 2.2.d SAN items belong to UCS.
   - site_audit (2026-11-25): 70/70 clean (full run; one run covered the 12 items done
     this evening from postgresql to mds, since none touched docs/). Queue file only.
-- [ ] san/cisco/nexus-dashboard
+- [x] san/cisco/nexus-dashboard
+  - Audit (2026-11-25): 31 pages, 5,275 lines, 6 subdirs (architecture, deploy,
+    operations, security, troubleshooting, learning-path) + index + release-notes.
+    "Applies to:" 15x "Cisco MDS / NX-OS", 12x "Cisco MDS · Nexus", 3x "Nexus
+    Dashboard 3.x" (/NDFC 12.x /NDI 6.x), 1 none. Version mentions top out at ND 3.2
+    and NDFC 12.2.2; ZERO pages mention ND 4.x (current line, see below). Whole
+    section is one major release stale: ND 4.1.1 (GA Aug 2025) unified Fabric
+    Controller + Orchestrator + Insights into a single product, no per-service
+    install/upgrade; KB still teaches "install NDFC/NDI as apps on ND 3.x".
+    Factual errors / stale claims found:
+    - release-notes.md: table stops at 3.2 "2024-Q3"; all links are "#"; quarter
+      dates not verified against Cisco; no 4.1/4.2/4.3 rows; Applies-to says MDS/NX-OS.
+    - operations/faq.md:20 "ND 3.1.x with NDFC 12.2.x is the current recommendation"
+      and "cluster of 3 or 5 nodes": stale (4.x; 4.1 added 1-node/3-node pND
+      ND-NODE-G5S/G5L; 4.3.1 deprecates 3-node vND large and 5-node vND app
+      deployments for greenfield). ND 3.0/3.1/3.2 EoS/EoL notice posted 26-Aug-2026.
+    - troubleshooting/escalation.md:102 sample output "Nexus Dashboard Fabric
+      Controller 2.1.4" (NDFC versions are 12.x) plus "Multi-Site Orchestrator 3.2.1"
+      running alongside NDO 3.5.2 (MSO-renamed-to-NDO co-residency: not verified).
+    - troubleshooting/common-issues.md:180-183 sample "dcnm 14.1.1" and "ndfc 14.1.1"
+      as separate ND apps, plus "ise 3.2.1" as an ND app: invented (no DCNM/NDFC 14.x;
+      ISE-as-ND-app not verified, believed wrong). operations/common-issues.md:42 node version
+      "14.1.2.1" also invented.
+    - Inconsistent sample versions across pages (ND CLI v2.3.1.1a, v2.3.1.4a,
+      v3.2.1.4a; ND 3.1.1/3.1.2/3.2.1.1a; NDFC 12.1.3/12.2.1/12.2.2; NDI 6.2.1/6.3.1).
+    - deploy/index.md:234 sends readers to "the Cisco DCNM deployment guide" for NDFC
+      fabric creation (DCNM past LDoS 2026-04-30).
+    - `acs ...` CLI (acs system ntp, acs backup remote, acs upgrade start --version,
+      acs network test, acs system resources) used on ~17 pages: not verified against
+      Cisco docs; Phase B must check each verb against the ND CLI reference.
+  - Cert research (2026-11-25): No Nexus-Dashboard or SAN-specific Cisco cert exists
+    (300-625 DCSAN retired 2023-04-19, per coordinator). Nexus Dashboard is named
+    explicitly in DCCOR v1.2, DCID v1.2 and DCIT v1.2 blueprints (verified via PDF):
+    - 350-601 DCCOR v1.2 (120 min): 1.9 infra monitoring incl. "Cisco Nexus
+      Dashboard"; 1.10 network assurance / streaming telemetry; 1.11 "Describe the
+      capabilities and features of Nexus Dashboard"; 3.4 storage monitoring with
+      SPAN and Nexus Dashboard; 3.1 FC (FCID, zoning, FCNS, NPV/NPIV, VSAN) as the
+      SAN fabric content ND manages; 3.3 software updates (disruptive/non, EPLD);
+      4.2.d evaluate Nexus Dashboard as automation/orchestration tech.
+    - 300-610 DCID v1.2 (90 min; 35 Net/25 Compute/20 Storage/20 Automation): 1.7.c
+      centralized management and monitoring such as Nexus Dashboard; 4.4 evaluate
+      automatic network deployment using Nexus Dashboard.
+    - 300-615 DCIT v1.2 (90 min; 25/25/15 Storage/15 Automation/20 Mgmt&Ops): 5.2
+      troubleshoot integration of centralized mgmt such as Nexus Dashboard and
+      Intersight; 5.1 firmware upgrades/interoperability; 3.1-3.2 FC troubleshooting
+      (buffer-credit starvation, NPV/NPIV, VSAN, FCID, zoning); 5.3 AAA/RBAC,
+      fabric binding, MACsec.
+    Current product: Nexus Dashboard 4.3.1 (4.3.1.175, available 2026-08-22) is the
+    highest release on cisco.com; 4.2.1 (RN 2026-03-12), 4.1.1g (2025-08-13). From
+    4.1.1 the platform and services are "unified into a single product"; upgrade
+    paths are from ND 3.2.2 or 4.1.1. Standalone NDFC RN list tops at 12.2.1 on the
+    series page (later 12.2.x patch numbers not verified).
+    Sources (primary, vendor):
+    https://learningcontent.cisco.com/documents/marketing/exam-topics/350-601-DCCOR-v1.2.pdf
+    https://learningcontent.cisco.com/documents/marketing/exam-topics/300-610-DCID-v1.2.pdf
+    https://learningcontent.cisco.com/documents/marketing/exam-topics/300-615-DCIT-v1.2.pdf
+    https://www.cisco.com/c/en/us/support/data-center-analytics/nexus-dashboard/series.html
+    https://www.cisco.com/c/en/us/td/docs/dcn/nd/4x/release-notes/cisco-nexus-dashboard-release-notes-431.pdf
+    https://www.cisco.com/c/en/us/td/docs/dcn/nd/4x/release-notes/cisco-nexus-dashboard-release-notes-411.pdf
+    Target bar: 350-601 DCCOR v1.2 ND objectives (1.9-1.11, 3.4, 4.2.d) + DCIT 5.2 +
+    DCID 1.7.c/4.4, taught on Nexus Dashboard 4.x (4.3.1) unified, with 3.2 as legacy.
+  - Gap vs blueprint (pages mentioning each term, out of 31): Zero coverage: ND 4.x /
+    unified product (0), NPV/NPIV (0), FCID/FCNS (0), buffer credits (0), Ansible (0),
+    Terraform (0), MACsec/fabric binding (0). Thin: POAP 1, Intersight 1, Connected
+    TAC/tech-support 1, ISSU/EPLD/image mgmt 1, SAN Insights/Analytics 2, VXLAN EVPN 2,
+    device-alias 3, templates 4, persistent IP/data vs mgmt network 4, SAN fabric 5,
+    VSAN 5, RBAC 5, zoning 6, SPAN 6, NetFlow/flow telemetry 6, NDO 6. Adequate:
+    telemetry 14, NDFC 17, Insights 20, backup 19, anomaly/assurance 10, REST API 8,
+    AAA 8 (MDS 31 is inflated by Applies-to lines; ~9 pages discuss MDS in body).
+    Phase B should: (1) rebase the section on ND 4.3.1 unified (single install,
+    unified RBAC/6 roles, unified fabric types, 1/3-node pND G5, vND cluster
+    types + 4.3.1 deprecations, upgrade from 3.2.2/4.1.1) with 3.x as legacy +
+    EoL note; (2) rewrite release-notes.md with real 3.0-4.3.1 rows and links;
+    (3) fix the invented versions (NDFC 2.1.4, dcnm/ndfc 14.1.1, ise-as-app, MSO+NDO)
+    and normalise samples; (4) verify every `acs` verb against Cisco docs; (5) add SAN
+    workflow pages on ND (SAN fabric create, zoning/device-alias, VSAN, NPV/NPIV
+    visibility, SAN Insights, buffer-credit/slow-drain views) mapped to DCCOR 3.1/3.4
+    and DCIT 3.1-3.2; (6) add automation page (ND REST API, Ansible collections (names not verified),
+    Terraform, POAP) for DCCOR 4.2.d/DCID 4.4; (7) add DCIT-5.2-style integration
+    troubleshooting (ND<->switch discovery, Intersight/Connected TAC); (8) fix
+    Applies-to lines to "Nexus Dashboard 4.x (3.2 legacy)".
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
+    touched docs/). Queue file only.
 
 ### Security
-- [ ] security/certificates
-- [ ] security/products/cyberark
-- [ ] security/products/venafi
+- [x] security/certificates
+  - Audit (2026-11-25): 29 pages, 5,103 lines; no product subdirs (Venafi/CyberArk live
+    under security/products/ and are separate queue items). Subdirs architecture/
+    (how-it-works, integrations, design-standards, ports), deploy/pki-deployment,
+    learning-path/, operations/ (backup-restore, certificate-trust, cli-reference,
+    health-checks, install-upgrade, procedures, scripts, faq), security/ (access-control,
+    authentication, encryption, hardening), troubleshooting/ (common-issues, diagnostics,
+    escalation, known-issues), release-notes. Biggest: procedures 603, diagnostics 535,
+    backup-restore 445, cli-reference 364. "Applies to": 6 lines -- 2x "All products
+    (Security)", 1x "Windows Server 2019 / 2022 CA role", 1x "Microsoft ADCS, Let's
+    Encrypt, general TLS/PKI", 1x "Microsoft ADCS / Venafi TPP / Let's Encrypt / ACME",
+    1x "Linux (RHEL/Ubuntu) / Windows Server / OpenSSL 3.x / ADCS". Version mentions:
+    Windows Server 2022 (2), 2019 (1), 2008 R2 (1, template compatibility), OpenSSL 3
+    (1), TLS 1.3 (7), TLS 1.2 (1). Scope is enterprise/internal PKI ops: ADCS two/three-
+    tier hierarchy, CDP/AIA, CRL/OCSP, auto-enrollment, openssl/certutil/keytool, ACME/
+    Let's Encrypt, Venafi TPP API. Strengths: CRL 24 pages, ADCS 21, chain/intermediate
+    17, OCSP 14, ACME 14, PEM/DER 14, X.509 13, autoenrollment 12, CSR 11, SAN 11,
+    CDP/AIA 11, HSM 11, Let's Encrypt 11; 24/29 pages carry a diagram. No exam content.
+    Factual errors spotted: (1) operations/faq.md:28 says public TLS max is "397 days
+    (browser requirement since 2020)" -- wrong since 2026-03-15 (CA/B BR: 200 days now,
+    100 days from 2027-03-15, 47 days from 2029-03-15, ballot SC081). (2) release-
+    notes.md:24 claims "2024-Q4 -- 90-day max validity enforcement" -- no such rule
+    exists; the whole version table (2022-2024 rows, links to "#") looks invented and
+    should be replaced with a real WebPKI-rules timeline (SC063 OCSP-optional 2024-03-15,
+    SC081 schedule). (3) troubleshooting/diagnostics/index.md:138-141 sample shows a
+    Let's Encrypt "R3"-issued wildcard with "247 days remaining" -- impossible: LE
+    certs are 90 days (or 6-day opt-in). (4) operations/faq.md "How do I check the
+    current Certificate Management version?" answer is a cert-dates command (nonsense
+    Q/A from a template). (5) learning-path/health-checks lean on OCSP; BR now makes
+    OCSP optional for public CAs and requires CRLs -- revocation pages should say so.
+  - Cert research (2026-11-25): No vendor-neutral exam is PKI-specialist; no current
+    Microsoft exam covers AD CS. Verified AZ-802 "Administering Windows Server" study
+    guide (successor to AZ-800/801): 7 domains (AD DS 20-25%, hybrid 10-15%, VMs 10-15%,
+    networking 10-15%, storage 15-20%, secure WS 10-15%, monitor/troubleshoot 15-20%)
+    with zero AD CS/PKI/certificate objectives -- not a fit. Exam anchor chosen:
+    CompTIA Security+ SY0-801 (V8). Verified on comptia.org V8 page: launched November
+    17, 2026; max 90 questions (MCQ + performance-based); 90 minutes; pass 750 on
+    100-900; English; retirement "estimated 3 years after launch"; SY0-701 (V7, launched
+    2023-11-07) retires June 11, 2027 (English) / Aug 13, 2027 (JA/PT/ES/TH). Domains
+    (objectives PDF "Document Version 2.0"): 1.0 General Security Concepts 16%, 2.0
+    Threats/Vulns/Attacks 24%, 3.0 Security Architecture 19%, 4.0 Security Operations
+    27%, 5.0 Program Mgmt & Oversight 14%. PKI lives in obj. 1.3 "Explain the importance
+    of using appropriate cryptographic solutions": PKI (public key, private key, key
+    escrow); Certificates (CAs, CRLs, OCSP, self-signed, third-party, root of trust, CSR
+    generation, wildcard); Encryption (protocols, symmetric, asymmetric, levels full-disk/
+    partition/file/volume/database/record, transport, key exchange, algorithms, key
+    length); digital signatures; salting; tools; obfuscation; hashing algorithms. Also
+    4.1 lists code signing and 802.1X. V8 objectives do NOT list HSM, TPM, OCSP stapling,
+    pinning or certificate transparency. Security+ is therefore a floor, far below the
+    KB's ADCS depth. DigiCert "Digital Trust Professional" (3 free self-paced courses:
+    DNS/PKI/TLS Fundamentals, no exam stated) and "Digital Trust Solutions Engineer"
+    (4 product Technical Professional certs, proctored) are vendor-product credentials,
+    not chosen. Keyfactor/Sectigo person-certifications: not verified (none found in
+    search). (ISC)2 CISSP crypto domain: not verified (not fetched).
+    Expert-depth fallback bar (verified): CA/Browser Forum TLS Baseline Requirements
+    v2.3.1 (dated 4-Oct-2026): RFC 3647 structure (naming, identity/domain validation
+    3.2.2, CAA, lifecycle ch.4 incl. revocation reasons/CRL/OCSP, key sizes 6.1.5 incl.
+    P-256/P-384/P-521); validity schedule 398 -> 200 days (2026-03-15) -> 100 days
+    (2027-03-15) -> 47 days (2029-03-15) with matching DCV-reuse cuts (SC081, adopted
+    2025-04-11); SC063 made OCSP optional and CRLs mandatory (effective 2024-03-15).
+    NIST SP 800-57 Part 1 Rev. 5 (May 2020; page shows no superseding notice): key
+    management lifecycle, cryptoperiods, key states, protection. Microsoft AD CS docs
+    (CA roles, web enrollment, Online Responder, NDES, TPM key attestation, CEP/CES,
+    ML-DSA post-quantum signing support) for the internal-PKI depth.
+    Sources (primary, vendor):
+    https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-802
+    https://www.comptia.org/en/certifications/security/
+    https://www.comptia.org/en/certifications/security/v7/
+    https://www.comptia.org/en/certifications/security/v8/
+    https://lecbyo.files.cmp.optimizely.com/download/77f3bd3223ac11f180820e495f189928
+    https://www.digicert.com/digital-trust-certification
+    https://raw.githubusercontent.com/cabforum/servercert/main/docs/BR.md
+    https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final
+    https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview
+    https://letsencrypt.org/docs/faq/
+    Target bar: Security+ SY0-801 obj. 1.3 fully covered as the floor, plus expert depth
+    = CA/B BR v2.3.1 lifecycle/validity rules + NIST SP 800-57 Pt1 r5 key management +
+    full AD CS role-service coverage (incl. NDES/CEP/CES, key archival, PQC).
+  - Gap vs blueprint (pages mentioning each term, out of 29): Zero coverage: CAA,
+    S/MIME, post-quantum/ML-DSA, ADCS attack paths (ESC1-ESC16/Certipy), name
+    constraints, CLM as a discipline, cryptoperiod, key exchange/ECDHE/forward secrecy,
+    salting, RFC 5280, ACME Renewal Info (ARI), SSH certificates, the 200/100/47-day
+    WebPKI schedule (the 2 "47 days" hits are sample output). Thin: CEP/CES 1, key
+    archival/recovery 1, key escrow 1, self-signed 1, TPM 1, CP/CPS 1, delta CRL 1,
+    RFC 8555 1, NDES/SCEP 2, DV/OV/EV 2, JKS 2, digital signatures 2, TLS 1.3 2,
+    PKINIT/smart card 2, CA/B Forum BR 3, NIST 3, ECC/ECDSA 3, cert-manager 3, symmetric/
+    AES 3, root of trust 3, key usage/EKU 4, certbot 4, PKCS#12 4, wildcard 4, Vault 4,
+    CRL reason codes 4, CT logs 5, mTLS 5, code signing 5, key ceremony 5.
+    Phase B should: (1) fix the 5 factual errors above (FAQ 397-day claim, invented
+    release-notes table, impossible LE sample, nonsense version Q/A, OCSP-optional
+    note); (2) add a WebPKI rules page: BR structure, DV/OV/EV, CAA, CT, SC081 validity/
+    DCV-reuse schedule, SC063 CRL-vs-OCSP, and the automation implications (ACME, ARI,
+    6-day LE certs); (3) add crypto-fundamentals page mapped to Sec+ 1.3: symmetric vs
+    asymmetric, key exchange/ECDHE/PFS, hashing/salting, digital signatures, key length,
+    encryption levels, key escrow, self-signed vs third-party, root of trust; (4) add
+    NIST SP 800-57 key-management page (key states, cryptoperiods, HSM/TPM protection,
+    archival/recovery, compromise handling); (5) deepen ADCS: CEP/CES, NDES/SCEP, key
+    archival/KRA, CP/CPS, name constraints, template security and ESC attack-path
+    hardening, PKINIT/smart-card logon, ML-DSA PQC; (6) add S/MIME, SSH-certificate and
+    code-signing coverage; (7) add a Security+ obj.-1.3-mapped exam-prep page with
+    practice questions plus a BR/800-57 expert self-check.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
+    touched docs/). Queue file only.
+- [x] security/products/cyberark
+  - Audit (2026-11-25): 27 pages, 3,885 lines, 21 subdirs (architecture/{how-it-works,
+    integrations,design-standards}, deploy, learning-path, operations/{backup-restore,
+    cli-reference,health-checks,install-upgrade,procedures,scripts}, security/
+    {access-control,authentication,encryption,hardening}, troubleshooting/{common-issues,
+    diagnostics,escalation}). Largest: backup-restore 403, cli-reference 335,
+    diagnostics 308; 7 pages <=50 lines. "Applies to:" 20x "CyberArk PAM", 2x "PAS
+    12.x", plus singletons "PAS / Privilege Cloud 13.x+", "PAM 13.x+", "PAM 12.x/13.x",
+    "PAM (Self-Hosted) 12.x/13.x", "PAM - Vault, PVWA, CPM, PSM" (inconsistent; old
+    "PAS" name). Scope is clearly SELF-HOSTED PAM: Vault 24/27, PVWA 24, CPM 21, PSM 20,
+    PrivateArk 9, PACLI 4, dbparm.ini 3, DR Vault 14; Privilege Cloud only 3 pages.
+    Versions: 13.2 (8, escalation/PACLI samples), 14.2/14.0/13.0/12.6 (release-notes
+    only); 10.x hits are IP addresses. Suspect factual errors: release-notes.md table
+    ("14.2 - PAM360 integration improvements" - PAM360 is not a CyberArk product name;
+    "14.0 - CORA AI launch"; "12.6 - Conjur Cloud GA"; all links "#") looks fabricated -
+    not verified against vendor release notes (docs.cyberark.com URL tried returned 404).
+    operations/faq.md "CyberArk v13.x (Privilege Cloud)" - Privilege Cloud is SaaS, not
+    versioned that way (not verified). No page mentions the 2026 rebrand to Palo Alto
+    Networks "Idira" or the certification program change.
+  - Cert research (2026-11-25): The CyberArk certification program (Defender PAM-DEF,
+    Sentry PAM-SEN, Guardian, etc.) was RETIRED effective 2026-11-10 and moved into the
+    Palo Alto Networks certification program at Pearson (registration freeze 11-11..
+    11-23; PANW portal reopened 11-24). cyberark.com cert URLs now redirect to
+    paloaltonetworks.com/idira; product is "Idira (formerly CyberArk)". Current PANW
+    Idira PAM certs: PAM Self-Hosted Analyst, PAM Self-Hosted Engineer, PAM SaaS
+    Engineer (all "Specialist" level). TARGET: Palo Alto Networks Certified Privileged
+    Access Manager Self-Hosted Engineer (deploy/install/configure/harden, HA focus) -
+    matches the KB's self-hosted Vault/PVWA/CPM/PSM scope; companion: PAM Self-Hosted
+    Analyst (day-to-day ops). Engineer blueprint (datasheet NOV2026, sums 100%):
+    1 CPM 15% | 2 PAM Solution Integration (MFA/PKI/RADIUS/SAML auth; NTP, SMTP, LDAP,
+    Syslog/SIEM) 20% | 3 Performance & Load Tuning (Safe/PSM recording retention;
+    interval, concurrency, AllowedSafes) 11% | 4 PSM Install/Deploy/Hardening (sizing,
+    recording storage, SIA, HTML5 Gateway) 15% | 5 PSM for SSH (maintenance users, MFA
+    caching) 10% | 6 Web Access UI (PVWA) deploy, hardening, LB, REST API 13% | 7 Vault
+    install/deploy/hardening 16%. Analyst blueprint (sums 100%): Account Onboarding 18 |
+    Application Mgmt 10 | Maintenance & Troubleshooting 10 | Password Config & Mgmt 25 |
+    Security & Audit 17 | Session Mgmt Config 10 | User Mgmt (Vendor PAM/Remote Access)
+    10. Format: Specialist-level price $250 USD (may vary by country); English only, +30
+    min ESL extension; multiple choice, matching, ordering items; scaled passing score
+    860 of 300-1000 (all PANW exams); valid 2 years, recertify by retaking in the 6
+    months before expiry; legacy CyberArk vouchers accepted. Question count and
+    duration: not verified (not on page/datasheet/FAQ/handbook). Legacy-to-new exam
+    equivalency (e.g., PAM-SEN -> SH Engineer): not verified - Pearson says "will be
+    published shortly". Engineer prep ILT: "Idira PAM Self-Hosted Install and Configure".
+    Sources (primary, vendor): https://www.pearsonvue.com/us/en/cyberark.html ;
+    https://www.cyberark.com/services-support/technical-education/cyberark-certification/
+    (redirects to paloaltonetworks.com/idira) ;
+    https://www.paloaltonetworks.com/services/education/certification ;
+    https://www.paloaltonetworks.com/services/education/palo-alto-networks-pam-sh-engineer
+    ; .../palo-alto-networks-pam-sh-analyst ; .../palo-alto-networks-pam-saas-engineer ;
+    https://www.paloaltonetworks.com/content/dam/pan/en_US/assets/pdf/datasheets/
+    education/pam-sh-engineer-datasheet.pdf ; .../pam-sh-analyst-datasheet.pdf ;
+    .../certification-faq.pdf ;
+    https://www.paloaltonetworks.com/content/dam/pan/en_US/assets/pdf/ebooks/
+    panw-certification-handbook.pdf ; https://www.pearsonvue.com/us/en/paloaltonetworks.html
+    Target bar: pass PANW Certified PAM Self-Hosted Engineer (7 domains, 860/1000), with
+    Analyst-blueprint ops topics covered as the foundation layer.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: HTML5
+    Gateway 0, Secure Infrastructure Access/SIA 0, MFA caching 0, PSMP maintenance users
+    0, Distributed Vaults 0, logon account 0, time-of-use restrictions 0, loosely
+    connected devices 0, Remote Access/Vendor PAM 0, Secrets Hub 0, PTA 0, Idira
+    rebrand/new cert program 0. Thin: Privilege Cloud 3, PSM for SSH 6, Master Policy 5,
+    reconcile 5, dual control/split workflow 4, onboarding rules/bulk upload/pending
+    accounts 4, discovery 1, Plugin Generator/connection components 5, SAML 1, PKI 2,
+    NTP 2, SMTP 2, load balancing 2, sizing/storage requirements 2, interval/
+    concurrency/AllowedSafes 4, Marketplace platforms 2, SSH keys 3, recording Safe 1,
+    live monitoring/termination 2, System Health 3, Secure Tunnel/connectors 3.
+    Reasonable: Vault 24, PVWA 24, CPM 21, PSM 20, Platform 20, Safe 19, recording 15,
+    LDAP 15, DR 14, REST API 11, hardening 10, PrivateArk 9.
+    Phase B should: (1) fix/replace the fabricated release-notes table and normalise
+    "Applies to:" to "Idira (formerly CyberArk) PAM Self-Hosted 14.x" after verifying
+    current versions; add rebrand note; (2) add per-domain pages for the Engineer
+    blueprint: CPM sizing/placement/install/hardening; PSM sizing + recording-storage
+    math, PSM post-install, HTML5 Gateway, SIA; PSMP install, maintenance users, MFA
+    caching; PVWA install, hardening, load balancing, REST API; Vault install +
+    post-install hardening; auth integration (MFA, PKI, RADIUS, SAML) and NTP/SMTP/
+    Syslog/SIEM; performance tuning (retention, CPM Interval/MaxConcurrent/AllowedSafes);
+    (3) cover Analyst ops topics: discovery + onboarding rules/bulk upload, Master Policy
+    workflows (dual control, exclusive/one-time, split workflow, time-of-use), platform
+    management (duplication, linked logon/reconcile accounts, usages, loosely connected,
+    Marketplace), recording Safes, reports, Vendor PAM; (4) expand the 7 sub-50-line
+    pages; (5) add a cert page with blueprint mapping, $250, 860/1000, 2-yr validity.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
+    touched docs/). Queue file only.
+- [x] security/products/venafi
+  - Audit (2026-11-25): 26 pages, 3,523 lines, 20 subdirs (architecture/{design-
+    standards,how-it-works,integrations}, operations/{backup-restore,cli-reference,
+    health-checks,install-upgrade,procedures,scripts}, security/{access-control,
+    authentication,encryption,hardening}, troubleshooting/{common-issues,diagnostics,
+    escalation}, learning-path). "Applies to:" tally: 21 "Venafi TLS Protect",
+    2 "Venafi Trust Protection Platform", 1 "TPP 22.x+", 1 "TPP 22.x / 23.x",
+    1 "TLS Protect (TPP) on Windows Server". KB is SELF-HOSTED TPP (Windows/IIS/SQL,
+    policy tree, engines); SaaS appears only as side mentions (VaaS 14 hits, "TLS
+    Protect Cloud" 8). Versions: TPP 22.x (8 hits), 23.4 (1); release-notes table
+    stops at 24.3 with placeholder "#" links. Zero use of current names (Trust
+    Protection Foundation, Certificate Manager - Self-Hosted, Palo Alto Networks);
+    the 9 "CyberArk" hits are about CyberArk PAM vaulting break-glass creds, not the
+    rebrand. Suspected errors: (1) security/authentication + access-control describe
+    "built-in roles: Policy Master, Certificate Manager, Approver" (6 "Policy Master"
+    hits) - the 26.2 doc TOC shows a "Master Admin" role plus object-level
+    permissions and no "Policy Master" topic; verify and rewrite in Phase B.
+    (2) release-notes.md version summaries (e.g. "23.2 - machine identity firewall",
+    "24.3 - TLS Protect Cloud improvements" on a TPP page) not verified against
+    vendor release notes; look generated. (3) Version table is ~5 releases stale.
+  - Cert research (2026-11-25): NO current certification exists for this product.
+    Naming chain (verified): Venafi Trust Protection Platform / TLS Protect ->
+    CyberArk Certificate Manager, Self-Hosted -> Palo Alto Networks "Trust
+    Protection Foundation" (26.2 readme: "This product was formerly named Venafi
+    Trust Protection Platform"; docs versions 25.1, 25.3, 26.1, 26.2). Certificate
+    Manager - Self-Hosted, SSH Manager and Code Sign Manager (ex-CodeSign Protect)
+    are products on that foundation. SaaS line (Venafi TLS Protect Cloud/VaaS ->
+    CyberArk Certificate Manager SaaS) is now "Next-Gen Trust Security (NGTS)".
+    CyberArk brand itself is now "Idira by Palo Alto Networks" (cyberark.com
+    certification/training URLs redirect to paloaltonetworks.com/idira). PANW
+    certification catalog lists 23 certs (PAM SH Analyst/Engineer, PAM SaaS, EPM,
+    IAM, NetSec, Cortex, etc.) - none for certificate/machine identity. PANW ILT
+    catalog Idira courses are PAM SH Admin, PAM SH Install & Configure, PAM SaaS,
+    EPM only - no Certificate Manager course. Legacy Venafi training site
+    (university.venafi.com) no longer resolves. Fallback bar = official 26.2 doc
+    set chapter list (extracted from the docs' MadCap TOC data file).
+    Sources (primary, vendor):
+    https://docs.paloaltonetworks.com/trust-protection-foundation/Docs/26.2/TopNav/Content/Release-Documents/Readme.php
+    https://docs.paloaltonetworks.com/trust-protection-foundation/Docs/26.2/TopNav/Data/Tocs/TopNav_TOC_for_products.js
+    https://docs.paloaltonetworks.com/trust-protection-foundation/Docs/26.2/TopNav/Data/Tocs/TopNav_TOC_for_products_Chunk0.js
+    https://docs.paloaltonetworks.com/trust-protection-foundation/
+    https://www.paloaltonetworks.com/network-security/next-gen-trust-security/certificate-manager
+    https://www.paloaltonetworks.com/services/education/certification
+    https://www.paloaltonetworks.com/services/education/ilt
+    https://www.cyberark.com/certification/ (-> paloaltonetworks.com/idira)
+    https://www.cyberark.com/services-support/training (-> paloaltonetworks.com/idira)
+    https://training.cyberark.com/ (-> learn.paloaltonetworks.com, JS-only)
+    Target bar: No exam - expert bar = Trust Protection Foundation 26.2 docs:
+    Platform (Install/Upgrade, Administration, Server Agent, Reporting, Log Server,
+    Macro guides) + Certificate Manager (Certificate Management Guide 16 chapters,
+    CA & Hosting Platform Integration Guide, Troubleshooting) + REST APIs (Auth
+    REST, Web SDK).
+  - Gap vs blueprint (pages mentioning each term, out of 26): Zero coverage:
+    onboard discovery, EST enrollment, application/device objects, system
+    encryption keys (software/HSM key storage), custom fields, credential objects,
+    macros, Venafi Support Console (VSC), Venafi Operational Certificate (server
+    agent client auth), Trust Protection Foundation/Certificate Manager -
+    Self-Hosted naming. Thin: SCEP 1, ACME 3, work/client groups 1, dashboards 1,
+    SSO/SAML 1, lost certs/root trust 1, Auth REST/OAuth tokens 2, disaster
+    recovery 2, adaptable drivers 2, HSM 4, network discovery 5, server agent 7,
+    provisioning/installation 7. Adequate: policy folders 19, workflow/approval 15,
+    Web SDK/REST 15, MS ADCS 13, public CAs 13, engines 13, reports 10, vcert 9,
+    validation 8, CA templates 7, log server/notifications 7. Phase B should:
+    rename to "Palo Alto Networks Trust Protection Foundation / Certificate Manager
+    - Self-Hosted (formerly Venafi TPP)" with 26.x Applies-to; rebuild release-notes
+    from 25.1-26.2 readmes (+ deprecated features page); verify/fix the RBAC model
+    (Master Admin + object permissions vs "Policy Master"); add pages for
+    discovery (network + onboard), enrollment protocols (SCEP/EST/ACME), app
+    objects + certificate installation/drivers, system encryption keys + HSM,
+    Server Agent (VOC, client groups, work), custom fields + credentials, Auth
+    REST tokens/API integrations, DR operations, VSC, macros/notification rules.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
+    touched docs/). Queue file only.
 
 ### Storage — Ceph
-- [ ] storage/products/ceph
+- [x] storage/products/ceph
+  - Audit (2026-11-25): 27 pages, 9,669 lines, 22 subdirs (architecture/{how-it-works,
+    integrations,design-standards}, deploy, learning-path, operations/{procedures,
+    backup-restore,health-checks,install-upgrade,scripts,cli-reference}, security/
+    {encryption,hardening,access-control,authentication}, troubleshooting/{diagnostics,
+    escalation,common-issues}). "Applies to:" tally: Ceph Reef / Squid x17, "Red Hat
+    Ceph Storage · Upstream Ceph" x6, Ceph 18.x (Reef) x2, Reef/Squid x1, Reef/Quincy
+    x1. Version mentions: Reef 34, Quincy 37, Squid 21, Octopus 10, Pacific 12,
+    Nautilus 5, RHCS 5/6/7 x1 each; Tentacle 0, Umbrella 0, RHCS 8/9 0, "IBM Storage
+    Ceph" 0. Focus is upstream cephadm (cephadm on 20/27 pages) with light RHCS nods.
+    Factual errors spotted:
+    (1) operations/install-upgrade/index.md version table calls Squid 19 "Current
+    development, EOL TBD" and Reef 18 "Current stable (LTS)". Per docs.ceph.com,
+    Reef is now an archived release, Squid is near EOL (est. 2026-12-02), and
+    Tentacle 20 (20.2.5) and Umbrella 21 (21.2.0, 2026-10-28) are the active
+    releases. Neither is in the table.
+    (2) The same page says "Pacific -> Reef requires an intermediate Quincy upgrade".
+    Not verified this session; upstream's skip-one-release upgrade rule should be
+    checked before this line is kept.
+    (3) deploy/index.md says "Reef = current stable" but the curl fetches cephadm from
+    the quincy branch, which is both stale and inconsistent.
+    (4) release-notes.md tops out at 18.2 Reef. Its Released dates and "RGW multi-site
+    active-active" as a Reef headline look doubtful (multisite predates Reef), and all
+    links are placeholders (#).
+    (5) troubleshooting/escalation/index.md calls RHCS 6 (Quincy) and RHCS 7 (Reef)
+    "current; full support", but RHCS 8 and 9 exist and docs.redhat.com now defaults
+    to RHCS 9 (9.1/9.2 docs are PDF only).
+  - Cert research (2026-11-25): The candidate EX260 (Red Hat Certified Specialist in
+    Ceph Cloud Storage) is RETIRED. The redhat.com EX260 URL now redirects to
+    /retired-ex260-... titled "Retired - Red Hat Certified Specialist in Ceph Cloud
+    Storage exam". That page still shows the full objective list, a 3-hour
+    performance-based format and CL260 as prep. No retirement date is shown (not
+    verified). The CL260 and CL261 English pages return 404. The certification page
+    (rhcs-ceph-cloud-storage) still lists the skills and EX260 without a retired
+    label. The Credly retired-badges collection lists only the older "Specialist in
+    Ceph Storage Administration" (EX125), not Ceph Cloud Storage.
+    RHCS version EX260 is based on: not verified. The page only says "most recent
+    product version available" and the CL261 page that would state it is 404.
+    May 2026 framework: the RH T&C FAQ says there are no changes to exam content,
+    objectives, recommended training, price or proctoring. That statement covers
+    live exams only and is moot for EX260, which is retired.
+    Product ownership: Red Hat Ceph Storage still exists (lifecycle page lists
+    RHCS 7/8/9, each with 36 months of Production Support). Engineering is IBM's:
+    RHCS 9.0 release notes use IBMCEPH-* bug IDs and mention "upgrade to Tentacle",
+    which implies RHCS 9 is Tentacle-based (not stated outright).
+    IBM replacement credential: "IBM Storage Ceph Administrator" Credly badge,
+    Intermediate level, earned by completing IBM DLP course SSCH1DG (IBM Storage Ceph
+    Workshop: 3 days self-paced, 14-day labs, graded quizzes). It is a course badge,
+    not a proctored exam. IBM's launch blog (2025-10-21) calls the Red Hat Ceph course
+    "now-retired". SSCH1DG agenda: cephadm deploy and expand, dashboard, CLI and
+    service specs, pools, OSDs and device classes, CephX, RGW, RBD + NVMe, CephFS,
+    data protection and CRUSH, tune and troubleshoot, OpenStack/OpenShift
+    integration.
+    Upstream: Umbrella 21 (21.2.0, released 2026-10-28, est. EOL 2028-06-01),
+    Tentacle 20 (20.2.5, est. EOL 2027-06-01), Squid 19 (19.2.7, est. EOL
+    2026-12-02). Reef, Quincy and Pacific are archived.
+    Sources (primary, vendor):
+    https://www.redhat.com/en/services/training/ex260-red-hat-certified-specialist-in-ceph-cloud-storage-exam
+    (redirects to the retired- URL),
+    https://www.redhat.com/en/services/training/retired-ex260-red-hat-certified-specialist-in-ceph-cloud-storage-exam,
+    https://www.redhat.com/en/services/certification/rhcs-ceph-cloud-storage,
+    https://www.redhat.com/en/services/training/cl261-cloud-storage-with-red-hat-ceph-storage-with-exam
+    (404), https://www.redhat.com/en/services/training/cloud-storage-red-hat-ceph-storage-cl260
+    (404), https://www.redhat.com/en/services/training-and-certification/faq,
+    https://www.redhat.com/en/blog/validate-targeted-expertise-major-updates-red-hat-certification,
+    https://www.credly.com/organizations/red-hat-inc/collections/retired-red-hat-certifications/badge_templates(.json),
+    https://www.credly.com/org/ibm/badge/ibm-storage-ceph-administrator,
+    https://community.ibm.com/community/user/blogs/upendra-rajan/2025/10/21/ceph-training-from-ibm,
+    https://access.redhat.com/support/policy/updates/ceph-storage,
+    https://docs.redhat.com/en/documentation/red_hat_ceph_storage (-> /9),
+    https://docs.redhat.com/en/documentation/red_hat_ceph_storage/9/html-single/9.0_release_notes/index,
+    https://docs.ceph.com/en/latest/releases/
+    Target bar: There is no live proctored Ceph exam. Use the last published EX260
+    objective list as the task blueprint, modernised to cephadm/orchestrator on
+    Tentacle 20 / RHCS 9 / IBM Storage Ceph, and add the SSCH1DG topics (service
+    specs, device classes, NVMe-oF, OpenShift). A reader should be able to do every
+    EX260 task hands-on from the KB.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: pg-upmap/
+    balancer 0, NVMe-oF/iSCSI gateway 0, cephfs-mirror 0, stretch mode 0, mClock 0,
+    RGW debug logging (debug_rgw) 0, RGW TLS/in-transit encryption (rgw_frontends ssl)
+    0, persistent CephFS mount via fstab 0, IBM Storage Ceph 0, Tentacle/Umbrella 0.
+    Thin: EC profile 1, device classes 1, rbd-mirror 1 (no pool vs image mode, no
+    status), RBD export/import(-diff) 2, RBD clone/snap protect 2, rbd map 2,
+    osd_memory_target 2, public/cluster network 2, Grafana 2, service specs 3,
+    CephFS snapshots 3, ceph crash 3, alertmanager 3, RADOS namespaces 4, ceph-volume
+    4, CRUSH rules 4, recovery tuning (osd_max_backfills etc.) 4, s3cmd/awscli 4,
+    Swift CLI/subusers 4, ganesha/NFS 5, multisite 5, erasure 5, OpenStack
+    Glance/Cinder 5, deep-scrub 5, pg autoscaler 6, quotas 6. Solid: OSD 26, PGs 23,
+    RGW 23, RBD 22, MON quorum 21, cephadm 20, CephFS 19, MDS 16, upgrade 16,
+    orchestrator 15, health 14, CRUSH 12, cephx 12, pools 12, S3 12.
+    Phase B should:
+    (a) fix the version table, release notes, the deploy cephadm URL and the RHCS
+    escalation lines to Tentacle/Umbrella and RHCS 8/9, and add an RHCS / IBM
+    Storage Ceph <-> upstream mapping, citing sources;
+    (b) write one hands-on lab per EX260 objective group: restricted cephx clients
+    (pool/namespace caps); EC profile + pool + upload; RBD create/map/snap/clone/
+    export-diff/import-diff; one-way rbd-mirror in pool and image mode + status;
+    RGW deploy, multisite, S3 and Swift users, NFS export of buckets, in-transit TLS;
+    CephFS create, fstab mount, quotas, snapshots; CRUSH bucket hierarchy + rules
+    + pg-upmap/balancer; full/nearfull ratios; scrub, recovery and memory tuning;
+    debug_rgw; Glance/Cinder RBD backends;
+    (c) add SSCH1DG-era topics: service specs, device classes, NVMe-oF gateway,
+    stretch mode, mClock, cephfs-mirror and ODF/Rook integration;
+    (d) record that EX260 is retired and point readers to the IBM SSCH1DG badge as
+    the current vendor credential.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
+    touched docs/). Queue file only.
 
 ### Storage — Dell
-- [ ] storage/products/dell/apex-storage-as-a-service
-- [ ] storage/products/dell/cloudiq
-- [ ] storage/products/dell/cod
+- [x] storage/products/dell/apex-storage-as-a-service
+  - Audit (2026-11-25): 26 pages, 4,215 lines, 5 subdirs (architecture, operations,
+    security, troubleshooting, learning-path) + index + release-notes. Content is
+    skewed: scripts.md 1,354 + cli-reference.md 661 + diagnostics.md 449 +
+    escalation.md 357 = 67% of lines; 12 pages are <60 lines. "Applies to:" 21x
+    "APEX Storage-as-a-Service", 2x "Dell EMC Storage" (stale brand), 2x "Dell APEX
+    Block/File/Object Storage", 1x "(block storage)". Names used: APEX Console (19
+    pages), CloudIQ (18), PowerStore (15), PowerFlex (12), PowerScale (10), PowerMax
+    (2); "APEX Data Storage Services" (Dell's documented name) appears on 0 pages.
+    FLAGS: (1) CloudIQ is presented as current; Dell support now calls it "Dell AIOps
+    (formerly CloudIQ)" / "APEX AIOps" (0 KB pages say AIOps). (2) release-notes.md
+    lists invented-looking versions ("Apex STaaS 2024.3 PowerMax NVMe tier", "2022.3
+    PowerScale object tier") with "[Release Notes](#)" dead links; ADSS is a
+    service, not a versioned product - not verifiable, treat as fabricated. (3)
+    cli-reference/scripts assert api.dell.com OAuth2 token URL + console.dell.com +
+    cloudiq.apis.dell.com REST paths - not verified against any Dell API doc. (4)
+    Section ignores the public-cloud line (APEX Block/File Storage for AWS/Azure,
+    APEX Navigator for Multicloud Storage): 0 pages.
+  - Cert research (2026-11-25): NO current Dell Proven Professional exam covers APEX
+    storage-as-a-service. Dell Learning "Certification and Badges" page (fetched,
+    82 exam codes) lists only APEX Cloud Platform achievements (D-AX-DY-A-00 Azure,
+    D-AX-RH-A-00 OpenShift) - compute/HCI, not storage; no APEX Data Storage
+    Services / APEX Console / APEX Block or File Storage exam. Feb-2024 exam
+    transformation PDF: zero "APEX" hits. Nearest adjacencies checked: D-CS-DS-23
+    Cloud Services Design (vendor-neutral cloud strategy; 7 domains, 0 APEX
+    mentions) - not a fit; D-PWF-OE-00 PowerFlex Operate (11/26/24) has one
+    objective "Describe PowerFlex with APEX" + APEX AIOps Observability - too thin.
+    Product status: dell.com/support manuals still publish "Dell APEX Data Storage
+    Services" (Roles & Responsibilities for Customer-managed / Dell-managed
+    deployments; Remote Access Planning for Dell-managed On-Prem and Colocation) with
+    APEX Console + CloudIQ tasks and no EOL notice (revision dates not shown).
+    Dell blog 2025-10-22 markets "Dell APEX Infrastructure" (subscription +
+    pay-per-use) - storage scope/ADSS relationship not stated. Public cloud: APEX
+    Navigator for Multicloud Storage service guide covers APEX Block Storage for AWS
+    and APEX File Storage for AWS (US only, 90-day eval); InfoHub Block-for-AWS paper
+    says purchasable on AWS Marketplace. NOT VERIFIED: "Flex on Demand" current
+    naming and any ADSS rename/retirement (dell.com/dt marketing pages return 403 to
+    curl and WebFetch); APEX File Storage for Azure GA (only a Microsoft
+    preview-announcement result, not fetched).
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+    https://learning.dell.com/content/dell/en-us/home/training/apex-training.html
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/Dell%20Technologies%20Proven%20Professional%20Exam%20Updates.pdf
+    https://learning.dell.com/content/dam/dell-emc/documents/en-english/D-CS-DS-23_Cloud_Services_Design_Exam.pdf
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/Dell_PowerFlex_Operate_Exam_Description.pdf
+    https://www.dell.com/support/manuals/en-us/apex-data-storage-service/roles_response_cust_mgmd_adss_pub/block-storage-activities?guid=guid-657a6276-bae2-4a82-8f73-4f2f9c2f7051&lang=en-us
+    https://www.dell.com/support/manuals/en-us/apex-navigator-multi-cloud-storage/apex_nav_multicloud_serviceguide_pub/introduction?guid=guid-9dee03df-6b8a-43f0-96d3-2b99cb7e9e79&lang=en-us
+    https://www.dell.com/en-us/infohub/articles/dell-apex-block-storage-for-aws
+    https://www.dell.com/support/product-details/en-us/product/cloud-iq/resources/articles
+    https://www.dell.com/en-us/blog/transform-your-it-subscription-meets-pay-per-use/
+    Target bar: no exam exists - fallback = Dell product doc set: ADSS Roles &
+    Responsibilities (Customer- + Dell-managed), ADSS Remote Access Planning (SCG,
+    Dell Management Stack, ports/firewall), APEX Navigator for Multicloud Storage
+    service guide + InfoHub APEX Block Storage for AWS; underlying-platform depth
+    via D-PST-OE-23 PowerStore Operate / D-PWF-OE-01 PowerFlex Operate (both listed).
+  - Gap vs blueprint (pages mentioning each term, out of 26): Zero coverage: "Data
+    Storage Services" 0, Dell Management Stack 0, virtual gateway 0, AIOps 0, APEX
+    Navigator 0, Block/File Storage for AWS/Azure 0, Flex on Demand 0, Terraform 0.
+    Thin: customer-managed 2, colocation/Equinix 1, AWS 1, Azure 2, APEX
+    Infrastructure 1, replication 4, SAML/SSO 4, MFA 4, firewall 5, Dell-managed 7.
+    Adequate: APEX Console 19, CloudIQ 18 (stale name), PowerStore 15, subscription
+    14, SCG 13, metering/billing 13, tier 13, PowerFlex 12, snapshot 11, committed
+    capacity 10, SLA 10, PowerScale 10, burst 9, responsibilities 9.
+    Phase B should: rename to Dell's documented "APEX Data Storage Services" and
+    note the "APEX Infrastructure" umbrella (re-verify on dell.com first); replace
+    CloudIQ with Dell AIOps (formerly CloudIQ); delete/rebuild release-notes.md
+    (no fabricated versions); verify or remove api.dell.com/cloudiq API paths in
+    cli-reference+scripts; add Dell- vs customer-managed responsibility matrix
+    (block, file, backup target), colocation option, Remote Access Planning (SCG,
+    Dell Management Stack, port table); add a public-cloud sub-area (APEX Navigator,
+    Block Storage for AWS (PowerFlex-based, per InfoHub), File Storage for AWS,
+    90-day eval, US-only); fix "Dell EMC Storage" Applies-to lines; thicken the 12
+    sub-60-line pages.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
+    touched docs/). Queue file only.
+- [x] storage/products/dell/cloudiq
+  - Audit (2026-11-25): 31 pages, 4,582 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting) + index + release-notes.
+    "Applies to:" 21 CloudIQ, 7 Dell CloudIQ, 1 Dell CloudIQ SaaS, 1 CloudIQ (SaaS),
+    1 CloudIQ / Secure Connect Gateway. Largest: operations/scripts.md (883),
+    troubleshooting/escalation.md (459), diagnostics.md (416). RENAMED-PRODUCT FLAG:
+    whole section presents "CloudIQ" as the current name; 0 pages mention "Dell
+    AIOps", "APEX AIOps" or "Infrastructure Observability". Dell now sells it as
+    "Dell AIOps (formerly CloudIQ)" (2024 interim name: APEX AIOps Infrastructure
+    Observability). Accuracy flags: release-notes.md version table (2022.4-2024.4)
+    has placeholder "(#)" links and is unverified; API examples use 3 different
+    base URLs (api.cloudiq.dell.com, cloudiq.apis.dell.com/..., cloudiq.dell.com/
+    auth/v1/token) - unverified, likely invented in part. OVERLAP: sibling
+    storage/products/dell/dell-aiops (24 pages, 1,772 lines; 21 pages mention
+    CloudIQ) covers the same product - Phase B should merge into ONE section
+    (dell-aiops as canonical, cloudiq as redirect/"formerly" alias), not build
+    two cert-grade sections.
+  - Cert research (2026-11-25): NO current Dell Proven Professional exam covers
+    CloudIQ/Dell AIOps. Checked 10 exam descriptions via pdftotext - 0 hits for
+    "CloudIQ"/"AIOps": D-PST-OE-23 PowerStore Operate, D-PST-DY-23 PowerStore
+    Deploy, D-PVM-OE-01 PowerMax Operate v2, D-PVM-DS-01 PowerMax Design v2,
+    D-PSC-DY-23 PowerScale Deploy, D-PSC-DS-23 PowerScale Design (its 8%
+    monitoring domain names InsightIQ/HealthCheck/SRS, not CloudIQ), D-PSC-MN-23
+    (retirement notice), D-MSS-DS-23 Midrange Design, D-CIS-FN-01 Cloud Infra &
+    Services Foundations v2; Proven Professional "Exam Updates" (as of 2024-02-05)
+    lists no CloudIQ exam. Dell KB 000157827 (mod. 2026-05-04) states CloudIQ
+    documentation "is limited to a white paper and on-line help"; no public user
+    guide exists. Support manuals page lists only "Dell AIOps Collector Security
+    Configuration Guide" (2026-07-14) and "CloudIQ Detailed Review" (2022-05-24).
+    Fallback bar = current Dell white paper "Dell AIOps: A Detailed Review"
+    (H15691.12, Jan 2026 per search snippet) + Collector Security Config Guide -
+    BOTH PDFs returned HTTP 403 to curl and WebFetch, so their TOCs are NOT
+    VERIFIED; scope below is from fetched Dell product FAQ + Dell blog only.
+    A Dell Demo Center hands-on lab ITD-0511 "Dell AIOps (formerly CloudIQ)" was
+    seen only in a search snippet (page requires sign-in) - not verified.
+    Sources (primary, vendor): dell.com/en-gb/shop/dell-aiops/sl/aiops (name
+    "Dell AIOps (formerly CloudIQ)", ProSupport/ProSupport Plus/ProSupport One
+    entitlement, supported products incl. Connectrix/PowerSwitch/VxRail, AIOps
+    Assistant, health/anomaly, cyber, sustainability);
+    dell.com/support/product-details/en-uk/product/cloud-iq/resources/articles;
+    dell.com/support/product-details/en-us/product/cloud-iq/resources/manuals;
+    dell.com/support/kbdoc/en-us/000157827; dell.com/en-us/blog/ai-powered-it-
+    from-reactive-to-proactive-with-dell-aiops/ (2025-12-15: AIOps Assistant,
+    health scores, cyber risk, forecasting incl. SAN optics, carbon, mobile app,
+    email digests, APIs/webhooks to Slack/ServiceNow/Ansible/Terraform);
+    learning.dell.com exam PDFs listed above (all fetched + pdftotext'd).
+    Target bar: no cert exists - expert bar = Dell AIOps Detailed Review
+    (H15691.12) feature set + Collector security guide, fetch both before Phase B.
+  - Gap vs blueprint (pages mentioning each term, out of 31): Zero coverage:
+    Dell AIOps / APEX AIOps / Infrastructure Observability name (0), AIOps
+    Assistant/GenAI (0), cybersecurity/vulnerability (0), ransomware (0),
+    performance impact analysis (0), health-score categories (0), Connectrix (0),
+    PowerSwitch (0), Terraform (0), Report Browser (0), custom reports (0).
+    Thin: collector VM 2, misconfiguration 2, sustainability/carbon 2, Slack 2,
+    Ansible 2, ProSupport entitlement 2, PowerEdge/OME 3, PowerProtect 3, roles
+    3, email digest 3, mobile app 1, VxRail 1. Covered: SCG 14, REST API 15,
+    forecast 14, health score 13, webhook 9, SupportAssist/SRS 8, anomaly 6,
+    ServiceNow 6. Phase B should: (1) decide merge with dell-aiops and rename to
+    "Dell AIOps (formerly CloudIQ)" everywhere; (2) obtain the H15691.12 PDF and
+    Collector Security Config Guide (manual download if 403 persists) and rebuild
+    against their TOC; (3) add cyber/vulnerability, AIOps Assistant, collector
+    (VMware/Connectrix/PowerSwitch), Report Browser/custom reports, RBAC incl.
+    DevOps role, sustainability pages; (4) verify or delete the API base URLs and
+    the invented release-notes table.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
+    touched docs/). Queue file only.
+- [x] storage/products/dell/cod
+  - Audit (2026-11-25): 21 pages, 2,911 lines, 4 subdirs (architecture 5p,
+    operations 9p, troubleshooting 5p, learning-path 1p) + index + release-notes.
+    Largest: operations/scripts 654, troubleshooting/escalation 433,
+    troubleshooting/diagnostics 408, operations/cli-reference 303. Section has
+    NO stable identity: "Applies to:" tally = 13x "Cloud for Desktop (COD)",
+    4x "Dell Cloud Object Detachment", 2x "Dell PowerMax COD licensing", 1x
+    "Dell Cloud on Demand (COD) / PowerMax Cloud on Demand", 1x "Dell PowerMax
+    Capacity on Demand (COD)". Body content mostly describes PowerMax/VMAX
+    license-gated pre-installed drives activated with a key file via
+    SYMCLI/Unisphere (symlmf-style key import, SRP/disk-group capacity), but
+    architecture/how-it-works.md also carries an unrelated "Object Storage
+    Data Model" (buckets, namespaces, geo-replication) and a "30/90-day
+    burst" sequence; FAQ claims PowerStore/Unity CoD licence menus.
+    release-notes.md lists invented "COD 2.4-3.2" software versions (COD is
+    not a versioned product). Flag for Phase B: mislabeled + partly
+    hallucinated content; "Cloud for Desktop" and "Cloud Object Detachment"
+    are not Dell storage offerings (no Dell source found for either).
+    Overlap: sibling sections storage/products/dell/fod (Flex on Demand) and
+    storage/products/dell/apex-storage-as-a-service cover the real Dell
+    consumption programs; cod largely duplicates/confuses them.
+  - Cert research (2026-11-25): NO current Dell certification covers "Capacity
+    on Demand" or any consumption/licensing program. Dell Proven Professional
+    catalog (learning.dell.com certification-and-badges, fetched) lists ~80
+    exam codes; only APEX items are APEX Cloud Platform implementation
+    (Azure/OpenShift), nothing for APEX Flex on Demand / pay-per-use. Nearest
+    technical certs are PowerMax: D-PVM-OE-01 PowerMax Operate v2 (75 min
+    ~40 Q + 45 min ~8 Q lab; domains: Storage Provisioning 24%, Business
+    Continuity Admin 20%, Data Mobility 12%, Monitoring/Workload Planning 10%,
+    Local/Remote Replication Concepts 10%, Solutions Enabler 10 10%,
+    Unisphere 10 8%, Virtual Env 4%; requirements as of 2024-09-18),
+    D-PVM-DS-01 PowerMax Design v2, D-PM-IN-23 Install, D-PM-MN-23
+    Maintenance. pdftotext of all four PDFs: zero hits for "licens",
+    "entitle", "on demand capacity" -> licensing/COD is not an exam topic.
+    Offering status: "PowerMax Capacity on Demand" as a named current Dell
+    program NOT VERIFIED (no Dell primary source found; dell.com returns 403
+    to automated fetch). Dell's consumption program is now marketed as "Dell
+    APEX Infrastructure" pay-per-use: the old en-us flex-on-demand.htm URL
+    301-redirects to /dt/apex/subscriptions.htm -> /shop/apex/subscriptions/
+    sl/apex-infrastructure (Wayback capture 2026-11-04). That page: "pre-
+    deployed buffer capacity", "capped monthly billing at 85% of total
+    installed capacity ... Available with Dell Flex on Demand for Storage,
+    Data Protection, and VxRail. Dark sites, non-metered deployments ... not
+    eligible. 85% billing cap excludes servers"; deployment + support are
+    required. This is a COMMERCIAL/FINANCIAL program, not a technical product.
+    Sources (primary, vendor):
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+      https://education.dell.com/content/emc/en-us/home/certification-overview.html
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-PVM-OE-01-PowerMax_Operate_Exam_Description.pdf
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/ExamDescriptionDellPowerMaxDesignv2ExamD-PVM-DS-01.pdf
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-PM-IN-23-Install_PowerMax_Exam.pdf
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-PM-MN-23-Maintenance_PowerMax_Exam.pdf
+      https://web.archive.org/web/20261104004947id_/https://www.dell.com/en-us/shop/apex/subscriptions/sl/apex-infrastructure
+        (archived Dell page; live dell.com 403 to curl/WebFetch)
+    Target bar: no cert exists -> expert bar = Dell's own APEX Infrastructure /
+    Flex on Demand program terms (commit vs buffer, metering, 85% cap,
+    eligibility) + PowerMax licensing/eLicensing (LAC, Solutions Enabler
+    license import) at D-PVM-OE-01 operator depth; recommend Phase B merge
+    cod into dell/fod rather than build it out.
+  - Gap vs blueprint (pages mentioning each term, out of 21): Zero coverage:
+    "Flex on Demand" 0, "APEX Infrastructure"/"storage as a service" 0,
+    buffer capacity 0, metering 0, pricing 0, data reduction 0. Thin: APEX 1,
+    committed/base capacity 1, pay-per-use/consumption 1, billing 1,
+    PowerStore 3, Secure Connect Gateway/SRS 2, SRP 5. Heavy (off-target or
+    suspect): "Cloud for Desktop" 13, Solutions Enabler/SYMCLI 13, license
+    key/file 12, Unisphere 16, PowerMax 16, CloudIQ/AIOps 8, buckets 3.
+    Phase B should: (1) decide identity - recommended: retire/merge into
+    dell/fod and dell/powermax (licensing), redirect; (2) if kept, retitle as
+    "PowerMax licensing & capacity activation" only after a Dell primary
+    source confirms the mechanism; (3) delete "Cloud for Desktop"/"Cloud
+    Object Detachment" labels, object-storage/bucket section, 30/90-day
+    burst claim and fabricated COD 2.4-3.2 release table; (4) verify
+    PowerStore/Unity CoD claims or remove; (5) cross-link to APEX
+    Infrastructure 85% cap / buffer model in dell/fod.
+  - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
+    touched docs/). Queue file only.
 - [ ] storage/products/dell/data-domain
 - [ ] storage/products/dell/dell-aiops
 - [ ] storage/products/dell/ecs
