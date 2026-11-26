@@ -5056,21 +5056,1983 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     labs mapped to 3V0-22.25 objective numbers.
   - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered this item
     and the 9 others done alongside it, none touched docs/). Queue file only.
-- [ ] virtualization/vmware/products/aria-operations-for-logs
-- [ ] virtualization/vmware/products/aria-operations-for-networks
-- [ ] virtualization/vmware/products/aria-suite-lifecycle
-- [ ] virtualization/vmware/products/esxi
-- [ ] virtualization/vmware/products/horizon
-- [ ] virtualization/vmware/products/nsx
-- [ ] virtualization/vmware/products/powercli
-- [ ] virtualization/vmware/products/srm
-- [ ] virtualization/vmware/products/tanzu
-- [ ] virtualization/vmware/topics
-- [ ] virtualization/vmware/products/vcenter
-- [ ] virtualization/vmware/products/vmware-cloud-foundation
-- [ ] virtualization/vmware/products/vsan
-- [ ] virtualization/vmware/products/vsphere-replication
-- [ ] virtualization/vmware/products/vxrail
+- [x] virtualization/vmware/products/aria-operations-for-logs
+  - Audit (2026-11-25): 27 pages, 5,351 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). Largest:
+    operations/procedures.md 892, operations/health-checks.md 486,
+    troubleshooting/diagnostics.md 473, deploy/index.md 446, troubleshooting/
+    escalation.md 382, operations/cli-reference.md 370. "Applies to:" all 8.x:
+    "Aria Logs 8.x" 10, "VMware Aria 8.x" 7, "Aria Operations for Logs 8.x" 7,
+    3 variants 1 each. Versions cited: 8.14.0 (18x), 8.10.2 (13x), 8.14.x, 8.2-
+    8.18; one "9.1" mention. Zero pages mention VCF Operations for Logs, VCF 9,
+    Log Management (9.1), VMSP or Fleet Management. Presents 8.x as current; no
+    note that 8.18 -> 9.0 is fresh-deploy only, nor 9.1 rebrand. release-notes.md
+    is the template "Unverified version history" table; its 8.14 row "vRLI
+    rebrand to Aria" (release-notes.md:28) is wrong: the build KB already lists
+    8.12 as "VMware Aria Operations for Logs" (8.10.2 last vRLI build).
+    Current product facts (Broadcom primary): last 8.x build 8.18.7 (05/27/2026,
+    build 25423541) per KB 325701; TechDocs 8.18 nav also lists 8.18.8 release
+    notes (not opened). VCF 9.0 = "VCF Operations for Logs 9.0.x"; 8.18.x has no
+    in-place upgrade to 9.0, fresh deploy, both run in parallel, log data
+    transfer supported up to 90 days (KB 402314). VCF 9.1: Aria Ops for Logs
+    "rebranded as Log Management", "built-in, containerized core service" on VCF
+    Management Services Platform, accessed via VCF Operations > Operate > Logs
+    (KB 442141); 9.0.x appliance -> 9.1 leaves two appliances, agents/syslog
+    must be repointed, custom content packs must be converted to management
+    packs (KB 443492); content packs "deprecated in VCF Operations 9.1" (KB
+    443089); 9.1 rejects non-TLS syslog by default, TLS on 1514 (KB 454002).
+    Invented/wrong CLI and API (checked against Broadcom primary sources):
+    - `li-admin status|cluster-info|restart|log-collection-status|storage|
+      cluster|stats|disk`: operations/cli-reference.md:17-29,254-256;
+      deploy/index.md:155-156,164-168,354-374. No Broadcom source found
+      (li-admin is a Logpoint SIEM console user). Likewise `/usr/lib/loginsight/
+      application/bin/loginsight-cli config` operations/health-checks.md:183 and
+      `loginsight-ls.sh --support-bundle` troubleshooting/escalation.md:155,166
+      (public API has /api/v2/appliance/vm-support-bundles instead).
+    - REST paths absent from the developer.broadcom.com Log Insight API
+      operation index (v1 + v2/latest): /api/v2/cluster/nodes (25 uses, e.g.
+      deploy/index.md:200,390, troubleshooting/escalation.md:66,88,
+      operations/backup-restore.md:17, operations/scripts.md:18,
+      operations/health-checks.md:190; v2 "cluster" has only /cluster/vips);
+      /api/v1/cluster/nodes troubleshooting/diagnostics.md:30,138;
+      /api/v2/cluster/stats operations/scripts.md:24,
+      troubleshooting/common-issues.md:17, troubleshooting/diagnostics.md:144;
+      /api/v2/alerts* (alerts exist only under v1) operations/backup-restore.md:
+      55,102, operations/scripts.md:30,66, troubleshooting/common-issues.md:135;
+      /api/v2/archiver + /api/v2/agents/groups operations/backup-restore.md:
+      61,64; /api/v2/health, /api/v2/system/info (in error-fix tips deploy/index.md:419,
+      operations/backup-restore.md:115); /api/v1/agents, /api/v1/content/
+      contentpackmetadata, /api/v1/system/info, /api/v1/system/storage
+      operations/cli-reference.md:181-193,263; /api/v1/events/query
+      operations/cli-reference.md:83. Fabricated ingest response
+      {"status":"success","eventCount":1,...} operations/cli-reference.md:170.
+      Confirmed real: /api/v2/sessions (POST username/password/provider ->
+      sessionId, ttl), /api/v1|v2/version, /api/v1|v2/notification/channels,
+      /api/v1/alerts, /api/v2/events, /api/v2/events/ingest/{agentId},
+      /api/v2/log-forwarder, /api/v2/vrops, /api/v2/vsphere, roles/datasets,
+      Swagger at https://<host>/rest-api (8.18+).
+    - Auth: HTTP basic `curl -u admin:<pw>` used on ~55 lines across 9 pages
+      (heaviest operations/health-checks.md, scripts.md, backup-restore.md);
+      Broadcom docs describe POST /sessions -> Bearer sessionId only; basic auth
+      not documented. cli-reference.md does use Bearer (correct pattern).
+    - Ports: "VAMI at https://<fqdn>:9543" troubleshooting/escalation.md:52,67,
+      143 is wrong - 9543 is CFAPI over SSL (9000 cleartext) per KB 431771.
+      `https://<vip>:9000/api/v1/version` operations/procedures.md:439 mixes
+      cleartext ingestion port with HTTPS API. 1514 called non-TLS / "reliable"
+      / "structured syslog" security/encryption.md:42, security/hardening.md:85,
+      troubleshooting/diagnostics.md:198 vs Broadcom: 1514 and 6514 = syslog
+      over TLS. diagnostics.md:211-213 sample output shows the agent process
+      listening on 9543/1514 server-side (invented). Correct: 514 UDP/TCP,
+      6514 TLS, 9000/9543 CFAPI, liagent.ini path, proto=cfapi.
+    - Agent: deploy/index.md:288-290 `.bin -- --ip --port --ssl=yes` and
+      `/etc/init.d/vmware-log-insight-agent` not found in Broadcom docs; KB
+      395921/425006 use `rpm -i`, /var/lib/loginsight-agent/liagent.ini
+      (hostname=, proto=cfapi, port=9543, ssl=yes, central_config), and
+      liagentd service (diagnostics.md:285-305 liagentd usage is OK).
+      Agent log path /var/log/vmware/loginsight-agent/ (diagnostics.md:289)
+      not verified.
+    - Not verified (no primary source found either way): "Elasticsearch"
+      index tier architecture/how-it-works.md:25, troubleshooting/
+      escalation.md:332; keepalived for ILB operations/procedures.md:428,441,
+      operations/health-checks.md:185; Cassandra nodetool steps
+      troubleshooting/common-issues.md:45-82; port 16520 cluster comms
+      common-issues.md:97 (only seen in a search snippet of Suite Lifecycle
+      docs).
+  - Cert research (2026-11-25): No dedicated Logs exam. Primary target is
+    Advanced VMware Cloud Foundation 9 Operations (3V0-22.25) -> VCAP-VCF
+    Operations; guide dated November 2026; 60 items, pass 300 scaled, 135 min;
+    content based on VCF 9; only Section 4 testable (4.1-4.16), Section 5 "NO
+    TESTABLE OBJECTIVES"; courses VCF Operations: Advanced Design / Advanced
+    Configuration / Advanced Troubleshooting. Logs-relevant objectives:
+    4.1 "scale a VCF Operations for logs deployment" (+ configure a new
+    integration, RBAC); 4.9 "upload a VCF log bundle with Log Assist" (+ alerts,
+    notifications, troubleshooting workbench); 4.12 Log Event Monitoring and
+    Analysis: "configure Aria Operations for Logs for event monitoring", "create
+    an log event alert query in VCF Operations for logs", "manage dashboards in
+    VCF Operations for logs", "manage content packs in VCF Operations for logs";
+    4.16 "monitor user logons with Audit Users" (log-adjacent). Baseline
+    2V0-17.25 VCF 9.0 Administrator (Nov 2026 guide; 60 items, 300, 135 min)
+    Obj 4.3: "identify the use case for VCF Network Operations and VCF
+    Operations (Logs)", "monitor log events in VCF Operations"; its MQC list
+    names VCF Operations for Logs as a component. Legacy: VCP-CO 2V0-32.24
+    (guide last updated 8/1/2025; vRLI 8.8-era objectives 1.4, 2.6, 3.2-3.3,
+    4.5-4.6, 4.9, 4.12, 6.1, 6.5, 7.16-7.21: agents, retention/archiving,
+    notifications, auth, upgrades) - not in current certification-paths PDF;
+    not the target. Overlap with sibling aria-operations: same 3V0-22.25 exam;
+    4.12 and the Logs bullet of 4.1 belong here; 4.9 Log Assist and the VCF
+    Operations-side "monitor log events"/Operate > Logs UI straddle both
+    sections - Phase B should cross-link, not duplicate. Note the exam still
+    says "Aria Operations for Logs" in 4.12 while the product is VCF Operations
+    for Logs (9.0) / Log Management (9.1); "Content in this exam is based on
+    VCF 9" (version 9.0 vs 9.1 not stated).
+    Sources (primary, vendor): docs.broadcom.com/doc/VCAP-Operation-exam-guide;
+    docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide;
+    docs.broadcom.com/doc/vmw-certification-paths;
+    docs.broadcom.com/doc/vmw-vcp-co-8-x-exam-guide; knowledge.broadcom.com KB
+    325701, 402314, 442141, 443492, 443089, 454002, 431771, 426748, 384445,
+    425006, 395921; techdocs.broadcom.com aria-operations-for-logs 8-18 REST
+    API page; developer.broadcom.com/xapis/vrealize-log-insight-api (latest,
+    2.0, 1.0 operation-index; v2 sessions POST).
+    Target bar: 3V0-22.25 Obj 4.12 + Logs parts of 4.1/4.9 at VCAP scenario
+    depth on VCF 9 (Ops for Logs 9.0 / Log Management 9.1), with 2V0-17.25 4.3.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    VCF Operations for Logs / VCF 9 0, Management Services Platform/VMSP 0,
+    Fleet Management 0, management pack (9.1 content-pack replacement) 0, Log
+    Assist 0, Cloud Proxy log collection 0, Swagger /rest-api 0, 8.18->9.0
+    fresh-deploy/parallel-run migration 0. Thin: Log Management 1 (generic),
+    agent groups/central config 1, extracted fields 2, VCF Operations
+    integration 3, vCenter integration 3, support/log bundle 3, Aria Suite
+    Lifecycle 4, Interactive Analytics/Explore Logs 6, ILB/VIP 7, dashboard 8.
+    Moderate: cluster scale-out/worker node 10, CFAPI 10, retention/partitions
+    11, archiving 12, forwarding 12, TLS syslog ports 12, content pack 14,
+    RBAC roles/datasets 16, alert 22. Phase B should: (1) re-baseline the
+    section on VCF Operations for Logs 9.0 and Log Management 9.1 (VMSP,
+    Operate > Logs UI, Fleet Management deploy/scale) with 8.18.x as legacy
+    (8.18.7/8.18.8, fresh-deploy migration, 90-day data transfer); (2) delete
+    li-admin / loginsight-cli / loginsight-ls.sh and every API path not in the
+    developer.broadcom.com index; switch all curl examples to POST
+    /api/v2/sessions + Bearer; fix VAMI:9543, :9000 HTTPS and 1514 TLS errors;
+    replace agent .bin flags with rpm + liagent.ini/central config; (3) write
+    4.12 scenario labs: configure event monitoring, build a log alert query,
+    manage dashboards, manage content packs (and 9.1 content-pack -> management
+    pack conversion); 4.1 scale-out (add nodes, ILB/VIP); 4.9 Log Assist log
+    bundle upload; 2V0-17.25 4.3 use-case comparison (Logs vs Network Ops);
+    (4) verify unconfirmed internals (Elasticsearch, keepalived, Cassandra,
+    16520) against 9.x TechDocs before keeping any; (5) cross-link with
+    aria-operations rather than duplicating Operate > Logs content.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/aria-operations-for-networks
+  - Audit (2026-11-25): 27 pages, 6,406 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting) + index/release-notes.
+    "Applies to:" on 27/27 pages, all 6.x/8.x: "Aria Networks 6.x" 9, "Aria
+    Operations for Networks 6.x" 8, "VMware Aria 8.x" 7, three other 6.x variants.
+    Version mentions are all 6.x (6.5, 6.12, 6.14.0). Zero pages say "VCF
+    Operations for Networks" or "Network Operations". The only 9.x hit is a dig
+    banner. Largest pages: operations/procedures.md 992, cli-reference.md 694,
+    deploy/index.md 543, troubleshooting/common-issues.md 506.
+    INVENTED or WRONG CLI/API (checked against the developer.broadcom.com 9.1.2
+    operation index and Broadcom KBs):
+    (a) Invented /api/ni paths, not in the vendor index:
+      /api/ni/datasources (no hyphen; real is /data-sources/<type>) and
+        .../{id}/sync: cli-reference.md:408,418,422,694; common-issues.md:141,344;
+        procedures.md:53,111,271,324,504.
+      /api/ni/health: diagnostics.md:23,110,478.
+      /api/ni/info (bare): diagnostics.md:114.
+      /api/ni/system/version (real is /info/version): install-upgrade.md:66,137.
+      /api/ni/collectors (real is /infra/nodes): deploy/index.md:224;
+        install-upgrade.md:145; health-checks.md:50,344; cli-reference.md:619.
+      /api/ni/problems (real is /entities/problems): cli-reference.md:478;
+        scripts.md:38,144.
+      /api/ni/alerts and /alerts/{id}/acknowledge: cli-reference.md:628,633.
+      /api/ni/applications/{id}/security-groups[/export]: cli-reference.md:562,567;
+        procedures.md:517.
+      /api/ni/compliance/check: procedures.md:698,749.
+      /api/ni/micro-segmentation/recommendations (real is
+        /micro-seg/recommended-rules): scripts.md:59.
+      /api/ni/groups/applications/{id}/ip-addresses: scripts.md:109.
+      /api/ni/data-sources/{endpoint} is fine as a pattern.
+    (b) Auth bodies with no "domain" object. KB 313764 says "domain" is mandatory,
+      with domain_type LOCAL for local users: cli-reference.md:365,377;
+      backup-restore.md:14,50. Correct form: authentication.md:65,
+      diagnostics.md:120, scripts.md:26. The "24 hours" token lifetime at
+      cli-reference.md:22 is unsourced. The API returns an expiry, and one older
+      doc said 5 h.
+    (c) Appliance CLI is invented as a Linux/systemd model: ssh ubuntu@ + sudo
+      systemctl vrni-platform/nginx/cassandra/kafka/elasticsearch/postgres,
+      ni-collector or vrni-collector (inconsistent), /var/log/app.log,
+      /var/log/proxy.log, /var/log/vrni-platform/platform.log,
+      /home/ubuntu/support/pairing.sh. Locations: cli-reference.md:20,30-35,
+      71-86,149-160; deploy/index.md:145-153,216-240,460-497;
+      common-issues.md:234-309; escalation.md:100. Vendor model (KB 416016,
+      390092): log in as consoleuser for the restricted CLI (show-version,
+      show-service-status). The support user runs
+      sudo /home/ubuntu/check-service-health.sh -p -d.
+    (d) Unverified: the VAMI on :5480 (diagnostics.md:427; escalation.md:70,186)
+      and a hard-coded "default password" for consoleuser (procedures.md:892).
+      Remove the password in Phase B.
+    (e) The search-query examples (health-checks.md:84-90,252-261;
+      procedures.md:216,236,584,941; cli-reference.md:464,473) use plausible
+      "flows where ..." grammar, but tokens like `time_range = "last 15
+      minutes"`, `source = physical` and `collector = "..."` are not verified.
+      POST /api/ni/search exists, but its body schema was not checked.
+    (f) The data-source model is pre-VCF 9 throughout. It misses that 9.x deploys
+      via Fleet Management, that vCenter/NSX sources are added in VCF Operations
+      (Administration > Integrations > Network Operations > "Activate Network &
+      Flow Collection"), that VDS IPFIX is pushed by OfN, and that NetFlow/sFlow
+      needs a dedicated Physical Flow Collector appliance.
+  - Cert research (2026-11-25): Naming: "VCF Operations for Networks" (formerly
+    Aria Operations for Networks, before that vRNI; KB 325702). Builds: 9.0.0
+    (17-Jun-25), 9.0.1, 9.0.2 (20-Jan-26), 9.1.0.0 (12-May-26), 9.1.0.0100,
+    9.1.0.0200, 9.1.1.0 (03-Sep-26). The 6.x line continues with 6.14.1
+    (Aug-25), 6.14.2 (Feb-26) and 6.14.3 (28-May-26). The API reference "latest"
+    is 9.1.2, with 9.1.1/9.1/9.0 also listed. No VCF Operations for Networks
+    VCAP exists. The topic is a minority slice of three VCF 9 exams:
+    3V0-22.25 Advanced VCF 9 Operations (guide Nov 2026; 60 items, 135 min,
+    pass 300): obj 4.1 "scale a VCF Operations for network deployment" and
+    obj 4.13 "monitor VCF networks with VCF Operations for Networks" (the only
+    bullet under 4.13). The other 4.x objectives are VCF Ops/Logs, not OfN.
+    2V0-17.25 VCP-VCF Administrator: obj 4.3 "identify the use case for VCF
+    Network Operations and VCF Operations (Logs)" and "monitor networks using
+    VCF Network Operations". OfN is also listed as a product in the MQC.
+    3V0-25.25 Advanced VCF 9 Networking (guide Nov 2026): obj 4.12 "identify
+    the appropriate VCF tool/product to monitor a VMware NSX implementation"
+    and obj 5.1 "...to troubleshoot an issue in NSX". These are tool-selection
+    items where OfN is a likely answer, but OfN is not named.
+    The cert-paths PDF (Oct 2026) lists VCAP VCF Operations and VCAP VCF
+    Networking tracks with no OfN-specific exam.
+    Sources (primary, vendor):
+      https://docs.broadcom.com/doc/VCAP-Operation-exam-guide
+      https://docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide
+      https://docs.broadcom.com/doc/vcap-networking-exam-guide
+      https://docs.broadcom.com/doc/vmw-certification-paths
+      https://knowledge.broadcom.com/external/article/325702
+      https://developer.broadcom.com/xapis/vcf-operations-for-networks-api/latest/operation-index/
+      https://knowledge.broadcom.com/external/article/313764/using-the-apiniauthtoken-api-to-obtain-a.html
+      https://knowledge.broadcom.com/external/article/416016/how-to-check-version-of-vcf-operations-f.html
+      https://knowledge.broadcom.com/external/article/390092/unable-to-run-ssh-commands-against-appli.html
+      https://knowledge.broadcom.com/external/article/407642/netflow-or-sflow-flow-exports-from-3rd-p.html
+      https://knowledge.broadcom.com/external/article/406689/operations-for-networks-add-data-sources.html
+      https://knowledge.broadcom.com/external/article/442616/vcf-operations-for-networks-does-not-sho.html
+    Target bar: 3V0-22.25 obj 4.1 (scale OfN) + 4.13 (monitor networks), plus
+    2V0-17.25 obj 4.3 OfN bullets and 3V0-25.25 obj 4.12/5.1 tool selection.
+    Rebaseline the section on VCF Operations for Networks 9.1.x.
+  - Gap vs blueprint (pages mentioning each term, out of 27):
+    Zero coverage: "VCF Operations for Networks" 0, "Network Operations" 0,
+    Fleet Management 0, "Activate Network & Flow Collection" 0, scaling or adding
+    platform/collector nodes 0, Physical Flow Collector 0, sFlow 0,
+    pinboards/custom dashboards 0, path/VM-to-VM path 0, search-based
+    alerts/intents 0, show-version 0, show-service-status 0,
+    check-service-health/support user 0, HCX 0, databus 0, traceflow 0.
+    Thin: VCF 9.x 1 (a false hit), consoleuser 1 (with an invented password),
+    VCF Operations adapter/integration 1, /settings/backup 1, Kubernetes 2,
+    license 2, 6.14 3, application discovery 4, micro-segmentation 6.
+    Well covered (but on the 6.x model): collector 20, IPFIX 15, search 15,
+    NetFlow 13.
+    Phase B should: rename to VCF Operations for Networks 9.x and keep a
+    lineage note (vRNI > AON 6.14.x > VCF OfN 9). Rewrite deploy/scale for
+    Fleet Management, platform cluster and collector scaling (3V0-22.25 4.1).
+    Rewrite data sources for VCF Operations integration: vCenter/NSX via
+    Integrations, OfN-managed VDS IPFIX, a dedicated Physical Flow Collector
+    for NetFlow (2055) and sFlow (6343). Add a "monitor VCF networks" chapter:
+    search/flows, dashboards/pinboards, path, application discovery,
+    micro-seg, alerts/intents (4.13, 2V0-17.25 4.3). Replace all invented
+    /api/ni paths with ones from the vendor operation index. Fix auth bodies
+    to include domain. Replace the systemd/ubuntu CLI with the consoleuser and
+    support-user model. Delete the default-password claim. Add a
+    "which VCF tool monitors/troubleshoots NSX" comparison for 3V0-25.25
+    4.12/5.1.
+    Overlap: aria-operations (VCF Operations) owns the 4.1 Unified Cloud Proxy
+    material, policies, dashboards and the Network Operations integration
+    toggle. Only aria-operations/architecture/integrations.md mentions OfN, so
+    cross-link it. The nsx section (nsx/learning-path/index.md is its only OfN
+    mention) owns 3V0-25.25. This section should hold the OfN-side "tool
+    selection" content and link to nsx, without duplicating NSX config.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/aria-suite-lifecycle
+  - Audit (2026-11-25): 27 pages / 5,424 lines; subdirs architecture(5), deploy(1),
+    learning-path(1), operations(8), security(5), troubleshooting(5) + index,
+    release-notes. "Applies to:" 15x "Aria LCM 8.x", 8x "Aria Suite Lifecycle 8.x",
+    2x "VMware Aria 8.x", 1x "8.x / 2403+", 1x "(vRSLCM) 8.x". Versions cited are
+    8.0-8.16 (8.12.1 x7, 8.16 x6, 8.14.x); 8.18 appears only in the template
+    release-notes table ("Unverified version history"); zero mentions of VCF 9,
+    VCF Operations, fleet management, Identity Broker, SDDC Manager, Patch 2.
+    Invented/wrong CLI+API (checked vs developer.broadcom.com 8.16 API reference
+    and the 8.18 programming guide):
+    - /lcm/lcmservice/api/v2/environments|requests (real: /lcm/lcops/api/v2/
+      environments, /lcm/request/api/v2/requests): how-it-works.md:70-71,
+      authentication.md:99-114, health-checks.md:158,163, backup-restore.md:
+      123-166, common-issues.md:291,296, scripts.md:45,51,179-199
+    - /lcm/authz/api/v2/login + token flow (real prefix is /lcm/authzn/; guide
+      documents Basic "Authorization" header, no login endpoint): how-it-works.md
+      :69, authentication.md:93,148, health-checks.md:50, backup-restore.md:117,
+      common-issues.md:285, scripts.md:39,94,172
+    - "x-xenon-auth-token" header (not in 8.18 guide): authentication.md:98,146,
+      health-checks.md:54-162, encryption.md:55,189,194,233, backup-restore.md:
+      122-133, common-issues.md:290,295, scripts.md:44-188
+    - /lcm/api/v1/* and /lcm/apis/status, /lcm/health (real health API:
+      /lcm/health/api/v2/status): diagnostics.md:25-562 (11 lines),
+      authentication.md:124, health-checks.md:31, escalation.md:65,88,307
+    - `vracli` (an Aria Automation appliance CLI, not in any LCM doc fetched):
+      cli-reference.md (23 lines, whole page), backup-restore.md:208,241,
+      common-issues.md:234,245
+    - systemd units vmware-vrlcm/-db/-certmanager, lcm-vmon, vra-dsc-service,
+      lcm-support.sh, /var/log/lcm/*: not verified (no primary source found) --
+      diagnostics.md:23-560, escalation.md:68-394, common-issues.md:252-274,
+      deploy/index.md:147-484, health-checks.md:36,260,298, cli-reference.md:191-234
+    Locker paths /lcm/locker/api/v2/passwords|certificates|certificates/import
+    ARE real (Locker controllers). Mock outputs with 2024 dates/fake UUIDs.
+  - Cert research (2026-11-25): Product is end-of-line. KB 403188: "Aria Suite
+    Lifecycle 8.x (VRSLCM) is now known as VMware Cloud Foundation Operations fleet
+    management in VCF 9"; its EOGS is aligned with other Aria products. KB 456708:
+    Aria 8.18.x + VMware Identity Manager 3.3.7 End of Service Oct 11, 2027 (ASL
+    8.18 not listed by name -> Oct 11 2027 by alignment). KB 390634: ASL has no
+    upgrade to 9.0; ASL 8.18 Patch 2 upgrades Aria Ops 8.14+ to VCF Ops 9.0 and
+    deploys the "VCF Operations fleet management appliance"; vIDM 3.3.x has no
+    in-place upgrade and stays managed by ASL 8.x; VCF Identity Broker (VIDB) is
+    new in 9.0, installed after VCF Ops/SDDC Mgr/mgmt vCenter are 9.0. KB 433436:
+    Patch 2 via Settings > Binary Mapping > Patch Binaries, Settings > System
+    Patches. KB 440630: VCF 9.1 removes the standalone Fleet Management Appliance;
+    replaced by "Fleet Lifecycle" and "SDDC Lifecycle" services in VCF Management
+    Services; vRSLCM+vIDM keep working with VCF Automation 9.1 until Day-2 move to
+    Identity Broker, then decommission. No current exam targets ASL 8.x; old
+    VCP-CO 2V0-32.24 (vRSLCM obj 1.2, 2.4, 4.2, 4.4, 4.6, 4.8) is 8.x-era.
+    2V0-17.25 (guide dated Nov 2026; 60 items, 135 min, 300) lists "VCF Fleet
+    Management" and "VCF Identity Broker" as MQC components; obj 4.2 VCF: Manage:
+    differentiate Fleet Management capabilities in VCF Operations; configure
+    Identity Management + RBAC; license mgmt; certificate mgmt; Password Management;
+    import an existing vCenter; manage VCF lifecycle. 3V0-22.25 (Nov 2026; 60 items,
+    135 min, 300; MQC "competent in all aspects of Fleet Management incl. identity
+    & access, certificates, passwords, configuration drifts, lifecycle, security"):
+    obj 4.14 Complete Fleet Management activities in VCF Operations: scaling a VCF
+    Fleet Management - Lifecycle; upgrade components of a VCF Fleet; SSL certs via
+    Certificate Management; passwords via Password Management; VCF SSO via Identity
+    and Access Management. 4.15 VCF licenses via License Management. 4.16 Compliance
+    Benchmarks + VCF Operations Config Drift.
+    Sources (primary, vendor): docs.broadcom.com/doc/vmware-cloud-foundation-
+    administrator-exam-guide; docs.broadcom.com/doc/VCAP-Operation-exam-guide;
+    docs.broadcom.com/doc/vmw-vcp-co-8-x-exam-guide; knowledge.broadcom.com/
+    external/article/{403188,456708,422643,390634,433436,440630,394324,447950};
+    developer.broadcom.com/xapis/vmware-aria-suite-lifecycle-rest-api/{latest,
+    8.14/Authentication-Provider-Controller, 8.16/<Environment, Locker-Password,
+    Locker-Certificates, Locker-License, Health, Request, Authentication-User,
+    Settings, VMware-Aria-Suite-Lifecycle-Update>-Controller}; techdocs.broadcom
+    .com/.../aria-suite-lifecycle/8-18/vmware-aria-suite-lifecycle-programming-
+    guide-8-18.html
+    Target bar: 2V0-17.25 obj 4.2 + 3V0-22.25 obj 4.14-4.16 (VCF Operations fleet
+    management / 9.1 Fleet Lifecycle), with ASL 8.18 kept as legacy/migration path.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: fleet
+    management, VCF 9/9.0, VCF Operations, Identity Broker/VIDB, VCF SSO, SDDC
+    Manager, Patch 2/system patch, PSPACK/product support pack, Fleet Lifecycle/
+    VCF Management Services, VCF-mode, /lcm/lcops (the real API prefix). Thin:
+    licence 4, inventory sync 3, drift 2, day-2 1, globalenvironment 1, 8.18 1.
+    Present but 8.x-only: vIDM 15, locker 20, certificate 26, password 18, RBAC/role
+    15, import 15, binary mapping 10, snapshot 13, LCM Cloud Admin/admin@local 6.
+    Phase B should: reframe section as legacy ASL 8.18 (EoS Oct 11 2027) + migration
+    to VCF 9.0 fleet management appliance and 9.1 Fleet Lifecycle; add Patch 2
+    upgrade flow, ASL->VCF Ops import/upgrade, vIDM->Identity Broker transition,
+    certificate/password/license mgmt in VCF Operations, config drift, vCenter
+    import; rewrite all API examples to Basic auth + /lcm/lcops, /lcm/request,
+    /lcm/health/api/v2/status, /lcm/authzn; delete cli-reference.md vracli content
+    and unverified systemd/log names unless a primary source is found; replace
+    release-notes table with verified 8.18 Patch history.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/esxi
+  - Audit (2026-11-25): 27 pages, 8,915 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" 27/27 say
+    vSphere/ESXi 7.x-8.x; 0 pages target ESX 9.x (one "9.0" hit is a temperature).
+    Version mentions: 7.0 U1-U3n, 8.0 U1-U3, 8.0 U2c, 8.0.2; no 8.0 U3x patch level,
+    no 9.0/9.1. operations/faq.md:20 calls "ESXi 8.0 Update 3" the current
+    recommendation (stale: VCF 9.1.2.0 shipped 24 Nov 2026; 5.2.5 ships 8.0 U3m).
+    release-notes.md is template-generated, "Not yet verified" (not evidence).
+    Biggest pages: operations/procedures (1,103), cli-reference (1,090), deploy (679).
+    CLI accuracy vs ESXCLI 8.0.2 reference (686 commands parsed):
+    invalid esxcli commands -
+      `system settings advanced get` (real: `advanced list -o`):
+        security/authentication.md:104,329; security/hardening.md:128,129,352,375
+      `network ntp get` architecture/design-standards.md:29 (real: system ntp get)
+      `vswitch standard portgroup add` deploy/index.md:201 (missing `network`)
+      `network ip interface get` deploy/index.md:262
+      `cluster get` deploy/index.md:525 (real: vsan cluster get)
+      `system ssh get` deploy/index.md:679; `system ssh status` scripts.md:149
+      `vsan health summary get` cli-reference.md:626; `vsan storage stats get` :631;
+      `vsan network ipconfig list` :642; `vsan debug network test` :643
+      `system service restart` cli-reference.md:706, common-issues.md:664
+      `sched group list` cli-reference.md:739
+      `hardware sensor(s) list` cli-reference.md:878-881, health-checks.md:301
+      `hardware health get` procedures.md:58,69,80
+      `system secpolicy domain join|leave` procedures.md:704,727 (only list/set)
+      `system snmp restart` procedures.md:773
+      `system stats memory get` common-issues.md:377
+      `system ntp status` common-issues.md:663 (real: ntp test / ntp stats get)
+      `hardware cpu get` escalation.md:92
+      `network firewall ruleset get` access-control.md:300-302
+      `system module parameters get` authentication.md:152 (real: parameters list)
+      `storage nmp path set` escalation.md:280 (only `nmp path list` exists)
+    Other suspects (not verifiable from vendor ref): PowerCLI `Invoke-VMConsolidation`
+    common-issues.md:555,575,587; `Connect-VMHost` common-issues.md:682;
+    `Apply-DrsRecommendation` how-it-works.md:144 (Broadcom DRS category shows
+    `Invoke-DrsRecommendation`); `esxcfg-auth` authentication.md:146,172;
+    `vim-cmd vimsvc/content/licenseManager ...` authentication.md:390;
+    `/UserVars/TpmBiosDeviceEnabled` + `/var/run/tpm/tpminfo.json` hardening.md:352,375
+    (real TPM checks `hardware trustedboot get`, `system settings encryption get`
+    are used on 0 pages); hardening.md:186 says Secure Boot cannot be enabled
+    after install (unverified). localcli 0 pages; vsish 1.
+  - Cert research (2026-11-25): Target 2V0-16.25 VMware vSphere Foundation 9.0
+    Administrator -> VCP-VVF Administrator (guide dated Nov 2026): 60 items, 135 min,
+    passing 300 scaled, Pearson VUE proctored. MQC names "vCenter Standard, ESX,
+    vSphere Supervisor), vSAN, VCF Operations, VCF Operations for logs". Testable:
+    S2 2.1 Virtualization Fundamentals; 2.2 VMware Compute Fundamentals (deploy/
+    configure vCenter and ESX; configure vSphere Cluster; deploy/configure VMs;
+    manage VM via vCenter; Day 2 ops in vCenter; Content Libraries; secure
+    workloads/infra using encryption); 2.3 Storage (vSphere storage, vSAN ESA/OSA,
+    deploy vSAN, storage policies, resilience, space efficiency); 2.4 Network
+    (differentiate VVF networking components); 2.5 VKS/Supervisor. S4 4.1 Deploy
+    and Configure (VVF components/deployment, Supervisor); 4.2 Manage (Identity/
+    RBAC, licensing, certificates, lifecycle of VVF); 4.3 Operate (VCF Operations/
+    for Logs, incl. security hardening & compliance); 4.4 Consume/Automate. S1, S3,
+    S5 have no testable objectives. Overlap: 2V0-17.25 VCP-VCF Administrator
+    (60 items/135 min/300) obj 2.2 has identical compute bullets ("VCF compute
+    components (vCenter and ESX)"). No vSphere/ESX VCAP exists: 2026 cert-paths
+    PDF lists VCAP only by domain (VKS, VCF Automation, Operations, Storage,
+    Networking, AI Resilient Infrastructure "Coming Soon") and role (VCF Admin/
+    Support/Architect); no 3V0 code is printed. Legacy 2V0-21.23 (vSphere 8.x
+    Professional, VCP-DCV 2024; 70 items/135 min/300; guide last updated
+    1/25/2024) is NOT on the retired-exams PDF (last updated July 2025; it lists
+    2V0-21.20 and 3V0-21.21 retired 31 Jan 2024); current bookability not
+    verified. Naming: Broadcom TechDocs "VMware ESX 9.1.0.0100 Release Notes"
+    (build 25433460, 05 Jun 2026; "VMware vSphere Hypervisor (ESX)", file names
+    still "ESXi"); KB 379388 body uses "ESX". Versions: VCF 9.0 (17 Jun 2025),
+    9.0.1.0, 9.0.2.0 (20 Jan 2026), 9.1.0 (12 May 2026), 9.1.1 (03 Sep 2026),
+    9.1.2.0 (24 Nov 2026); 9.x version format Major.Minor.Maint.EEHH.Build (KB
+    395110). ESXi 8.0 U3m build 25926933 in VCF 5.2.5 (19 Nov 2026). vSphere 8.0
+    End of General Support 11 Oct 2027 (KB 459135). vLCM baselines (VUM) in 9.0:
+    patching 9.x hosts via VUM blocked, ISO import/upgrade blocked, no new VUM
+    clusters, no Rollup bulletins; 8.x hosts may still use VUM (KB 379388). Free
+    ESX not offered in 9.0; free up to 8.0U3 (vSphere 9 FAQ).
+    Sources (primary, vendor):
+    https://docs.broadcom.com/doc/vmware-vsphere-foundation-administrator-exam-guide
+    https://docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide
+    https://docs.broadcom.com/doc/vmw-certification-paths
+    https://docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges
+    https://docs.broadcom.com/doc/vmw-vcp-dcv-8-exam-guide
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/esx/esx-9-1-0-0100-release-notes.html
+    https://knowledge.broadcom.com/external/article/395110
+    https://knowledge.broadcom.com/external/article/314608/correlating-vmware-cloud-foundation-vers.html
+    https://knowledge.broadcom.com/external/article/459135/end-of-general-support-for-vsphere-80.html
+    https://knowledge.broadcom.com/external/article/379388
+    https://www.vmware.com/docs/vsphere9-faq
+    https://developer.broadcom.com/xapis/esxcli-command-reference/8.0.2/namespace/
+    esxcli_{system,network,hardware,vsan,storage,software,iscsi,vm,sched}.html
+    Target bar: VCP-VVF Administrator 2V0-16.25 obj 2.2-2.4 + 4.2 (ESX host
+    deploy/config, cluster, VM, storage, networking, encryption, RBAC, certs,
+    lifecycle), cross-mapped to 2V0-17.25 obj 2.2; written for ESX 9.x with 8.0 U3
+    deltas.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: ESX
+    9.x/VCF 9 (1, false hit), content library (0), vSphere Configuration
+    Profiles (0), Supervisor/VKS (0), vSAN ESA (0), storage policy/SPBM (0),
+    vVols (0), memory tiering (0), execInstalledOnly (0), esxcli software
+    component/baseimage (0), trustedboot/system settings encryption (0), localcli
+    (0). Thin: vLCM image-based (2), Key Provider/KMS/NKP (1), vSphere HA (2),
+    resource pools (2), Fault Tolerance (1), Proactive HA (1), Quick Boot (1),
+    Auto Deploy (3), kickstart (1), VDS (4), DPU (1), vTPM (3), license (3),
+    VCF Operations (2), encryption (4). Covered: esxcli (18), SSH/ESXi Shell (18),
+    vMotion (16), syslog (16), VMkernel (15), baseline (12), VMFS (12), iSCSI
+    (11), DCUI (11), host profiles (10), vLCM (10), DRS (10), lockdown (8),
+    Secure Boot/TPM (5). Phase B should: retarget "Applies to" to ESX 9.x with
+    8.0 U3 deltas and adopt the ESX name; fix the ~25 invalid esxcli lines above
+    and verify PowerCLI/vim-cmd/TPM claims; rewrite lifecycle around vLCM images
+    (baselines blocked for 9.x hosts) incl. `esxcli software component/
+    baseimage`; add vSphere Configuration Profiles vs host profiles, content
+    libraries, VM/host encryption + Native Key Provider + trustedboot, cluster
+    HA/DRS/resource pools, VDS vs VSS, vSphere storage + SPBM, RBAC/certificates,
+    and an objective-mapped 2V0-16.25/2V0-17.25 2.2 study page.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/horizon
+  - Audit (2026-11-25): 27 pages / 5,052 lines; subdirs architecture, deploy,
+    learning-path, operations, security, troubleshooting (+ index, release-notes).
+    "Applies to:" 27/27 = generic Horizon 8.x (20 "Horizon 8.x", 5 "VMware Horizon
+    8.x", 1 "8.x (2111+)", 1 "8 (2111+) / 2312+"). Newest release named anywhere is
+    2312 (2406 only appears in a VMDK filename); zero mentions of 2503/2506/2512/2603
+    (current ESB)/2606/2609 (current). "VMware Horizon" on 21/27 pages; "Omnissa" on
+    1/27 (ports.md:123, a license-check row). Stale VMware/Broadcom pointers:
+    escalation.md:8,13,148,176,204 send Horizon cases to Broadcom support (Horizon
+    support is Omnissa now); diagnostics.md:38 mysupport.vmware.com;
+    install-upgrade.md:123 + design-standards.md:150 interopmatrix.vmware.com. Every
+    install path and log path uses the old VMware layout (C:\Program Files\VMware\
+    VMware View\Server\tools\bin, C:\ProgramData\VMware\VDM\logs:
+    diagnostics.md:125,148,240-241,358,374-377; escalation.md:101,241;
+    procedures.md:560; integrations.md:117). Omnissa docs for 2609 give
+    C:\Program Files\Omnissa\Horizon\Server\tools\bin and
+    \ProgramData\Omnissa\Horizon\logs. release-notes.md is the template table
+    ("Unverified version history"), it stops at 2312, and its dates are invented.
+    CLI/API accuracy (checked against Omnissa 2609 docs, the Horizon REST swagger,
+    the Omnissa.Horizon.Helper cmdlet index and the UAG REST swagger):
+    - vdmadmin: the real options are -A (agent logging/IP override) -F -H -I -L
+      (assign or remove a dedicated machine) -M -N -O -P -Q -R -S -T -U -V -X.
+      INVENTED or misused: cli-reference.md:25,28,31 (-L -pools/-desktops), :34,37
+      (-D does not exist), :44,47,50 (-entitlement), :57,60 (-assignments/-release),
+      :63 (-N is domain filters, not unlock), :70,73,76,79 (-L -servers/-events);
+      deploy/index.md:144,275,356,392 + learning-path:82 (vdmadmin -A -d <domain> as
+      an "ADAM replication" check or log bundle); diagnostics.md:31,244,248,252,256
+      (-L/-A/-S/-M "-list"); escalation.md:241.
+    - vdmexport (-f -v -c -k -g) is used correctly. vdmimport has only -f -i -d -p
+      -g, so -v and -u are INVENTED (backup-restore.md:222,225; cli-reference.md:110,
+      113). Omnissa states that encrypted LDIF must be decrypted first with
+      vdmimport -d -p.
+    - PowerShell: the helper module is now Omnissa.Horizon.Helper. Horizon PowerCLI
+      ships as a download zip per release ("horizon4powercli_2512" etc.), not from
+      PSGallery, and is View-API based with View API deprecation announced (KB
+      6000139). "Install-Module VMware.Hv.Helper" (cli-reference.md:230-231) is
+      wrong, and health-checks.md:59 still uses the VMware.Hv.Helper name.
+      Cmdlets that are not in the Omnissa.Horizon.Helper index: Get-HVDesktop
+      (common-issues.md:111,114,133; scripts.md:54,77,164; health-checks.md:228,235;
+      backup-restore.md:85), Get-HVSession (cli-reference.md:295-318), Get-HVFarmHealth
+      (procedures.md:55), Get-HVConnectionServer (procedures.md:246). Real ones are
+      Get-HVMachine, Get-HVLocalSession/GlobalSession, Get-HVHealth and
+      Get-HVFarmSummary. Connect-AppVolumesServer (procedures.md:357) has no Omnissa
+      source; App Volumes is REST-only on developer.omnissa.com.
+    - Horizon REST (2609 spec, base /rest, 797 paths): /login,
+      /monitor/connection-servers, /inventory/v1/desktop-pools|sessions|farms|
+      machines and /inventory/v1/sessions/action/logoff all exist. INVENTED:
+      /monitor/v2/sessions (diagnostics.md:294),
+      /inventory/v1/sessions/{id}/action/logoff (cli-reference.md:373),
+      desktop-pools/{id}/action/rebalance (:387) and .../action/refresh (:400). The
+      real pool actions are schedule-push-image, apply-image, add-/remove-machines,
+      etc. desktop-pools now runs to /inventory/v14.
+    - UAG: the published REST spec (32 paths) has /v1/monitor/stats,
+      /v1/monitor/support-archive and /v1/config/certs/ssl/{entity}. Not in the spec:
+      /rest/healthcheck (diagnostics.md:26,174,391), /rest/v1/monitor/health
+      (health-checks.md:84), /rest/v1/monitor/service/horizon (deploy/index.md:369),
+      /rest/v1/config/logs/collect (diagnostics.md:191). PUT /rest/v1/config/certs/ssl
+      is missing {entity} (encryption.md:27). The whole "hzedge" UAG CLI
+      (cli-reference.md:118-198) and the systemctl uag/vmware-uag/vmware-uag-admin
+      units (health-checks.md:143; cli-reference.md:220; hardening.md:63) look
+      invented. "systemctl status vmware-appvolumes-ma..." (health-checks.md:165) is
+      wrong because App Volumes Manager runs on Windows. The monitor/stats JSON
+      sample (cli-reference.md:213) is fabricated output.
+    - Ports (Omnissa 2609 "TCP and UDP Ports for Clients and Agents"): client to
+      UAG/CS is 443 TCP(+UDP), 8443 TCP+UDP Blast through BSG, 4172 PCoIP. UAG/CS or
+      a direct client to the agent is 22443 TCP+UDP Blast, 4172, 32111 USB and 9427.
+      The agent connects to the CS on 4001/4002 JMS. KB WRONG: ports.md:36-37 (swaps
+      8443 "fallback" and 22443 "primary" client to UAG); ports.md:39-40 (9427/32111
+      client to UAG, which are tunnelled over 443); ports.md:49-50 (UAG to CS 8443/4001
+      "JMS"); ports.md:63 (client to CS 8443 "JMS SSL"); ports.md:75-76 (JMS direction
+      is agent to CS); known-issues.md:52 (22443 client to UAG); known-issues.md:79
+      (JMS 4001/4002 "between Connection Servers"); procedures.md:294 (UAG to CS
+      22443, should be UAG to agent); procedures.md:643 (32111 is not a CPA port);
+      design-standards.md:62,67 (client/UAG to desktop on 8443, should be 22443);
+      how-it-works.md:105 (22443 is "alternative via UAG"). Correct: integrations.md:105
+      (Enrollment Server TCP 32111).
+    - lmvutil (CPA) is never mentioned; Cloud Pod Architecture appears on 3/27 pages.
+  - Cert research (2026-11-25): EUC certs are now Omnissa's own program, with exams
+    at Pearson VUE, registration and credentials in Clarus, $250 USD per exam, and
+    every credential valid 2 years. Tracks: OCA-H (administrator), OCE-H (engineer;
+    launched 2025-12-10), OCDE-H (design; "coming soon"), OCPE (expert). OCAP and
+    Specialist legacy exams are retired, and unexpired credentials still count.
+    Mandatory training prerequisites were removed 2025-08-29.
+    TARGET = Omnissa Horizon Administrator - 2025, exam 1H0_25, giving OCA-H: 65 items,
+    scaled pass 274, 90-minute appointment, proctored by Pearson VUE (online or test
+    centre). Minimum candidate: 18 months IT + 6 months Horizon. Item types: MC,
+    multi-select, build-list, matching, drag-drop, point-and-click, hot-area. The
+    guide (Oct 2026) publishes NO section weights. Sections: 1 Infrastructure
+    Planning & Mgmt (install/config CS; Horizon Clients on Win/Mac/iOS/Android).
+    2 Desktop/app/profile mgmt (golden images Win desktop/server/Linux; agent
+    settings; OSOT; DEM agent; GPU-ready image; persistent/non-persistent pools; 3D;
+    entitlements; RDSH farms, automated farms, app pools, load balancing,
+    maintenance schedules; App Volumes packages via CLI and traditional, classic vs
+    on-demand delivery, lifecycle, assignments, writable volumes; DEM UEM/computer
+    environment + Smart Policies, folder redirection, Sync tool / Application
+    Profiler / Helpdesk Support Tool; Horizon GPOs, OUs, service accounts).
+    3 Monitoring & Optimization (infra/session perf; codecs BlastCodec/H.264/adaptive
+    JPG-PNG; disable UDP behind SSL VPN; OSOT templates). 4 Troubleshooting
+    (connection failures and event logs; provisioning/unreachable agents; log bundles
+    via console and .bat; authN at UAG/CS/service account; Blast network issues;
+    profile corruption, Helpdesk Tool; RTT/loss/latency; refresh/restart/recover/
+    reset; DEM debug logs; App Volumes agent/console logs; Omnissa Access reports).
+    5 Security & Compliance (console session timeouts, global/farm/app settings).
+    6 Automation & Integration (Omnissa Access: purpose, AD group sync). Aligned
+    courses: Horizon Administration and Operations; App Volumes and DEM.
+    Next level: OCE-H = Horizon Engineer - 2025, exam 2H0_25: 65 items, pass 285,
+    135 min, 7 sections (adds Scale & Recovery); minimum 5 years IT + 12 months
+    Horizon, with OCA knowledge assumed.
+    Old VMware exams: Broadcom's retired list shows 2V0-51.21 (Horizon 8.x) retired
+    2023-07-31, 2V0-51.19 retired 2022-02-28, and VCP-DTM/VCAP-DTM 2023 badges
+    retired. 2V0-51.23 / VCP-DTM 2024 is not on the Broadcom list because EUC moved
+    to Omnissa; its fate is covered only by Omnissa's "OCAP/Specialist retired" FAQ
+    (exact mapping not verified, since Tech Zone returned 403).
+    Product status: Horizon 8 2609 (22 OCT 2026, server 8.20.0) is current; 2606
+    (24 AUG 2026, 8.19.0); 2603 (14 APR 2026, 8.18.0) is the ESB that 2606/2609 agents
+    pair with; 2512 (16 DEC 2025, 8.17.0). All docs now live at docs.omnissa.com /
+    developer.omnissa.com.
+    Sources (primary, vendor): https://www.omnissa.com/learning/ ;
+    https://www.omnissa.com/oca-horizon-exam-guide/ ;
+    https://static.omnissa.com/sites/default/files/OCA_Horizon_Exam_Guide_Oct_2026.pdf ;
+    https://www.omnissa.com/oce-horizon-exam-guide/ ;
+    https://static.omnissa.com/sites/default/files/OCE_Horizon_Exam_Guide.pdf ;
+    https://docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges ;
+    https://docs.omnissa.com/horizon8-rn-V{2512,2603,2606,2609}/Horizon8-ReleaseNotes ;
+    https://docs.omnissa.com/Horizon-Administration-V2609/{vdmadminCommandOptions,
+    vdmadminCommandUsage,ExportLDAPConfigurationData,ImportLDAPConfigurationData,
+    RestoringHorizonConnectionServerConfigurationData} ;
+    https://docs.omnissa.com/Horizon-Security-V2609/{Horizon8TCPandUDPPorts,
+    TCPandUDPPortsforClientsandAgents,Horizon8TrueSSOPorts,Horizon8LogFiles} ;
+    https://developer.omnissa.com/horizon-apis ; .../horizon-server/versions/2609/
+    (+ rest-api-swagger-docs.json) ; https://developer.omnissa.com/horizon-powercli/
+    download/ ; .../horizon-powercli/connect-hvserver/ ;
+    https://developer.omnissa.com/uag-rest-apis/api-reference/ (+ rest-api-swagger.json)
+    Provenance note (coordinator, 2026-11-25): 1H0_25/2H0_25 details come from the
+    Omnissa exam-guide PDFs, which redirect unless a Referer header is sent; the
+    research agent sent one. Coordinator re-checked only the public HTML learning
+    page ($250 USD, legacy OCAP/Specialist exams retired). Re-confirm format from
+    the exam-guide page in a browser before Phase B relies on it.
+    Target bar: pass 1H0_25 (OCA-H): administer Horizon 8 2603 ESB/2609 end to end
+    (CS, pools, RDSH, App Volumes, DEM, OSOT, UAG), plus the troubleshooting blueprint.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: App
+    Volumes on-demand vs classic delivery 0; DEM folder redirection 0; DEM
+    Sync tool / Application Profiler / Helpdesk Support Tool 0; Omnissa as vendor
+    ~0 (1). Thin: Linux desktops/golden image 1; OSOT 1; DEM Smart Policies 1;
+    Horizon Help Desk Tool 1; Horizon Cloud/Edge/Universal Broker 1; log bundle/
+    DCT/support.bat 2; codecs (BlastCodec/H.264/JPG-PNG) 2; Cloud Pod Architecture 3;
+    vGPU/3D 3; Omnissa/WS1 Access 4; True SSO 4; App Volumes packages 4; published
+    apps 7; GPO/ADMX 7; golden image 8; writable volumes 8; Horizon Client
+    platforms 8; session timeouts/global settings 8. Strong: Connection Server 25,
+    UAG 23, Blast 22, App Volumes 17, entitlements 17, PCoIP 17, instant clones 15,
+    DEM 14. Phase B should: (1) rebrand to Omnissa Horizon 8 and set Applies-to to
+    2603 ESB / 2609, swapping in the Omnissa install/log paths, support links and
+    the docs.omnissa.com/developer.omnissa.com links; (2) rewrite cli-reference.md:
+    vdmadmin from the real -A..-X option table, vdmimport -d/-p/-i/-g, PowerCLI zip
+    install + Omnissa.Horizon.Helper cmdlets only, REST paths from the 2609 swagger,
+    delete hzedge and the fake UAG endpoints and outputs; (3) rebuild ports.md and
+    design-standards/how-it-works/known-issues/procedures from the Omnissa port
+    tables (8443 client to BSG, 22443 to agent, 4001/4002 agent to CS); (4) add
+    pages for App Volumes packaging/lifecycle/on-demand + writable volumes, DEM
+    (Smart Policies, folder redirection, Sync tool/AppProfiler/Helpdesk), OSOT, Linux
+    and RDSH golden images, Blast codecs/UDP tuning, log bundles/DCT, Help Desk
+    Tool, Omnissa Access sync, and console timeouts; (5) add an OCA-H blueprint map
+    page (OCE-H as stretch) and replace the template release-notes table with the
+    verified 2512-2609 rows.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/nsx
+  - Audit (2026-11-25): 27 pages, 12,056 lines; subdirs architecture/ deploy/
+    learning-path/ operations/ security/ troubleshooting/ (+ index.md,
+    release-notes.md). Largest pages: operations/procedures.md 2,730 lines,
+    operations/cli-reference.md 1,955. "Applies to:" on all 27 pages, all NSX-T 3.x
+    and 4.x variants: 11 "VMware NSX-T 3.x / 4.x", 8 "NSX-T 3.x / NSX 4.x",
+    6 "NSX-T 3.x · NSX 4.x", 1 "NSX 4.x", 1 "NSX 3.x / 4.x". Version mentions:
+    NSX-T 3.x 37, NSX 4.x 26, NSX 3.x 4, 4.1.x 2, 4.0 2, 4.2.x 1. NSX 9 and VCF 9
+    appear on 0 pages. The current release is NSX 9.1.2.0 (2026-11-24, build
+    25929667) and the 4.x line is at 4.2.5 (2026-11-19). The KB stops at 4.1/4.2,
+    so it is stale.
+    faq.md:20 says "NSX 4.1.x or 4.2.x is the current recommendation", which is
+    stale. design-standards.md:177 has a 4.2.x / ESXi 7.0 U3 / VCF 5.1 row that
+    is not verified.
+    release-notes.md:24-28 is the "Unverified version history" template, and
+    every row is wrong. 4.1.2 says 2024-Q2 but shipped 2023-10-17. 4.1.1 says
+    2023-Q4 but shipped 2023-08-15. 4.0.1 is not a release (4.0.1.1 shipped
+    2022-10-13). 3.2.3 says 2022-Q3 but shipped 2023-05-09. 3.2.1 says 2022-Q1
+    but shipped 2022-05-17. The table also has no 4.2.x or 9.x rows.
+    INVENTED API: 239 /api/v1 or /policy/api/v1 path mentions were checked
+    against Broadcom's swagger specs (Manager 9.1.0.0 and 4.2.3.0.0, Policy
+    9.1.0.0). 22 distinct paths (37 mentions) are in neither spec:
+    - security/authentication.md:30,88,160,215,226,297,73 has /aaa/session,
+      /aaa/identity-sources, /aaa/ldap/search and /aaa/principal-identities.
+      The real paths are policy /aaa/ldap-identity-sources[/{id}/search] and
+      /trust-management/principal-identities.
+    - security/access-control.md:129,175,179 has /api/v1/projects (real: policy
+      /orgs/{org}/projects) and /aaa/principal-identities.
+    - architecture/integrations.md:160,167 has /aaa/vidm/status (real:
+      /node/aaa/providers/vidm/status).
+    - security/encryption.md:187 has /api/v1/certificates.
+    - /api/v1/fabric/nodes appears at authentication.md:30 and
+      procedures.md:2180,2303,2448,2476,2530 (+1).
+    - /node/support-bundles[/status|/download] appears at
+      troubleshooting/escalation.md:217,222,226,250 and diagnostics.md:41,644,723.
+    - procedures.md:1605,1633 has /administration/support-bundles/status and
+      /download. The real call is /administration/support-bundles?action=collect.
+    - /node/backups/create appears at cli-reference.md:178 and
+      design-standards.md:213.
+    - /pools/ip-pools/{id}/ip-allocations appears at common-issues.md:285 and
+      how-it-works.md:342.
+    - /api/v1/status appears at health-checks.md:255.
+    - /api/v1/schema/* appears at authentication.md:73 and procedures.md:1953.
+    - procedures.md:2118 has /transport-zones/{id}/transport-zone-profiles.
+    - procedures.md:235,245 has policy /tier-1s/{id}/route-advertisement. Route
+      advertisement is a Tier1 field (route_advertisement_types), not a
+      sub-path.
+    REMOVED IN 9.x: 14 more Manager API paths exist in 4.2.3 but are gone from
+    the 9.1 spec (about 23 mentions):
+    - /logical-routers: escalation.md:409, procedures.md:2206,
+      scripts.md:323,327
+    - /logical-ports: procedures.md:160,941
+    - /loadbalancer/*: procedures.md:1819-1949
+    - /vpn/ipsec/*: procedures.md:1970-2035
+    - /traceflows: diagnostics.md:555,559, procedures.md:902,
+      cli-reference.md:1504 (policy /infra/traceflows replaces it)
+    INVENTED CLI: 271 get/set/del lines were checked against the NSX CLI Guide
+    all-commands lists (9.1.0 and 4.2.3, about 1,560-1,730 commands each). 165
+    lines match. 59 distinct forms (106 lines) are in neither guide:
+    - get tunnel status / get tunnel endpoints: common-issues.md:70,73,76,
+      diagnostics.md:219,220,654, cli-reference.md:311,317,586,592,635,
+      how-it-works.md:100
+    - get transport-nodes / get transport-node-status / get transport-node <id>:
+      deploy/index.md:355,356,476, diagnostics.md:214,215,653,
+      install-upgrade.md:33, cli-reference.md:208
+    - get corfu-cluster status: common-issues.md:216, escalation.md:385,
+      diagnostics.md:119, cli-reference.md:1755
+    - set edge-cluster failover: hardening.md:72, procedures.md:384,
+      cli-reference.md:974, how-it-works.md:181
+    - set firewall rule N source-ip ... action allow: access-control.md:135-141.
+      This does not exist; DFW rules are set through the policy API or UI.
+    - set/get/del service syslog exporter(s): authentication.md:349,
+      integrations.md:297,300,303, encryption.md:227,230,
+      cli-reference.md:147-153. The real command is set/del logging-server ...
+      proto ... level.
+    - set service ntp server and get ntp servers: cli-reference.md:91,94 (real:
+      set ntp-server)
+    - get node cpu-usage / get node memory: common-issues.md:334,
+      diagnostics.md:459,460, cli-reference.md:1025-1027
+    - get nat rules / translations / rule stats: common-issues.md:340,
+      cli-reference.md:1285-1341
+    - get vpn ipsec|l2vpn session list: how-it-works.md:421,424 (real: get
+      ipsecvpn ...)
+    - other forms: get backup status|history, set backup schedule,
+      get service manager backup, get ip-pool(s), get logs,
+      get log manager follow, get certificates, get trust-objects,
+      get clusters, get firewall stats, get dfw stats, get traceflows,
+      get logical-port(s), get service dataplane stats,
+      get interface X counters, set service load-balancer stop
+      (cli-reference.md:18,175,525-534,912,1132-1135,1438,1500,1584-1587,
+      1826-1828,1862-1864,1899-1902; hardening.md:42; diagnostics.md:451)
+    The edge "get logical-router(s)", "get bgp neighbor summary" and
+    "get route [detail]" are real. vsipioctl and summarize-dvfilter
+    (deploy/index.md:671,674; hardening.md:156) and net-vdl2
+    (learning-path/index.md:97) are ESXi shell tools, not NSX CLI, and are not
+    verified. nsxdp-cli is not used in the KB.
+  - Cert research (2026-11-25): The Broadcom 2026 cert-paths PDF lists VCAP VCF
+    Networking as a domain-based VCAP. Its courses are VCF Networking: Advanced
+    Design, Advanced Configuration and Advanced Troubleshooting [V9.0]. There is
+    no VCP-level networking exam on the VCF 9 track; networking at VCP level is
+    obj 2.4 / 4.1 of VCF 9.0 Administrator 2V0-17.25 (coordinator-verified).
+    Exam 3V0-25.25 "Advanced VMware Cloud Foundation 9 Networking", VCAP-VCF
+    Networking; guide dated November 2026. Format: 60 items, pass 300 scaled,
+    135 min, Pearson VUE, based on VCF 9. Sections 1-2 have no testable
+    objectives. Broadcom publishes NO per-objective or per-section weights.
+    - Sec 3 Plan and Design:
+      - 3.2 NSX architecture and components
+      - 3.3 connectivity design (centralized vs distributed)
+      - 3.4 multisite design in VCF
+      - 3.5 NSX Fleet design considerations
+      - 3.6 optimization and acceleration
+      - (there is no 3.1)
+    - Sec 4 Deploy, Configure, and Operate:
+      - 4.1 Federation deploy in VCF
+      - 4.2 configure NSX components
+      - 4.3 Edge Cluster
+      - 4.4 Tier-0
+      - 4.5 Segment
+      - 4.6 Tier-1
+      - 4.7 VPC deploy and manage
+      - 4.8 stateful services
+      - 4.9 Projects and tenancy
+      - 4.10 advanced integrations
+      - 4.11 ops (syslog, backup and restore)
+      - 4.12 VCF monitoring tool for NSX
+    - Sec 5 Troubleshoot and Optimize:
+      - 5.1 VCF troubleshooting tool
+      - 5.2 infrastructure issues
+      - 5.3 connectivity and routing
+      - 5.4 ECMP and HA (simulations)
+      - 5.5 logical routing packet walk (simulations)
+    The MQC can design, install, configure, manage and troubleshoot gateways,
+    segments, VPCs, routing, services and load balancing through UI, CLI and
+    API, with 1-2 years of NSX and 2 years of enterprise networking.
+    Legacy: NSX 4.x Professional V2, 2V0-41.24 (VCP-NV 2024); guide last updated
+    2024-02-23. Format: 55 items, pass 300, 135 min. Sec 2 objectives 2.1-2.24
+    (to DPU acceleration), Sec 4 objectives 4.1-4.13, Sec 5 objectives 5.1-5.3,
+    no weights. It is not on the retired list (that list was last updated July
+    2025, and 2V0-41.24 is absent). Its live status is not verified.
+    Sources (primary, vendor): docs.broadcom.com/doc/vmw-certification-paths ;
+    docs.broadcom.com/doc/vcap-networking-exam-guide ;
+    docs.broadcom.com/doc/vmware-vcp-nv-exam-guide ;
+    docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges ;
+    knowledge.broadcom.com/external/article/317797 (NSX builds) ;
+    knowledge.broadcom.com/external/article/410435 (unified VCF versioning) ;
+    developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/x-references/
+    and 4.2.3/x-references/ (nsx_api.json 9.1.0.0 and 4.2.3.0.0,
+    nsx_policy_api.json 9.1.0.0) ;
+    developer.broadcom.com/xapis/nsx-cli-guide/{9.1.0,9.0.2,4.2.3}/all_all_commands.html
+    Target bar: VCAP-VCF Networking 3V0-25.25 (NSX 9.x in VCF 9: design, deploy
+    and troubleshoot, including VPC, Projects, Federation and packet walk), with
+    2V0-41.24 objectives as the fundamentals floor.
+  - Gap vs blueprint (pages mentioning each term, out of 27):
+    - Zero coverage:
+      - VPC 0, Transit Gateway 0
+      - VCF Networking / NSX 9 / VCF 9 0
+      - segment profiles 0
+      - stateful A/A 0, NAT64 0, reflexive NAT 0, DHCP relay 0, bridging 0
+      - DPU/EDP acceleration 0
+      - port mirroring / IPFIX 0
+      - vDefend 0
+      - VCF Installer / SDDC Manager 0
+    - Thin:
+      - Projects/multi-tenancy 1, Global Manager 1, Federation 2
+      - OSPF 2, EVPN 2, packet walk/datapath 2, ECMP 4
+      - DNS forwarder 1, L2 VPN 1, IPSec 4
+      - Ops-for-networks 1, uplink profile 3
+      - Policy vs Manager API 5, load balancer 6, VRF 6
+    - OK:
+      - DFW 22, BGP 18, Tier-0 17, Manager cluster 16, backup 16, TEP 15,
+        segment 15, edge cluster 14, Tier-1 12, Geneve 12, BFD 10, syslog 9,
+        traceflow 8, transport zone 7
+    - Phase B should:
+      - Rebase "Applies to:" on NSX 9.x in VCF 9 (keep 4.2.x as the VCF 5.x
+        line).
+      - Replace release-notes.md with the KB 317797 table.
+      - Rewrite the CLI pages against the 9.1 NSX CLI Guide, removing the 59
+        invented forms.
+      - Move every API example to the Policy API, verified against the 9.1
+        swagger: drop the 22 invented paths and the 14 removed Manager paths.
+      - Add pages for VPC / Transit Gateway / Projects, Federation in VCF, NSX
+        Fleet design, centralized vs distributed connectivity, stateful
+        services (stateful A/A, NAT64, reflexive NAT), Edge-cluster and
+        T0/T1 creation via VCF.
+      - Add packet-walk and ECMP/HA failover scenarios (simulation items).
+      - Add a page on VCF Operations (and Ops for networks) for monitoring and
+        troubleshooting.
+      - Add a page on DPU/EDP acceleration.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/powercli
+  - Audit (2026-11-25): 26 pages, 4,361 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" on all 26:
+    "PowerCLI 13.x" x22, "VMware PowerCLI 13.x" x2, "13.x+" x1, "12.x / 13.x" x1.
+    Version mentions: "PowerCLI 13" x32, 13.3 x2, 13.3.0/13.2/13.1/13.0/12.7/11 x1
+    each, PowerShell 7 x5 / 5.1 x5. ZERO mentions of "VCF PowerCLI", VCF.PowerCLI
+    or 9.x: the whole section predates the June-2025 rename. Every install command
+    is `Install-Module VMware.PowerCLI` (deploy/index.md:59,62,81;
+    troubleshooting/common-issues.md:120). 149 distinct Verb-Noun tokens; all VMware
+    ones checked against VCF.PowerCLI 9.1.2 module nuspec tags + help XML:
+    NOT IN ANY OFFICIAL MODULE (invented or community-only):
+      Get-VsanClusterHealthSummary (real: Test-VsanClusterHealth) at
+        operations/cli-reference.md:125, scripts.md:185, procedures.md:388,
+        health-checks.md:104, install-upgrade.md:95,
+        troubleshooting/common-issues.md:215;
+      Get-NsxtSegment / Get-NsxtTransportNode (Nsxt module exports only Connect/
+        Disconnect-NsxtServer, Get-NsxtService, Get-NsxtPolicyService,
+        Get-NsxtGlobalManagerService) at architecture/integrations.md:27,30,
+        how-it-works.md:56;
+      Get-SrmRecoveryPlan / Get-SrmProtectionGroup / Get-SrmProtectedVM /
+        Start-SrmRecoveryPlan / Start-SrmRecovery (Srm module = Connect/
+        Disconnect-SrmServer only; API via VMware.Sdk.Srm Invoke-Srm*) at
+        integrations.md:59,62,63,66, how-it-works.md:57;
+      New-KeyManagementServer (real Add-KeyManagementServer), Test-/
+        Set-VsanKeyManagementServer (real Set-KeyManagementServer),
+        Invoke-VsanKeyRotation at security/encryption.md:102,105,108,44;
+        Set-VsanClusterConfiguration -Cluster/-EncryptionEnabled are not
+        parameters (encryption.md:41; real: Start-VsanEncryptionConfiguration);
+      Invoke-VsanCommand (operations/faq.md:36); Get-Alarm (real
+        Get-AlarmDefinition; operations/health-checks.md:134);
+      Set-VMHostNtpServer (real Add-/Remove-/Get-VMHostNtpServer;
+        troubleshooting/known-issues.md:66); Invoke-VMwareRestMethod
+        (learning-path/index.md:36);
+      module "VMware.VimAutomation.Horizon" + Get-HVPool/Get-HVDesktopMachine
+        (how-it-works.md:59) - no such module; Gallery has
+        VMware.VimAutomation.HorizonView 7.9.0 (not in VCF.PowerCLI deps) and the
+        HV cmdlets are not in any Gallery PowerCLI module.
+    WRONG MODULE ATTRIBUTION (how-it-works.md:52-60): Get-Datastore is Core not
+    Storage; VMware.CloudServices is not vCD (Get-Org = VMware.VimAutomation.Cloud,
+    Get-VApp = Core). Get-VM -VMHost (procedures.md:32, scripts.md:140) is not a
+    documented parameter/alias in the 13.5.2 help XML (use -Location or pipeline).
+    Verified real: Connect-VIServer, Get-View, Get-EsxCli -V2, Set-/
+    Get-PowerCLIConfiguration (-InvalidCertificateAction/-Scope/-ParticipateInCeip/
+    -DefaultVIServerMode/-ProxyPolicy), Get-Stat, Get-VIEvent, New-VICredentialStore
+    Item, Get-VDSwitch/New-VDPortgroup, Get-VsanDisk/DiskGroup/View/Object,
+    Get-Spbm*, Connect-NsxtServer, Connect-SrmServer, Connect-/Get-HCX* (case
+    differs), Get-PowerCLIVersion, Apply-DrsRecommendation/Apply-VMHostProfile
+    (aliases), Install-VMHostPatch, Get-OSCustomizationSpec.
+    release-notes.md (flagged Unverified) vs Gallery publish dates: 13.3 2024-Q3 OK
+    (2024-07-25), 12.7 2022-Q3 OK (2022-07-12); 13.2 "2024-Q1" wrong (2023-11-08),
+    13.1 "2023-Q3" wrong (2023-04-18), 13.0 "2023-Q1" wrong (2022-11-22); "13.1 -
+    VMware.PowerCLI umbrella module" false (umbrella exists from 12.x); table omits
+    VCF PowerCLI 9.0 (2025-06-17), 9.1.0 (2026-05-12), 9.1.1 (2026-09-10),
+    9.1.2 (2026-11-24) and VMware.PowerCLI 13.3.0.24145082/83 (Jun 2025).
+  - Cert research (2026-11-25): NO PowerCLI exam exists. Broadcom cert-paths PDF
+    lists only 2V0-13/15/16/17/18.25 + VCAP tracks; "PowerCLI"/"PowerShell" occur 0
+    times in paths PDF, 2V0-17.25 (VCF 9.0 Admin) guide and 3V0-21.25 (VCAP VCF
+    Automation) guide; 3V0-21.25 is VCF Automation (VCFA) UI/API, not PowerCLI.
+    Fallback = Broadcom VCF PowerCLI 9.1 User's Guide + module cmdlet reference.
+    Product facts: renamed "VCF PowerCLI" (formerly VMware PowerCLI) at 9.0 to follow
+    VCF versioning; module VCF.PowerCLI (Install-Module -Name VCF.PowerCLI); Broadcom
+    recommends uninstalling VMware.PowerCLI first (AllowClobber /
+    SkipPublisherCheck for 13.3-or-earlier upgrades, new Broadcom signing cert).
+    Latest Gallery: VCF.PowerCLI 9.1.2.25952617 (2026-11-24; sub-modules
+    13.5.2.25952617; developer portal page still says 9.1.1); legacy
+    VMware.PowerCLI frozen at 13.3.0.24145083. PowerShell 7.0.13+ required, 7.4+
+    recommended, Windows PowerShell 5.1 deprecated in 9.0. New in 9.x:
+    VMware.Vcf.SddcManager (Get-Sddc*, New-VcfOAuthSecurityContext), VMware.Vcf.Sso,
+    VMware.VimAutomation.Vpc (NSX VPC), VMware.Sdk.Vcf.Installer/Ops, Connect-
+    VIServer -VcfApiToken / -VcfOAuthSecurityContext; VMware.PowerCLI.VCenter lost
+    10 cmdlets in 9.0 changelog; ImageBuilder Python 3.10+ (9.1.1).
+    Sources (primary, vendor): https://docs.broadcom.com/doc/vmw-certification-paths ;
+    https://docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide ;
+    https://docs.broadcom.com/doc/VCAP-Automation-exam-guide ;
+    https://developer.broadcom.com/powercli ;
+    https://developer.broadcom.com/powercli/installation-guide ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcf-sdks--apis--and-clis-9-1-1/vcf-powercli-9-1-1-0-release-notes.html ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-whats-new/whats-new-vcf-cli-api-sdk/vcf-powercli-changelog.html ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/introduction-to-vmware-vsphere-powercli.html
+    (+ .../vmware-powercli-compatibility-matrix.html, .../configuring-vmware-vsphere-powercli.html) ;
+    https://blogs.vmware.com/cloud-foundation/2025/06/24/introducing-vcf-powercli-9-0/ ;
+    PowerShell Gallery OData + .nupkg for VCF.PowerCLI 9.1.2, VMware.PowerCLI
+    13.3.0.24145083 and 26 sub-modules 13.5.2.25952617 (nuspec PSCmdlet_ tags +
+    *-Help.xml parameter lists; 955 cmdlets/functions enumerated).
+    Target bar: no exam - expert bar = VCF PowerCLI 9.1 User's Guide chapters 1-17
+    (install/config/connect, vSphere, VCF API SDK, vSAN, VR/VLSR, NSX Policy, VCD,
+    VCF Ops, VMC, support bundle) with every cmdlet/param valid in VCF.PowerCLI 9.1.2.
+  - Gap vs blueprint (pages mentioning each term, out of 26): Zero coverage:
+    VCF.PowerCLI/"VCF PowerCLI" 0, VcfApiToken/OAuth 0, SddcManager 0, Vpc 0,
+    Get-NsxtPolicyService 0, Connect-CisServer/Get-CisService 0, Test-VsanClusterHealth
+    0, ImageBuilder/Add-EsxSoftwareDepot 0, DeployAutomation 0, Invoke-VMScript 0,
+    Copy-VMGuestFile 0, ContentLibrary 0, Get-ErrorReport/support bundle 0,
+    RunAsync/Wait-Task 0, Get-AlarmDefinition 0, Add-VMHostNtpServer 0,
+    Add-KeyManagementServer/Start-VsanEncryptionConfiguration 0, Get-Inventory 0.
+    Thin: VMware.Sdk.* 1, Get-EsxCli 1, Get-Stat 1, OSCustomizationSpec 1,
+    Connect-SrmServer 1, Connect-NsxtServer 2, VDSwitch/VDPortgroup 2,
+    VICredentialStore 2, PowerShell 5.1 2, Get-VIEvent 3, Get-View 5, PowerShell 7 5.
+    OK: Connect-VIServer 18, InvalidCertificateAction 12, Set-PowerCLIConfiguration 11,
+    Get-Cluster 10, ExtensionData 9, Get-VsanDisk 7.
+    Phase B should: (1) rebrand section to VCF PowerCLI 9.1.x, swap all installs to
+    VCF.PowerCLI + migration/uninstall steps, PS 7.4 baseline, 5.1 deprecated;
+    (2) replace every invented cmdlet listed above with the real one or the
+    VMware.Sdk.* Invoke-* pattern (NSX Policy, SRM, vSphere REST); fix module table;
+    (3) add VCF 9 content: SDDC Manager module, VcfApiToken/OAuth connect, VPC,
+    VCF Installer/Ops SDK; (4) add Image Builder/Auto Deploy, guest ops, content
+    library, async tasks, Get-ErrorReport; (5) rebuild release-notes.md from Gallery
+    dates and Broadcom release notes; (6) add an audit check validating KB cmdlets
+    against the cached Gallery cmdlet list.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/srm
+  - Audit (2026-11-25): 27 pages, 4,846 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" tally: SRM
+    8.x / 9.x (16), SRM 8.x (6), vSphere 7.x / 8.x (3), Site Recovery Manager
+    8.x / 9.x (1), SRM 8.x / vSphere Replication 8.x (1). Version mentions: "SRM 8.x"
+    x36, 8.3-8.8 a few each, "SRM 9.0" x1 (release-notes only). ZERO pages use
+    "Live Site Recovery", "VMware Live Recovery" or "Protection and Recovery", so the
+    whole section presents SRM 8.x as current. The 4 security sub-pages are
+    31-32-line stubs. release-notes.md has the "Unverified version history" template,
+    and every date in it is wrong per KB 313905: 9.0 "2024-Q2" (actual 2024-03-19),
+    8.8 "2023-Q4" (2023-09-21), 8.7 "2023-Q1" (2023-04-18), 8.6 "2022-Q3"
+    (2022-10-11), 8.5 "2022-Q1" (2021-10-05). The "REST-only management" and
+    "policy-based PGs" summaries are unverified. It has no 9.0.x/9.1 rows.
+    Lifecycle (verified): SRM 8.8.0.3 (2024-02-08) is the last SRM-named build. VLSR
+    9.0 shipped 2024-03-19 (build 23464738), up to 9.0.2.4. From 9.0.3 (2025-06-17) it
+    is the converged "VMware Live Recovery" appliance (VLSR + vSphere Replication +
+    vSAN Data Protection), up to 9.0.5.1 (2026-04-20). It was then renamed "VCF
+    Protection and Recovery" 9.1 (2026-05-12; latest 9.1.0.0200, 2026-07-13). vVols
+    deprecated in VCF 9.0: migrate vVols replication to ABR before P&R 9.1.
+    Invented/incorrect content (vs the VLSR 9.0 Install & Config PDF):
+    architecture/integrations.md:60-80: SRA install via scp + ./install.sh into
+    /opt/vmware/srm/lib/adapters/ + `systemctl restart vmware-dr` is invented.
+    Vendor: VAMI > Storage Replication Adapters > New Adapter > Upload the .tar.gz
+    (SRA runs as a docker image), then Site Pair > Configure > Array Based Replication
+    > SRAs > Rescan Adapters.
+    operations/cli-reference.md:105-114 (/api/sessions, /api/groups, /api/plans,
+    /actions/test) and operations/backup-restore.md:32-40 (/api/session,
+    /api/recovery-plans, Bearer token) are invented paths. Vendor: POST
+    /api/rest/srm/v1/session, GET /api/rest/srm/v1/pairings/,
+    .../pairings/{id}/recovery-management/plans,
+    .../plans/{id}/actions/recovery, POST .../pairings/{id}/remote-session, plus an
+    OpenAPI spec at /api/rest/srm/<ver>/open-api.json and a separate
+    /api/rest/configure/ gateway.
+    operations/scripts.md:6,11 and operations/health-checks.md:6,11 cite PowerCLI
+    `Get-SrmRecoveryPlan` / `Start-SrmRecoveryPlan -PlanMode Test`. Neither cmdlet
+    exists: VMware.VimAutomation.Srm 13.5.2 ships only Connect-SrmServer and
+    Disconnect-SrmServer, and the API is reached via .ExtensionData (the KB body code
+    that uses ExtensionData is the right pattern). scripts.md is also an empty
+    shell: no script body.
+    deploy/index.md:119: "SRM setup UI at https://...:9086/" is wrong. The appliance
+    is configured in the VAMI on 5480.
+    9086 as the appliance site-pair channel (architecture/how-it-works.md:51,
+    ports.md:24,52,96,109, deploy/index.md:45,60,72,424, index.md:27,
+    cli-reference.md:21, known-issues.md:66) is wrong for the appliance. The vendor
+    doc says all appliance services run behind a reverse proxy on 443, plus VAMI
+    5480. 9086 appears only as the legacy *Windows* SRM SOAP API endpoint.
+    ports.md:33,93 (9085 "SRM REST API") and 8095 (index.md:27, deploy:60,73,
+    ports.md:44,95, diagnostics.md:255) are not in the vendor doc: not verified,
+    likely invented.
+    how-it-works.md:47 ("OVA appliance from 8.x+") is imprecise.
+    troubleshooting/diagnostics.md:268-279 lists Windows log paths
+    (C:\ProgramData\VMware\VMware vCenter SRM\Logs) as current. Appliance logs:
+    /var/log/vmware/srm/ (vmware-dr-N.log), bundle via
+    /opt/vmware/dr/bin/dr-support-linux.sh. common-issues.md:256 uses service
+    `vmware-srm` and port localhost:13116 (vendor service names: srm-server,
+    dr-configurator, dr-client, dr-rest, envoy-proxy).
+    VR ports (10443, 44046 in ports.md:73-98, integrations.md:152,
+    common-issues.md:149) are not verified here; defer to the sibling
+    vsphere-replication item. Note the vendor VLSR doc gives 31031 + 32032 for enhanced
+    replication, and the KB never mentions 32032.
+  - Cert research (2026-11-25): No current or retired Broadcom exam centres on
+    SRM/VLSR/Protection and Recovery. The 2026 VCF cert paths PDF (VCP-VCF
+    Admin/Architect/Support, VCP-VVF, domain/role VCAPs for VKS, Automation, Operations,
+    Storage, Networking; "VCAP VCF AI Resilient Infrastructure" listed as "Coming
+    Soon", scope unpublished) has no DR exam. The 2V0-17.25 exam guide (VCF 9.0 Admin)
+    has no Live Recovery/SRM objective; the only resilience item is "options for
+    Resilience and Data Availability in VMware vSAN" (Obj 2.3). The retired list
+    (updated July 2025) has zero SRM/Site Recovery entries. Fallback expert bar =
+    VMware Live Site Recovery 9.0 Installation and Configuration PDF (full TOC
+    verified, 28.9k lines extracted), updated to Protection and Recovery 9.1
+    structure.
+    Sources (primary, vendor):
+    https://docs.broadcom.com/doc/vmw-certification-paths ;
+    https://docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide ;
+    https://docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges ;
+    https://knowledge.broadcom.com/external/article/313905 ;
+    https://knowledge.broadcom.com/external/article/426655 ;
+    https://knowledge.broadcom.com/external/article/447296 ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/live-site-recovery/9-0.html ;
+    https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/live-recovery/live-recovery/live-site-recovery/vmware-live-site-recovery-installation-and-configuration.pdf ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/live-site-recovery/9-1.html ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/live-site-recovery/9-1/next-release-is-part-of-protection-and-recovery.html ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1.html ;
+    https://www.powershellgallery.com/packages/VMware.VimAutomation.Srm/
+    Target bar: Expert-level VLSR 9.0 / VCF Protection and Recovery 9.1 admin. Covers
+    the VLSR 9.0 Install&Config guide end-to-end (deploy/pair/licensing/certs/offline +
+    degraded modes, replication, mappings, placeholders, PGs, recovery plans, IP
+    customization, reprotect, REST gateway, roles, interop, alarms, logs, security
+    reference) plus 9.1 P&R scope (site recovery, operational/ransomware recovery,
+    multi-tenant DR for VCF Automation, dashboards). No exam exists.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: Live Site
+    Recovery / VMware Live Recovery / Protection and Recovery naming (0), vSAN Data
+    Protection (0), Live Cyber Recovery / ransomware recovery (0), vVols + its VCF 9
+    deprecation (0), stretched storage (0), shared recovery site (0), enhanced
+    replication / port 32032 (0), offline mode (0), degraded/suspended mode (0),
+    dr-ip-customizer (0), Rescan Adapters / SRA docker upload (0), vmware-dr.xml (0),
+    dr-support-linux.sh (0), Aria Orchestrator plug-in (0). Thin: placeholder datastore
+    (2), licensing per protected VM / Advanced Cyber Compliance (2), priority groups
+    (3), recovery steps/callouts/prompts (1), config import/export tool (1), FIPS (1),
+    Aria Ops management pack (1), Connect-SrmServer (3), planned migration (5),
+    reprotect (5), VAMI 5480 (5), REST API (7, all with wrong paths). Adequate by
+    count: protection group (19), recovery plan (19), vSphere Replication (20), SRA
+    (17), test recovery (16), inventory mappings (13), IP customization (10). Phase B
+    should: rebrand the section to VLSR 9.0 -> VCF Protection and Recovery 9.1 with
+    the verified lifecycle table (replace the release-notes template). Fix the
+    port model (443 reverse proxy + 5480; drop 9086/9085/8095 for the appliance;
+    add 31031/32032). Rewrite the SRA install, REST (/api/rest/srm/v1/...), PowerCLI
+    (only Connect/Disconnect-SrmServer + ExtensionData) and appliance log/service
+    content. Build out the 4 security stubs from the Security Reference chapter. Add
+    pages for dr-ip-customizer CSV workflow, reprotect states/optimized reprotect,
+    shared recovery site, stretched storage, offline/degraded modes, and the 9.1
+    converged appliance (vSAN DP, ransomware recovery). Coordinate VR ports and
+    enhanced replication content with the sibling vsphere-replication item.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/tanzu
+  - Audit (2026-11-25): 27 pages, 8,385 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). Applies-to: "Tanzu 3.x"
+    14, "Tanzu 2.x" 6, "VMware Tanzu" 3, 4 one-off TKG 2.x / vSphere with Tanzu
+    7.x-8.x variants. No product called "Tanzu 2.x/3.x" exists in this sense;
+    the section is pre-VCF-9 and mixes three products: vSphere with Tanzu / TKG
+    Service (Supervisor), standalone TKG (tanzu management-cluster create,
+    operations/install-upgrade.md:86, deploy/index.md:318) and TAP Cartographer
+    (carto.run/v1alpha1, architecture/how-it-works.md:416). Versions named: vSphere
+    7.0 U2+/8.x, NSX-T 3.1+, TKG 2.x, K8s 1.24/1.26/1.28/1.30. Zero mentions of
+    VKS, vSphere Kubernetes Service, VCF 9, VCF CLI, NSX VPC, vSphere Zones,
+    Foundation Load Balancer, Supervisor Services, v1beta2.
+    release-notes.md:21-27 table (Tanzu 2.0-2.4, "TKG rebrand", 2022-2024) is
+    template-generated and invented; flagged "Unverified version history".
+    Accuracy findings (vs Broadcom TechDocs):
+    - TKC v1alpha3 used as the provisioning API in operations/procedures.md:80,
+      deploy/index.md:324, architecture/how-it-works.md:89. TechDocs 9.0 "About
+      VKS Cluster Provisioning": v1alpha3 is "Deprecated" and "Starting with VKS
+      3.7, the TanzuKubernetesCluster API is no longer supported"; use Cluster
+      v1beta1 (recommended) or v1beta2 (latest). Only cluster.x-k8s.io use in the
+      KB is a MachineHealthCheck (architecture/design-standards.md:364); no
+      ClusterClass Cluster example anywhere.
+    - operations/procedures.md:96-97 `spec.distribution.version: v1.26.5` in a
+      v1alpha3 TKC: invalid. The v1alpha3 API reference has only spec.topology and
+      spec.settings; version goes in topology.*.tkr.reference.name. Expected output
+      at procedures.md:107-111 (STATUS/READY/REPLICAS columns) looks invented.
+    - kubectl vsphere login: Broadcom 8.0 docs use `--server=<IP-or-FQDN>
+      --vsphere-username ... --tanzu-kubernetes-cluster-name ...
+      --tanzu-kubernetes-cluster-namespace ...`. KB uses `--username` (not the
+      documented flag) at security/authentication.md:33-36,74-78,
+      security/hardening.md:269, operations/procedures.md:39-40,128,346,
+      operations/scripts.md:35-36; operations/cli-reference.md:146-149 passes both
+      --username and --vsphere-username. deploy/index.md:237,276,400 use the
+      documented flag. Current 9.x Supervisor login doc shows only VCF CLI
+      (`vcf context create --endpoint <SUPERVISOR> --username <SSO-user>
+      --ca-certificate <file>`; `--workload-cluster-name/-namespace` for VKS);
+      KB has zero VCF CLI content.
+    - operations/procedures.md:39-48 creates a vSphere Namespace with `kubectl
+      apply` of a core v1 Namespace on the Supervisor; not the documented
+      workflow (not verified whether self-service namespace template allows it).
+    - deploy/index.md:61 + index.md:35 "VDS 7.0+ with HAProxy": VCF 9.0 Supervisor
+      Models design page lists only NSX LB, Avi and Foundation Load Balancer;
+      HAProxy is not mentioned (HAProxy pages found only in 8.0 docs).
+    - deploy/index.md:318 error-fix tells Supervisor users to run `tanzu
+      management-cluster create` and look in tkg-system: standalone-TKG advice in
+      a Supervisor procedure.
+    - tanzu CLI used throughout (cli-reference.md:36-98, install-upgrade.md,
+      health-checks.md:116-166, procedures.md:316-370); VKS 3.8 RN documents the
+      `vcf` CLI (vcf cluster class list, vcf addon replacing deprecated vcf
+      package plugin). Not checked: VM class names best-effort-*, port table.
+  - Cert research (2026-11-25): VCF 9 renamed the stack vSphere Supervisor +
+    vSphere Kubernetes Service (VKS); VKS has its own release cadence independent
+    of Supervisor/VCF numbering. Current: VKS 3.8.1+v1.37 (25 Nov 2026; 3.8.0 22
+    Oct 2026; K8s 1.37, CAPI v1.14, CAPV v1.17; requires Supervisor K8s >= 1.33
+    and VKS >= 3.5.0 to upgrade). Latest Supervisor 9.1.2 (24 Nov 2026, embeds VKS
+    3.7.1). Dedicated exam exists: 3V0-24.25 "Advanced VMware Cloud Foundation 9
+    vSphere Kubernetes Service" (credential VCAP-VCF VKS; guide dated Nov 2026;
+    60 items, 135 min, pass 300). Courses: VKS Advanced Design / Configuration /
+    Troubleshooting [V9.0]. Same VKS objectives also embedded in role VCAPs
+    3V0-11.26 Admin (obj 4.30-4.34), 3V0-12.26 Architect, 3V0-13.26 Support (obj
+    5.15-5.17), and in VCP-VCF Admin 2V0-17.25 obj 2.5, 4.1, 4.4. Old Tanzu certs:
+    VCP-TKO 2023 retired 31 Dec 2023 (successor VCP-TKO 2024); TMC Specialist
+    5V0-71.23 and Cloud Native Master Specialist 2024 retired 30 Jun 2025.
+    VCP-TKO 2024 / 2V0-71.23 status: not verified (absent from retired list, which
+    is dated Jul 2025, and absent from current paths PDF). Tanzu brand now =
+    Broadcom app platform (Tanzu Platform 10.4 GA 24 Apr 2026: TAS, Platform Core,
+    Hub); Kubernetes runtime is VKS under VCF.
+    3V0-24.25 objectives: 1.1 VMs vs containers; 1.2 K8s architecture, networking,
+    storage, service mesh, Helm; 1.3 reference architecture (NSX, VDS, Zones);
+    2.1 Supervisor capabilities/services/topologies; 2.2 Supervisor networking
+    VDS, NSX Segments, VPCs + load balancing; 2.3 storage policies, PVs across
+    zones; 2.4 identity (external IdP, K8s admin creds); 2.5 Kubernetes releases +
+    content libraries (subscribed, local, air-gapped); 2.6 CNIs, NSX objects, TLS
+    certs, securing clusters; 3.1 LB size implications; 3.2 Namespace network
+    options; 3.3 namespace ingress/egress; 3.4 Supervisor enablement process; 3.5
+    service mesh; 4.1 create Supervisor with NSX VPC/NSX Segment/VDS + Avi; 4.2
+    vSphere Namespaces and Zones; 4.3 Supervisor Pods / VM Service; 4.4
+    Supervisor add-on services (Harbor, external-dns); 4.5 provision/delete/
+    monitor/scale VKS clusters with kubectl and VCF CLI; 4.6 rolling updates; 4.7
+    autoscalers; 4.8 package repos, standard packages, registry secrets, private
+    registries; 4.9 snapshots; 4.10 upgrade Supervisor Service; 4.11 static/
+    dynamic PVs + expansion; 4.12 workload models (pods, VMs, ingress, registries);
+    4.13 Velero backup/restore to object storage; 4.14 edit YAML; 5.1 Supervisor/
+    VKS provisioning, connectivity, namespace errors; 5.2 VM class, cluster plans,
+    content library, storage, networking errors; 5.3 container, registry, trusted
+    CA errors; 5.4 recover failed VKS upgrades; 5.5 monitoring and scaling.
+    Sources (primary, vendor): docs.broadcom.com/doc/VMware-VCAP-VKS-exam-guide,
+    docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide,
+    docs.broadcom.com/doc/vcap-admin-exam-guide, .../vcap-architect-exam-guide,
+    .../vcap-support-exam-guide, docs.broadcom.com/doc/vmw-certification-paths,
+    docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges;
+    techdocs.broadcom.com: VKS 3.8 RN (vcf-service-administration-and-development
+    /9-1/release-notes/vks-release-notes/...-38-release-notes.html), vSphere
+    Supervisor RN 9.1, About VKS Cluster Provisioning (9-0), TKC v1alpha3 API
+    (vsphere-supervisor/8-0), Connect to Supervisor as SSO user (latest),
+    Connect to TKG cluster with kubectl (8-0), vSphere Supervisor Models (VCF
+    9.0 design); blogs.vmware.com VKS 3.7 (16 Jun 2026) and VKS 3.8 (2 Nov
+    2026); support.broadcom.com advisory 37403 (Tanzu Platform 10.4).
+    Target bar: 3V0-24.25 VCAP-VCF VKS (also covers VKS parts of 2V0-17.25 and
+    3V0-11/12/13.26).
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    VKS/vSphere Kubernetes Service 0, VCF 9 0, VCF CLI/vcf context 0, v1beta2 0,
+    NSX VPC 0, vSphere Zones/multi-zone 0, Foundation Load Balancer 0,
+    Supervisor Services 0, external-dns 0, Tanzu Platform 0. Thin: cluster.x-k8s.io
+    1, ClusterClass 2, VKr 3, VM Service 1, autoscaler 1, service mesh 1, air-gap 2,
+    vSphere/Supervisor Pod 3, HAProxy 3 (obsolete), VM class 5, content library 5,
+    snapshot 5, Helm 5, Velero 7. Legacy-heavy: TanzuKubernetesCluster 11, tanzu
+    CLI 14, kubectl vsphere login 9, Avi 11, Harbor 20, storage policy 11, vSphere
+    Namespace 16, Pinniped/OIDC 11. Phase B should: rename/retarget the section to
+    vSphere Supervisor + VKS (VCF 9.x, VKS 3.x own cadence) and move standalone
+    TKG + TAP content out (or mark legacy); replace all TKC v1alpha3 manifests with
+    Cluster v1beta1/v1beta2 + builtin-generic ClusterClass examples and document
+    TKC retirement (retire-tkc label); replace tanzu CLI with VCF CLI (context,
+    cluster, addon plugins) and fix `--username` to `--vsphere-username` in any
+    kept kubectl-vsphere content; add Supervisor networking models (VDS+FLB/Avi,
+    NSX Segment, NSX VPC), single vs three-zone, LB sizing; Supervisor Services
+    (Harbor, external-dns) install/upgrade; VKr + content library incl. air-gap;
+    VM Service and vSphere Pods; autoscaler, snapshots, PV expansion; Velero;
+    troubleshooting per 5.1-5.5; delete invented release-notes table and replace
+    with verified VKS/Supervisor version tables; drop HAProxy as current option.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/topics
+  - Audit (2026-11-25): 53 pages, 15,429 lines, 15 subdirs (14 deep-dive topic dirs
+    + scenarios/ with 37 scenario pages + index). Not cross-cutting design/licensing/
+    DR content: it is vSphere-behaviour deep dives (HA admission control, isolation
+    response, DRS/vMotion, failure domains, recovery/APD-PDL, contention, snapshots,
+    storage latency, packet loss, NTP/DNS, maintenance risk, cluster validation,
+    upgrade order, learning path) plus 37 cross-product troubleshooting/ops scenarios.
+    "Applies to:" 53/53 = "vSphere 7.x / 8.x" (vSphere 7 reached End of General
+    Support 2 Oct 2025 per KB 415405); zero pages target VCF 9 / ESX 9. Version
+    mentions: "vSphere 7" x56, ESXi 5.0/6.5 x6, vSAN 8 x2, vCenter 8.0 x1, no 9.x.
+    Naming: Aria on 30 pages, "VCF Operations"/"VCF Automation" 0, Tanzu/Supervisor/
+    VKS 0, SRM 6 / "VMware Live Recovery" 0, Workspace ONE Access/vIDM 2,
+    Skyline Health (vSAN) on ~15 pages, legacy links interopmatrix.vmware.com,
+    docs.vmware.com, kb.vmware.com (all now 302 to Broadcom). Index says "25
+    scenarios" (index.md:9, :23) but there are 37.
+    Overlap with per-product rule: ha-admission-control, host-isolation-response,
+    recovery-behavior duplicate internals/ha-deep-dive + products/vcenter
+    (24 product pages mention admission control); drs-vmotion-behavior duplicates
+    internals/drs-mechanics; upgrade-sequence-reference duplicates
+    reference/lifecycle, reference/upgrade-readiness and products/*/operations/
+    install-upgrade.md (21 product pages); storage-latency/snapshot-impact belong
+    in products/vsan or products/esxi; learning-path overlaps products/*/learning-
+    path. Scenarios are genuinely cross-product and can stay as the one justified
+    cross-cutting area. Phase B should migrate topic dirs into product sections.
+    Stale/invented (file:line):
+    upgrade-sequence-reference/index.md:65-70 VCF order lists vCenter before NSX;
+    Broadcom VCF 9.0 LCM order is SDDC Manager, NSX, vCenter, ESX, vSAN, after
+    fleet mgmt components (VCF Ops fleet management, then VCF Operations) first;
+    :36-45 Aria Suite Lifecycle/VIDM/"Aria Log Insight" chain is 8.x-only (VCF 9
+    uses VCF Operations fleet management + VCF Identity Broker); :87 "ESXi within
+    N-2 of vCenter" not a Broadcom rule (not verified, interop matrix governs);
+    :89 "SRM must match vCenter version exactly" not verified, likely wrong;
+    :98 "EVA migration" typo; :99 `esxcli vsan upgrade status` not verified;
+    :79-82 dead-domain links. learning-path/index.md:77 "FTT=1 RAID-5 requires 4
+    hosts" true only for OSA; ESA RAID-5 (2+1) min 3 hosts per techdocs;
+    :106-116 Aria Suite naming (now VCF Operations / for logs / for networks).
+    scenarios/vcf-sddc-manager-upgrade-stalled.md:112 "vcf-5.5.0" and :341
+    "SDDC Manager: 5.4.1.0" invented (VCF 5.x ends at 5.2.5 per KB 314608).
+    scenarios/psod-esxi-kernel-panic.md:219 points to kb.vmware.com.
+    Licensing: section makes no licensing claims (only "assign licence key" UI
+    paths, add-esxi-host-to-cluster.md:185,194, vmotion-failing.md:63); 0 pages
+    mention per-core, VVF, VCF editions or perpetual.
+  - Cert research (2026-11-25): Section is troubleshooting-heavy, so the best
+    target is 2V0-15.25 VCF 9.0 Support (VCP-VCF Support; guide dated Nov 2026;
+    60 items, pass 300, 135 min; only Section 5 testable, objectives 5.1-5.10),
+    with 2V0-18.25 VVF 9.0 Support (same format, 5.1-5.9) as the vSphere-only
+    sibling and 2V0-17.25 VCF 9.0 Administrator (2.2-2.4, 4.2-4.3) as umbrella
+    for the deep-dive topic pages. Cert-paths PDF (2026) lists VCP: 2V0-13.25
+    VCF Architect, 2V0-16.25 VVF Admin, 2V0-17.25 VCF Admin, 2V0-18.25 VVF
+    Support, 2V0-15.25 VCF Support; VCAP by domain (VKS, VCF Automation, VCF
+    Operations, VCF Storage, VCF Networking; AI Resilient "coming soon").
+    Mapping (2V0-15.25):
+    5.2 upgrade/conversion: vcf-sddc-manager-upgrade-stalled, vcenter-upgrade-
+    failure, upgrade-sequence-reference, host-maintenance-patching
+    5.3 workload domains/scale hosts: add-esxi-host-to-cluster (vxrail pages are
+    Dell, out of scope)
+    5.4 certs/passwords/identity: certificate-expiry-rotation, ntp-drift-sso-cert
+    5.6 compute: esxi-host-disconnected, psod, vcenter-down, vcenter-ha-failover,
+    vm-performance-degraded, vm-cpu-memory-contention, vmotion-failing, vm-
+    snapshot-consolidation, ha-admission-control-breach, vm-inaccessible-ha-
+    failover, host-profile-compliance-drift + topic dirs ha-admission-control,
+    host-isolation-response, drs-vmotion, recovery-behavior, resource-contention,
+    snapshot-impact, cluster-state-validation, time-dns-validation
+    5.7 storage: vsan-disk-component-failure, vsan-capacity-alarm, vsan-stretched-
+    split-brain, vsan-witness-unreachable, storage-apd, datastore-full,
+    storage-vmotion, enable-vsan-encryption, storage-latency, failure-domains
+    5.8 networking: nsx-connectivity-broken, nsx-dfw, nsx-edge-bgp, nsx-transport-
+    node-prep, nsx-microsegmentation, network-packet-loss
+    5.9 VCF Operations: aria-ops-alert-storm, capacity-planning (8.x Aria UI)
+    No objective: dr-test-planned-failover, srm-replication-lag (VMware Live
+    Recovery is a VCF add-on, not in 2V0-15.25/17.25 objectives)
+    Sources (primary, vendor): docs.broadcom.com/doc/vmware-cloud-foundation-
+    support-exam-guide; .../vmware-vsphere-foundation-support-exam-guide;
+    .../vmware-cloud-foundation-administrator-exam-guide; .../vmw-certification-
+    paths; techdocs VCF 9.0 BOM + LCM-of-core-components + vSAN 9.1 RAID-5/6
+    page; knowledge.broadcom.com KB 313548 (16 cores/CPU min), KB 415405 (vSphere
+    7 EOGS 2 Oct 2025), KB 314608 (VCF version list)
+    Target bar: answer any 2V0-15.25 "given a scenario, troubleshoot" item for a
+    VCF 9.0 fleet using VCF 9 names, UI paths (VCF Operations) and ESX 9 tooling.
+  - Gap vs blueprint (pages mentioning each term, out of 53): Zero coverage: VCF
+    9 / ESX 9 (0 real hits), VCF Operations 0, VCF Automation 0, fleet 0, VCF
+    Installer/Cloud Builder 0, Identity Broker 0, Supervisor/VKS/Tanzu 0, VPC 0,
+    Transit Gateway 0, HCX 0, log assist 0, Observability Workbench 0, vCenter
+    import/convert 0, licence entitlement/expiry 0, Memory Tiering 0, Terraform 0.
+    Thin: SDDC Manager 3, workload domain 1, vSAN ESA 2, availability zone 2,
+    CSR 2, certificate authority/VMCA 2, log/support bundle 3, iSCSI 4, FC 4,
+    VDS 5, NFS 6, VCF Ops for logs 4 (as Log Insight). Present: Aria 30, vMotion
+    30, PowerCLI 27, NSX 26, certificate 23, DRS 22, SSO/identity 16, password 14.
+    Phase B should: (1) move the 14 deep-dive dirs into products/vcenter|esxi|vsan
+    and keep scenarios/ as the cross-product troubleshooting hub; (2) retarget
+    "Applies to" to VCF/VVF 9.0 (keep 8.x notes), rename Aria->VCF Operations,
+    SRM->VMware Live Recovery, ESXi->ESX for 9.x; (3) fix VCF upgrade order and
+    the invented 5.4/5.5 versions; (4) add scenarios for the zero-coverage 15.25
+    objectives: VCF Installer deploy failure, fleet add/remove instance, VCF 5.x
+    ->9.0 upgrade and vSphere->VCF convert/import, licence assign/expiry,
+    Identity Broker, VCF Automation orgs/Provider mgmt/Supervisor, NSX VPC,
+    supplemental iSCSI/NFS/FC, log assist + Observability Workbench; (5) update
+    index count 25->37 and dead VMware links.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/vcenter
+  - Audit (2026-11-25): 27 pages, 7,284 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). Largest: procedures.md
+    844, troubleshooting/common-issues.md 722, troubleshooting/diagnostics.md 632,
+    deploy/index.md 567, architecture/how-it-works.md 525. "Applies to:" all
+    7.x/8.x: "vSphere 7.x / 8.x" 19, "vSphere 7.x · 8.x" 6, "VMware vCenter 7.x /
+    8.x" 2. Versions cited are mostly 7.x ("vSphere 7.x" 33 mentions); 8.x appears
+    on a handful of lines; zero pages mention vCenter 9.0/9.1, VCF 9 or vSphere 9;
+    VCF/SDDC Manager appears on 1 page (release-notes.md). faq.md:20 says "vCenter
+    8.0 Update 3 is the current recommendation". Current per KB 326316: 9.1.2.0
+    (2026-11-24), 9.0.2.0200 (2026-11-19), 8.0 U3m 8.0.3.01200 (2026-11-19);
+    vSphere/vCenter 8.x EoGS 2027-10-11 (KB 459135, KB 456708).
+    release-notes.md is the template "Unverified version history" table and its
+    dates are wrong vs KB 326316: 8.0 U3 "2024-Q3" (actual 2024-06-25), 8.0 U2
+    "2024-Q1" (actual 2023-09-21), 7.0 U3 "2022-Q1" (actual 2021-10-05); 8.0 GA
+    and 8.0 U1 quarters are right; no 9.x rows.
+    Invented/wrong CLI and API (verified against Broadcom primary sources):
+    - REST paths absent from the vSphere Automation API reference (9.1.2):
+      /api/vcenter/health/system architecture/how-it-works.md:401,
+      operations/health-checks.md:215, troubleshooting/diagnostics.md:485,629 ->
+      real is /api/appliance/health/system. /api/vcenter/deployment/backup/
+      schedules?vmw-task=true operations/procedures.md:413 (labelled "manual
+      backup") and /api/vcenter/deployment/backup/job :430 -> real are
+      /api/appliance/recovery/backup/job (POST = manual backup) and
+      /api/appliance/recovery/backup/schedules. Confirmed real: /api/session
+      (6 uses), /api/vcenter/vm, /api/vcenter/host, /api/vcenter/identity/
+      providers, /api/appliance/system/version; legacy /rest/com/vmware/cis/
+      session (ports.md:106) and /rest/appliance/system/version
+      (procedures.md:623) are old-style paths, not flagged as current.
+    - Wrong certificate-manager paths: /usr/lib/vmware-vmcad/certificate-manager
+      deploy/index.md:466,482; /usr/lib/vmware-vpx/bin/certificate-manager
+      troubleshooting/diagnostics.md:243. KB 318946: /usr/lib/vmware-vmca/bin/
+      certificate-manager (used correctly on 10 other lines).
+    - lstool.py at /usr/lib/vmware-vmafd/bin/ on port 7080, used to "check STS
+      expiry" operations/procedures.md:321,351: KB 322196 gives 7.x/8.x as
+      /usr/lib/vmware-lookupsvc/tools/lstool.py ... localhost:7090 (7080 +
+      vmidentity path is 6.x); lstool does not report STS expiry.
+    - vdcrepadmin at /usr/lib/vmware-vmafd/bin/ operations/procedures.md:793;
+      KB 410816 path is /usr/lib/vmware-vmdir/bin/vdcrepadmin. "dir-cli
+      replication status" troubleshooting/known-issues.md:62 is not a documented
+      command (KB 410816 uses vdcrepadmin -f showpartnerstatus).
+    - "Use full path /usr/lib/vmware-vmafd/bin/service-control"
+      deploy/index.md:526, operations/cli-reference.md:275: no source gives that
+      path (KB 344633 runs service-control from the shell); not verified.
+    - service-control service names not in KB 344633's 7.x service list:
+      vmware-sts-idmd (6.x name) architecture/how-it-works.md:98,
+      troubleshooting/common-issues.md:351,399, troubleshooting/diagnostics.md:415,
+      security/authentication.md:269; vmware-sts operations/health-checks.md:38,
+      131,147; vmware-sso troubleshooting/escalation.md:69; vmware-lookupsvc
+      operations/health-checks.md:39,132 (list says lookupsvc); vmware-vmafd
+      troubleshooting/common-issues.md:419 (list says vmafdd). vmware-stsd,
+      vmware-vpxd, vmware-vpostgres, applmgmt, vsphere-ui, vmware-eam are real.
+    - vmon-cli: KB 415673 documents `vmon-cli -l` and `vmon-cli -s <svc>`
+      (RunState: STARTED / HealthState: HEALTHY). `vmon-cli --status` with
+      supervisord-style "vpxd:vpxd RUNNING" output operations/procedures.md:376,
+      388-395,628,643 and `vmon-cli --restart` :402 are not documented; the
+      output format is invented.
+    - `dir-cli user unlock --account ...` security/access-control.md:258,
+      security/authentication.md:238, troubleshooting/common-issues.md:402: not in
+      KB 326186, which unlocks via the vSphere Client or resets the password with
+      /usr/lib/vmware-vmdir/bin/vdcadmintool option 3. Treat as invented until a
+      dir-cli reference confirms it.
+    - Not found in any Broadcom source (likely invented): `vmafd-cli
+      get-tls-endpoint` security/hardening.md:35; `python3 /usr/lib/vmware-vcha/
+      VcHaMgr.py state` operations/health-checks.md:48 (vCenter HA state is in
+      the vSphere Client or the vcenter/vcha/cluster API); cron of
+      /usr/lib/vmware-vami/scripts/backup.sh operations/health-checks.md:112
+      (backups are scheduled in VAMI :5480 or the recovery/backup API).
+    - IWA offered as a current identity source: security/access-control.md:67,
+      operations/procedures.md:482, architecture/integrations.md:18. KB 314324: IWA
+      deprecated in 7.0 and removed in vSphere 9.0.
+    - Backup protocols (procedures.md:405 "NFS, SFTP, FTPS, HTTP, HTTPS") leave
+      out FTP and SMB. KB 322371 lists FTP, FTPS, HTTP, HTTPS, SFTP (7.0; SCP on
+      6.x), NFS, and SMB (6.7/7.0/8.0). KB 318731 says 9.0 still does file-based
+      and image-based backup via VAMI :5480.
+    - Zero pages for lsdoctor, vdt/VCF Diagnostic Tool, cmsso-util (all real:
+      KB 320837 lsdoctor 6.7-9.x; KB 344917 VDT 2.2.3+ for 7.x/8.x/9.x, run as
+      `python vdt.py`; KB 370062 `cmsso-util unregister|domain-repoint`, plus
+      `cmsso-util break-elm` in vSphere 9).
+  - Cert research (2026-11-25): No vCenter-only or vSphere VCAP exists. The 2026
+    cert paths PDF lists only VCP-VCF Architect 2V0-13.25, VCP-VVF Admin
+    2V0-16.25, VCP-VCF Admin 2V0-17.25, VCP-VVF Support 2V0-18.25, VCP-VCF
+    Support 2V0-15.25, and domain VCAPs (VKS, VCF Automation, Operations,
+    Storage, Networking, AI Resilient Infra "coming soon"); no 3V0-21.25.
+    Primary target: VMware vSphere Foundation 9.0 Administrator (2V0-16.25) ->
+    VCP-VVF Administrator. Exam guide dated November 2026; 60 items, pass 300
+    scaled, 135 min, Pearson VUE; based on VVF 9 (vCenter Standard, ESX, vSphere
+    Supervisor, vSAN, VCF Operations, VCF Ops for logs). Testable sections: 2
+    and 4 only (1, 3, 5 have no testable objectives). No per-section weights
+    are published (neither guide has percentages), so weights are not verified.
+    vCenter-relevant objectives: 2.2 Compute Fundamentals (deploy/configure
+    vCenter and ESX; configure a vSphere cluster; deploy/configure VMs; manage a
+    VM through vCenter; Day 2 operations in vCenter; Content Libraries;
+    encryption to secure workloads and infrastructure); 4.2 Manage (Identity
+    Management + RBAC; license management; certificate management; lifecycle of
+    VVF); also 4.1 (VVF deployment, Supervisor in a cluster) and 4.3 bullet
+    "configure the integration with VVF components" (VCF Operations).
+    Secondary: VCF 9.0 Administrator (2V0-17.25; guide dated November 2026; 60
+    items, pass 300, 135 min). 2.2 covers deploy/configure vCenter and ESX, vSphere
+    cluster, VMs, and managing VMs through vCenter (no Day-2/Content Library/
+    encryption bullets). 4.2 adds Fleet Management in VCF Operations, Identity/
+    RBAC, license, certificate, Password Management, "tasks and processes to
+    import an existing vCenter into VCF", and VCF lifecycle.
+    Legacy: VCP-DCV 2V0-21.23 (vSphere 8.x Professional; guide last updated
+    1/25/2024; 70 items, pass 300, 135 min; leads to VCP-DCV 2024) is still
+    downloadable. It is not on the retired list (last updated July 2025), which
+    retires only 2V0-21.20 (2024-01-31) and VCP-DCV 2023. Whether 2V0-21.23 can
+    still be booked today, and whether a 2V0-21.24 exists, is not verified. It is
+    not the target because it is vSphere 8-based and 8.x reaches EoGS 2027-10-11.
+    Product facts for Phase B (primary): VCF Identity Broker runs in Embedded or
+    Appliance mode, only one per vCenter/VCF instance, and is set up at VCF
+    Operations > Fleet Management > Identity & Access (KB 413884). vCenter RDU
+    (Reduced Downtime Update) is the recommended vCenter update method in 9.0,
+    via CLI installer/APIs, and supports vCenter HA (VCF blog "vSphere in VCF 9.0
+    what's new"). ELM must be remediated before converge (VCF converge blog). KB
+    370062 recommends splitting ELM after upgrading to vSphere 9 with `cmsso-util
+    break-elm`.
+    Sources (primary, vendor): docs.broadcom.com/doc/vmware-vsphere-foundation-
+    administrator-exam-guide; docs.broadcom.com/doc/vmware-cloud-foundation-
+    administrator-exam-guide; docs.broadcom.com/doc/vmw-certification-paths;
+    docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges;
+    docs.broadcom.com/doc/vmw-vcp-dcv-8-exam-guide; knowledge.broadcom.com/
+    external/article/ 326316 (vCenter builds), 459135 (vSphere 8 EoGS), 456708
+    (8.x end of service), 318731 (backup options), 322371 (backup ports/
+    protocols), 344633 (service-control + service list), 415673 (vmon-cli),
+    320837 (lsdoctor), 344917 (VDT), 318946 (certificate-manager), 326186 (SSO
+    admin unlock), 322196 (lstool), 410816 (vdcrepadmin), 370062 (ELM split/
+    cmsso-util), 413884 (Identity Broker modes), 314324 (IWA removal);
+    developer.broadcom.com/xapis/vsphere-automation-api/latest/ (cis-session,
+    vcenter-vm, vcenter-host, vcenter-identity-providers, appliance-health-system,
+    appliance-recovery-backup-job, -schedules, appliance-system-version pages);
+    blogs.vmware.com/cloud-foundation (2025/06/23 vSphere in VCF 9.0 what's new;
+    2026/02/05 how to converge vSphere to VCF 9.0; 2025/06/19 VCF SSO)
+    Target bar: VCP-VVF Admin 2V0-16.25 Obj 2.2 + 4.2 (vCenter 9.x), with the
+    2V0-17.25 Obj 4.2 extras (password mgmt, vCenter import into VCF, Fleet
+    Management) on top. Overlaps the esxi item on 2.2 (ESX deploy, cluster).
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    vCenter 9.x/VCF 9/vSphere 9, VCF Operations, Fleet Management, VCF Identity
+    Broker/VIDB, VCF SSO, import/converge vCenter into VCF, vSphere Supervisor,
+    VKS/Kubernetes, vCenter Linking, cmsso-util/break-elm, lsdoctor, vdt, vCLS,
+    vSphere Configuration Profiles. Thin: Identity Federation 1, EVC 1, reduced
+    downtime upgrade 1, Host Profile 1, Content Library 2, password management 2,
+    license 3, Enhanced Linked Mode 3, VM templates/clone 3, vmon-cli 3, ADFS/
+    Entra/Okta 4, VM encryption/KMS/key provider 4, vLCM/lifecycle manager 4.
+    Moderate: vSphere HA 6, baseline 6 (VUM baselines are unsupported in 9),
+    vecs-cli 9, certificate-manager 9, file-based backup 9, VMCA 10, vCenter HA
+    10, RBAC/privilege/global permission 11, DRS 12, vpxd 12, VAMI/5480 13,
+    service-control 13, VAMI 18, vSphere Client 19, certificate 23, SSO/
+    vsphere.local 23.
+    Phase B should: (1) move the section to vCenter 9.0/9.1, keep 8.0 U3 as
+    legacy with the 2027-10-11 EoGS, and replace release-notes.md with KB 326316
+    data; (2) fix every flagged path, API and service name above, and remove IWA
+    as an option; (3) add pages for VCF Identity Broker/VCF SSO (embedded vs
+    appliance), Identity Federation, RBAC and global permissions; for license,
+    certificate and password management in VCF Operations Fleet Management; for
+    vLCM images and RDU; and for importing an existing vCenter into VCF
+    (prechecks, ELM remediation; known-failure KBs 404182/429391/421768/429134
+    were located by search, not fetched); (4) cover the 2.2 Day-2 topics:
+    Content Libraries, VM encryption and key providers, cluster HA/DRS/EVC,
+    and VM templates/clones; (5) add lsdoctor, VDT and cmsso-util (break-elm,
+    unregister, domain-repoint) to the troubleshooting pages; (6) map each
+    2V0-16.25 2.2/4.2 bullet to a page, and split Supervisor/VKS content with
+    the esxi and VCF items to avoid duplication.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/vmware-cloud-foundation
+  - Audit (2026-11-25): 27 pages, 5,223 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" tally:
+    13x "VCF 4.x / 5.x", 3x "VCF 4.x · 5.x", 1x "VCF 5.x", 10x "VMware vSphere
+    7.x / 8.x" (wrong product line; template default on release-notes, faq,
+    install-upgrade, scripts, how-it-works, integrations, design-standards,
+    3 security pages). Zero VCF 9 coverage. Version mentions: VCF 4.x (22), 5.x
+    (4), 5.2/5.1/5.0/4.5 (1 each); "VCF 9" appears once, as a YouTube button
+    title (deploy/index.md:49) on a page that is otherwise all Cloud Builder.
+    The whole section is VCF 4.x/5.x and is presented as current: Cloud Builder
+    OVA + bring-up JSON (index.md:26-65, deploy/index.md:162-300), SDDC Manager
+    UI, VI workload domains, VxRail as a validated system
+    (learning-path/index.md:40). Per Broadcom VCF 9.0 product support notes,
+    Cloud Builder is end of support (replaced by the VCF Installer), the
+    Deployment Parameter Worksheet is replaced by VCF Installer UI/JSON, the
+    SDDC Manager UI is deprecated, LCM moves to VCF Operations, and OBTU is now
+    the VCF Download Tool. Current VCF is 9.1.2.0 (GA 24 Nov 2026; 9.0 GA 17 Jun
+    2025; 9.1.0 12 May 2026; 9.1.1 3 Sep 2026). VCF 5.2.x is still in support
+    (latest 5.2.5, 19 Nov 2026), end of service 11 Oct 2027 (KB 456708).
+    VCF 4.x is end of general support (KB 314608). The 9.1 BOM still ships SDDC
+    Manager (shown as "VCF Installer/ SDDC Manager"; 9.1.0.0 build 25371088),
+    so SDDC Manager API content is not obsolete, but the KB versions need
+    labels.
+    release-notes.md: "Unverified" table is wrong against KB 314608: 5.1.1
+    (2024-Q1) is not a vendor release; 5.0 is dated 2022-Q4 (real 1 Jun 2023);
+    5.1 is 2023-Q3 (real 7 Nov 2023); 4.5 is 2022-Q1 (real 11 Oct 2022); and
+    nothing after 5.2 is listed (5.2.1-5.2.5 and all of 9.x are missing).
+    CLI/API invented or wrong. Checked against the developer.broadcom.com SDDC
+    Manager API operation indexes (latest/9.1.x, VCF API 5.2.1, 5.1.0):
+    - The SDDC Manager API requires a Bearer token from POST /v1/tokens (Tokens
+      page: "access token has to be passed in the Authorization header as a
+      Bearer token"; basic auth is not mentioned). The KB uses basic auth
+      `curl -sk -u 'admin@local:...'` basic auth (57 calls; coordinator recount): deploy/index.md:310,351,357,418,506,
+      577,583; procedures.md:92,120,223,296,333,389,454,510,556,601;
+      health-checks.md:31,36; how-it-works.md:47,54,63.
+    - These endpoints are in no index (latest, 5.2.1 or 5.1): /v1/credentials/
+      rotate (deploy:354, how-it-works:51; the real call is PATCH
+      /v1/credentials, which cli-reference.md gets right); /v1/certificates
+      (deploy:419, how-it-works:64, health-checks:220,225; the real path is
+      /v1/domains/{id}/certificates); /v1/system/health (health-checks:31);
+      /v1/system/inventory/components and /snapshots (deploy:578,
+      install-upgrade:83,157); /v1/sddcmanager (ports.md:112; the real path is
+      /v1/sddc-managers); /v1/syslog-configuration (procedures:455);
+      /v1/bundles/retrigger (procedures:334); /v1/upgradables/prechecks
+      (procedures:297); GET /v1/backups (procedures:511, install-upgrade:151;
+      only POST /v1/backups/tasks exists).
+    - sos: the real path is /opt/vmware/sddc-support/sos (KB 385749/454898).
+      diagnostics.md:463-520 uses an invented /usr/lib/vmware-sddc-support/sos.
+      escalation.md:114,117,166,427 runs it via `python3`, which is not
+      documented, and uses `--health-summary`, which is not in any fetched
+      source. diagnostics.md:470 `--connectivity-check` was not seen in any
+      fetched source. Confirmed options: --health-check, --collect-all-logs,
+      --sddc-manager-logs, --zip, --log-dir, --vcf-mgmt-svcs-logs (9.1).
+    - `vcf-support-bundle --type sddc` (escalation.md:204-225) is not a
+      documented tool; KB 385749 documents only sos.
+    - Service names contradict each other across pages: vmware-vcf-* units
+      (diagnostics.md:110-136), `operationsmanager lcm domainmanager
+      sddc-manager-svc` (escalation.md:340), and `sddc-manager.service` with a
+      RHEL7 `el7_9` Java path and a nonexistent bundle "5.5.1.0"
+      (cli-reference.md:159-183). None of these were verified.
+    - cli-reference.md:32 says "authenticate with the vcf admin account" but
+      the example uses administrator@vsphere.local.
+    - learning-path/index.md:66 says cli-reference covers
+      lcm-bundle-transfer-util, but that page never mentions it.
+    - SDDC Manager on 9.0 drops /v1/system/precheck (LCM moved to VCF
+      Operations), so the KB upgrade flows (install-upgrade.md,
+      procedures.md:290-340) are 5.x-only and not labelled as such.
+    - lookup_passwords is not present in the KB.
+    Security pages are stubs (access-control, authentication and encryption
+    are 24 lines each).
+  - Cert research (2026-11-25): Primary target is 2V0-17.25 VCP-VCF
+    Administrator (VCF 9.0; 60 items, scaled, pass 300, 135 min, Pearson VUE;
+    blueprint per coordinator; aws/evs links here for the exam body). Broadcom
+    cert-paths PDF (2026) lists the VCF VCP track as 2V0-13.25 VCP-VCF
+    Architect, 2V0-17.25 VCP-VCF Administrator and 2V0-15.25 VCP-VCF Support,
+    plus domain VCAPs (VKS, Automation, Operations, Storage, Networking;
+    AI Resilient "Coming Soon") and role-based VCAPs. The role-based VCAP
+    exam guides (all Nov 2026; 60 items, scaled, pass 300, 135 min, Pearson
+    VUE; content based on VCF 9):
+    - 3V0-11.26 Advanced VCF 9 Administrator (VCAP-VCF Administrator). Only
+      Section 4 is testable, with 60 objectives: 4.1-4.9 vSAN (WLD vSAN,
+      stretched, non-vSAN WLD storage, cross-cluster capacity sharing/storage
+      clusters, encryption, data protection, Day-2, storage policies);
+      4.10-4.18 vSphere (advanced settings, VMs, networking, CPU/memory/vCenter
+      performance, monitoring, security, VM encryption, Trusted Env);
+      4.19-4.29 VCF Automation Provider portal/orgs/PCO, All Apps org IdP,
+      access, projects, governance, Namespace Class, VPCs; 4.30-4.34 Supervisor
+      (NSX VPC/segment/vDS/Avi), add-on services, VKS updates, package repos,
+      Supervisor upgrade; 4.35-4.43 VCF Operations Day-2, reclaim, rightsize,
+      what-if, cost, policy, business/operational intent, business apps,
+      alerts; 4.44-4.47 Fleet Management scale/upgrade, VCF SSO via Identity
+      and Access Management, config drift; 4.48-4.60 NSX Federation,
+      components, Edge cluster, T0, VRF, segments, T1, VPC, DHCP, NAT,
+      projects/tenancy, integrations, syslog/backup.
+    - 3V0-12.26 Advanced VCF 9 Architect. Sections 1-3 are testable: AMPRS,
+      requirements/assumptions/constraints/risks, design decisions, VCF
+      architecture options, Advanced Services, conceptual/logical/physical
+      design, identity, consumption and monitoring strategy.
+    - 3V0-13.26 Advanced VCF 9 Support. Only Section 5 is testable (5.1-5.19):
+      vSAN/non-vSAN, ESX, vCenter, cluster, VM, Automation, Supervisor/VKS,
+      VCF Ops CloudProxy/HA/adapters.
+    MQC for all three: multi-region and/or multi-org VCF with vCenter, ESX,
+    vSAN, NSX, VCF Identity Broker, VCF Automation, VCF Operations (Logs, Fleet
+    Mgmt, Networks) and VKS. Recommended courses: VCF Storage/Automation/
+    Operations/Networking/Compute + VKS "Advanced Configuration" (admin),
+    "Advanced Design" (architect), "Advanced Troubleshooting" (support).
+    Stretch target here: 3V0-11.26 (closest to a product section); 3V0-12.26
+    is the design/deploy alternative. The coordinator-supplied 3V0-21.25 and
+    3V0-22.25 (domain VCAPs) were not re-fetched in this pass.
+    Sources (primary, vendor):
+    https://docs.broadcom.com/doc/vmw-certification-paths ;
+    https://docs.broadcom.com/doc/vcap-admin-exam-guide ;
+    https://docs.broadcom.com/doc/vcap-architect-exam-guide ;
+    https://docs.broadcom.com/doc/vcap-support-exam-guide ;
+    https://knowledge.broadcom.com/external/article/314608/correlating-vmware-cloud-foundation-vers.html ;
+    https://knowledge.broadcom.com/external/article/456708/upcoming-end-of-service-for-vsphere-8-vs.html ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes.html
+    (+ .../9-1-0-0-release-notes/vcf-91-product-support-notes.html,
+    .../vmware-cloud-foundation-bill-of-materials.html,
+    .../vmware-cloud-foundation-9-1-2-0-release-notes.html) ;
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html
+    (+ platform-whats-new.html) ;
+    https://developer.broadcom.com/xapis/sddc-manager-api/latest/operation-index/ ;
+    https://developer.broadcom.com/xapis/vmware-cloud-foundation-api/5.2.1/operation-index/ ;
+    https://developer.broadcom.com/xapis/vmware-cloud-foundation-api/5.1.0/operation-index/ ;
+    https://developer.broadcom.com/xapis/sddc-manager-api/9.0/tokens/ ;
+    https://knowledge.broadcom.com/external/article/385749 ;
+    https://knowledge.broadcom.com/external/article/454898
+    Target bar: 2V0-17.25 VCP-VCF Admin (VCF 9.0) fully covered; 3V0-11.26
+    VCAP-VCF Admin as stretch; 5.x content kept but labelled legacy (EoS
+    11 Oct 2027).
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    VCF Installer (only a YouTube title), VCF Operations as a product (0; the
+    6 hits are page titles "VCF Operations — ..." and a service name), Fleet
+    Management 0, VCF Identity Broker 0, VCF Automation 0 (8 pages say "Aria"),
+    Supervisor 0, NSX VPC 0, vSAN ESA 0, VCF Network Gateway 0, vCenter import
+    / converge 0, VCF Ops config drift 0 (2 pages mean password/cert drift),
+    vLCM images 0, ESX 9 / VCF 9 0, VCF Download Tool 0, cert/exam mention 0.
+    Thin: VKS/Tanzu 2, storage policy 2, vSAN OSA 2, stretched cluster 2,
+    license 3, compliance 3, NSX Edge 1, VxRail 1, logs/syslog 5, alerts/
+    dashboards 5. Well covered (5.x-era): SDDC Manager 22, workload domain 20,
+    lifecycle 18, certificate 18, health 18, RBAC/identity 14, password/
+    credential 13. Phase B should:
+    (1) rebuild deploy/ around the VCF 9 VCF Installer (deployment models,
+    JSON spec, depot/Download Tool, converge/import of existing vCenter) and
+    move Cloud Builder/workbook/bring-up to a clearly labelled "VCF 5.2
+    (legacy, EoS 2027-10-11)" sub-page;
+    (2) add VCF Operations fleet management pages (lifecycle, license, cert,
+    password, identity/SSO via VCF Identity Broker, drift/compliance → Security
+    Posture Management in 9.1, Health & Diagnostics, views/reports/alerts/
+    policies);
+    (3) add VCF 9 storage (vSAN ESA/OSA, storage clusters, policies,
+    stretched), networking (NSX 9 VPC, Edge, T0/T1, VCF Network Gateway),
+    Supervisor/VKS and VCF Automation (Provider/All Apps org) content, linking
+    to the sibling product sections;
+    (4) fix every invented CLI/API item listed above: Bearer token instead of
+    basic auth, real endpoint paths, a single sos path, drop vcf-support-bundle
+    and the made-up service units;
+    (5) replace release-notes.md with the KB 314608 table (5.2.x + 9.0-9.1.2);
+    (6) fix the 10 "vSphere 7.x/8.x" Applies-to lines and flesh out the 3
+    security stubs;
+    (7) add an exam-map page for 2V0-17.25 (aws/evs links here) and 3V0-11.26.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/vsan
+  - Audit (2026-11-25): 29 pages, 12,961 lines; 6 subdirs (architecture 7, deploy 1,
+    learning-path 1, operations 8, security 5, troubleshooting 5) + index.md and
+    release-notes.md at root. "Applies to:" tally: all 29 say 7.x/8.x
+    (17 "vSAN 7.x / 8.x", 8 "vSAN 7.x · 8.x", 3 "VMware vSAN 7.x / 8.x", 1 "7.x / 8.x
+    (ESA and OSA)"). Version mentions: "vSAN 7" 38, "vSAN 8"/"8.0" 6, 6.x 8; zero
+    mentions of vSAN 9 / VCF 9 anywhere. release-notes.md is the template table
+    (flagged "Unverified version history"; 5 rows 7.0 U2-8.0 U3, no 9.x; ESA-GA and
+    vSAN Max rows not checked this run) and still lists "vSAN SKU: Standard/Advanced/
+    Enterprise/Enterprise Plus" (release-notes.md:41-42), which does not match VCF 9
+    licensing (vSAN TiB entitlements via VCF Operations, per 9.0 What's New).
+    Ops tooling is named "Aria Operations" on 7 pages, "VCF Operations" on 0.
+    CLI accuracy, checked against Broadcom ESXCLI reference 7.0.0/8.0.1/8.0.3/9.0.0
+    (union of 135 `vsan` commands): 77 occurrences of 26 `esxcli vsan` commands
+    exist in none of them, e.g.
+    `debug network test` x11 (troubleshooting/common-issues.md:32,125,159,312),
+    `storage stats get` x9 (common-issues.md:271; diagnostics.md:271,282,324),
+    `debug component list` x8 (common-issues.md:97; diagnostics.md:431,434,437),
+    `debug resync throttle get|set` x12 (common-issues.md:186-187;
+    operations/procedures.md:612,636,646; operations/cli-reference.md:38-39;
+    architecture/resync-mechanics.md:203) - real is `vsan resync throttle get|set`,
+    `resync get` x5 (troubleshooting/escalation.md:110,244,313,411),
+    `debug object get` x4 (common-issues.md:94; diagnostics.md:33,395;
+    operations/health-checks.md:218), `network ipconfig list` x4
+    (common-issues.md:322; procedures.md:1304; cli-reference.md:489,651),
+    `health summary get` x3 (cli-reference.md:137,434,888),
+    `cluster rebalance start|stop|status` (procedures.md:861,878;
+    resync-mechanics.md:63,81) - rebalance is PowerCLI Start/Stop-VsanClusterRebalance,
+    `storage evacuate` (cli-reference.md:360,421), `perf query` (health-checks.md:316,
+    353), `perf restart` (cli-reference.md:927), `health host get` (deploy/index.md:507),
+    `debug resync start` (known-issues.md:57), `cluster hcl` (known-issues.md:65),
+    `debug object repair` (escalation.md:393), `debug vmdk perf` (escalation.md:420),
+    `commands` (diagnostics.md:244), `network tag add` (diagnostics.md:577),
+    `storage check` (diagnostics.md:709), `module is available` (procedures.md:1677),
+    `storage get` (procedures.md:2071), `object list` (component-states.md:111).
+    The KB never uses real 8/9 namespaces: `storagepool` (ESA), `dedup`,
+    `encryption`, `iscsi`, `network security`, `datastore`, `debug evacuation precheck`,
+    `debug object health summary get`, `resync bandwidth get`.
+    PowerCLI, checked against VMware.VimAutomation.Storage 13.5.2 (PSGallery manifest,
+    150 cmdlets): not in module - Get-VsanFaultDomainConfiguration, Get-VsanResyncStatus
+    (real: Get-VsanResyncingComponent/-Overview), Get-VsanClusterHealthSummary,
+    Set-VsanResyncThrottle, Invoke-VsanEncryptionRekey, Invoke-VsanClusterKeyRotation,
+    Get-VsanDiskFormatVersion (security/encryption.md:179; operations/scripts.md:844,
+    1555; procedures.md:597,640,943,1358,1486,2046,2299,2322; health-checks.md:294,430;
+    cli-reference.md:677,683). OK: Get/Set-VsanClusterConfiguration, Get-VsanSpaceUsage,
+    New-VsanFaultDomain, Get-VsanView, Get-VsanStat, Get-VsanDisk(Group),
+    Test-VsanClusterHealth.
+    RVC: KB treats it as "legacy, available" (cli-reference.md:695-697;
+    diagnostics.md:810-898) but never states it is deprecated in VCF 9.0. RVC names
+    not in Broadcom KB 326527: vsan.health.health_check, vsan.health_check,
+    vsan.cluster_list (cli-reference.md:882; real: vsan.cluster_info),
+    vsan.test_network_perf, vsan.svg, vsan.debug (component-states.md:59 presents
+    it as an esxcli error). Suspect fixes in error tables: `service-control --status
+    vmware-rbd` as "RVC service" and `load_vsan_plugin` (diagnostics.md:895,897);
+    `systemctl status|restart vsand/vsanvpd/cmmds/hostd` on ESXi hosts (~25 lines,
+    e.g. component-states.md:58, procedures.md:351) - not verified, review in Phase B.
+    vsantop: 0 mentions.
+  - Cert research (2026-11-25): No vSAN-only exam exists. VMware vSAN Specialist
+    (5V0-22.21) retired 2023-07-31 (retired list, updated Jul 2025); 5V0-22.23 is
+    not listed in the retired PDF and not on the 2026 paths, so not current.
+    The 2026 cert paths list a domain track, "VCAP VCF Storage" (Design/Config/
+    Troubleshooting courses). Its guide (dated Nov 2026) is Advanced VMware Cloud
+    Foundation 9 Storage (3V0-23.25), credential VCAP-VCF Storage: 60 items, pass
+    300, 135 min, Pearson VUE, content based on VCF 9. MQC: 12-18 months of vSAN
+    including ESA. No section weights are published. Sections and objectives:
+    S1 Architectures: 1.1-1.2 HCI vs traditional storage (types, use cases);
+    1.3 iSCSI/vSAN/NFS/FC/NVMe use cases.
+    S2 Products: 2.1 OSA vs ESA; 2.2 vSAN components; 2.3 principal vs supplemental
+    storage in a WLD cluster; 2.4 advanced vSAN features/services; 2.5 datastores
+    and datastore clusters; 2.6 storage in a Supervisor context.
+    S3 Plan/Design: 3.1 vSAN design for VCF; 3.2 vSAN sizing; 3.3 non-vSAN design.
+    S4 Deploy/Configure/Operate: 4.1 vSAN cluster in a WLD; 4.2 stretched cluster in
+    a WLD; 4.3 2-node; 4.4/4.10 vSAN Data Protection; 4.5/4.11 WLD on non-vSAN storage;
+    4.6 cross-cluster capacity sharing + storage clusters; 4.7 encryption; 4.8/4.17
+    File Service + shares; 4.9/4.18 iSCSI target/LUN; 4.12 datastore cluster;
+    4.13/4.14/4.19 Day-2 tasks (vSAN, stretched, non-vSAN); 4.15 storage policy;
+    4.16 Data Protection recovery plan.
+    S5 Troubleshoot: 5.1-5.2 monitor vSAN and non-vSAN storage with VCF tools;
+    5.3-5.4 troubleshoot vSAN and non-vSAN storage.
+    Baseline: 2V0-17.25 obj 2.3, 4.1 and 4.3 (coordinator-verified; re-confirmed in
+    the PDF). Product: VCF 9.0 vSAN What's New covers Live Recovery replication
+    (RPO 1 min), licensing via VCF Operations (TiB), stretched compute-only + stretched
+    storage clusters, client traffic separation, 500 file shares, Dying Disk Handling
+    for cache drives. 9.0 support notes: RVC/rbvmomi deprecated in VCF 9.0 (use
+    PowerCLI/DCLI/vCenter UI); OSA hybrid and OSA RDMA to be discontinued.
+    ESXCLI 9.0.0 has a `vsan dedup` namespace. Current train is VCF 9.1 (vSAN 9.1.1.0,
+    03 SEP 2026). 9.1 adds ESA Auto RAID-6, ESA Global Deduplication (cluster-wide,
+    post-process, with encryption), shared storage clusters (OSA+ESA clients),
+    stretched storage across vCenters, end-to-end encryption for disaggregated vSAN,
+    site maintenance, replication seeding, retention schedules, cyber recovery,
+    WSFC/RAC support, and the Native Object Store tech preview in 9.1.1.
+    Sources (primary, vendor): docs.broadcom.com/doc/vmw-certification-paths;
+    docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges;
+    docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide;
+    docs.broadcom.com/doc/storage-guide; TechDocs VCF 9.0 RN whats-new-vsan +
+    product-support-notes-vsan; TechDocs VCF 9.1 whats-new-vsan; vSAN 9.1.1.0 RN;
+    developer.broadcom.com/xapis/esxcli-command-reference/{7.0.0,8.0.1,8.0.3,9.0.0}/
+    namespace/esxcli_vsan.html; knowledge.broadcom.com KB 326527 (RVC); blogs.vmware.com
+    vSAN 9.0 announcement; PSGallery VMware.VimAutomation.Storage 13.5.2 manifest.
+    Target bar: 3V0-23.25 VCAP-VCF Storage (VCF 9), with 2V0-17.25 obj 2.3/4.1/4.3
+    as the floor.
+  - Gap vs blueprint (pages mentioning each term, out of 29): Zero coverage: workload
+    domain 0, SDDC Manager 0, principal/supplemental storage 0, VCF Operations 0
+    (Aria Operations 7), Supervisor/CNS 0, datastore cluster/SDRS 0, vSAN replication/
+    Live Recovery 0, global dedup 0, Auto RAID-6 0, storage pool 0 (disk group 24),
+    TRIM/UNMAP 0, vsantop 0, Dying Disk Handling 0, traffic separation 0, any 9.x
+    version 0. Thin: storage cluster/vSAN Max 2, compute-only/HCI Mesh/cross-cluster
+    capacity 3, vSAN Data Protection/snapshots 3, iSCSI 3, data-in-transit 3, RVC 3,
+    IOPS limit 2, object space reservation 1, striping 4, 2-node 5, File Services 6,
+    data-at-rest 6, vLCM 7, fault domain 8, KMS/key provider 8. Adequate: stretched 18,
+    storage policy/SPBM 17, witness 16, FTT 16, PowerCLI 14, ESA 13, OSA 13, dedup 12,
+    RAID-5/6 11, compression 10. Phase B should: (1) re-base every page to vSAN 9.x
+    (VCF 9.0 exam baseline + 9.1 deltas), with ESA as default and OSA as legacy;
+    (2) fix or remove the 26 invented esxcli commands and 7 invented PowerCLI cmdlets
+    listed above, and add the real `storagepool`/`dedup`/`encryption`/`iscsi`/
+    `network security` namespaces; (3) mark RVC as deprecated in VCF 9.0 and drop the
+    invented RVC names; (4) add VCF context pages: WLD vSAN deploy (SDDC Manager
+    path to verify), principal vs supplemental storage (NFS/VMFS-FC/NVMe), datastore
+    clusters, and Supervisor/CNS storage; (5) add storage clusters (vSAN Max rename
+    unverified) + cross-cluster capacity sharing + compute-only stretched;
+    (6) add vSAN Data Protection, replication, and recovery plans (obj 4.4/4.10/
+    4.16); (7) add procedures for iSCSI targets/LUNs and File Service shares
+    (SMB/NFS); (8) rewrite encryption to cover DaR vs DiT, OSA vs ESA flows, and key
+    rotation via real commands; (9) cover monitoring with VCF Operations storage, vSAN
+    health, vsantop, and proactive tests; (10) redo release-notes.md from TechDocs RNs
+    (9.0 through 9.1.1) and drop the SKU glossary entry.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/vsphere-replication
+  - Audit (2026-11-25): 27 pages, 5,742 lines, 6 subdirs (architecture, deploy,
+    learning-path, operations, security, troubleshooting). "Applies to:" 24x
+    "vSphere Replication 8.x", 3x "VMware vSphere 7.x / 8.x". Version mentions are
+    8.x only (8.0-8.8, SRM 8.6/8.8); zero 9.x, zero Live Recovery 9.0.3+ or VCF
+    Protection and Recovery 9.1. release-notes.md is the template "Unverified
+    version history" table; 4 of 5 dates are wrong vs KB 319887 (8.8 is
+    2023-09-21, not 2024-Q1; 8.7 2023-04-18; 8.5 2021-10-05; 8.4 2021-03-09).
+    Invented or wrong content (Phase B must fix):
+    - Ports: architecture/ports.md:30,62 (8043 = admin web UI; vendor: 8043 is
+      vCenter->VR and VRMS->VRMS SOAP, 8.x only); :40 (31031 VR appliance->ESXi;
+      vendor: ESXi(source)->VR server); :46,64,74 (10443 = VR pairing; vendor:
+      Web Client->vCenter/Inventory Service, lists target datastores);
+      :47,56,64,65 + how-it-works.md:161,285 + integrations.md:151-152,198 +
+      deploy/index.md:62,73 + security/access-control.md:99 +
+      security/encryption.md:35 (44046 = VRA<->VRA management/pairing or
+      ESXi->ESXi fallback; 44046 is not in Broadcom's 8.x/9.0 port table); 32032
+      (Enhanced, encrypted) and 902 (NFC) are absent.
+    - REST: no API_VERSION segment and invented endpoints:
+      security/authentication.md:95 (/api/rest/vr/authentication/token; vendor:
+      POST /api/rest/vr/{ver}/session + x-dr-session header);
+      security/encryption.md:101 (/api/rest/vr/ssl/certificate); .../vr/health
+      and /vr/deployment (deploy/index.md:680, cli-reference.md:213,216,
+      health-checks.md:63, diagnostics.md:179); :8043/api/sites, /api/vms,
+      /api/health, /api/config/site, /api/vrs/instances (deploy/index.md:369,603,
+      636; integrations.md:53; how-it-works.md:344,426). integrations.md:114
+      ("SRM talks to VR only via VRA REST on 8043") is not verified.
+    - PowerCLI: deploy/index.md:478 Get-VmReplication does not exist; real module
+      is VMware.Sdk.Vr (Connect-VrServer, Invoke-Vr*/Initialize-Vr*); 0 pages.
+    - RPO/MPIT: faq.md:28 and deploy/index.md:415 ("minimum 5 minutes") are
+      outdated (1 min with Enhanced + ACC/SRM subscription);
+      how-it-works.md:172 increment rule (5-min steps to 1 h, then 1 h) not
+      verified; backup-restore.md:92 and how-it-works.md:223 "Default: 3
+      instances" not verified. Instances 1-24 (deploy/index.md:417) is correct.
+    - Compression: procedures.md:45 says CPU cost on the VRS; vendor says source
+      ESXi compresses and the target ESXi decompresses.
+    - Encryption: encryption.md:49,52 + learning-path/index.md:71 "AES-256,
+      5-10% CPU" not verified; vendor states TLSv1.2 with mutual cert auth
+      (source ESXi <-> target VR server), mandatory for Enhanced.
+    - Roles/services: learning-path/index.md:35 calls VRA an "agent on ESXi";
+      deploy/index.md:687,703 "hms.service - Hybrid Management Service" vs
+      :313 "vSphere Replication Management Service" (inconsistent; systemd unit
+      names not verified). Vendor model: one VR appliance per vCenter (VRMS +
+      embedded VR server + vPostgres + Site Recovery UI + VAMI), optional
+      additional VR servers, VR agent on ESXi.
+  - Cert research (2026-11-25): No current or retired Broadcom exam centres on
+    vSphere Replication. Certification paths PDF (2026) lists VCP-VCF Architect
+    2V0-13.25, VCP-VVF Admin 2V0-16.25, VCP-VCF Admin 2V0-17.25, VCP-VVF Support
+    2V0-18.25, VCP-VCF Support 2V0-15.25, domain VCAPs (VKS, Automation,
+    Operations, Storage, Networking) and "VCAP VCF AI Resilient Infrastructure
+    Coming Soon"; 0 hits for replication/recovery/SRM/disaster. 2V0-17.25 and
+    2V0-16.25 guides: 0 hits (only "Resilience and Data Availability in vSAN").
+    Retired list (updated July 2025): 0 hits. Lifecycle: VR 9.0 (2024-03-19)
+    through 9.0.2.3 (2025-11-28) standalone; VMware Live Recovery appliance
+    9.0.3 (2025-06-17, pulled) / 9.0.4 / 9.0.5 / 9.0.5.1 (2026-04-20) bundles VR
+    + Live Site Recovery + vSAN DP; renamed VCF Protection and Recovery 9.1
+    (2026-05-12), latest 9.1.2.0 (24 NOV 2026). Standalone VR/SRM appliances
+    are deprecated in 9.1; VR 9.0.3+ supports only Enhanced replication; 9.1.x is
+    the final release with MPIT for vSphere Replication. VR supports N-1 pairing.
+    Fallback bar = Broadcom vSphere Replication 9.0 Administration TOC (verified)
+    plus Protection and Recovery 9.1 replication chapters. Overlap with srm item:
+    converged appliance, pairing, Site Recovery UI, reprotect, licensing.
+    Sources (primary, vendor):
+    https://docs.broadcom.com/doc/vmw-certification-paths
+    https://docs.broadcom.com/doc/vmware-cloud-foundation-administrator-exam-guide
+    https://docs.broadcom.com/doc/vmware-vsphere-foundation-administrator-exam-guide
+    https://docs.broadcom.com/doc/vmware-retired-exams-certifications-and-badges
+    https://knowledge.broadcom.com/external/article?articleNumber=319887
+    https://knowledge.broadcom.com/external/article/426655/build-numbers-and-versions-of-vmware-liv.html
+    https://knowledge.broadcom.com/external/article/408127/steps-to-converge-to-vmware-live-recover.html
+    https://knowledge.broadcom.com/external/article/444864/vcf-protection-and-recovery-91-transitio.html
+    https://knowledge.broadcom.com/external/article/312798/port-numbers-that-must-be-open-for-vsphe.html
+    https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/vsphere-replication/9-0/vr-help-plug-in-9-0.html
+    (+ 22 child pages under .../9-0/vr-help-plug-in-9-0/: administration,
+    appliance components, how VR works, compression, system requirements,
+    licensing, operational limits, install prep, additional VR servers,
+    configure-a-replication, RPO, retention policy, MPIT, seeds, enhanced
+    replication, network encryption, encrypted VMs, REST API list, REST site
+    pairing)
+    https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/vsphere-replication/9-1.html
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1.html
+    https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-9120-release-notes.html
+    https://blogs.vmware.com/PowerCLI/2023/06/managing-srm-and-vr-with-powercli-13-1.html
+    Target bar: no exam; vendor-guide expert bar = VR 9.0 Admin guide TOC
+    (install/pair, configure/reconfigure, RPO+MPIT, seeds, Enhanced vs legacy,
+    encryption, compression, recovery, REST/PowerCLI, troubleshooting) re-based
+    on Live Recovery 9.0.4+ / VCF Protection and Recovery 9.1.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    Enhanced replication, legacy replication, port 32032, 1-minute RPO,
+    retention policy, MPIT deprecation, additional VR server, embedded vPostgres,
+    NFC/902, VCF Protection and Recovery, convergence/unified appliance,
+    x-dr-session/API version, VMware.Sdk.Vr/Connect-VrServer, vSAN snapshots and
+    replication/vSAN DP, Storage DRS, TRIM/UNMAP. Thin: Live Recovery 1, cloud
+    replication/Cyber Recovery 1, licensing 1, reprotect 1, network encryption 2,
+    encrypted VMs 2, N-1 interop 2, Site Recovery UI 3, quiescing 4, MPIT 5,
+    traffic isolation 5, compression 6, seeds 6. Covered: /api/rest/vr 8 (mostly
+    wrong paths), VRMS 10, VAMI 5480 14. Phase B should: re-base the section on
+    VR 9.0.x -> Live Recovery 9.0.4+ -> VCF Protection and Recovery 9.1 with a
+    lifecycle page; rewrite ports.md and every port table from KB 312798; add an
+    Enhanced vs legacy replication page (32032, direct host data path, mandatory
+    TLS, 1-min RPO licensing, 9.0.3+ Enhanced-only); fix RPO/MPIT pages (24
+    cap, retention math, MPIT final-release notice); replace invented REST and
+    PowerCLI with /api/rest/vr/{ver}/session + x-dr-session and VMware.Sdk.Vr;
+    correct appliance roles; replace release-notes table with KB 319887 builds.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
+- [x] virtualization/vmware/products/vxrail
+  - Audit (2026-11-25): 74 pages, 15,433 lines, 19 subdirs (operations 17,
+    troubleshooting 11, hardware 7, lifecycle 7, vxrail-manager 7, architecture 6,
+    security 5, 12 single-page dirs). "Applies to:" 36x "VxRail 7.x · 8.x",
+    33x "VxRail 7.x / 8.x", 4x "Dell VxRail 7.x / 8.x", 1x "vSAN 7.x / 8.x".
+    Version mentions skew old: 7.0.510 (13), 7.0.401 (11), 8.0.210 (6),
+    8.0.200 (5), 8.0.300 (2); zero pages mention VxRail 9.x. Hardware is
+    14G-only (E560, G560F); zero 16G models. release-notes.md carries the
+    "Unverified version history" table (8.0.300/8.0.200/8.0.100/7.0.481/
+    7.0.450 with quarters, all unverified; no 8.0.3xx later builds, no 9.x).
+    integration/index.md:4,9 says "Dell EMC CloudIQ" (now Dell AIOps).
+    Invented or unsupported CLI/API content (checked against Dell's own public
+    API SDK dell/ansible-vxrail-utility 2.9.0 = VxRail 8.0.360, the Dell
+    ansible-vxrail collection, and Dell/Broadcom KBs):
+    - No `vxm-cli` tool found in any Dell source: cli-reference/index.md:251,255
+      (`/opt/vmware/marvin/bin/vxm-cli`), scripts/index.md:1000,1010,1014.
+    - The VxRail Manager services are `vmware-marvin` and `runjars` (Broadcom KB
+      422437). `systemctl status/restart mystic` is invented:
+      troubleshooting/common-issues.md:122-149, troubleshooting/diagnostics.md:30.
+      `mystic` is the SSH user, not a service.
+    - Logs: Dell KB 000190671 lists `/mystic/generateLogBundle.py -v`, output in
+      /tmp/mystic/dc/ and the log /var/log/mystic/dc.log. /var/log/mystic/web.log
+      appears in a search snippet of Dell KB 000213643, but that KB was not
+      fetched. The KB's mystic.log, lcm.log and access.log are
+      unverified: troubleshooting/diagnostics.md:109-163,461-463,480;
+      common-issues.md:331,339. generateLogBundle.py appears on zero pages.
+    - Auth: the Dell SDK uses HTTP basic auth only. The `/rest/vxm/v1/tokens` POST
+      with an X-AUTH-TOKEN/Bearer JWT is invented: architecture/integrations.md:
+      63-80.
+    - Paths missing from the Dell SDK's 201 public paths: /v1/system/credentials/
+      mystic (deploy/index.md:553), /v1/system/user/password
+      (security/authentication.md:45, hardening.md:51), /v1/system/certificate[s]
+      [/csr] (security/encryption.md:302,349; operations/procedures.md:928,941;
+      real: /v1/certificates/csr, /v{1-3}/certificates/import-vxm),
+      /v1/support/bundle[/status|/download] (troubleshooting/diagnostics.md:40,
+      399-442; operations/cli-reference.md:106,279-302; real: /v1/support/logs,
+      /support/logs/{logId}/download), /v1/support-assist/status
+      (security/hardening.md:427; real: /v{1-3}/callhome/*), /v1/plugin/register
+      (troubleshooting/common-issues.md:178), /v1/lcm/upgrade/plan
+      (common-issues.md:240,287), /v1/lcm/bundle and /v1/lcm/precheck/status
+      (operations/install-upgrade.md:106,190; operations/cli-reference.md:104-105,
+      194,199; real: /v1/lcm/upgrade/upload-bundle, /v{1,2}/lcm/precheck),
+      /v1/system/alerts and /v1/system/health (cli-reference/index.md:70,78;
+      scripts/index.md:108,887).
+    - The KB's real paths: /v1/system, /v1/cluster, /v1/hosts, /v1/lcm/upgrade
+      (the SDK has v1 to v9), /v1/cluster/expansion and /v1/requests/{id}. The
+      request bodies and outputs for them (operations/procedures.md:315-330,
+      with a made-up expansion_id) are unverified.
+    - `Get-VxRail`/`Invoke-VxRailApi` (scripts/index.md:70,840) are local
+      wrapper functions, not Dell cmdlets. The Swagger UI/spec at
+      /rest/vxm/api-doc(.html|/vxrail_public_api.yaml) appears on zero pages.
+    - lifecycle/rollback-planning.md is titled "rollback" but its diagram (:17-37)
+      is a node-replacement flow. Dell KB 000310965 says an updated cluster
+      "can't be downgraded".
+  - Cert research (2026-11-25): Dell Proven Professional lists three current
+    VxRail exams plus one achievement. D-VXR-OE-02 "VxRail Operate" (marketed as
+    Operate v3; live since 2026-08-07, replacing D-VXR-OE-01 Operate v2, which
+    retired 2026-08-06 per the OE-01 page notice): Management 30% (add/replace/
+    remove nodes; create/manage VMs; manage VxRail operations), Maintenance &
+    Monitoring 34% (software updates via VxRail Manager; backup of VxRail
+    components; REST API tasks; cluster monitoring/health checks),
+    Troubleshooting 36% (generate/collect logs; verify network connectivity/
+    config; respond to VxRail and vSAN alarms; replace failed components). The
+    overview also names node expansion/replacement, vSAN policy mgmt, network
+    config, certificates, passwords, Secure Connect Gateway (SCG) and capacity
+    monitoring. D-VXR-DY-02 "VxRail Deploy": Pre-deployment 30% (node discovery
+    prep, customer-managed vCenter prep, requirements, pre-install validation
+    errors), Deployment 40% (method choice, deploy, node expansion, vSAN errors,
+    iDRAC node/disk health, troubleshoot), Post-deployment 30% (validation,
+    software upgrade, SCG setup, file-based backup, failed expansion). D-VXR-DS-01
+    "VxRail Design": Requirements 20%, Design 60% (Live Optics, VxRail Sizer,
+    EIPT, data protection/HA), Post-design 20% (VxRail Configuration Portal).
+    D-VCFVXR-A-01 "VCF 5 on VxRail Implementation and Upgrade" is an achievement
+    (web-based, single 100% topic list, VCF 5/vRLCM-era). All three exams: English
+    and French, proctored via Pearson VUE/OnVUE, practice tests offered.
+    Question count, duration, passing score and the v3 recommended-training list
+    are NOT shown on the pages, and no D-VXR-OE-02 description PDF was found
+    (likely names returned 404). The prior OE-01 PDF (2024) listed VxRail 8.0,
+    vSphere/vSAN/vCenter 8.0, the REST API at 10%, and courses ESCPXD06622,
+    ESCPXD06623 and ESCPXD05505. Product state: Dell's doc list has VxRail 9.x.x
+    and 8.0.x lines, "VCF 9.x on Dell VxRail 9.x.x" release notes and support
+    matrix (login-gated), and 16G models VE-660, VE-6615, VP-760, VS-760, VP-7625,
+    VD-4000r/z/w and VD-4510c/4520c. Broadcom KB 450374 says vSphere 9.1 (VxRail)
+    to VCF 9.1 (VxRail) needs VxRail Manager 9.1+ and a Dell RPQ. Dell KB
+    000310965 (modified 2026-05-06) says 8.0.x to 9.0 needs a VCF/VVF
+    subscription on every node, and perpetual licences do not entitle the 9.0
+    update. The exact latest build numbers are not verified (release notes need a
+    login). Overlap: the 2V0-17.25 VCF 9.0 Administrator blueprint was not
+    re-fetched in this run. The vSAN content (policies, health, ESA, stretched
+    cluster) is shared with the KB vsan/vcenter sections and should be cross-linked
+    there, not duplicated.
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-VXR-OE-02
+    ...available-exams.html?exam=D-VXR-DY-02 ; ?exam=D-VXR-DS-01 ;
+    ?exam=D-VCFVXR-A-01 ; ?exam=D-VXR-OE-01 (retirement notice) ; ?exam=D-VXR-DY-01
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/DellVxRailOperatev2ExamDescription.pdf
+    https://www.dell.com/support/manuals/en-ca/vxrail-software/vxr_p_vxrail-doc-list-doc/?lang=en-us
+    https://www.dell.com/support/kbdoc/en-gp/000310965/vxrail-licensing-implication-when-upgrading-from-vxrail-8-0-x-to-9-0-x
+    https://www.dell.com/support/kbdoc/en-my/000190671/dell-vxrail-how-to-collect-vxrail-appliance-log-bundle-on-vxrail-4-7-x-and-7-x
+    https://knowledge.broadcom.com/external/article/450374/transitioning-from-vsphere-91-vxrail-to.html
+    https://knowledge.broadcom.com/external/article/422437/vxrail-managers-marvin-and-runjars-servi.html
+    https://knowledge.broadcom.com/external/article/384807/get-api-restvxmv1system-failing-with-acc.html
+    https://github.com/dell/ansible-vxrail-utility (git clone, 2025-08-25, SDK 2.9.0)
+    https://github.com/dell/ansible-vxrail (git clone, 2025-08-25, VxRail 8.0.360)
+    Target bar: D-VXR-OE-02 VxRail Operate (admin level). DY-02 is secondary for
+    deploy pages. DS-01 is out of scope beyond a design-tools stub.
+  - Gap vs blueprint (pages mentioning each term, out of 74): Zero coverage:
+    VxRail 9.x / VCF 9 on VxRail (0), VVF (0), 16G models VE-660/VP-760/VE-6615/
+    VP-7625/VD-4000 (0), Dell AIOps (0), VxRail Configuration Portal (0), vLCM
+    mode (0 by "vLCM"), LCM advisory report/online updates (0), Swagger
+    api-doc (0), dynamic/satellite nodes (0), generateLogBundle.py (0), Live
+    Optics/Sizer/EIPT (0). Thin: VCF (3), SCG / Secure Connect Gateway (1;
+    SupportAssist 14 is the old name), vmware-marvin/runjars (1), node removal
+    (3), customer-managed vCenter (3), node discovery/RASR (4), power control/
+    shutdown (5), vSAN ESA (2), 2-node (3), Ansible (1). Covered: iDRAC 35,
+    certificate 27, health check 26, alarm/event 21, REST API 19, expansion 19,
+    SolVe 19, password 19, mystic 19 (mostly wrong service usage), stretched/
+    witness 9, storage policy 9, file-based backup ~10. Phase B should:
+    (1) delete or rewrite every invented CLI/API item listed above (vxm-cli,
+    mystic service, /v1/tokens bearer auth, about 15 non-existent paths), using
+    the Dell SDK path list (.cache/cert-phase-a/vxrail/sdk_paths.txt) and the
+    on-box /rest/vxm/api-doc as the reference, and teach API versioning (v1 to v9
+    lcm/upgrade, v1 to v16 hosts). (2) Re-baseline "Applies to" to VxRail 8.0.x
+    / 9.x, add 9.x and VCF 9 on VxRail plus the licensing/RPQ constraints, and
+    replace release-notes.md with a sourced or explicitly empty table.
+    (3) Add 16G hardware. (4) Add OE-02 domain pages: node add/replace/remove,
+    LCM via VxRail Manager (vLCM mode, advisory report, online bundles), file-based
+    VxM backup/restore, log collection (UI + generateLogBundle.py), alarms/event
+    codes, failed-component replacement, SCG, password/certificate rotation and
+    cluster shutdown. (5) Rename CloudIQ to Dell AIOps. (6) Fix the
+    rollback-planning page mismatch. (7) Add a DY-02 deploy path (Configuration
+    Portal, node discovery, customer-managed vCenter prep, pre-install
+    validation errors).
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks; one run covered these 15
+    items, none touched docs/). Queue file only.
 
 ## Phase B+ (not queued yet)
 
