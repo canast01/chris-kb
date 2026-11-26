@@ -15,13 +15,18 @@ Version history and release notes for Brocade Fabric OS.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 9.2.2 | 2024-Q3 | FOS 9.2.2 — 64G FC speed support | [Release Notes](#) |
-| 9.2.1 | 2024-Q1 | FOS 9.2.1 — security hardening patches | [Release Notes](#) |
-| 9.2.0 | 2023-Q3 | FOS 9.2.0 — zoning scalability improvements | [Release Notes](#) |
-| 9.1.1 | 2023-Q1 | FOS 9.1.1 — FICON MIHPTO enhancements | [Release Notes](#) |
-| 9.1.0 | 2022-Q3 | FOS 9.1.0 — 64G long distance SFP support | [Release Notes](#) |
+| 9.2.2 | 2024-Q3 | FOS 9.2.2 — 64G FC speed support | Not yet verified |
+| 9.2.1 | 2024-Q1 | FOS 9.2.1 — security hardening patches | Not yet verified |
+| 9.2.0 | 2023-Q3 | FOS 9.2.0 — zoning scalability improvements | Not yet verified |
+| 9.1.1 | 2023-Q1 | FOS 9.1.1 — FICON MIHPTO enhancements | Not yet verified |
+| 9.1.0 | 2022-Q3 | FOS 9.1.0 — 64G long distance SFP support | Not yet verified |
 
 ## Key Terminology
 

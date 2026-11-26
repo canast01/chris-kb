@@ -15,13 +15,18 @@ Version history and release notes for Jira.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 9.17 | 2024-Q3 | Jira Software 9.17 — Backlog import improvements | [Release Notes](#) |
-| 9.15 | 2024-Q2 | Jira Software 9.15 — roadmap planning update | [Release Notes](#) |
-| 9.12 | 2024-Q1 | Jira Software 9.12 — plan capacity enhancements | [Release Notes](#) |
-| 9.4 | 2023-Q1 | Jira Software 9.4 — LTS baseline | [Release Notes](#) |
-| 9.0 | 2022-Q3 | Jira Software 9.0 — project template updates | [Release Notes](#) |
+| 9.17 | 2024-Q3 | Jira Software 9.17 — Backlog import improvements | Not yet verified |
+| 9.15 | 2024-Q2 | Jira Software 9.15 — roadmap planning update | Not yet verified |
+| 9.12 | 2024-Q1 | Jira Software 9.12 — plan capacity enhancements | Not yet verified |
+| 9.4 | 2023-Q1 | Jira Software 9.4 — LTS baseline | Not yet verified |
+| 9.0 | 2022-Q3 | Jira Software 9.0 — project template updates | Not yet verified |
 
 ## Key Terminology
 

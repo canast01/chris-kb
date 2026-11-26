@@ -15,13 +15,18 @@ Version history and release notes for Dell PowerStore.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 3.6 | 2024-Q3 | PowerStore 3.6 — AppsOn enhancements | [Release Notes](#) |
-| 3.5 | 2024-Q1 | PowerStore 3.5 — NVMe-oF iSCSI offload | [Release Notes](#) |
-| 3.2 | 2023-Q3 | PowerStore 3.2 — volume group remote replication | [Release Notes](#) |
-| 3.0 | 2022-Q4 | PowerStore 3.0 — Metro volume replication GA | [Release Notes](#) |
-| 2.1 | 2022-Q1 | PowerStore 2.1 — Kubernetes CSI improvements | [Release Notes](#) |
+| 3.6 | 2024-Q3 | PowerStore 3.6 — AppsOn enhancements | Not yet verified |
+| 3.5 | 2024-Q1 | PowerStore 3.5 — NVMe-oF iSCSI offload | Not yet verified |
+| 3.2 | 2023-Q3 | PowerStore 3.2 — volume group remote replication | Not yet verified |
+| 3.0 | 2022-Q4 | PowerStore 3.0 — Metro volume replication GA | Not yet verified |
+| 2.1 | 2022-Q1 | PowerStore 2.1 — Kubernetes CSI improvements | Not yet verified |
 
 ## Key Terminology
 

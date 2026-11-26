@@ -16,13 +16,18 @@ Version history and release notes for VMware Cloud Foundation.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 5.2 | 2024-Q3 | VCF 5.2 — consolidated architecture GA | [Release Notes](#) |
-| 5.1.1 | 2024-Q1 | VCF 5.1.1 — NSX 4.1, vSAN 8 U2 alignment | [Release Notes](#) |
-| 5.1 | 2023-Q3 | VCF 5.1 — vSphere 8 U1 integrated baseline | [Release Notes](#) |
-| 5.0 | 2022-Q4 | VCF 5.0 — NSX-T to NSX rebrand, single pane | [Release Notes](#) |
-| 4.5 | 2022-Q1 | VCF 4.5 — vSphere 7 LTS, lifecycle management | [Release Notes](#) |
+| 5.2 | 2024-Q3 | VCF 5.2 — consolidated architecture GA | Not yet verified |
+| 5.1.1 | 2024-Q1 | VCF 5.1.1 — NSX 4.1, vSAN 8 U2 alignment | Not yet verified |
+| 5.1 | 2023-Q3 | VCF 5.1 — vSphere 8 U1 integrated baseline | Not yet verified |
+| 5.0 | 2022-Q4 | VCF 5.0 — NSX-T to NSX rebrand, single pane | Not yet verified |
+| 4.5 | 2022-Q1 | VCF 4.5 — vSphere 7 LTS, lifecycle management | Not yet verified |
 
 ## Key Terminology
 

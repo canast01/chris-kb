@@ -16,13 +16,18 @@ Version history and release notes for VMware SRM.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 9.0 | 2024-Q2 | SRM 9.0 — vSphere 8 native, REST-only management | [Release Notes](#) |
-| 8.8 | 2023-Q4 | SRM 8.8 — vSAN stretched cluster DR improvements | [Release Notes](#) |
-| 8.7 | 2023-Q1 | SRM 8.7 — policy-based protection groups | [Release Notes](#) |
-| 8.6 | 2022-Q3 | SRM 8.6 — vSphere Replication 8.6 alignment | [Release Notes](#) |
-| 8.5 | 2022-Q1 | SRM 8.5 — NFS array-based replication expansion | [Release Notes](#) |
+| 9.0 | 2024-Q2 | SRM 9.0 — vSphere 8 native, REST-only management | Not yet verified |
+| 8.8 | 2023-Q4 | SRM 8.8 — vSAN stretched cluster DR improvements | Not yet verified |
+| 8.7 | 2023-Q1 | SRM 8.7 — policy-based protection groups | Not yet verified |
+| 8.6 | 2022-Q3 | SRM 8.6 — vSphere Replication 8.6 alignment | Not yet verified |
+| 8.5 | 2022-Q1 | SRM 8.5 — NFS array-based replication expansion | Not yet verified |
 
 ## Key Terminology
 

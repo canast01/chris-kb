@@ -15,13 +15,18 @@ Version history and release notes for MySQL.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.4 LTS | 2024-Q2 | MySQL 8.4 LTS — new innovation release model | [Release Notes](#) |
-| 8.2 | 2023-Q4 | MySQL 8.2 — Vector data type preview | [Release Notes](#) |
-| 8.0.36 | 2024-Q1 | MySQL 8.0.36 — security and bug fix release | [Release Notes](#) |
-| 8.0.34 | 2023-Q3 | MySQL 8.0.34 — JSON table improvements | [Release Notes](#) |
-| 8.0.32 | 2023-Q1 | MySQL 8.0.32 — InnoDB parallel DDL | [Release Notes](#) |
+| 8.4 LTS | 2024-Q2 | MySQL 8.4 LTS — new innovation release model | Not yet verified |
+| 8.2 | 2023-Q4 | MySQL 8.2 — Vector data type preview | Not yet verified |
+| 8.0.36 | 2024-Q1 | MySQL 8.0.36 — security and bug fix release | Not yet verified |
+| 8.0.34 | 2023-Q3 | MySQL 8.0.34 — JSON table improvements | Not yet verified |
+| 8.0.32 | 2023-Q1 | MySQL 8.0.32 — InnoDB parallel DDL | Not yet verified |
 
 ## Key Terminology
 

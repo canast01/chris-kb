@@ -16,13 +16,18 @@ Version history and release notes for VMware PowerCLI.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 13.3 | 2024-Q3 | PowerCLI 13.3 — vSphere 8.0 U3 module updates | [Release Notes](#) |
-| 13.2 | 2024-Q1 | PowerCLI 13.2 — New-VM template improvements | [Release Notes](#) |
-| 13.1 | 2023-Q3 | PowerCLI 13.1 — VMware.PowerCLI umbrella module | [Release Notes](#) |
-| 13.0 | 2023-Q1 | PowerCLI 13.0 — PowerShell 7.3 compatibility | [Release Notes](#) |
-| 12.7 | 2022-Q3 | PowerCLI 12.7 — vSAN cmdlet additions | [Release Notes](#) |
+| 13.3 | 2024-Q3 | PowerCLI 13.3 — vSphere 8.0 U3 module updates | Not yet verified |
+| 13.2 | 2024-Q1 | PowerCLI 13.2 — New-VM template improvements | Not yet verified |
+| 13.1 | 2023-Q3 | PowerCLI 13.1 — VMware.PowerCLI umbrella module | Not yet verified |
+| 13.0 | 2023-Q1 | PowerCLI 13.0 — PowerShell 7.3 compatibility | Not yet verified |
+| 12.7 | 2022-Q3 | PowerCLI 12.7 — vSAN cmdlet additions | Not yet verified |
 
 ## Key Terminology
 

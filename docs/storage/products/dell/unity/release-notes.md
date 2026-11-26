@@ -15,13 +15,18 @@ Version history and release notes for Dell Unity.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 5.4 | 2024-Q2 | Unity XT 5.4 — eNAS protocol updates | [Release Notes](#) |
-| 5.3 | 2023-Q3 | Unity XT 5.3 — CloudIQ integration improvements | [Release Notes](#) |
-| 5.2 | 2022-Q4 | Unity XT 5.2 — NFS v4.1 support | [Release Notes](#) |
-| 5.1 | 2022-Q1 | Unity XT 5.1 — Unisphere 5.1 GA | [Release Notes](#) |
-| 5.0 | 2021-Q2 | Unity XT 5.0 — NFSv4 ACL support | [Release Notes](#) |
+| 5.4 | 2024-Q2 | Unity XT 5.4 — eNAS protocol updates | Not yet verified |
+| 5.3 | 2023-Q3 | Unity XT 5.3 — CloudIQ integration improvements | Not yet verified |
+| 5.2 | 2022-Q4 | Unity XT 5.2 — NFS v4.1 support | Not yet verified |
+| 5.1 | 2022-Q1 | Unity XT 5.1 — Unisphere 5.1 GA | Not yet verified |
+| 5.0 | 2021-Q2 | Unity XT 5.0 — NFSv4 ACL support | Not yet verified |
 
 ## Key Terminology
 

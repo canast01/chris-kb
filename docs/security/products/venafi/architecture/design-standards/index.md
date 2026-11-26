@@ -73,12 +73,12 @@ SHA-256 is the minimum hash algorithm. SHA-1 certificates are blocked at the pol
 |---|---|---|
 | Internal — Production | 2 years | 30 days before expiry |
 | Internal — Non-production | 3 years | 30 days before expiry |
-| External / Public-facing | 1 year | 30 days before expiry |
+| External / Public-facing | 200 days max (CA/B limit; 100 days from 2027-03-15) | 30 days before expiry |
 | Internal CA (Issuing) | 10 years | Renew 12 months before expiry |
 | Root CA | 20 years | Renew 24 months before expiry |
 | Code signing | 1 year | 30 days before expiry |
 
-Note: CA/Browser Forum mandates a maximum 398-day (roughly 13-month) validity for publicly trusted TLS certificates. Venafi policy enforces 365-day maximum for all external certificates to allow headroom.
+Note: the CA/Browser Forum Baseline Requirements (ballot SC081) cap publicly trusted TLS certificates at 200 days for certificates issued on or after 15 March 2026, then 100 days from 15 March 2027 and 47 days from 15 March 2029. The old 398-day limit, and any 1-year policy for public certificates, no longer applies: set the external policy maximum at or below the current CA/B limit and rely on automated renewal.
 
 ---
 

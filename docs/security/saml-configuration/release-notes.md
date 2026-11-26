@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q3 | 2024-Q3 | SAML — SHA-256 assertion signing enforced | [Release Notes](#) |
-| 2024-Q1 | 2024-Q1 | SAML — IdP metadata auto-refresh rollout | [Release Notes](#) |
-| 2023-Q3 | 2023-Q3 | SAML — certificate rotation automation | [Release Notes](#) |
-| 2023-Q1 | 2023-Q1 | SAML — attribute mapping standard update | [Release Notes](#) |
-| 2022-Q3 | 2022-Q3 | SAML — IDP-initiated SSO audit trail | [Release Notes](#) |
+| 2024-Q3 | 2024-Q3 | SAML — SHA-256 assertion signing enforced | Not yet verified |
+| 2024-Q1 | 2024-Q1 | SAML — IdP metadata auto-refresh rollout | Not yet verified |
+| 2023-Q3 | 2023-Q3 | SAML — certificate rotation automation | Not yet verified |
+| 2023-Q1 | 2023-Q1 | SAML — attribute mapping standard update | Not yet verified |
+| 2022-Q3 | 2022-Q3 | SAML — IDP-initiated SSO audit trail | Not yet verified |
 
 ## Key Terminology
 

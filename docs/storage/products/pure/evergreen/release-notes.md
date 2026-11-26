@@ -15,13 +15,18 @@ Version history and release notes for Pure Evergreen.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024.4 | 2024-Q4 | Evergreen//Forever — non-disruptive controller upgrade | [Release Notes](#) |
-| 2024.2 | 2024-Q2 | Evergreen//Architecture — array expansion policy update | [Release Notes](#) |
-| 2023.4 | 2023-Q4 | Evergreen//Flex — elastic capacity pool improvements | [Release Notes](#) |
-| 2023.2 | 2023-Q2 | Evergreen//One SLA revision — 1 ms latency guarantee | [Release Notes](#) |
-| 2022.4 | 2022-Q4 | Evergreen — FlashBlade inclusion in program | [Release Notes](#) |
+| 2024.4 | 2024-Q4 | Evergreen//Forever — non-disruptive controller upgrade | Not yet verified |
+| 2024.2 | 2024-Q2 | Evergreen//Architecture — array expansion policy update | Not yet verified |
+| 2023.4 | 2023-Q4 | Evergreen//Flex — elastic capacity pool improvements | Not yet verified |
+| 2023.2 | 2023-Q2 | Evergreen//One SLA revision — 1 ms latency guarantee | Not yet verified |
+| 2022.4 | 2022-Q4 | Evergreen — FlashBlade inclusion in program | Not yet verified |
 
 ## Key Terminology
 

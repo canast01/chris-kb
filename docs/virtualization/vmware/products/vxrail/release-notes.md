@@ -15,13 +15,18 @@ Version history and release notes for Dell VxRail.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.0.300 | 2024-Q3 | VxRail 8.0.300 — ESXi 8.0 U3 baseline | [Release Notes](#) |
-| 8.0.200 | 2024-Q1 | VxRail 8.0.200 — vSAN 8 U2 support | [Release Notes](#) |
-| 8.0.100 | 2023-Q2 | VxRail 8.0 — full vSphere 8 lifecycle support | [Release Notes](#) |
-| 7.0.481 | 2022-Q4 | VxRail 7.0.481 — ESXi 7.0 U3 LTS | [Release Notes](#) |
-| 7.0.450 | 2022-Q1 | VxRail 7.0.450 — stability and driver updates | [Release Notes](#) |
+| 8.0.300 | 2024-Q3 | VxRail 8.0.300 — ESXi 8.0 U3 baseline | Not yet verified |
+| 8.0.200 | 2024-Q1 | VxRail 8.0.200 — vSAN 8 U2 support | Not yet verified |
+| 8.0.100 | 2023-Q2 | VxRail 8.0 — full vSphere 8 lifecycle support | Not yet verified |
+| 7.0.481 | 2022-Q4 | VxRail 7.0.481 — ESXi 7.0 U3 LTS | Not yet verified |
+| 7.0.450 | 2022-Q1 | VxRail 7.0.450 — stability and driver updates | Not yet verified |
 
 ## Key Terminology
 

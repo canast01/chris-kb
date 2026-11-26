@@ -15,13 +15,18 @@ Version history and release notes for Dell CloudIQ.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024.4 | 2024-Q4 | CloudIQ 2024.4 — sustainability score v2 | [Release Notes](#) |
-| 2024.2 | 2024-Q2 | CloudIQ 2024.2 — PowerStore 3.5 anomaly detection | [Release Notes](#) |
-| 2023.4 | 2023-Q4 | CloudIQ 2023.4 — cyber recovery health index | [Release Notes](#) |
-| 2023.2 | 2023-Q2 | CloudIQ 2023.2 — PowerScale capacity analytics | [Release Notes](#) |
-| 2022.4 | 2022-Q4 | CloudIQ 2022.4 — Data Domain integration GA | [Release Notes](#) |
+| 2024.4 | 2024-Q4 | CloudIQ 2024.4 — sustainability score v2 | Not yet verified |
+| 2024.2 | 2024-Q2 | CloudIQ 2024.2 — PowerStore 3.5 anomaly detection | Not yet verified |
+| 2023.4 | 2023-Q4 | CloudIQ 2023.4 — cyber recovery health index | Not yet verified |
+| 2023.2 | 2023-Q2 | CloudIQ 2023.2 — PowerScale capacity analytics | Not yet verified |
+| 2022.4 | 2022-Q4 | CloudIQ 2022.4 — Data Domain integration GA | Not yet verified |
 
 ## Key Terminology
 

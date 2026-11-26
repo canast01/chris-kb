@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | MFA — phishing-resistant FIDO2 policy enforcement | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | MFA — conditional access policy update | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | MFA — number matching required for push | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | MFA — passkey (FIDO2) pilot deployment | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | MFA — legacy auth block policy go-live | [Release Notes](#) |
+| 2024-Q4 | 2024-Q4 | MFA — phishing-resistant FIDO2 policy enforcement | Not yet verified |
+| 2024-Q2 | 2024-Q2 | MFA — conditional access policy update | Not yet verified |
+| 2023-Q4 | 2023-Q4 | MFA — number matching required for push | Not yet verified |
+| 2023-Q2 | 2023-Q2 | MFA — passkey (FIDO2) pilot deployment | Not yet verified |
+| 2022-Q4 | 2022-Q4 | MFA — legacy auth block policy go-live | Not yet verified |
 
 ## Key Terminology
 

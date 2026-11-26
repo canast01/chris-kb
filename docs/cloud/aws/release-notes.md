@@ -15,13 +15,18 @@ Version history and release notes for AWS.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q3 | 2024-Q3 | AWS — EC2 C8g instances GA, EBS io2 Block Express | [Release Notes](#) |
-| 2024-Q1 | 2024-Q1 | AWS — EKS 1.29, RDS Graviton3 default | [Release Notes](#) |
-| 2023-Q3 | 2023-Q3 | AWS — VPC Lattice GA, GuardDuty EKS runtime | [Release Notes](#) |
-| 2023-Q1 | 2023-Q1 | AWS — ECS Fargate spot improvements | [Release Notes](#) |
-| 2022-Q3 | 2022-Q3 | AWS — Lake Formation governed tables GA | [Release Notes](#) |
+| 2024-Q3 | 2024-Q3 | AWS — EC2 C8g instances GA, EBS io2 Block Express | Not yet verified |
+| 2024-Q1 | 2024-Q1 | AWS — EKS 1.29, RDS Graviton3 default | Not yet verified |
+| 2023-Q3 | 2023-Q3 | AWS — VPC Lattice GA, GuardDuty EKS runtime | Not yet verified |
+| 2023-Q1 | 2023-Q1 | AWS — ECS Fargate spot improvements | Not yet verified |
+| 2022-Q3 | 2022-Q3 | AWS — Lake Formation governed tables GA | Not yet verified |
 
 ## Key Terminology
 

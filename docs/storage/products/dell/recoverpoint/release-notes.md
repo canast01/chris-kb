@@ -15,13 +15,18 @@ Version history and release notes for Dell RecoverPoint.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 6.0 | 2024-Q2 | RecoverPoint 6.0 — VMAX/PowerMax 10 support | [Release Notes](#) |
-| 5.3 | 2023-Q2 | RecoverPoint 5.3 — PowerStore replication GA | [Release Notes](#) |
-| 5.2 | 2022-Q2 | RecoverPoint 5.2 — cloud copy target support | [Release Notes](#) |
-| 5.1 | 2021-Q4 | RecoverPoint 5.1 — scale-out splitter support | [Release Notes](#) |
-| 5.0 | 2021-Q1 | RecoverPoint 5.0 — VMware vSphere 7 support | [Release Notes](#) |
+| 6.0 | 2024-Q2 | RecoverPoint 6.0 — VMAX/PowerMax 10 support | Not yet verified |
+| 5.3 | 2023-Q2 | RecoverPoint 5.3 — PowerStore replication GA | Not yet verified |
+| 5.2 | 2022-Q2 | RecoverPoint 5.2 — cloud copy target support | Not yet verified |
+| 5.1 | 2021-Q4 | RecoverPoint 5.1 — scale-out splitter support | Not yet verified |
+| 5.0 | 2021-Q1 | RecoverPoint 5.0 — VMware vSphere 7 support | Not yet verified |
 
 ## Key Terminology
 

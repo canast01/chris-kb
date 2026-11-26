@@ -15,13 +15,18 @@ Version history and release notes for Python.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 3.13 | 2024-Q4 | Python 3.13 — free-threaded mode, JIT compiler preview | [Release Notes](#) |
-| 3.12 | 2023-Q4 | Python 3.12 — improved error messages, f-string updates | [Release Notes](#) |
-| 3.11 | 2022-Q4 | Python 3.11 — 10-60 % speed improvements | [Release Notes](#) |
-| 3.10 | 2021-Q4 | Python 3.10 — structural pattern matching | [Release Notes](#) |
-| 3.9 | 2020-Q4 | Python 3.9 — dict union operators, type hints | [Release Notes](#) |
+| 3.13 | 2024-Q4 | Python 3.13 — free-threaded mode, JIT compiler preview | Not yet verified |
+| 3.12 | 2023-Q4 | Python 3.12 — improved error messages, f-string updates | Not yet verified |
+| 3.11 | 2022-Q4 | Python 3.11 — 10-60 % speed improvements | Not yet verified |
+| 3.10 | 2021-Q4 | Python 3.10 — structural pattern matching | Not yet verified |
+| 3.9 | 2020-Q4 | Python 3.9 — dict union operators, type hints | Not yet verified |
 
 ## Key Terminology
 

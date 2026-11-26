@@ -17,13 +17,18 @@ Version history and release notes for VMware vSAN.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.0 U3 | 2024-Q3 | ESA stretched cluster GA, compression enhancements | [Release Notes](#) |
-| 8.0 U2 | 2024-Q1 | Express Storage Architecture (ESA) improvements | [Release Notes](#) |
-| 8.0 U1 | 2023-Q2 | vSAN 8 ESA initial GA, HCI mesh updates | [Release Notes](#) |
-| 7.0 U3 | 2022-Q4 | vSAN Max disaggregated storage preview | [Release Notes](#) |
-| 7.0 U2 | 2022-Q1 | HCI mesh GA, vSAN File Services scale-out | [Release Notes](#) |
+| 8.0 U3 | 2024-Q3 | ESA stretched cluster GA, compression enhancements | Not yet verified |
+| 8.0 U2 | 2024-Q1 | Express Storage Architecture (ESA) improvements | Not yet verified |
+| 8.0 U1 | 2023-Q2 | vSAN 8 ESA initial GA, HCI mesh updates | Not yet verified |
+| 7.0 U3 | 2022-Q4 | vSAN Max disaggregated storage preview | Not yet verified |
+| 7.0 U2 | 2022-Q1 | HCI mesh GA, vSAN File Services scale-out | Not yet verified |
 
 ## Key Terminology
 

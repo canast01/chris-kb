@@ -15,13 +15,18 @@ Version history and release notes for Windows Server.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2025 | 2024-Q4 | Windows Server 2025 — Hotpatch GA, NVMe improvements | [Release Notes](#) |
-| 2022 CU9 | 2024-Q2 | Windows Server 2022 CU9 — security patches | [Release Notes](#) |
-| 2022 CU6 | 2023-Q3 | Windows Server 2022 CU6 — SMB compression improvements | [Release Notes](#) |
-| 2022 GA | 2021-Q4 | Windows Server 2022 GA — Azure Arc integration | [Release Notes](#) |
-| 2019 LTS | 2018-Q4 | Windows Server 2019 LTS baseline | [Release Notes](#) |
+| 2025 | 2024-Q4 | Windows Server 2025 — Hotpatch GA, NVMe improvements | Not yet verified |
+| 2022 CU9 | 2024-Q2 | Windows Server 2022 CU9 — security patches | Not yet verified |
+| 2022 CU6 | 2023-Q3 | Windows Server 2022 CU6 — SMB compression improvements | Not yet verified |
+| 2022 GA | 2021-Q4 | Windows Server 2022 GA — Azure Arc integration | Not yet verified |
+| 2019 LTS | 2018-Q4 | Windows Server 2019 LTS baseline | Not yet verified |
 
 ## Key Terminology
 

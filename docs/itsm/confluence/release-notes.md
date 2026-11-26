@@ -15,13 +15,18 @@ Version history and release notes for Confluence.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.9 | 2024-Q3 | Confluence 8.9 — AI companion GA, editor improvements | [Release Notes](#) |
-| 8.8 | 2024-Q2 | Confluence 8.8 — Jira integration updates | [Release Notes](#) |
-| 8.5 | 2023-Q4 | Confluence 8.5 — drag-and-drop page tree | [Release Notes](#) |
-| 8.0 | 2023-Q1 | Confluence 8.0 — new visual editor foundation | [Release Notes](#) |
-| 7.19 | 2022-Q3 | Confluence 7.19 — LTS baseline release | [Release Notes](#) |
+| 8.9 | 2024-Q3 | Confluence 8.9 — AI companion GA, editor improvements | Not yet verified |
+| 8.8 | 2024-Q2 | Confluence 8.8 — Jira integration updates | Not yet verified |
+| 8.5 | 2023-Q4 | Confluence 8.5 — drag-and-drop page tree | Not yet verified |
+| 8.0 | 2023-Q1 | Confluence 8.0 — new visual editor foundation | Not yet verified |
+| 7.19 | 2022-Q3 | Confluence 7.19 — LTS baseline release | Not yet verified |
 
 ## Key Terminology
 

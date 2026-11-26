@@ -15,13 +15,18 @@ Version history and release notes for Dell Apex Storage-as-a-Service.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024.3 | 2024-Q3 | Apex STaaS 2024.3 — PowerMax NVMe tier addition | [Release Notes](#) |
-| 2024.1 | 2024-Q1 | Apex STaaS 2024.1 — sustainability SLA module | [Release Notes](#) |
-| 2023.3 | 2023-Q3 | Apex STaaS 2023.3 — PowerStore flex tier GA | [Release Notes](#) |
-| 2023.1 | 2023-Q1 | Apex STaaS 2023.1 — burst capacity on-demand | [Release Notes](#) |
-| 2022.3 | 2022-Q3 | Apex STaaS 2022.3 — PowerScale object tier | [Release Notes](#) |
+| 2024.3 | 2024-Q3 | Apex STaaS 2024.3 — PowerMax NVMe tier addition | Not yet verified |
+| 2024.1 | 2024-Q1 | Apex STaaS 2024.1 — sustainability SLA module | Not yet verified |
+| 2023.3 | 2023-Q3 | Apex STaaS 2023.3 — PowerStore flex tier GA | Not yet verified |
+| 2023.1 | 2023-Q1 | Apex STaaS 2023.1 — burst capacity on-demand | Not yet verified |
+| 2022.3 | 2022-Q3 | Apex STaaS 2022.3 — PowerScale object tier | Not yet verified |
 
 ## Key Terminology
 

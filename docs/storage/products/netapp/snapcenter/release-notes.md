@@ -15,13 +15,18 @@ Version history and release notes for NetApp SnapCenter.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 6.0 | 2024-Q3 | SnapCenter 6.0 — ONTAP 9.15 compatibility | [Release Notes](#) |
-| 5.0 | 2023-Q4 | SnapCenter 5.0 — REST API v3, PostgreSQL plugin | [Release Notes](#) |
-| 4.9 | 2023-Q2 | SnapCenter 4.9 — Oracle RAC improvements | [Release Notes](#) |
-| 4.8 | 2022-Q4 | SnapCenter 4.8 — SAP HANA System Replication support | [Release Notes](#) |
-| 4.7 | 2022-Q2 | SnapCenter 4.7 — Kubernetes CSI plugin GA | [Release Notes](#) |
+| 6.0 | 2024-Q3 | SnapCenter 6.0 — ONTAP 9.15 compatibility | Not yet verified |
+| 5.0 | 2023-Q4 | SnapCenter 5.0 — REST API v3, PostgreSQL plugin | Not yet verified |
+| 4.9 | 2023-Q2 | SnapCenter 4.9 — Oracle RAC improvements | Not yet verified |
+| 4.8 | 2022-Q4 | SnapCenter 4.8 — SAP HANA System Replication support | Not yet verified |
+| 4.7 | 2022-Q2 | SnapCenter 4.7 — Kubernetes CSI plugin GA | Not yet verified |
 
 ## Key Terminology
 

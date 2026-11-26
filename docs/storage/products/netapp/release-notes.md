@@ -15,13 +15,18 @@ Version history and release notes for NetApp.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024.4 | 2024-Q4 | NetApp platform update — unified BlueXP UI | [Release Notes](#) |
-| 2024.2 | 2024-Q2 | NetApp — ONTAP 9.15, SnapCenter 6.0 alignment | [Release Notes](#) |
-| 2023.4 | 2023-Q4 | NetApp — AFF C-series capacity tier GA | [Release Notes](#) |
-| 2023.2 | 2023-Q2 | NetApp — BlueXP backup and recovery expansion | [Release Notes](#) |
-| 2022.4 | 2022-Q4 | NetApp — ONTAP S3 multi-protocol enhancement | [Release Notes](#) |
+| 2024.4 | 2024-Q4 | NetApp platform update — unified BlueXP UI | Not yet verified |
+| 2024.2 | 2024-Q2 | NetApp — ONTAP 9.15, SnapCenter 6.0 alignment | Not yet verified |
+| 2023.4 | 2023-Q4 | NetApp — AFF C-series capacity tier GA | Not yet verified |
+| 2023.2 | 2023-Q2 | NetApp — BlueXP backup and recovery expansion | Not yet verified |
+| 2022.4 | 2022-Q4 | NetApp — ONTAP S3 multi-protocol enhancement | Not yet verified |
 
 ## Key Terminology
 

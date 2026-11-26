@@ -15,13 +15,18 @@ Version history and release notes for Dell PowerPath.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 6.4 | 2024-Q2 | PowerPath 6.4 — RHEL 9.4 / SLES 15 SP5 support | [Release Notes](#) |
-| 6.3 | 2023-Q3 | PowerPath 6.3 — PowerStore 3.0 multipath support | [Release Notes](#) |
-| 6.2 | 2022-Q4 | PowerPath 6.2 — NVMe-oF multipath GA | [Release Notes](#) |
-| 6.1 | 2022-Q1 | PowerPath 6.1 — Windows Server 2022 support | [Release Notes](#) |
-| 6.0 | 2021-Q2 | PowerPath 6.0 — CLI management improvements | [Release Notes](#) |
+| 6.4 | 2024-Q2 | PowerPath 6.4 — RHEL 9.4 / SLES 15 SP5 support | Not yet verified |
+| 6.3 | 2023-Q3 | PowerPath 6.3 — PowerStore 3.0 multipath support | Not yet verified |
+| 6.2 | 2022-Q4 | PowerPath 6.2 — NVMe-oF multipath GA | Not yet verified |
+| 6.1 | 2022-Q1 | PowerPath 6.1 — Windows Server 2022 support | Not yet verified |
+| 6.0 | 2021-Q2 | PowerPath 6.0 — CLI management improvements | Not yet verified |
 
 ## Key Terminology
 

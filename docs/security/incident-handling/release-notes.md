@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | IR — NIST SP 800-61r3 alignment update | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | IR — playbook automation (SOAR integration) | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | IR — severity classification update | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | IR — tabletop exercise framework revision | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | IR — evidence handling chain-of-custody update | [Release Notes](#) |
+| 2024-Q4 | 2024-Q4 | IR — NIST SP 800-61r3 alignment update | Not yet verified |
+| 2024-Q2 | 2024-Q2 | IR — playbook automation (SOAR integration) | Not yet verified |
+| 2023-Q4 | 2023-Q4 | IR — severity classification update | Not yet verified |
+| 2023-Q2 | 2023-Q2 | IR — tabletop exercise framework revision | Not yet verified |
+| 2022-Q4 | 2022-Q4 | IR — evidence handling chain-of-custody update | Not yet verified |
 
 ## Key Terminology
 

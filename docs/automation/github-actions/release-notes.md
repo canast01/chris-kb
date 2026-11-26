@@ -15,13 +15,18 @@ Version history and release notes for GitHub Actions.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q3 | 2024-Q3 | GitHub Actions — GPU-hosted runners GA | [Release Notes](#) |
-| 2024-Q1 | 2024-Q1 | GitHub Actions — larger hosted runners ARM | [Release Notes](#) |
-| 2023-Q3 | 2023-Q3 | GitHub Actions — required workflows GA | [Release Notes](#) |
-| 2023-Q1 | 2023-Q1 | GitHub Actions — environment protection rules | [Release Notes](#) |
-| 2022-Q3 | 2022-Q3 | GitHub Actions — reusable workflows GA | [Release Notes](#) |
+| 2024-Q3 | 2024-Q3 | GitHub Actions — GPU-hosted runners GA | Not yet verified |
+| 2024-Q1 | 2024-Q1 | GitHub Actions — larger hosted runners ARM | Not yet verified |
+| 2023-Q3 | 2023-Q3 | GitHub Actions — required workflows GA | Not yet verified |
+| 2023-Q1 | 2023-Q1 | GitHub Actions — environment protection rules | Not yet verified |
+| 2022-Q3 | 2022-Q3 | GitHub Actions — reusable workflows GA | Not yet verified |
 
 ## Key Terminology
 

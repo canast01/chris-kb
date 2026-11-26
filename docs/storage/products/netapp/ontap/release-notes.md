@@ -15,13 +15,18 @@ Version history and release notes for NetApp ONTAP.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 9.15.1 | 2024-Q4 | NVMe-oF enhancements, SnapMirror active sync improvements | [Release Notes](#) |
-| 9.14.1 | 2024-Q1 | S3 object storage GA, autonomous ransomware protection v3 | [Release Notes](#) |
-| 9.13.1 | 2023-Q3 | FlexGroup SnapMirror active sync, NFS 4.1 pNFS support | [Release Notes](#) |
-| 9.12.1 | 2023-Q1 | iSCSI LUN rebalancing, ONTAP Mediator 1.5 | [Release Notes](#) |
-| 9.11.1 | 2022-Q3 | Consistency groups GA, REST API parity milestone | [Release Notes](#) |
+| 9.15.1 | 2024-Q4 | NVMe-oF enhancements, SnapMirror active sync improvements | Not yet verified |
+| 9.14.1 | 2024-Q1 | S3 object storage GA, autonomous ransomware protection v3 | Not yet verified |
+| 9.13.1 | 2023-Q3 | FlexGroup SnapMirror active sync, NFS 4.1 pNFS support | Not yet verified |
+| 9.12.1 | 2023-Q1 | iSCSI LUN rebalancing, ONTAP Mediator 1.5 | Not yet verified |
+| 9.11.1 | 2022-Q3 | Consistency groups GA, REST API parity milestone | Not yet verified |
 
 ## Key Terminology
 

@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | Security framework — zero-trust policy update | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | Security — NIST CSF 2.0 control mapping | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | Security — CIS benchmark v8.1 alignment | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | Security — MITRE ATT&CK v14 coverage update | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | Security — ISO 27001:2022 gap analysis | [Release Notes](#) |
+| 2024-Q4 | 2024-Q4 | Security framework — zero-trust policy update | Not yet verified |
+| 2024-Q2 | 2024-Q2 | Security — NIST CSF 2.0 control mapping | Not yet verified |
+| 2023-Q4 | 2023-Q4 | Security — CIS benchmark v8.1 alignment | Not yet verified |
+| 2023-Q2 | 2023-Q2 | Security — MITRE ATT&CK v14 coverage update | Not yet verified |
+| 2022-Q4 | 2022-Q4 | Security — ISO 27001:2022 gap analysis | Not yet verified |
 
 ## Key Terminology
 

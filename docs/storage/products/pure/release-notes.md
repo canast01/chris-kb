@@ -15,13 +15,18 @@ Version history and release notes for Pure Storage.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024.3 | 2024-Q3 | Pure1 platform update — AI-driven anomaly detection | [Release Notes](#) |
-| 2024.1 | 2024-Q1 | Pure1 — enhanced sustainability dashboard | [Release Notes](#) |
-| 2023.3 | 2023-Q3 | Pure1 — unified fleet capacity planning | [Release Notes](#) |
-| 2023.1 | 2023-Q1 | Pure1 — cross-array workload analytics | [Release Notes](#) |
-| 2022.3 | 2022-Q3 | Pure1 — ransomware assessment module GA | [Release Notes](#) |
+| 2024.3 | 2024-Q3 | Pure1 platform update — AI-driven anomaly detection | Not yet verified |
+| 2024.1 | 2024-Q1 | Pure1 — enhanced sustainability dashboard | Not yet verified |
+| 2023.3 | 2023-Q3 | Pure1 — unified fleet capacity planning | Not yet verified |
+| 2023.1 | 2023-Q1 | Pure1 — cross-array workload analytics | Not yet verified |
+| 2022.3 | 2022-Q3 | Pure1 — ransomware assessment module GA | Not yet verified |
 
 ## Key Terminology
 

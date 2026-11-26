@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 14.2 | 2024-Q3 | CyberArk 14.2 — PAM360 integration improvements | [Release Notes](#) |
-| 14.0 | 2024-Q1 | CyberArk 14.0 — CORA AI launch | [Release Notes](#) |
-| 13.2 | 2023-Q3 | CyberArk 13.2 — EPM Mac Apple Silicon support | [Release Notes](#) |
-| 13.0 | 2023-Q1 | CyberArk 13.0 — Identity Security platform | [Release Notes](#) |
-| 12.6 | 2022-Q3 | CyberArk 12.6 — Conjur Cloud GA | [Release Notes](#) |
+| 14.2 | 2024-Q3 | CyberArk 14.2 — PAM360 integration improvements | Not yet verified |
+| 14.0 | 2024-Q1 | CyberArk 14.0 — CORA AI launch | Not yet verified |
+| 13.2 | 2023-Q3 | CyberArk 13.2 — EPM Mac Apple Silicon support | Not yet verified |
+| 13.0 | 2023-Q1 | CyberArk 13.0 — Identity Security platform | Not yet verified |
+| 12.6 | 2022-Q3 | CyberArk 12.6 — Conjur Cloud GA | Not yet verified |
 
 ## Key Terminology
 

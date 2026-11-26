@@ -15,13 +15,18 @@ Version history and release notes for Nutanix.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 6.8 | 2024-Q3 | AOS 6.8 — NCI improvements, 3-node edge scaling | [Release Notes](#) |
-| 6.7 | 2024-Q1 | AOS 6.7 — Flow Network Security enhancements | [Release Notes](#) |
-| 6.6 | 2023-Q3 | AOS 6.6 — Objects 4.0 S3 multipart upload | [Release Notes](#) |
-| 6.5 | 2023-Q1 | AOS 6.5 LTS — Prism Central scale improvements | [Release Notes](#) |
-| 6.1 | 2022-Q1 | AOS 6.1 — Nutanix Files WORM GA | [Release Notes](#) |
+| 6.8 | 2024-Q3 | AOS 6.8 — NCI improvements, 3-node edge scaling | Not yet verified |
+| 6.7 | 2024-Q1 | AOS 6.7 — Flow Network Security enhancements | Not yet verified |
+| 6.6 | 2023-Q3 | AOS 6.6 — Objects 4.0 S3 multipart upload | Not yet verified |
+| 6.5 | 2023-Q1 | AOS 6.5 LTS — Prism Central scale improvements | Not yet verified |
+| 6.1 | 2022-Q1 | AOS 6.1 — Nutanix Files WORM GA | Not yet verified |
 
 ## Key Terminology
 

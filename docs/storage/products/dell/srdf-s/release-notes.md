@@ -15,13 +15,18 @@ Version history and release notes for Dell SRDF/S.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 10.1 | 2024-Q3 | SRDF/S 10.1 — 1 ms synchronous replication target | [Release Notes](#) |
-| 10.0 | 2023-Q3 | SRDF/S 10.0 — PowerMax 350F GA | [Release Notes](#) |
-| 9.2 | 2022-Q3 | SRDF/S 9.2 — Metro witness improvements | [Release Notes](#) |
-| 9.1 | 2021-Q4 | SRDF/S 9.1 — Active/Active Metro enhancements | [Release Notes](#) |
-| 9.0 | 2021-Q1 | SRDF/S 9.0 — HYPERMAX OS 9.0 alignment | [Release Notes](#) |
+| 10.1 | 2024-Q3 | SRDF/S 10.1 — 1 ms synchronous replication target | Not yet verified |
+| 10.0 | 2023-Q3 | SRDF/S 10.0 — PowerMax 350F GA | Not yet verified |
+| 9.2 | 2022-Q3 | SRDF/S 9.2 — Metro witness improvements | Not yet verified |
+| 9.1 | 2021-Q4 | SRDF/S 9.1 — Active/Active Metro enhancements | Not yet verified |
+| 9.0 | 2021-Q1 | SRDF/S 9.0 — HYPERMAX OS 9.0 alignment | Not yet verified |
 
 ## Key Terminology
 

@@ -15,13 +15,18 @@ Version history and release notes for Linux.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| RHEL 9.4 | 2024-Q2 | RHEL 9.4 — kernel 5.14.0-427, FIPS 140-3 | [Release Notes](#) |
-| RHEL 9.3 | 2023-Q4 | RHEL 9.3 — image mode preview, toolbox v3 | [Release Notes](#) |
-| RHEL 9.2 | 2023-Q2 | RHEL 9.2 — OpenSSL 3.0.7, SELinux udica | [Release Notes](#) |
-| Ubuntu 24.04 | 2024-Q2 | Ubuntu 24.04 LTS — kernel 6.8, systemd 255 | [Release Notes](#) |
-| Ubuntu 22.04 | 2022-Q2 | Ubuntu 22.04 LTS — kernel 5.15, OpenSSL 3.0 | [Release Notes](#) |
+| RHEL 9.4 | 2024-Q2 | RHEL 9.4 — kernel 5.14.0-427, FIPS 140-3 | Not yet verified |
+| RHEL 9.3 | 2023-Q4 | RHEL 9.3 — image mode preview, toolbox v3 | Not yet verified |
+| RHEL 9.2 | 2023-Q2 | RHEL 9.2 — OpenSSL 3.0.7, SELinux udica | Not yet verified |
+| Ubuntu 24.04 | 2024-Q2 | Ubuntu 24.04 LTS — kernel 6.8, systemd 255 | Not yet verified |
+| Ubuntu 22.04 | 2022-Q2 | Ubuntu 22.04 LTS — kernel 5.15, OpenSSL 3.0 | Not yet verified |
 
 ## Key Terminology
 

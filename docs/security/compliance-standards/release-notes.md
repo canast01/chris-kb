@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | Compliance — ISO 27001:2022 transition complete | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | Compliance — NIST CSF 2.0 mapping update | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | Compliance — CIS Controls v8.1 adoption | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | Compliance — SOC 2 Type II evidence collection | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | Compliance — GDPR annual review cycle | [Release Notes](#) |
+| 2024-Q4 | 2024-Q4 | Compliance — ISO 27001:2022 transition complete | Not yet verified |
+| 2024-Q2 | 2024-Q2 | Compliance — NIST CSF 2.0 mapping update | Not yet verified |
+| 2023-Q4 | 2023-Q4 | Compliance — CIS Controls v8.1 adoption | Not yet verified |
+| 2023-Q2 | 2023-Q2 | Compliance — SOC 2 Type II evidence collection | Not yet verified |
+| 2022-Q4 | 2022-Q4 | Compliance — GDPR annual review cycle | Not yet verified |
 
 ## Key Terminology
 

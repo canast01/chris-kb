@@ -16,13 +16,18 @@ Version history and release notes for VMware Tanzu.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2.4 | 2024-Q3 | Tanzu 2.4 — Kubernetes 1.30 support | [Release Notes](#) |
-| 2.3 | 2024-Q1 | Tanzu 2.3 — Tanzu Kubernetes Grid 2.3 | [Release Notes](#) |
-| 2.2 | 2023-Q3 | Tanzu 2.2 — ClusterClass GA, Carvel tools update | [Release Notes](#) |
-| 2.1 | 2023-Q1 | Tanzu 2.1 — vSphere Namespace policy enhancements | [Release Notes](#) |
-| 2.0 | 2022-Q4 | Tanzu 2.0 — TKG rebrand, unified lifecycle | [Release Notes](#) |
+| 2.4 | 2024-Q3 | Tanzu 2.4 — Kubernetes 1.30 support | Not yet verified |
+| 2.3 | 2024-Q1 | Tanzu 2.3 — Tanzu Kubernetes Grid 2.3 | Not yet verified |
+| 2.2 | 2023-Q3 | Tanzu 2.2 — ClusterClass GA, Carvel tools update | Not yet verified |
+| 2.1 | 2023-Q1 | Tanzu 2.1 — vSphere Namespace policy enhancements | Not yet verified |
+| 2.0 | 2022-Q4 | Tanzu 2.0 — TKG rebrand, unified lifecycle | Not yet verified |
 
 ## Key Terminology
 

@@ -17,13 +17,18 @@ Version history and release notes for VMware vCenter.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.0 U3 | 2024-Q3 | vCenter HA improvements, SDDC Manager integration | [Release Notes](#) |
-| 8.0 U2 | 2024-Q1 | Reduced footprint appliance, converged management | [Release Notes](#) |
-| 8.0 U1 | 2023-Q2 | vCenter Server 8.0 U1 stability and security patches | [Release Notes](#) |
-| 8.0 GA | 2022-Q4 | vCenter 8 GA — vSphere Distributed Services Engine | [Release Notes](#) |
-| 7.0 U3 | 2022-Q1 | vCenter 7.0 U3 — end of gen LTS baseline | [Release Notes](#) |
+| 8.0 U3 | 2024-Q3 | vCenter HA improvements, SDDC Manager integration | Not yet verified |
+| 8.0 U2 | 2024-Q1 | Reduced footprint appliance, converged management | Not yet verified |
+| 8.0 U1 | 2023-Q2 | vCenter Server 8.0 U1 stability and security patches | Not yet verified |
+| 8.0 GA | 2022-Q4 | vCenter 8 GA — vSphere Distributed Services Engine | Not yet verified |
+| 7.0 U3 | 2022-Q1 | vCenter 7.0 U3 — end of gen LTS baseline | Not yet verified |
 
 ## Key Terminology
 

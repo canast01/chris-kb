@@ -15,13 +15,18 @@ Version history and release notes for Ceph.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 18.2 Reef | 2024-Q2 | Ceph 18.2 Reef — RGW multi-site active-active | [Release Notes](#) |
-| 17.2 Quincy | 2023-Q2 | Ceph 17.2 Quincy — RBD fast-diff improvements | [Release Notes](#) |
-| 16.2 Pacific | 2022-Q2 | Ceph 16.2 Pacific — cephadm orchestration GA | [Release Notes](#) |
-| 15.2 Octopus | 2021-Q2 | Ceph 15.2 Octopus — object gateway enhancements | [Release Notes](#) |
-| 14.2 Nautilus | 2020-Q2 | Ceph 14.2 Nautilus — mgr dashboard v2 | [Release Notes](#) |
+| 18.2 Reef | 2024-Q2 | Ceph 18.2 Reef — RGW multi-site active-active | Not yet verified |
+| 17.2 Quincy | 2023-Q2 | Ceph 17.2 Quincy — RBD fast-diff improvements | Not yet verified |
+| 16.2 Pacific | 2022-Q2 | Ceph 16.2 Pacific — cephadm orchestration GA | Not yet verified |
+| 15.2 Octopus | 2021-Q2 | Ceph 15.2 Octopus — object gateway enhancements | Not yet verified |
+| 14.2 Nautilus | 2020-Q2 | Ceph 14.2 Nautilus — mgr dashboard v2 | Not yet verified |
 
 ## Key Terminology
 

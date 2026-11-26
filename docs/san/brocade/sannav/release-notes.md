@@ -15,13 +15,18 @@ Version history and release notes for Brocade SANnav.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2.3.1 | 2024-Q3 | SANnav 2.3.1 — FOS 9.2.2 discovery support | [Release Notes](#) |
-| 2.3.0 | 2024-Q1 | SANnav 2.3.0 — health dashboard improvements | [Release Notes](#) |
-| 2.2.2 | 2023-Q3 | SANnav 2.2.2 — REST API v2 analytics | [Release Notes](#) |
-| 2.2.1 | 2023-Q1 | SANnav 2.2.1 — scalability patch release | [Release Notes](#) |
-| 2.2.0 | 2022-Q3 | SANnav 2.2.0 — Supportsave automation | [Release Notes](#) |
+| 2.3.1 | 2024-Q3 | SANnav 2.3.1 — FOS 9.2.2 discovery support | Not yet verified |
+| 2.3.0 | 2024-Q1 | SANnav 2.3.0 — health dashboard improvements | Not yet verified |
+| 2.2.2 | 2023-Q3 | SANnav 2.2.2 — REST API v2 analytics | Not yet verified |
+| 2.2.1 | 2023-Q1 | SANnav 2.2.1 — scalability patch release | Not yet verified |
+| 2.2.0 | 2022-Q3 | SANnav 2.2.0 — Supportsave automation | Not yet verified |
 
 ## Key Terminology
 

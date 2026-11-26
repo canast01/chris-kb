@@ -16,13 +16,18 @@ Version history and release notes for VMware Aria Suite Lifecycle.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.18 | 2024-Q3 | Aria Suite Lifecycle 8.18 — GitOps config management | [Release Notes](#) |
-| 8.16 | 2024-Q1 | Aria Suite Lifecycle 8.16 — upgrade orchestration | [Release Notes](#) |
-| 8.14 | 2023-Q3 | Aria Suite Lifecycle 8.14 — vRSLCM rebrand to Aria | [Release Notes](#) |
-| 8.12 | 2023-Q1 | Aria Suite Lifecycle 8.12 — certificate automation | [Release Notes](#) |
-| 8.10 | 2022-Q3 | vRSLCM 8.10 — environment health dashboard | [Release Notes](#) |
+| 8.18 | 2024-Q3 | Aria Suite Lifecycle 8.18 — GitOps config management | Not yet verified |
+| 8.16 | 2024-Q1 | Aria Suite Lifecycle 8.16 — upgrade orchestration | Not yet verified |
+| 8.14 | 2023-Q3 | Aria Suite Lifecycle 8.14 — vRSLCM rebrand to Aria | Not yet verified |
+| 8.12 | 2023-Q1 | Aria Suite Lifecycle 8.12 — certificate automation | Not yet verified |
+| 8.10 | 2022-Q3 | vRSLCM 8.10 — environment health dashboard | Not yet verified |
 
 ## Key Terminology
 

@@ -15,13 +15,18 @@ Version history and release notes for SQL Server.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2022 CU14 | 2024-Q4 | SQL Server 2022 CU14 — Query Store enhancements | [Release Notes](#) |
-| 2022 CU10 | 2024-Q1 | SQL Server 2022 CU10 — security and performance | [Release Notes](#) |
-| 2022 GA | 2022-Q4 | SQL Server 2022 GA — Azure Synapse Link | [Release Notes](#) |
-| 2019 CU25 | 2023-Q4 | SQL Server 2019 CU25 — HA improvements | [Release Notes](#) |
-| 2019 GA | 2019-Q4 | SQL Server 2019 GA — Big Data Clusters | [Release Notes](#) |
+| 2022 CU14 | 2024-Q4 | SQL Server 2022 CU14 — Query Store enhancements | Not yet verified |
+| 2022 CU10 | 2024-Q1 | SQL Server 2022 CU10 — security and performance | Not yet verified |
+| 2022 GA | 2022-Q4 | SQL Server 2022 GA — Azure Synapse Link | Not yet verified |
+| 2019 CU25 | 2023-Q4 | SQL Server 2019 CU25 — HA improvements | Not yet verified |
+| 2019 GA | 2019-Q4 | SQL Server 2019 GA — Big Data Clusters | Not yet verified |
 
 ## Key Terminology
 

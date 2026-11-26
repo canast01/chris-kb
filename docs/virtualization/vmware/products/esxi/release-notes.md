@@ -17,13 +17,18 @@ Version history and release notes for VMware ESXi.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.0 U3 | 2024-Q3 | Security hardening, NVMe-oF initiator improvements | [Release Notes](#) |
-| 8.0 U2 | 2024-Q1 | TPM 2.0 attestation enhancements, vTPM migration | [Release Notes](#) |
-| 8.0 U1 | 2023-Q2 | ESXi 8.0 U1 — driver compatibility and stability | [Release Notes](#) |
-| 8.0 GA | 2022-Q4 | ESXi 8 GA — Intel TDX, AMD SEV-SNP support | [Release Notes](#) |
-| 7.0 U3 | 2022-Q1 | ESXi 7.0 U3 — lifecycle LTS baseline | [Release Notes](#) |
+| 8.0 U3 | 2024-Q3 | Security hardening, NVMe-oF initiator improvements | Not yet verified |
+| 8.0 U2 | 2024-Q1 | TPM 2.0 attestation enhancements, vTPM migration | Not yet verified |
+| 8.0 U1 | 2023-Q2 | ESXi 8.0 U1 — driver compatibility and stability | Not yet verified |
+| 8.0 GA | 2022-Q4 | ESXi 8 GA — Intel TDX, AMD SEV-SNP support | Not yet verified |
+| 7.0 U3 | 2022-Q1 | ESXi 7.0 U3 — lifecycle LTS baseline | Not yet verified |
 
 ## Key Terminology
 

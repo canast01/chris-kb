@@ -15,13 +15,18 @@ Version history and release notes for Dell COD.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 3.2 | 2024-Q2 | COD 3.2 — PowerMax 10.1 on-demand capacity | [Release Notes](#) |
-| 3.1 | 2023-Q3 | COD 3.1 — automated capacity reporting | [Release Notes](#) |
-| 3.0 | 2022-Q4 | COD 3.0 — REST API for capacity management | [Release Notes](#) |
-| 2.5 | 2022-Q1 | COD 2.5 — CloudIQ integration | [Release Notes](#) |
-| 2.4 | 2021-Q2 | COD 2.4 — usage forecasting model | [Release Notes](#) |
+| 3.2 | 2024-Q2 | COD 3.2 — PowerMax 10.1 on-demand capacity | Not yet verified |
+| 3.1 | 2023-Q3 | COD 3.1 — automated capacity reporting | Not yet verified |
+| 3.0 | 2022-Q4 | COD 3.0 — REST API for capacity management | Not yet verified |
+| 2.5 | 2022-Q1 | COD 2.5 — CloudIQ integration | Not yet verified |
+| 2.4 | 2021-Q2 | COD 2.4 — usage forecasting model | Not yet verified |
 
 ## Key Terminology
 

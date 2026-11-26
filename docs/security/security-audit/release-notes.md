@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | Security Audit — CISA KEV checklist integration | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | Security Audit — automated evidence collection | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | Security Audit — red team findings remediation v2 | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | Security Audit — penetration test scope update | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | Security Audit — cloud posture review addition | [Release Notes](#) |
+| 2024-Q4 | 2024-Q4 | Security Audit — CISA KEV checklist integration | Not yet verified |
+| 2024-Q2 | 2024-Q2 | Security Audit — automated evidence collection | Not yet verified |
+| 2023-Q4 | 2023-Q4 | Security Audit — red team findings remediation v2 | Not yet verified |
+| 2023-Q2 | 2023-Q2 | Security Audit — penetration test scope update | Not yet verified |
+| 2022-Q4 | 2022-Q4 | Security Audit — cloud posture review addition | Not yet verified |
 
 ## Key Terminology
 

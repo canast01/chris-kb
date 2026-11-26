@@ -15,13 +15,18 @@ Version history and release notes for NetApp InsightIQ.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 5.1 | 2024-Q2 | InsightIQ 5.1 — OneFS 9.7 compatibility | [Release Notes](#) |
-| 5.0 | 2023-Q3 | InsightIQ 5.0 — new performance baselines engine | [Release Notes](#) |
-| 4.1 | 2022-Q4 | InsightIQ 4.1 — cluster comparison dashboards | [Release Notes](#) |
-| 4.0 | 2022-Q1 | InsightIQ 4.0 — REST API for report export | [Release Notes](#) |
-| 3.2 | 2021-Q3 | InsightIQ 3.2 — long-term capacity trending | [Release Notes](#) |
+| 5.1 | 2024-Q2 | InsightIQ 5.1 — OneFS 9.7 compatibility | Not yet verified |
+| 5.0 | 2023-Q3 | InsightIQ 5.0 — new performance baselines engine | Not yet verified |
+| 4.1 | 2022-Q4 | InsightIQ 4.1 — cluster comparison dashboards | Not yet verified |
+| 4.0 | 2022-Q1 | InsightIQ 4.0 — REST API for report export | Not yet verified |
+| 3.2 | 2021-Q3 | InsightIQ 3.2 — long-term capacity trending | Not yet verified |
 
 ## Key Terminology
 

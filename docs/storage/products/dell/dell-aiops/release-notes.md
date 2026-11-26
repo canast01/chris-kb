@@ -15,13 +15,18 @@ Version history and release notes for Dell AIOps.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2.4 | 2024-Q2 | Dell AIOps 2.4 — predictive failure improvements | [Release Notes](#) |
-| 2.2 | 2023-Q3 | Dell AIOps 2.2 — cross-domain anomaly correlation | [Release Notes](#) |
-| 2.0 | 2022-Q4 | Dell AIOps 2.0 GA — ML-driven capacity forecasting | [Release Notes](#) |
-| 1.2 | 2022-Q1 | Dell AIOps 1.2 — alert noise reduction | [Release Notes](#) |
-| 1.0 | 2021-Q2 | Dell AIOps 1.0 — initial preview | [Release Notes](#) |
+| 2.4 | 2024-Q2 | Dell AIOps 2.4 — predictive failure improvements | Not yet verified |
+| 2.2 | 2023-Q3 | Dell AIOps 2.2 — cross-domain anomaly correlation | Not yet verified |
+| 2.0 | 2022-Q4 | Dell AIOps 2.0 GA — ML-driven capacity forecasting | Not yet verified |
+| 1.2 | 2022-Q1 | Dell AIOps 1.2 — alert noise reduction | Not yet verified |
+| 1.0 | 2021-Q2 | Dell AIOps 1.0 — initial preview | Not yet verified |
 
 ## Key Terminology
 

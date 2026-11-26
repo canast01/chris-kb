@@ -15,13 +15,18 @@ Version history and release notes for Commvault.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 11.32 | 2024-Q3 | Commvault 11.32 — AI-assisted anomaly recovery | [Release Notes](#) |
-| 11.30 | 2024-Q1 | Commvault 11.30 — Metallic integration updates | [Release Notes](#) |
-| 11.28 | 2023-Q3 | Commvault 11.28 — Air Gap Protect GA | [Release Notes](#) |
-| 11.26 | 2023-Q1 | Commvault 11.26 — Kubernetes operator improvements | [Release Notes](#) |
-| 11.24 | 2022-Q3 | Commvault 11.24 — Ransomware protection update | [Release Notes](#) |
+| 11.32 | 2024-Q3 | Commvault 11.32 — AI-assisted anomaly recovery | Not yet verified |
+| 11.30 | 2024-Q1 | Commvault 11.30 — Metallic integration updates | Not yet verified |
+| 11.28 | 2023-Q3 | Commvault 11.28 — Air Gap Protect GA | Not yet verified |
+| 11.26 | 2023-Q1 | Commvault 11.26 — Kubernetes operator improvements | Not yet verified |
+| 11.24 | 2022-Q3 | Commvault 11.24 — Ransomware protection update | Not yet verified |
 
 ## Key Terminology
 

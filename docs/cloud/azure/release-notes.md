@@ -15,13 +15,18 @@ Version history and release notes for Azure.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q3 | 2024-Q3 | Azure — AKS 1.30 GA, Azure VMware Solution 5.x | [Release Notes](#) |
-| 2024-Q1 | 2024-Q1 | Azure — Confidential VMs DCesv5, ZRS disks | [Release Notes](#) |
-| 2023-Q3 | 2023-Q3 | Azure — Azure Backup for AKS GA | [Release Notes](#) |
-| 2023-Q1 | 2023-Q1 | Azure — Azure NetApp Files large volumes GA | [Release Notes](#) |
-| 2022-Q3 | 2022-Q3 | Azure — Elastic SAN preview | [Release Notes](#) |
+| 2024-Q3 | 2024-Q3 | Azure — AKS 1.30 GA, Azure VMware Solution 5.x | Not yet verified |
+| 2024-Q1 | 2024-Q1 | Azure — Confidential VMs DCesv5, ZRS disks | Not yet verified |
+| 2023-Q3 | 2023-Q3 | Azure — Azure Backup for AKS GA | Not yet verified |
+| 2023-Q1 | 2023-Q1 | Azure — Azure NetApp Files large volumes GA | Not yet verified |
+| 2022-Q3 | 2022-Q3 | Azure — Elastic SAN preview | Not yet verified |
 
 ## Key Terminology
 

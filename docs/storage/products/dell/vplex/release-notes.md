@@ -15,13 +15,18 @@ Version history and release notes for Dell VPLEX.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 6.2 | 2024-Q2 | VPLEX 6.2 — cloud provider metadata sync | [Release Notes](#) |
-| 6.1 | 2023-Q3 | VPLEX 6.1 — concurrent I/O improvements | [Release Notes](#) |
-| 6.0 | 2022-Q4 | VPLEX 6.0 — GeoSynchrony management API v2 | [Release Notes](#) |
-| 5.5 | 2022-Q1 | VPLEX 5.5 — metro witness enhancements | [Release Notes](#) |
-| 5.4 | 2021-Q2 | VPLEX 5.4 — distributed cache improvements | [Release Notes](#) |
+| 6.2 | 2024-Q2 | VPLEX 6.2 — cloud provider metadata sync | Not yet verified |
+| 6.1 | 2023-Q3 | VPLEX 6.1 — concurrent I/O improvements | Not yet verified |
+| 6.0 | 2022-Q4 | VPLEX 6.0 — GeoSynchrony management API v2 | Not yet verified |
+| 5.5 | 2022-Q1 | VPLEX 5.5 — metro witness enhancements | Not yet verified |
+| 5.4 | 2021-Q2 | VPLEX 5.4 — distributed cache improvements | Not yet verified |
 
 ## Key Terminology
 

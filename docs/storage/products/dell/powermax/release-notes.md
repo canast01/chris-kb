@@ -15,13 +15,18 @@ Version history and release notes for Dell PowerMax.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 10.1 | 2024-Q3 | PowerMax 10.1 — NVMe/FC director updates | [Release Notes](#) |
-| 10.0 | 2023-Q3 | PowerMax 10.0 — 350F all-NVMe platform GA | [Release Notes](#) |
-| 9.2 | 2022-Q3 | PowerMax 9.2 — eNAS v9 firmware | [Release Notes](#) |
-| 9.1 | 2021-Q4 | PowerMax 9.1 — SRDF/Metro enhancements | [Release Notes](#) |
-| 9.0 | 2021-Q1 | PowerMax 9.0 — machine learning storage management | [Release Notes](#) |
+| 10.1 | 2024-Q3 | PowerMax 10.1 — NVMe/FC director updates | Not yet verified |
+| 10.0 | 2023-Q3 | PowerMax 10.0 — 350F all-NVMe platform GA | Not yet verified |
+| 9.2 | 2022-Q3 | PowerMax 9.2 — eNAS v9 firmware | Not yet verified |
+| 9.1 | 2021-Q4 | PowerMax 9.1 — SRDF/Metro enhancements | Not yet verified |
+| 9.0 | 2021-Q1 | PowerMax 9.0 — machine learning storage management | Not yet verified |
 
 ## Key Terminology
 

@@ -25,7 +25,7 @@ A: `openssl x509 -in cert.pem -noout -dates`
 ## Configuration
 
 **Q: What is the recommended certificate validity period?**
-A: TLS certificates: maximum 397 days (browser requirement since 2020). Internal CA certificates: 5 years for intermediate, 10-20 years for root. Code signing: 1-3 years. Shorter validity reduces exposure window from key compromise.
+A: Publicly trusted TLS certificates: maximum 200 days for certificates issued on or after 15 March 2026, dropping to 100 days from 15 March 2027 and 47 days from 15 March 2029 (CA/Browser Forum Baseline Requirements, ballot SC081; the old 398-day limit no longer applies). Plan for automated renewal (ACME). Internal CA certificates: 5 years for intermediate, 10-20 years for root. Code signing: 1-3 years. Shorter validity reduces exposure window from key compromise.
 
 **Q: How do I enable automatic certificate renewal with ACME/Let's Encrypt?**
 A: Deploy cert-manager in Kubernetes (`kubectl apply -f cert-manager.yaml`), or use Certbot on standalone servers (`certbot renew --pre-hook 'stop nginx' --post-hook 'start nginx'`). Configure renewal at 30 days before expiry.

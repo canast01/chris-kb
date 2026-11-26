@@ -15,13 +15,18 @@ Version history and release notes for Pure Evergreen//ONE.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024.4 | 2024-Q4 | Evergreen//ONE 2024.4 — SLA expansion to NVMe-oF | [Release Notes](#) |
-| 2024.2 | 2024-Q2 | Evergreen//ONE — latency guarantee update | [Release Notes](#) |
-| 2023.4 | 2023-Q4 | Evergreen//ONE — capacity burst model revision | [Release Notes](#) |
-| 2023.2 | 2023-Q2 | Evergreen//ONE — sustainability reporting GA | [Release Notes](#) |
-| 2022.4 | 2022-Q4 | Evergreen//ONE — FlashBlade//S tier introduction | [Release Notes](#) |
+| 2024.4 | 2024-Q4 | Evergreen//ONE 2024.4 — SLA expansion to NVMe-oF | Not yet verified |
+| 2024.2 | 2024-Q2 | Evergreen//ONE — latency guarantee update | Not yet verified |
+| 2023.4 | 2023-Q4 | Evergreen//ONE — capacity burst model revision | Not yet verified |
+| 2023.2 | 2023-Q2 | Evergreen//ONE — sustainability reporting GA | Not yet verified |
+| 2022.4 | 2022-Q4 | Evergreen//ONE — FlashBlade//S tier introduction | Not yet verified |
 
 ## Key Terminology
 

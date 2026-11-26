@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | Access Review — quarterly cycle automation update | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | Access Review — Joiner-Mover-Leaver workflow | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | Access Review — Entra ID integration improvements | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | Access Review — SoD conflict detection update | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | Access Review — certification campaign template v2 | [Release Notes](#) |
+| 2024-Q4 | 2024-Q4 | Access Review — quarterly cycle automation update | Not yet verified |
+| 2024-Q2 | 2024-Q2 | Access Review — Joiner-Mover-Leaver workflow | Not yet verified |
+| 2023-Q4 | 2023-Q4 | Access Review — Entra ID integration improvements | Not yet verified |
+| 2023-Q2 | 2023-Q2 | Access Review — SoD conflict detection update | Not yet verified |
+| 2022-Q4 | 2022-Q4 | Access Review — certification campaign template v2 | Not yet verified |
 
 ## Key Terminology
 

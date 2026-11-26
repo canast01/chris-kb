@@ -17,13 +17,18 @@ Version history and release notes for VMware NSX.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 4.1.2 | 2024-Q2 | Distributed SNAT, multi-site federation improvements | [Release Notes](#) |
-| 4.1.1 | 2023-Q4 | NSX-T to NSX rebrand GA, L7 firewall enhancements | [Release Notes](#) |
-| 4.0.1 | 2023-Q1 | NSX 4.0 — policy API convergence, EVPN support | [Release Notes](#) |
-| 3.2.3 | 2022-Q3 | NSX-T 3.2 LTS — distributed firewall scale | [Release Notes](#) |
-| 3.2.1 | 2022-Q1 | NSX-T 3.2.1 — malware prevention GA | [Release Notes](#) |
+| 4.1.2 | 2024-Q2 | Distributed SNAT, multi-site federation improvements | Not yet verified |
+| 4.1.1 | 2023-Q4 | NSX-T to NSX rebrand GA, L7 firewall enhancements | Not yet verified |
+| 4.0.1 | 2023-Q1 | NSX 4.0 — policy API convergence, EVPN support | Not yet verified |
+| 3.2.3 | 2022-Q3 | NSX-T 3.2 LTS — distributed firewall scale | Not yet verified |
+| 3.2.1 | 2022-Q1 | NSX-T 3.2.1 — malware prevention GA | Not yet verified |
 
 ## Key Terminology
 

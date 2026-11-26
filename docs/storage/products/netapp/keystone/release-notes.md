@@ -15,13 +15,18 @@ Version history and release notes for NetApp Keystone.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| STaaS v3 | 2024-Q3 | Keystone STaaS v3 — AFF C-series tier addition | [Release Notes](#) |
-| STaaS v2 | 2023-Q4 | Keystone STaaS v2 — NVMe tier GA, burst on-demand | [Release Notes](#) |
-| STaaS v1.2 | 2023-Q1 | Keystone 1.2 — co-location expansion regions | [Release Notes](#) |
-| STaaS v1.1 | 2022-Q3 | Keystone 1.1 — SLA reporting dashboard | [Release Notes](#) |
-| STaaS v1.0 | 2022-Q1 | Keystone STaaS v1.0 GA | [Release Notes](#) |
+| STaaS v3 | 2024-Q3 | Keystone STaaS v3 — AFF C-series tier addition | Not yet verified |
+| STaaS v2 | 2023-Q4 | Keystone STaaS v2 — NVMe tier GA, burst on-demand | Not yet verified |
+| STaaS v1.2 | 2023-Q1 | Keystone 1.2 — co-location expansion regions | Not yet verified |
+| STaaS v1.1 | 2022-Q3 | Keystone 1.1 — SLA reporting dashboard | Not yet verified |
+| STaaS v1.0 | 2022-Q1 | Keystone STaaS v1.0 GA | Not yet verified |
 
 ## Key Terminology
 

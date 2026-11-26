@@ -15,13 +15,18 @@ Version history and release notes for Cisco Nexus Dashboard.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 3.2 | 2024-Q3 | Nexus Dashboard 3.2 — multi-site fabric visibility | [Release Notes](#) |
-| 3.1 | 2024-Q1 | Nexus Dashboard 3.1 — Insights ML models | [Release Notes](#) |
-| 3.0 | 2023-Q3 | Nexus Dashboard 3.0 — unified services hub | [Release Notes](#) |
-| 2.3 | 2023-Q1 | Nexus Dashboard 2.3 — ACI Insights GA | [Release Notes](#) |
-| 2.2 | 2022-Q3 | Nexus Dashboard 2.2 — scalability improvements | [Release Notes](#) |
+| 3.2 | 2024-Q3 | Nexus Dashboard 3.2 — multi-site fabric visibility | Not yet verified |
+| 3.1 | 2024-Q1 | Nexus Dashboard 3.1 — Insights ML models | Not yet verified |
+| 3.0 | 2023-Q3 | Nexus Dashboard 3.0 — unified services hub | Not yet verified |
+| 2.3 | 2023-Q1 | Nexus Dashboard 2.3 — ACI Insights GA | Not yet verified |
+| 2.2 | 2022-Q3 | Nexus Dashboard 2.2 — scalability improvements | Not yet verified |
 
 ## Key Terminology
 

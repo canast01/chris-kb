@@ -15,13 +15,18 @@ Version history and release notes for Veeam Backup & Replication.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 12.2 | 2024-Q3 | Veeam 12.2 — Entra ID backup GA, CDP improvements | [Release Notes](#) |
-| 12.1 | 2024-Q1 | Veeam 12.1 — malware detection, ZTNA integration | [Release Notes](#) |
-| 12.0 | 2023-Q1 | Veeam 12.0 — immutable backup to S3 GA | [Release Notes](#) |
-| 11a | 2022-Q1 | Veeam 11a — patch release, CDP stability | [Release Notes](#) |
-| 11.0 | 2021-Q2 | Veeam 11.0 — CDP, Kubernetes support GA | [Release Notes](#) |
+| 12.2 | 2024-Q3 | Veeam 12.2 — Entra ID backup GA, CDP improvements | Not yet verified |
+| 12.1 | 2024-Q1 | Veeam 12.1 — malware detection, ZTNA integration | Not yet verified |
+| 12.0 | 2023-Q1 | Veeam 12.0 — immutable backup to S3 GA | Not yet verified |
+| 11a | 2022-Q1 | Veeam 11a — patch release, CDP stability | Not yet verified |
+| 11.0 | 2021-Q2 | Veeam 11.0 — CDP, Kubernetes support GA | Not yet verified |
 
 ## Key Terminology
 

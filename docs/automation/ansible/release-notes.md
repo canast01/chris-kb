@@ -15,13 +15,18 @@ Version history and release notes for Ansible.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2.17 | 2024-Q2 | Python 3.12 support, improved event-driven automation | [Release Notes](#) |
-| 2.16 | 2023-Q4 | AAP 2.4 compatibility, collection loader rewrite | [Release Notes](#) |
-| 2.15 | 2023-Q2 | Mitogen strategy improvements, fact caching backends | [Release Notes](#) |
-| 2.14 | 2022-Q4 | ansible-core 2.14 LTS release, controller deprecations | [Release Notes](#) |
-| 2.13 | 2022-Q2 | Python 3.8 minimum, task include_role refactor | [Release Notes](#) |
+| 2.17 | 2024-Q2 | Python 3.12 support, improved event-driven automation | Not yet verified |
+| 2.16 | 2023-Q4 | AAP 2.4 compatibility, collection loader rewrite | Not yet verified |
+| 2.15 | 2023-Q2 | Mitogen strategy improvements, fact caching backends | Not yet verified |
+| 2.14 | 2022-Q4 | ansible-core 2.14 LTS release, controller deprecations | Not yet verified |
+| 2.13 | 2022-Q2 | Python 3.8 minimum, task include_role refactor | Not yet verified |
 
 ## Key Terminology
 

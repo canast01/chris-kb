@@ -15,13 +15,18 @@ Version history and release notes for Cisco DCNM.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 12.2 | 2024-Q2 | DCNM 12.2 — fabric controller convergence | [Release Notes](#) |
-| 12.1 | 2023-Q3 | DCNM 12.1 — vPC enhancements | [Release Notes](#) |
-| 12.0 | 2022-Q4 | DCNM 12.0 — rebrand to Nexus Dashboard Fabric Controller | [Release Notes](#) |
-| 11.5 | 2022-Q1 | DCNM 11.5 — LAN fabric improvements | [Release Notes](#) |
-| 11.4 | 2021-Q2 | DCNM 11.4 — REST API v1 expansion | [Release Notes](#) |
+| 12.2 | 2024-Q2 | DCNM 12.2 — fabric controller convergence | Not yet verified |
+| 12.1 | 2023-Q3 | DCNM 12.1 — vPC enhancements | Not yet verified |
+| 12.0 | 2022-Q4 | DCNM 12.0 — rebrand to Nexus Dashboard Fabric Controller | Not yet verified |
+| 11.5 | 2022-Q1 | DCNM 11.5 — LAN fabric improvements | Not yet verified |
+| 11.4 | 2021-Q2 | DCNM 11.4 — REST API v1 expansion | Not yet verified |
 
 ## Key Terminology
 

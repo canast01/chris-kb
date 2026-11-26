@@ -2324,13 +2324,648 @@ community standard). Research via WebSearch, verify, don't assume from memory.
     Infrastructure 85% cap / buffer model in dell/fod.
   - site_audit (2026-11-25): 70/70 clean (full run; one run covered these 8 items, none
     touched docs/). Queue file only.
-- [ ] storage/products/dell/data-domain
-- [ ] storage/products/dell/dell-aiops
-- [ ] storage/products/dell/ecs
-- [ ] storage/products/dell/fod
-- [ ] storage/products/dell/powermax
-- [ ] storage/products/dell/powerpath
-- [ ] storage/products/dell/powerscale
+- [x] storage/products/dell/data-domain
+  - Audit (2026-11-25): 27 pages, 10,829 lines; subdirs architecture(5)
+    learning-path(1) operations(9) security(5) troubleshooting(5) + index,
+    release-notes. "Applies to:" 18x "Data Domain DD OS 7.x", 6x "Dell EMC
+    Storage", 1x "DD/PowerProtect DD running DDOS 7.x", 1x "DD OS 7.x / 8.x",
+    1x "Data Domain OS 7.x" -- 26/27 pages pinned to the 7.x line; only
+    release-notes.md:25 names 8.x (8.1, template table). Product name "PowerProtect
+    Data Domain" is still Dell's current name (exam + docs use it), so "Data
+    Domain" is fine; "Dell EMC" branding persists (14 lines). Stale/wrong:
+    operations/install-upgrade.md:29 "7.13.x Current / Recommended" and :24-30
+    matrix (Dell KB 000081247: LTS2026 8.6.1 is Recommended; 7.12 EoSS
+    2026-07-31, 7.11 2026-03-31, 7.10.1 2026-04-30; latest feature 8.9.0.0);
+    operations/faq.md:20 "DD OS 7.13.x is the current recommendation" (wrong);
+    install-upgrade.md:53-56 hardware lifecycle omits DD9910/DD9410/DD6410 (0
+    pages mention them); sample output uses DDOS 7.14.1.20 / 7.15.1.x
+    (operations/scripts.md:568, cli-reference.md:1236,2139, integrations.md:259,
+    hardening.md:431, encryption.md:301) -- no 7.14/7.15 family exists in Dell's
+    DDOS versions KB (7.13 -> 8.0), likely invented. Suspect/invented:
+    install-upgrade.md:41 "DDVDP protocol", :45 "SISL + DD Boost ... DD
+    MediaAgent", :46 "RAIN dedup integration"; encryption.md:117 `system
+    enter-maintenance-mode`; release-notes.md:27 "7.12 -- DD3300 platform GA"
+    (template table, unverified). learning-path has no cert/exam mapping.
+  - Cert research (2026-11-25): Two current Dell Proven Professional exams, both
+    listed in Dell's cert catalog: D-PDD-OE-01 "PowerProtect Data Domain Operate"
+    (v2) and D-PDD-DY-01 "PowerProtect Data Domain Deploy" (v2); predecessors
+    D-PDD-OE-23 / D-PDD-DY-23 (which replaced DES-DD33/DES-DD23 in Nov 2023) are
+    no longer in the catalog. No retirement notice found for -01. Both: 90 min,
+    50 questions, English/French; passing score and "requirements as of" date
+    NOT stated in either PDF (PDF metadata: OE created 2026-04-29, DY
+    2026-03-31). OE-01 blueprint: Active Tier Administration 50% (system/support
+    settings, access, network interfaces, file system, storage policies, CIFS/
+    NFS/DD Boost/VTL, Secure Multitenancy, replication policies, Retention Lock
+    on storage units, health/utilization monitoring, upgrades, tuning);
+    Integration with Application Software 14%; Cloud Tier Administration 18%
+    (config, data movement, tuning); Troubleshooting 18% (backup/restore/
+    replication/DR, software+connectivity, capacity+performance). DY-01
+    blueprint: Pre-Deployment Check 14% (site requirements, install checklist,
+    service tags); Deployment 52% (rack head unit + expansion shelves, shelf
+    cabling, network/power, access, mgmt network, backup connectivity, basic
+    testing); Post-Deployment 34% (system access, monitoring tools, data
+    security features, backup software config, policies); description names
+    encryption, multi-tenancy, CIFS/NFS/DD Boost/VTL/NDMP. Recommended training
+    incl. DD Management Center Administration (ESDPSD05255), Cloud Tier
+    (MR-1WP-DDCTIM), Hardware Installation (MR-1WP-DDHINSTL). Current DDOS
+    (Dell KB 000081247, modified 2026-11-04): latest feature release 8.9.0.0
+    (2026-08-19); LTS2026 8.6.1.30 Recommended (window 2026-04-14..2028-04-30);
+    LTS2025 8.3.1.50 and LTS2024 7.13.1.90 Legacy (to 2027-06-30); 7.13.1 not
+    compatible with DD9910/DD9410/DD6410 and newer. Info Hub 000126375 (modified
+    2026-08-20) lists docs for DD OS 8.0-8.9.
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+    https://learning.dell.com/content/dam/dell-emc/documents/en-english/Dell_PowerProtect_Data_Domain_Operate_v2_Exam%20_Description.pdf
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/Dell%20PowerProtect%20Data%20Domain%20Deploy%20v2%20Exam%20Description.pdf
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges/powerprotect-data-domain-operate-2.html
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges/powerprotect-data-domain-deploy.html
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams/powerprotect-dd-operate-.html
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/Dell%20Technologies%20Proven%20Professional%20Exam%20Updates.pdf
+    https://www.dell.com/support/kbdoc/en-us/000081247 (via WebFetch)
+    https://www.dell.com/support/kbdoc/en-us/000126375 (via WebFetch)
+    https://www.dell.com/support/kbdoc/en-us/000420246 (via WebFetch)
+    Target bar: pass D-PDD-OE-01 (primary) and D-PDD-DY-01 on DDOS 8.6.1 LTS /
+    8.9.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    Secure Multitenancy/tenant units 0, DDMC (Management Center) 0, ifgroup 0,
+    collection replication 0, service tag 0, LTS 0, Cyber Recovery 0, Smart
+    Scale 0, DD9910/DD9410/DD6410 0. Thin: Active Tier 2, data movement 1,
+    NDMP 2, cabling 1, expansion shelves 4, Retention Lock 7 (compliance/
+    governance mode 2 each), KMIP 2, fastcopy 1, DDVE 3, PowerProtect 5, 8.x
+    versions ~1 real. Adequate: DD Boost 21, MTree 18, replication 21, NFS 16,
+    CIFS 12, storage unit 10, Cloud Tier 9, encryption 10, Veeam 13, upgrade 13,
+    cleaning 12, autosupport 6, SNMP 5, AIOps/CloudIQ 5, VTL 7. Phase B should:
+    re-baseline all 27 "Applies to:" lines and the install-upgrade version
+    matrix to DDOS 8.6.1 LTS2026 / 8.9 (cite KB 000081247); replace invented
+    7.14/7.15 sample banners; add a Secure Multitenancy page (tenants, tenant
+    units, roles); add DDMC page; add Cloud Tier data-movement policies + tuning
+    and Active Tier vs Cloud Tier page; deepen Retention Lock (governance vs
+    compliance on storage units/MTrees); add DY-01 hardware deployment page
+    (pre-install checklist, service tags, rack/shelf cabling, initial config
+    wizard, ifgroups/backup connectivity, NDMP); add replication types
+    (collection/MTree/directory) page; map learning-path stages to OE-01/DY-01
+    domains with weights; verify or remove DDVDP/SISL/RAIN/enter-maintenance-mode
+    claims and update model lifecycle table against Dell docs.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks incl. new 71/72; one run
+    covered these 7 items). Queue file only.
+- [x] storage/products/dell/dell-aiops
+  - Audit (2026-11-25): 24 pages, 1,777 lines, 16 subdirs (alerts, architecture[5],
+    cli-reference, deploy, design-standards, insights, integration, learning-path,
+    lifecycle, operations[2], recommendations, reporting, scripts, security,
+    troubleshooting[2], vendor-support). "Applies to:" 16 "Dell AIOps", 2 "Dell
+    AIOps / CloudIQ AIOps", 2 stale "Dell EMC Storage" (release-notes.md:8,
+    operations/faq.md:10), 4 none (cli-reference, reporting, scripts, troubleshooting
+    index). Not in mkdocs nav (auto); linked from dell/index.md:29.
+    Overlap with cloudiq (31 pages, 4,587 lines): same product. 21/24 pages here say
+    "CloudIQ" and describe AIOps as a separate layer over CloudIQ (e.g. ports.md:22
+    "analytics layer built on top of CloudIQ and ESRS telemetry") - wrong: per Dell it is one
+    product, renamed. Unique to this section: alerts/insights/recommendations/
+    reporting cards + design-standards SLA/tagging policy. cloudiq has the deeper
+    ops/security/troubleshooting sub-pages. Recommend dell-aiops as canonical; fold
+    cloudiq in and redirect.
+    Hollow pages: many headings promised in the kb-summary are missing. recommendations
+    (28 lines) has only an issues table. insights has no "Performance Predictions" or
+    "Bottleneck Detection" section. lifecycle.md:59 "Check Current SCG Version" is
+    empty. operations/index.md:37 "Critical or High Recommendation" is empty.
+    troubleshooting/index.md has no issue content. Placeholder d2 "Component
+    A/B/C" diagrams: cli-reference:137, reporting:37, scripts:42. deploy.md "Verify"
+    (cluster/LUN/replication) is boilerplate that does not fit a SaaS product.
+    Invented or wrong content:
+    (a) Two conflicting API hosts. `api.cloudiq.dell.com` (cli-reference:23-134,
+    scripts:10-11, integration:41) is wrong. `cloudiq.apis.dell.com/cloudiq/rest/v1`
+    is the documented base, but the `/aiops/alerts|insights|reports` paths under it
+    (alerts:28-35, insights:39, reporting:10-27, troubleshooting:13-19) are not
+    verified.
+    (b) The API is READ-ONLY per Dell. These POST endpoints and their JSON outputs
+    are fabricated: acknowledge/dismiss (alerts:27-38, troubleshooting:18), report
+    generation (reporting:9). /anomalies, /audit-logs and capacity
+    "days_until_full" are unverified.
+    (c) Wrong role names. security:56-60 has Admin/Viewer; learning-path:74 has
+    Administrator/Operator/Observer. The real roles are Admin, Advisor, APM
+    Admin/Viewer, Cybersecurity Admin/DevOps/Operator/Viewer, DevOps, Resource
+    Operator, Standard.
+    (d) Stale names: esrs.dell.com and "ESRS telemetry" (ports.md:22,28; SRS was
+    removed from the whitepaper in H15691.10); "APEX AIOps"/apex.dell.com as the
+    portal (deploy:53-81; the real portal is aiops.dell.com); "Dell EMC";
+    "(Isilon)".
+    (e) Not in the Dell source: "90 days of telemetry required" (deploy:66,100-105),
+    "Settings → Analytics / Predictive Recommendations" (faq:31), anomaly
+    "sensitivity Low/Med/High" (design-standards/index:84-91; Dell's only
+    sensitivity setting is for ransomware incident detection), PagerDuty/Teams
+    channels, "Aria Operations bidirectional" (integration:53), "SAML 2.0"
+    (security), SCG UI :9443 (deploy:87, security:84; not checked), API secret
+    "90-day" rotation (Dell: client credentials valid 1 year), "Release Notes"
+    menu (lifecycle).
+    (f) release-notes.md versions 1.0-2.4 are invented: AIOps is SaaS with no
+    customer versions (template table, "Unverified").
+    (g) deploy.md:65 lists 5 platforms and omits PowerEdge, VxRail, PowerProtect
+    DD/DM, PowerVault, SC, XtremIO, Connectrix, PowerSwitch, VMware and APEX cloud.
+    Right per Dell: SaaS, Secure Connect Gateway, 5-min alert/performance
+    collection, ProSupport entitlement, aiops.dell.com.
+  - Cert research (2026-11-25): No Dell Proven Professional exam covers AIOps or
+    CloudIQ (reused from the cloudiq Phase A: 10 exam PDFs, 0 hits; not re-checked).
+    Fallback bar is now obtained. "Dell AIOps: A Detailed Review" H15691.12, January
+    2026, 226 pp, fetched via the Wayback copy dated 2026-07-27 (the live PDF
+    returns 403).
+    TOC: Executive summary; Overview (requirements/min code table, data collection
+    and retention, features, Global Search, AIOps Assistant); Home page; Monitor;
+    Manage; Optimize; Reports; Cybersecurity; Storage system / Block / File /
+    Storage Group / PowerStore appliance / Node / Quota / Host details; Connectrix
+    and PowerSwitch; HCI; Server; Data protection; VMware; Custom Tags;
+    Administration (Identity Mgmt/roles/SSO groups, Settings, Customization,
+    Integrations: REST API + Webhooks, Licenses); Mobile app; Appx A Enabling AIOps
+    at the system; Appx B Security; Appx C Collection frequencies; Appx D Report
+    Browser metrics; Appx E PowerEdge features by connection type.
+    Key facts from the paper:
+    - Health score is 100 minus the worst issue, across 5 categories: Components,
+      Configuration, Capacity, Performance, Data Protection.
+    - Data retention: 2 years. 5-min data is kept 100 days at system level and 22
+      days at object level.
+    - Connectivity: Secure Connect Gateway (replaces SRS and SupportAssist
+      Enterprise) or Embedded Service Enabler; AIOps Collector vApp for
+      VMware/Connectrix/PowerSwitch; OME + CloudIQ plugin or Dell Connectivity
+      Client for PowerEdge.
+    - REST API is read-only OAuth2: token valid 1 h, credentials 1 yr, DevOps role.
+    - Webhooks: 5 event types (Health Issue Change plus 4 cybersecurity types).
+    - AIOps Assistant (GenAI, "Powers"). Carbon/energy metrics.
+    Lab: Demo Center HOL-0511-01 "APEX AIOps Infrastructure Observability (formerly
+    CloudIQ)" (archived 2024-12-04, login needed to launch). Modules: Overview,
+    Health, Capacity, Performance Impacts and Anomalies, PowerEdge, VxRail, VMware,
+    Cybersecurity, Custom Labels and Reports, Energy/Carbon. ITD-0511 not verified.
+    Sources (primary, vendor):
+    web.archive.org/web/20260727122522id_/https://www.delltechnologies.com/asset/
+    en-us/products/storage/industry-market/dell-aiops-a-detailed-review.pdf ;
+    dell.com/community/Developer-Blogs/Start-Guide-to-CloudIQ-REST-API-Using-Postman/
+    ba-p/8375121 (Dell dev blog, 2023: base URL, token URL, scope oapi) ;
+    web.archive.org/web/20241204191217id_/https://democenter.dell.com/hol/HOLA/
+    HOL-0511-01
+    Target bar: Operate Dell AIOps end to end at the depth of the Detailed Review
+    H15691.12 TOC, plus the HOL-0511 module list and the read-only REST API/webhooks.
+  - Gap vs blueprint (pages mentioning each term, out of 24): Zero coverage:
+    Cybersecurity/misconfiguration/ransomware (0), AIOps Assistant/GenAI (0),
+    Collector (0), carbon/energy (0), mobile app (0), Ansible/Terraform (0), VxRail/
+    HCI (0), Dell Security Advisories, Custom Tags (real feature), Report Browser,
+    Reclaimable Storage, Workload Contention, SSO groups/Dell Identity/MyService360,
+    Trusted Advisor/partner access, Licenses, data retention, PowerEdge firmware
+    update jobs. Thin: SCG 12 (mostly wrong model), health score 7 (no 5-category
+    model), webhook 4 (no event types or HMAC secret), REST API 9 (wrong host, fake
+    writes), OAuth 3, ProSupport 1, PowerFlex 1, PowerSwitch/Connectrix 1, PowerProtect
+    2, VMware 4, SupportAssist 3, roles 6 (wrong names).
+    Phase B should:
+    1. Merge cloudiq into dell-aiops and redirect cloudiq. Fix the "layer on top of
+       CloudIQ" model to "CloudIQ → APEX AIOps Infrastructure Observability (Aug
+       2024) → Dell AIOps (Oct 2025)".
+    2. Delete the POST/write API examples and the api.cloudiq.dell.com host; rebuild
+       from developer.dell.com/apis/products/analytics/cloudiq.
+    3. Replace the roles, ports (drop esrs) and supported-platform tables with the
+       whitepaper tables (min code versions).
+    4. Add pages: Cybersecurity (evaluation plans, risk score, ransomware incidents
+       for PowerMax/PowerProtect DD), AIOps Assistant, Collector/connectivity per
+       product (Appx A), Custom Tags & Reports, Energy/Carbon, Mobile, Administration
+       (SSO groups, Advisor access), webhooks with signature verification.
+    5. Delete or replace the invented release-notes table, the 90-day and
+       sensitivity claims, and the placeholder diagrams. Fill the hollow sections.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks incl. new 71/72; one run
+    covered these 7 items). Queue file only.
+- [x] storage/products/dell/ecs
+  - Audit (2026-11-25): 26 pages, 6,899 lines; subdirs architecture/ operations/
+    security/ troubleshooting/ learning-path/ + index.md, release-notes.md.
+    "Applies to:" 23x "ECS 3.x", 2x "Dell EMC Storage", 1x "Dell ECS 3.x". Version
+    mentions: ECS 3.8 (6), 3.9 (4), 3.7/3.6 (2 each), 3.5/3.4 (1 each). ZERO pages
+    mention ObjectScale. KB presents ECS as the current product line - STALE: Dell
+    rebranded ECS to ObjectScale at 4.0 (Apr 2025); latest is ObjectScale 4.4 (Aug 2026).
+    Errors:
+    - operations/install-upgrade.md:32 "ECS 3.9.x | 2024 | CloudIQ ... | Active
+      (Current)" - no ECS 3.9 exists; Dell release-contents goes 3.8.1 (Apr 2024) ->
+      ObjectScale 4.0 (Apr 2025). Same invented 3.9 at architecture/integrations.md:384,
+      :386 and architecture/design-standards.md:137 (also "CloudIQ" is now Dell AIOps).
+    - operations/install-upgrade.md:29-31 dates wrong: 3.6 = Nov 2020, 3.8 = Dec 2022
+      (KB says 2021 / 2023); 3.8.x status "Active" omits the 4.x successor.
+    - operations/faq.md:20 "ECS 3.8.x is the current recommendation" - stale (4.x is
+      current; 3.8.x is the required upgrade source for 4.0). faq.md:20,23 `ecs version`
+      CLI command - not verified, likely invented.
+    - release-notes.md:25-29 dates all wrong vs Dell (3.8 "2024-Q2" vs Dec 2022; 3.7
+      "2023-Q3" vs Feb 2022; 3.6 "2022-Q4" vs Nov 2020; 3.5 "2022-Q1" vs May 2020; 3.4
+      "2021-Q2" vs Sep 2019); feature attributions unverified (table self-flagged).
+    - ecscli command syntax (12 pages, e.g. "ecscli namespace list") not verified
+      against Dell ECS CLI docs.
+  - Cert research (2026-11-25): Dell Proven Professional catalog still lists three
+    ECS exams; NO ObjectScale-named exam in the catalog. All three are 2023-vintage
+    and were not refreshed for ObjectScale 4.x; no retirement notice found.
+    - D-ECS-OE-23 "Dell ECS Operate 2023" (object storage administrator daily ops).
+      Products: ECS 3.8, Amazon S3, DD Cloud Tier 6.2, OpenStack, PowerScale
+      CloudPools 9.x, NetWorker CloudBoost 9.1. Domains: ECS Overview 22%; ECS
+      Administration 39%; ECS Data Client Access 30%; ECS Integrated Solutions 9%.
+      90 min. Requirements as of 2023-12-08. Languages English, French.
+    - D-ECS-DY-23 "Dell ECS Deploy 2023": Overview 16%; Implementation 36% (site prep,
+      core OS install, network separation, software install, initial config, install
+      troubleshooting); Administration 22%; Data Client Access 18%; Integrated
+      Solutions 8%. ECS 3.8. 90 min. As of 2023-12-08. Replaced DES-1B21 (retired
+      2024-01-04). Listed in a separate (possibly partner-gated) catalog block.
+    - D-ECS-DS-23 "Dell ECS Design 2023": Platform Architecture, Networking, Data
+      Management, Cluster Access, Monitoring & Performance - 20% each. ECS 3.7.
+      90 min. As of 2023-02-06.
+    Question count / pass score: not stated in PDFs or exam pages - not verified.
+    Sources (primary, vendor):
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-ECS-OE-23-Operate_ECS_Exam.pdf
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-ECS-DY-23-Deploy_ECS_Exam.pdf
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-ECS-DS-23-Design_ECS_Exam.pdf
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams/ecs-operate.html
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams/ecs-deploy.html
+      https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams/ecs-design.html
+      https://learning.dell.com/content/dam/dell-emc/documents/en-us/Dell%20Technologies%20Proven%20Professional%20Exam%20Updates.pdf
+      https://www.dell.com/support/kbdoc/en-us/000296965/ecs-rebranding-to-objectscale
+      https://www.dell.com/en-us/infohub/articles/dell-objectscale-release-contents
+    Target bar: pass D-ECS-OE-23 (primary) + D-ECS-DY-23 Implementation delta, with
+    ECS 3.8 exam content kept as-is but the section reframed as ObjectScale 4.x (ECS).
+  - Gap vs blueprint (pages mentioning each term, out of 26): Zero coverage:
+    ObjectScale/rebrand 0, ARM/access-during-outage 0, GeoDrive 0, DD Cloud Tier 0,
+    PowerScale/Isilon CloudPools 0, NetWorker CloudBoost 0, network separation 0,
+    node/hardware models (EX300/EX500/EX3000/EX5000/EXF900/XF960) 0, TSO/PSO 0,
+    Service Console 0, XOR 0, Dell cert codes 0. Thin: storage pool 3, metering 1,
+    D@RE 2, NFS 4, HDFS 4, sizing 3, multi-tenancy 4, ACL 5, load balancer 6, AD/LDAP 7.
+    Covered: S3 23, bucket 21, namespace 20, replication group 15, geo/federation 16,
+    VDC 15, quota 15, monitoring 15, IAM 14, compliance 14, retention 13, ecscli 12,
+    Swift 10, erasure coding 9, object lock 9, CAS 9.
+    Phase B should: (1) reframe section as "Dell ObjectScale (formerly ECS)", add
+    4.0-4.4 lineage + 3.8.x-only upgrade path (Gen2/Gen3) from KB 000296965; delete
+    invented ECS 3.9 rows/sections and fix install-upgrade/faq/release-notes dates;
+    (2) write integrated-solutions page (DD Cloud Tier, CloudPools, CloudBoost) - 8-9%
+    of OE/DY; (3) add ARM/ADO, TSO/PSO, XOR, storage-pool/VDC/RG data-protection
+    deep-dive for Administration 39%; (4) GeoDrive + ecscli + REST API + Swift client
+    access verified against Dell docs; (5) Implementation page: site prep, core OS,
+    network separation, initial config; (6) design/sizing: node types, LB methods,
+    multi-tenancy; (7) a cert-prep page mapping D-ECS-OE/DY/DS-23 objectives to pages.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks incl. new 71/72; one run
+    covered these 7 items). Queue file only.
+- [x] storage/products/dell/fod
+  - Audit (2026-11-25): 26 pages, 3,742 lines. Subdirs: architecture/ (5),
+    operations/ (8), security/ (5), troubleshooting/ (5), learning-path/ (1),
+    plus index.md and release-notes.md. "Applies to:" tags: 20 "Dell FOD",
+    2 "Dell EMC Storage", 2 "Dell FOD for PowerStore, PowerMax, Unity",
+    1 "Dell Flex on Demand (FoD) / APEX Flex on Demand", 1 "Dell Flex on
+    Demand / APEX Flex on Demand". No explicit mkdocs.yml nav entry, so the
+    nav is auto-generated.
+    IDENTITY SPLIT: the section mixes two different things. One is Flex on
+    Demand, the financial consumption program. The other is an invented
+    "Features on Demand" licence-key scheme. Pages built on licence keys:
+    operations/faq.md (title "Dell Features on Demand"; 90-day trial key,
+    :39), architecture/ports.md (license key pull from licensing.dell.com,
+    :24), troubleshooting/known-issues.md, learning-path/index.md (all of
+    :31-85; trial "typically 30 days", :34, contradicts faq's 90),
+    troubleshooting/escalation.md (symlicense install/list/preview .lic,
+    :134-377), health-checks.md:26-29, procedures.md:83-170 (symcfg -auth
+    activate, symcfg list -fod, with fabricated feature/expiry output
+    :121-135), install-upgrade.md:35-74 (symlmf import; fabricated "PowerMax
+    FOD Base/Burst Capacity" licence lines; capture says "not verified").
+    The metering half also contradicts Dell sources:
+    (a) "peak-hour metering, maximum capacity used in any hour" appears at
+    how-it-works.md:46, architecture/index.md:46 and cli-reference.md:405.
+    Dell says consumed capacity "is measured multiple times per day and the
+    daily average is used to calculate the monthly average", and "billed by
+    average or actual usage". WRONG.
+    (b) The "base/burst ceiling ... over-usage charges or immediate license
+    upgrade" model appears at how-it-works.md:44, architecture/index.md:40-44,
+    cli-reference.md:277 and procedures.md:50-58. Dell's terms are Committed
+    Capacity plus Buffer Capacity, with the 85% billing cap: no charge for
+    use above 85% of installed capacity. INVENTED.
+    (c) Product scope is given as "PowerMax, PowerStore, PowerScale"
+    (index.md, how-it-works.md:50-56), and cli-reference.md:18 says
+    "PowerMax/VMAX arrays". Dell lists Storage, Data Protection, and
+    HCI/VxRail (plus CI, PowerFlex, and servers per the 2021 blog and 2024
+    page). The scope is too narrow, and "Unity" (9 pages) is not verified.
+    (d) The CloudIQ/SCG telemetry billing pipeline (how-it-works.md:20,
+    integrations.md, encryption.md:33-38) is not verified; Dell says only
+    "automated tools installed with your equipment" and APEX console usage
+    data. Also unverified: the CloudIQ REST base URL in scripts.md:46,196,320
+    and the Unisphere "license_capability: FOD" field in cli-reference.md:186.
+    (e) release-notes.md "FOD 2.4-3.2" (:25-29) is FABRICATED, because FoD
+    is a payment program with no software versions; delete the table.
+    (f) Missing entirely: the 85% cap, commitment thresholds, term lengths,
+    dark-site/non-metered ineligibility, revised committed capacity, DFS as
+    provider, and the APEX Infrastructure rebrand.
+    cod MERGE: fod should be the canonical home. Its correct content is a
+    thin layer, but the cod key-activation material duplicates fod's
+    invented licence-key half. Merge cod's capacity-activation concept here
+    only after rewriting it against the Dell terms, then redirect cod.
+    Cross-link apex-storage-as-a-service as the subscription sibling.
+  - Cert research (2026-11-25): No Dell Proven Professional exam covers Flex
+    on Demand, APEX Infrastructure pay-per-use or consumption programs. I
+    reused the sibling-verified catalog (~82 codes; the only APEX exams are
+    APEX Cloud Platform for Azure/OpenShift) and did not re-fetch it. FoD is
+    a DFS financial program, so no technical exam is expected. Fallback bar:
+    the Dell program terms below, verified from Dell-owned pages and DFS
+    PDFs.
+    Sources (primary, vendor):
+    https://web.archive.org/web/20261104004947id_/https://www.dell.com/en-us/shop/apex/subscriptions/sl/apex-infrastructure
+    https://web.archive.org/web/20240416081929id_/https://www.dell.com/en-ie/dt/payment-solutions/flexible-consumption/flex-on-demand.htm
+    https://web.archive.org/web/20250514142305id_/https://www.dell.com/en-us/blog/cost-assurance-for-unpredictable-it-challenges/
+    https://www.delltechnologies.com/content/dam/uwaem/production-design-assets/en/services/Payment-Solutions/19-DFM-0172-DFS-FOD-Flyer-v4.pdf
+    https://i.dell.com/sites/csdocuments/Learn_Docs/en/uk/dfs-emea-flex-on-demand-english.pdf
+    Target bar: be able to explain and size an APEX Flex on Demand / APEX
+    Infrastructure pay-per-use deal end to end. That covers Committed vs
+    Buffer Capacity; commit thresholds (storage 40-80%, PowerEdge 70-80%,
+    HCI 50-80%); terms (storage 12-60 months, server 36-60 months); the
+    metering math (several samples a day, daily average, monthly average);
+    the 85% cap (excludes servers; dark-site and non-metered deployments not
+    eligible); revised committed capacity; end-of-term options; APEX console
+    pre-invoice approval; and product eligibility.
+  - Gap vs blueprint (pages mentioning each term, out of 26): Zero coverage:
+    "buffer capacity" 0, "buffer" 0, "billing cap" 0, "pay-per-use" 0,
+    "APEX Infrastructure" 0, "Dell Financial Services/DFS" 0, "dark site" 0,
+    "multiple times per day/daily average" 0, "revised committed" 0,
+    VxRail 0. Thin: "committed capacity" 1 (a script sample output line),
+    "85%" 1 (an unrelated script warning threshold), Data Protection 1
+    (off-topic), PowerFlex 1, "APEX Flex on Demand" 3. Over-weighted or
+    wrong: burst 11, licence/activation key 12, symcfg/symlicense/symlmf 8,
+    "features on demand" 4, peak 4 (3 of them the false peak-hour claim),
+    CloudIQ 14 and SCG 14 (as an unverified billing path). Phase B should:
+    (1) delete the Features-on-Demand licence-key material (faq, ports,
+    known-issues, learning-path, escalation, procedures:83-170,
+    install-upgrade:35-74, health-checks:26-29) and the fabricated
+    release-notes table;
+    (2) rewrite how-it-works and architecture/index around Committed/Buffer,
+    the daily-average metering and the 85% cap, with Dell citations;
+    (3) widen product scope to the Dell list;
+    (4) replace burst-ceiling procedures and scripts with array-side
+    capacity monitoring framed as "estimate buffer usage", clearly labelled
+    as not the billing meter;
+    (5) add an APEX console usage/pre-invoice review procedure (verify the
+    console docs first);
+    (6) absorb the rewritten cod content and redirect cod;
+    (7) cross-link apex-storage-as-a-service.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks incl. new 71/72; one run
+    covered these 7 items). Queue file only.
+- [x] storage/products/dell/powermax
+  - Audit (2026-11-25): 27 pages / 9,335 lines; subdirs architecture(5) deploy(1)
+    learning-path(1) operations(8) security(5) troubleshooting(5) + index + release-notes.
+    srdf-a/ and srdf-s/ are sibling dirs (storage/products/dell/srdf-a, /srdf-s), separate
+    queue items, not under powermax/. "Applies to:" on 26/27 pages: 21x "PowerMax 2500 /
+    8500", 2x "Dell PowerMax · VMAX", 2x 2500/8500 + PowerMaxOS 10.x, 1x "PowerMax
+    2000/8000, Unisphere 10.x, SE 10.x" (known-issues.md:14, mixes gen-1 HW with 10.x SW).
+    Version mentions are thin and partly wrong; no page names 10.2-10.5 or SE 10.x
+    pairing; no learning-path/cert/exam-code content at all.
+    Invented / wrong content (file:line):
+    - release-notes.md:24-28 table invented (tool-generated, flagged unverified): "10.0
+      2023-Q3 350F all-NVMe platform" and "10.1 2024-Q3" contradict Dell Info Hub (10.0
+      Jul 2022, 10.1 Oct 2023); 9.x rows are not PowerMaxOS versions. Replace with Info
+      Hub list 10.0 -> 10.5.
+    - operations/faq.md:20 "PowerMaxOS 10.1.x (5978.x)" wrong: exam PDFs list PowerMaxOS
+      10 and PowerMaxOS 5978 as distinct releases; also stale (current is 10.5).
+    - operations/install-upgrade.md:101-107 EOL table (VMAX 950F, 5977, 5978, SE 9.1 dates)
+      unsourced, treat as invented.
+    - operations/backup-restore.md:298-300,314,615 `symsnapvx ... set_expiry -hours` does
+      not exist; Dell KB 000211289 syntax is `set ttl -delta <t>|-absolute <dt>`. Same
+      block suggests legacy `symsnap` as SnapVX fallback.
+    - `symsnap list` used as a SnapVX command: troubleshooting/diagnostics.md:71,
+      operations/procedures.md:847,850, operations/health-checks.md:51,68,
+      troubleshooting/common-issues.md:95 (SnapVX CLI is symsnapvx).
+    - known-issues.md:66 `symapid stop; symapid start` and security/encryption.md:327,336
+      "symapid" daemon: SE daemons are storapid/storsrvd via `stordaemon` (secondary
+      source only, confirm vs SE 10 Install Guide).
+    - Suspected invented commands, not verified (SE 10 CLI ref is login-gated):
+      `symdf` (escalation.md:68,204,236,364,429; diagnostics.md:68), `symport`
+      (cli-reference.md:384-390,452), `symcapacity` (deploy/index.md:399;
+      procedures.md:471), `sympools` (procedures.md:666), `symsloprovisioning`
+      (procedures.md:743), `symcfg_daemon` (procedures.md:348).
+    - architecture/integrations.md:193 sample output "PowerMax OS 9.1" and
+      escalation.md:98,100 "SE V9.2.1.0" on a 10.x-scoped page: stale/invented samples.
+  - Cert research (2026-11-25): Dell catalog lists 4 PowerMax exams: Operate
+    (D-PVM-OE-01), Design (D-PVM-DS-01), Install (D-PM-IN-23), Maintenance (D-PM-MN-23).
+    Target = D-PVM-OE-01 Dell PowerMax Operate v2 (KB is admin/ops-focused). PDF
+    re-downloaded and read: Part 1 75 min ~40 Q, Part 2 45 min ~8 Q; practice test
+    D-PVM-OE-P-01; requirements as of 2024-09-18. Domains: Storage Provisioning 24%
+    (models/arch, configs, port mgmt, device mgmt, SL-based provisioning, auto-
+    provisioning groups); Business Continuity Admin 20% (SnapVX + TimeFinder Clone ops in
+    Unisphere, SRDF ops in Unisphere + SYMCLI); PowerMaxOS 10 Data Mobility 12% (NDM via
+    Unisphere, O-MDM via SYMCLI + Unisphere); Monitoring & Workload Planning 10%;
+    Local/Remote Replication Concepts 10% (SnapVX snaps vs clones, SRDF topologies);
+    Solutions Enabler 10 Implementation 10% (concepts, install/upgrade, gatekeepers,
+    daemons); Unisphere for PowerMax 10 8% (install, post-install, navigation, admin);
+    Virtual Env 4% (vSphere + VSI, VM monitoring). Products: PowerMaxOS 5978, SE 10,
+    Unisphere 10, SnapVX, SRDF, Open Replicator, NDM/O-MDM (2 further bullets clipped in
+    PDF text). Secondary: D-PVM-DS-01 Design v2 (as of 2025-04-18): Features 15%, Design
+    Resources 15% (PowerSizer, My Work), Upgrades & Migrations 17%, Local/Remote
+    Replication 19%, Unisphere 12% (WLP, Data Exclusion, Headroom), SE 7%, PowerMax File
+    15% (eNAS + SDNAS); Dell internal/partner audience. Install/Maintenance PDFs not read.
+    Current software (Dell Info Hub KB 000189115, modified 2026-11-18): PowerMaxOS
+    10.5.0.0 / SE 10.5.0 / Unisphere 10.5.0.0 all Nov 2026; 10.4 Apr 2026; 10.3 Oct 2025;
+    10.2 Oct 2024; 10.1 Oct 2023; 10.0 Jul 2022. KB 000297022: SE version must match
+    PowerMaxOS version (10.2->10.2, 10.3->10.3). Models: 2500/8500 current, 2000/8000 older.
+    Note exam blueprint (2024) predates 10.3-10.5; KB should teach blueprint + flag newer.
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-PVM-OE-01-PowerMax_Operate_Exam_Description.pdf
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/ExamDescriptionDellPowerMaxDesignv2ExamD-PVM-DS-01.pdf
+    https://www.dell.com/support/kbdoc/en-us/000189115/powermax-info-hub-product-documentation-videos
+    https://www.dell.com/support/kbdoc/en-hk/000297022/solutions
+    https://www.dell.com/support/kbdoc/000211289/solutions-enabler-unisphere-for-powermax
+    Target bar: pass D-PVM-OE-01 (incl. 45-min lab part) on PowerMaxOS 10 / SE 10 /
+    Unisphere 10, with the KB current to 10.5.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: NDM/Data
+    Mobility 0, O-MDM 0, Open Replicator 0, TimeFinder Clone 0, auto-provisioning groups
+    (term) 0, VSI 0, "workload planning" 0, Data Exclusion 0, SnapVX TTL/set ttl 0, secure
+    snaps 0, snapshot policies 0, SRDF/Metro witness 0, zDP 0, SDNAS/PowerMax File 0,
+    PowerSizer 0, exam codes 0. Thin: host I/O limits 1, gatekeeper 1, eNAS 1, VVols 3,
+    VASA 2, linked targets 3, cascaded/Star 4, stordaemon/storsrvd 5, data reduction 5,
+    eLicensing/license 5, symaccess 6, service level 6, symconfigure 5, NVMe-oF 7,
+    SRDF/Metro 8, AIOps/CloudIQ 9. OK: Unisphere 22, masking view 18, storage group 17,
+    SRDF group/symrdf 17, symcfg 16, SRDF/S 15, SRDF/A 14, SnapVX 14, SRP 11, REST 11.
+    Phase B should: (1) fix every invented item above (set_expiry, symsnap, symapid,
+    suspected sym* commands, release-notes table, faq 5978 mapping, EOL table); (2) add a
+    Data Mobility page (NDM + O-MDM via Unisphere and SYMCLI, Open Replicator); (3) add
+    SnapVX deep-dive (snap vs clone, link modes, TTL, secure snaps, snapshot policies,
+    TimeFinder Clone) and SRDF ops lab (modes, Metro + witness, topologies) cross-linked
+    to srdf-a/srdf-s items; (4) SE 10 install/upgrade, gatekeepers, daemons
+    (storapid/storsrvd/stordaemon), SE-PowerMaxOS version match; (5) Unisphere 10
+    install/post-install/admin + Monitoring/Workload Planning/headroom; (6) provisioning
+    page on auto-provisioning groups, service levels, host I/O limits, port/device mgmt;
+    (7) vSphere/VSI/VVols page; (8) learning-path mapped to D-PVM-OE-01 domains with %s
+    and a version note (blueprint 5978/10 vs current 10.5); (9) release-notes from Info Hub.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks incl. new 71/72; one run
+    covered these 7 items). Queue file only.
+- [x] storage/products/dell/powerpath
+  - Audit (2026-11-25): 27 pages, 7,839 lines, 5 subdirs (architecture, learning-path,
+    operations, security, troubleshooting) + index.md + release-notes.md. "Applies to:"
+    22 "PowerPath" (no version), 2 "Dell PowerPath 7.x", 1 each "PP/VE, Linux/Windows
+    6.x", "Linux/Windows; PP/VE for ESXi", "Linux/Windows/VMware 6.x". Version mentions
+    are all 6.0-6.4 (6.1 x12, 6.2 x14, 6.4 x6); zero pages mention 7.x content or 8.x,
+    although Dell's current lines are 8.x (Linux 8.2.1 P01, Windows 8.0 SP2, PP/VE
+    8.2 SP1 P01) and PPMA 4.0 SP1. Errors found:
+    - learning-path/index.md:36,57,60,67,70-73,84 call PPME "PowerPath Management
+      Server"; PPME is PowerPath Migration Enabler (Dell manuals/KB 000054845,
+      000059511); the management product is PPMA.
+    - troubleshooting/known-issues.md:58 `powermt check_registration -f <license-file>`;
+      Dell documents license install via `emcpreg -install` (KB 000021272); emcpreg is
+      on 0 pages.
+    - troubleshooting/common-issues.md:427, operations/common-issues.md:361,
+      operations/cli-reference.md:78,560,741 use `class=symmetrix`; the 8.x CLI ref
+      lists class=symm|powermax|unity|powerstore|... (no "symmetrix"). Also sets
+      CLAROpt on the Symmetrix class.
+    - security/authentication.md:60-63 sample output uses `hsv210..213` device names
+      (HP EVA style), not emcpower pseudo devices; fabricated output.
+    - release-notes.md:27 "6.2 | 2022-Q4 | NVMe-oF multipath GA": the Linux 6.2 guide
+      is dated April 2017; the table is template-generated and wrong.
+    - architecture/ports.md: PPMA ports 8443/9988 unsourced; PPMA 4.0 guide has a
+      "Port reservation" section that was not readable (not verified either way);
+      rpowermt/PP-VE CIM path not covered.
+  - Cert research (2026-11-25): No Dell certification centres on PowerPath. The Dell
+    catalog (49 exam codes parsed) has no PowerPath exam, and "PowerPath" and
+    "multipath" score 0 hits in the 4 storage exam PDFs (PowerMax Operate D-PVM-OE-01,
+    Install PowerMax D-PM-IN-23, Operate PowerStore D-PST-OE-23, Design Midrange
+    D-MSS-DS-23). Fallback expert bar = Dell's own 8.x documentation set: PowerPath
+    Family 8.x Product Guide (rev 4.0, Feb 2024, PP 8.2), PowerPath for Linux 7.5
+    Installation & Administration Guide (rev 2.0, Mar 2023), PowerPath Family 8.x
+    CLI & System Messages Reference, PPMA 4.0 Install & Config Guide (rev 6.0, Apr
+    2026). Current versions on Dell support filters: Linux 8.2.1 P01, Windows 8.0 SP2,
+    PP/VE 8.2 SP1 P01, PPMA 4.0 SP1. EOL dates not verified: kbdoc 000185734 lists
+    PowerPath only as an affected product, with dates in .xlsx attachments that were
+    not read.
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-PVM-OE-01-PowerMax_Operate_Exam_Description.pdf
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-PM-IN-23-Install_PowerMax_Exam.pdf
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-PST-OE-23-Operate_PowerStore_Exam.pdf
+    https://learning.dell.com/content/dam/dell-emc/documents/en-english/D-MSS-DS-23-Design_Midrange_Exam.pdf
+    https://www.dell.com/support/manuals/en-us/powerpathve-for-vmware/pp_product_guide_8x
+    https://www.dell.com/support/manuals/en-us/powerpath-for-linux/pp_pub_core_linux_7x_install_guide/PREFACE?guid=guid-a24035ac-a151-4dd4-8250-7c36954bd28e&lang=en-us
+    https://www.dell.com/support/manuals/en-us/powerpath-for-linux/pp_pub_8x_cli_reference/Revision-history?guid=guid-fb2a030c-cd3d-4261-8091-0d451a438dba&lang=en-us
+    https://www.dell.com/support/manuals/en-us/powerpath-for-linux/pp_pub_8x_cli_reference/powermt-set-policy?guid=guid-01ab7582-d61c-43d7-a438-a7e16072e1c2&lang=en-us
+    https://www.dell.com/support/manuals/en-us/powerpath-management-appliance/pp_ppma_4.0_iag/Revision-history?guid=guid-b3a6c32b-8d6a-4523-bf89-b517420e98df&lang=en-us
+    https://www.dell.com/support/product-details/en-us/product/powerpath-for-linux/resources/manuals
+    https://www.dell.com/support/product-details/en-us/product/powerpath-for-windows/resources/manuals
+    https://www.dell.com/support/product-details/en-us/product/powerpathve-for-vmware/resources/manuals
+    https://www.dell.com/support/product-details/en-us/product/powerpath-management-appliance/resources/manuals
+    https://www.dell.com/support/product-details/en-us/product/powerpath/resources/articles
+    https://www.dell.com/support/kbdoc/en-us/000185734/all-dell-emc-end-of-life-documents?lang=en
+    https://www.dell.com/support/kbdoc/en-us/000064623/emc244795-powerpath-ve-served-licensing-cheat-sheet?lang=en
+    Target bar: Can install, upgrade (incl. NDU and BFS), license, tune and troubleshoot
+    PowerPath 8.x on Linux, Windows and ESXi and manage it via PPMA 4.0 and rpowermt,
+    to the depth of the 8.x Product Guide, Linux Install/Admin Guide and CLI Reference.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage: PowerPath
+    8.x (0), rpowermt (0), emcpreg (0), autostandby (0), streamio/si policy (0), boot
+    from SAN (0), NDU (0), CLP licensing (0), FPIN (0), SAN latency/path_latency (0),
+    LVM filters (0), powermap/pseudo rename (0), PP/VE esxcli/VIB install (0), PPMA
+    3.x/4.0 (0), CIM/5989 (0). Thin: PP/VE (6), PPMA (2), NVMe (2), served licensing (4),
+    SymmOpt/CLAROpt named (2), least-I/O/blocks (2), host registration (1), flaky path
+    (1), Migration Enabler/powermig (1), UEFI Secure Boot/MOK (1), vSphere lifecycle
+    (1), MPIO (4). Adequate by count: powermt (20), path states alive/dead (18), powermt
+    save/config (18), license wording (18), restore (14), emcpower/pseudo (14), ALUA (9),
+    dm-multipath coexistence (9), iSCSI (9), upgrade (15). Phase B should: re-baseline
+    all "Applies to:" and samples to 8.x (Linux 8.2.x, Windows 8.0 SPx, PP/VE 8.2 SP1,
+    PPMA 4.0); fix the 5 flagged errors; add pages for the 8.x policy set (ad|co|lb|li|
+    re|rr|si|so + addon_policy=ca, proto=scsi|nvme), path states incl. autostandby
+    (asb:prox, asb:iopf) and proactive port-offline autostandby, emcpreg + CLP/served
+    licensing, rpowermt + PP/VE install/NDU via PPMA, Linux BFS (emcpbfs_linux), kernel
+    and OS upgrades, NDU, NVMe/TCP + ANA, LVM filters, Secure Boot MOK signing, PowerMax
+    features (host registration, flaky path, SAN latency, FPIN), PPMA 4.0 deployment
+    (OVA/TBZ-Docker/VHD), certificates and monitoring, and Migration Enabler.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks incl. new 71/72; one run
+    covered these 7 items). Queue file only.
+- [x] storage/products/dell/powerscale
+  - Audit (2026-11-25): 27 pages / 11,496 lines; subdirs architecture(5),
+    deploy(1), learning-path(1), operations(8), security(5), troubleshooting(5)
+    + index.md, release-notes.md. Heavy pages: operations/cli-reference.md
+    (2,603), scripts.md (1,265), procedures.md (978), security/authentication.md
+    (916). "Applies to:" tally: 26/27 say OneFS/PowerScale "9.x" (6 phrasings,
+    20x "PowerScale (Isilon) 9.x"). OneFS version mentions: 9.4.0.0 (8, all in
+    sample output), 9.7 (4), 9.4 (3), 9.5 (2), 9.3 (2), 9.6/8.0/8.1/8.2 (1
+    each); nothing newer than 9.8. Node models named: F200/F600/F900, H500/H600/
+    H700/H7000, A300/A3000 only. Staleness/errors:
+    operations/faq.md:20 "OneFS 9.7.x is the current recommendation" (Dell's
+    OneFS Info Hubs index now lists 9.16.0.0 as newest); install-upgrade.md:
+    28-34 + 69-73 version matrix tops out at "9.7.x/9.8.x Current GA";
+    faq.md:20 "Isilon Management Interface (IMI)" is not a OneFS UI name found
+    in any source fetched (suspect; OneFS docs say Web Administration);
+    operations/cli-reference.md:103,284,322 "PowerScale H500" (Dell hardware
+    hub lists it as "Isilon H500"); release-notes.md:25-29 template-invented
+    features (e.g. "9.4 - DataAdvantage analytics", "9.7 - SmartFlash NVMe
+    tier GA"), all marked "Not yet verified"; architecture/integrations.md:
+    5,10,23,47-51 + ports.md:38 + design-standards.md:55,70 + procedures.md:
+    102 + health-checks.md:85 still say "CloudIQ" (now Dell AIOps);
+    integrations.md:49 conflates `isi cloud accounts create` (CloudPools) with
+    AIOps telemetry; security/hardening.md:116 sample error text "Supported
+    versions: 1.0, 1.1, 1.3" looks invented. Zero mention of PowerScale for
+    Public Cloud / APEX File Storage (AWS/Azure) or of 2024+ nodes (F210/F710/
+    F910/PA110/H710/H7100/A310/A3100).
+  - Cert research (2026-11-25): Dell catalog now lists exactly three
+    PowerScale exams, all re-coded "-01": D-PSC-DY-01 PowerScale Deploy,
+    D-PSC-DS-01 PowerScale Design, D-PSC-MN-01 PowerScale Maintenance. No
+    PowerScale Operate/Administrator exam exists (other products have Operate
+    exams; PowerScale does not). Target = D-PSC-DY-01: its page says it
+    validates the ability to "deploy, configure, monitor, and maintain"
+    PowerScale; audience includes Storage Administrators; scope named:
+    cluster creation, OneFS upgrades, access zones, SmartConnect, SMB/NFS,
+    auth providers, SnapshotIQ, SyncIQ, SmartLock, quotas, dedupe, InsightIQ,
+    HealthCheck, job engine, CAVA/ICAP antivirus. Domains+weights (DY-01):
+    Install Nodes and Create Cluster 14% (front/back-end cabling, create
+    cluster, remove/reformat/reimage node); Configure Cluster and Nodes Post
+    Installation 62% (cluster config, OneFS upgrades/updates, SmartConnect
+    multi-subnet, protocol settings, software modules, auth providers + access
+    zones); Monitor and Troubleshoot 12% (performance, install InsightIQ,
+    HealthCheck + event/alert notifications, basic troubleshooting, job engine
+    best practices); Enable Data Protection 12% (data protection, CAVA/ICAP).
+    Languages English/French; delivered by Pearson VUE (centre or OnVUE).
+    Format (question count, duration, pass score) and a "requirements as of"
+    date are NOT published on the DY-01 page and no DY-01 PDF was found (4 URL
+    patterns 404). Predecessor D-PSC-DY-23 PDF (requirements as of 2024-02-21)
+    gave 90 min and 8 domains (NAS/PowerScale/OneFS 13%, Foundations for
+    Access 17%, Identity Mgmt/Authorization 10%, Client Access 13%, Data
+    Protection and Layout 12%, Storage Pools 13%, Data Services 15%,
+    Monitoring 7%) on OneFS 8.2 / Gen6 / InsightIQ 3.0; use it only as a
+    detail checklist (RBAC vs ZRBAC, ID mapping, FEC/requested-vs-actual
+    protection, isi get, neighborhoods/VHS, file filtering, DataIQ, S3).
+    DS-01 domains: Discover 14%, Design and Plan 18%, Platform Infrastructure
+    36%, Mgmt/Identity/Advanced Apps 24%, Monitor 8%. MN-01: Hardware Concepts,
+    Hardware Maintenance (FRU/CRU), Hardware Installation, Implementation, 25%
+    each. Product currency: Dell "PowerScale OneFS Info Hubs" (modified
+    2026-11-03) lists OneFS 9.16.0.0 as newest (9.7-9.16 hubs); no OneFS 10.
+    Dell's "OneFS Current Patches" KB is "no longer maintained". Dell support
+    names the cloud offer "PowerScale for Public Cloud (Legacy)" -
+    "software-defined, scale-out NAS (based on PowerScale OneFS) as a
+    customer-managed offer in AWS and Azure". Hardware hub (modified
+    2026-08-21) lists F910, F710, F210, PA110, F900, F600, F200, B100, P100,
+    A300/A3000, H700/H7000 plus A310/A3100/H710/H7100 and "Dell PowerEdge
+    R7725xd for Software Defined Storage".
+    Sources (primary, vendor):
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/certificationandbadges.html
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-PSC-DY-01
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-PSC-DS-01
+    https://learning.dell.com/content/dell/en-us/home/certification-overview/available-exams.html?exam=D-PSC-MN-01
+    https://learning.dell.com/content/dam/dell-emc/documents/en-us/D-PSC-DY-23%20%20PowerScale%20Deploy.pdf
+    https://www.dell.com/support/kbdoc/000152189/powerscale-onefs-info-hubs
+    https://www.dell.com/support/kbdoc/en-au/000401512/onefs-9-13-0-0-documentation---powerscale-info-hub
+    https://www.dell.com/support/kbdoc/en-ap/000184794/powerscale-onefs-current-patches
+    https://www.dell.com/support/kbdoc/en-bg/000198853/hardware-powerscale-info-hub
+    https://www.dell.com/support/product-details/en-pg/product/apex-file-storage-public-cloud/resources/articles
+    Target bar: pass D-PSC-DY-01 (Deploy, 4 domains, 62% post-install config)
+    on OneFS 9.x current (9.16), using DY-23 bullets as the detail checklist.
+  - Gap vs blueprint (pages mentioning each term, out of 27): Zero coverage:
+    CAVA/ICAP antivirus (a named DY-01 objective), ZRBAC, neighborhoods, inline
+    data reduction, DataIQ, file filtering, L3 cache, OneFS simulator,
+    FRU/CRU, PowerScale for Public Cloud, 2024+ nodes. Thin: job engine 1,
+    SSIP 2, file pool policies 2, SmartDedupe 2, ID mapping 2, isi get 2,
+    groupnets 3, InsightIQ 3 (install/discover is a DY-01 objective), RBAC 3,
+    SmartLock/WORM 3, upgrades 4, SupportAssist/SRS 4, Gen6/F-series nodes 4,
+    CloudPools 6, node pools 7, SmartPools 9, SnapshotIQ 9, protection
+    levels/FEC 9. OK: SMB 24, NFS 24, SyncIQ 24, quotas 17, SmartConnect 14,
+    access zones 12, AD 11, HealthCheck 11, S3 11, HDFS 11, ACL/POSIX 11.
+    Phase B should: (1) add dedicated pages for cluster creation/node
+    add-remove-reimage + cabling, OneFS upgrade (rolling/simultaneous/
+    parallel, patches, firmware), SmartConnect deep-dive (groupnet/subnet/
+    pool, SSIP, multi-subnet DNS delegation), access zones + auth providers +
+    ID mapping + RBAC/ZRBAC, job engine (jobs, impact policies, priorities),
+    CAVA/ICAP antivirus, SmartLock (enterprise vs compliance), SmartDedupe +
+    inline data reduction, InsightIQ install/monitor, HealthCheck + event/
+    alert notifications, FEC/protection levels + isi get; (2) refresh version
+    matrix/FAQ to 9.16 from the Info Hubs index, replace CloudIQ with Dell
+    AIOps, add current hardware list and PowerScale for Public Cloud note;
+    (3) purge or source release-notes.md. Overlap: InsightIQ (Dell product)
+    currently lives at storage/products/netapp/insightiq (24 pages, 21 mention
+    PowerScale/OneFS) - cross-link rather than duplicate; flag misfiling.
+  - site_audit (2026-11-25): 72/72 clean (full run, 72 checks incl. new 71/72; one run
+    covered these 7 items). Queue file only.
 - [ ] storage/products/dell/powerstore
 - [ ] storage/products/dell/recoverpoint
 - [ ] storage/products/dell/srdf-a

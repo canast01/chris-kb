@@ -15,13 +15,18 @@ Version history and release notes for Dell Data Domain.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.1 | 2024-Q2 | Data Domain OS 8.1 — DD VE scale improvements | [Release Notes](#) |
-| 7.13 | 2023-Q3 | DDOS 7.13 — cloud tier Azure Gov support | [Release Notes](#) |
-| 7.12 | 2023-Q1 | DDOS 7.12 — DD3300 platform GA | [Release Notes](#) |
-| 7.11 | 2022-Q3 | DDOS 7.11 — DD9900 capacity expansion | [Release Notes](#) |
-| 7.10 | 2022-Q1 | DDOS 7.10 — Boost performance improvements | [Release Notes](#) |
+| 8.1 | 2024-Q2 | Data Domain OS 8.1 — DD VE scale improvements | Not yet verified |
+| 7.13 | 2023-Q3 | DDOS 7.13 — cloud tier Azure Gov support | Not yet verified |
+| 7.12 | 2023-Q1 | DDOS 7.12 — DD3300 platform GA | Not yet verified |
+| 7.11 | 2022-Q3 | DDOS 7.11 — DD9900 capacity expansion | Not yet verified |
+| 7.10 | 2022-Q1 | DDOS 7.10 — Boost performance improvements | Not yet verified |
 
 ## Key Terminology
 

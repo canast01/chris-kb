@@ -15,13 +15,18 @@ Version history and release notes for Terraform.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 1.9 | 2024-Q2 | Input variable validations on modules, provider iteration | [Release Notes](#) |
-| 1.8 | 2024-Q1 | Provider-defined functions, enhanced import blocks | [Release Notes](#) |
-| 1.7 | 2023-Q4 | Ephemeral values, write-only attributes | [Release Notes](#) |
-| 1.6 | 2023-Q3 | Test framework GA, stack configuration preview | [Release Notes](#) |
-| 1.5 | 2023-Q2 | Import block GA, config-driven import | [Release Notes](#) |
+| 1.9 | 2024-Q2 | Input variable validations on modules, provider iteration | Not yet verified |
+| 1.8 | 2024-Q1 | Provider-defined functions, enhanced import blocks | Not yet verified |
+| 1.7 | 2023-Q4 | Ephemeral values, write-only attributes | Not yet verified |
+| 1.6 | 2023-Q3 | Test framework GA, stack configuration preview | Not yet verified |
+| 1.5 | 2023-Q2 | Import block GA, config-driven import | Not yet verified |
 
 ## Key Terminology
 

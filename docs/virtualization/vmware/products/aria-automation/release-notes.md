@@ -16,13 +16,18 @@ Version history and release notes for VMware Aria Automation.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.18 | 2024-Q3 | Aria Automation 8.18 — Day 2 actions catalog | [Release Notes](#) |
-| 8.16 | 2024-Q1 | Aria Automation 8.16 — Terraform provider updates | [Release Notes](#) |
-| 8.14 | 2023-Q3 | Aria Automation 8.14 — plugin extensibility GA | [Release Notes](#) |
-| 8.12 | 2023-Q1 | Aria Automation 8.12 — vRA rebrand to Aria | [Release Notes](#) |
-| 8.10 | 2022-Q3 | vRA 8.10 — ABX action enhancements | [Release Notes](#) |
+| 8.18 | 2024-Q3 | Aria Automation 8.18 — Day 2 actions catalog | Not yet verified |
+| 8.16 | 2024-Q1 | Aria Automation 8.16 — Terraform provider updates | Not yet verified |
+| 8.14 | 2023-Q3 | Aria Automation 8.14 — plugin extensibility GA | Not yet verified |
+| 8.12 | 2023-Q1 | Aria Automation 8.12 — vRA rebrand to Aria | Not yet verified |
+| 8.10 | 2022-Q3 | vRA 8.10 — ABX action enhancements | Not yet verified |
 
 ## Key Terminology
 

@@ -15,13 +15,18 @@ Version history and release notes for ServiceNow.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| Xanadu | 2024-Q4 | ServiceNow Xanadu — Now Assist AI GA | [Release Notes](#) |
-| Washington | 2024-Q1 | ServiceNow Washington — CMDB auto-discovery | [Release Notes](#) |
-| Vancouver | 2023-Q4 | ServiceNow Vancouver — ITSM AI enhancements | [Release Notes](#) |
-| Utah | 2023-Q1 | ServiceNow Utah — proactive CSM | [Release Notes](#) |
-| Tokyo | 2022-Q4 | ServiceNow Tokyo — App Engine studio v2 | [Release Notes](#) |
+| Xanadu | 2024-Q4 | ServiceNow Xanadu — Now Assist AI GA | Not yet verified |
+| Washington | 2024-Q1 | ServiceNow Washington — CMDB auto-discovery | Not yet verified |
+| Vancouver | 2023-Q4 | ServiceNow Vancouver — ITSM AI enhancements | Not yet verified |
+| Utah | 2023-Q1 | ServiceNow Utah — proactive CSM | Not yet verified |
+| Tokyo | 2022-Q4 | ServiceNow Tokyo — App Engine studio v2 | Not yet verified |
 
 ## Key Terminology
 

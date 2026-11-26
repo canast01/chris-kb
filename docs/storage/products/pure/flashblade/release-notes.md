@@ -15,13 +15,18 @@ Version history and release notes for Pure FlashBlade.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 4.4.10 | 2024-Q3 | Purity//FB 4.4 — S3 multi-region replication | [Release Notes](#) |
-| 4.3.7 | 2024-Q1 | Purity//FB 4.3 — rapid restore throughput | [Release Notes](#) |
-| 4.2.10 | 2023-Q3 | Purity//FB 4.2 — NFS v4.1 GA on FlashBlade//S | [Release Notes](#) |
-| 4.1.14 | 2023-Q1 | Purity//FB 4.1 — FlashBlade//S platform GA | [Release Notes](#) |
-| 3.3.6 | 2022-Q3 | Purity//FB 3.3 — SMB 3.1.1 Continuous Availability | [Release Notes](#) |
+| 4.4.10 | 2024-Q3 | Purity//FB 4.4 — S3 multi-region replication | Not yet verified |
+| 4.3.7 | 2024-Q1 | Purity//FB 4.3 — rapid restore throughput | Not yet verified |
+| 4.2.10 | 2023-Q3 | Purity//FB 4.2 — NFS v4.1 GA on FlashBlade//S | Not yet verified |
+| 4.1.14 | 2023-Q1 | Purity//FB 4.1 — FlashBlade//S platform GA | Not yet verified |
+| 3.3.6 | 2022-Q3 | Purity//FB 3.3 — SMB 3.1.1 Continuous Availability | Not yet verified |
 
 ## Key Terminology
 

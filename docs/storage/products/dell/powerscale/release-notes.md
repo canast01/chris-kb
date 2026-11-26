@@ -15,13 +15,18 @@ Version history and release notes for Dell PowerScale.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 9.7 | 2024-Q3 | OneFS 9.7 — SmartFlash NVMe tier GA | [Release Notes](#) |
-| 9.6 | 2024-Q1 | OneFS 9.6 — SyncIQ policy improvements | [Release Notes](#) |
-| 9.5 | 2023-Q3 | OneFS 9.5 — S3 protocol multi-bucket support | [Release Notes](#) |
-| 9.4 | 2023-Q1 | OneFS 9.4 — DataAdvantage analytics | [Release Notes](#) |
-| 9.3 | 2022-Q3 | OneFS 9.3 — SyncIQ SmartSync GA | [Release Notes](#) |
+| 9.7 | 2024-Q3 | OneFS 9.7 — SmartFlash NVMe tier GA | Not yet verified |
+| 9.6 | 2024-Q1 | OneFS 9.6 — SyncIQ policy improvements | Not yet verified |
+| 9.5 | 2023-Q3 | OneFS 9.5 — S3 protocol multi-bucket support | Not yet verified |
+| 9.4 | 2023-Q1 | OneFS 9.4 — DataAdvantage analytics | Not yet verified |
+| 9.3 | 2022-Q3 | OneFS 9.3 — SyncIQ SmartSync GA | Not yet verified |
 
 ## Key Terminology
 

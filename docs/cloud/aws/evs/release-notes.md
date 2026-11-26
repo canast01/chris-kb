@@ -15,13 +15,18 @@ Version history and release notes for AWS EVS.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 1.3 | 2024-Q3 | AWS EVS 1.3 — vSphere 8.0 U3 baseline | [Release Notes](#) |
-| 1.2 | 2024-Q1 | AWS EVS 1.2 — SDDC interconnect improvements | [Release Notes](#) |
-| 1.1 | 2023-Q3 | AWS EVS 1.1 — NSX 4.1 support | [Release Notes](#) |
-| 1.0 | 2023-Q1 | AWS EVS 1.0 GA — VMware workloads on AWS bare metal | [Release Notes](#) |
-| Preview | 2022-Q4 | AWS EVS preview — initial availability regions | [Release Notes](#) |
+| 1.3 | 2024-Q3 | AWS EVS 1.3 — vSphere 8.0 U3 baseline | Not yet verified |
+| 1.2 | 2024-Q1 | AWS EVS 1.2 — SDDC interconnect improvements | Not yet verified |
+| 1.1 | 2023-Q3 | AWS EVS 1.1 — NSX 4.1 support | Not yet verified |
+| 1.0 | 2023-Q1 | AWS EVS 1.0 GA — VMware workloads on AWS bare metal | Not yet verified |
+| Preview | 2022-Q4 | AWS EVS preview — initial availability regions | Not yet verified |
 
 ## Key Terminology
 

@@ -15,13 +15,18 @@ Version history and release notes for Dell SRDF/A.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 10.1 | 2024-Q3 | SRDF/A 10.1 — PowerMax 350F support | [Release Notes](#) |
-| 10.0 | 2023-Q3 | SRDF/A 10.0 — cycle time tuning improvements | [Release Notes](#) |
-| 9.2 | 2022-Q3 | SRDF/A 9.2 — consistency group scale | [Release Notes](#) |
-| 9.1 | 2021-Q4 | SRDF/A 9.1 — adaptive copy enhancements | [Release Notes](#) |
-| 9.0 | 2021-Q1 | SRDF/A 9.0 — write pacing algorithm update | [Release Notes](#) |
+| 10.1 | 2024-Q3 | SRDF/A 10.1 — PowerMax 350F support | Not yet verified |
+| 10.0 | 2023-Q3 | SRDF/A 10.0 — cycle time tuning improvements | Not yet verified |
+| 9.2 | 2022-Q3 | SRDF/A 9.2 — consistency group scale | Not yet verified |
+| 9.1 | 2021-Q4 | SRDF/A 9.1 — adaptive copy enhancements | Not yet verified |
+| 9.0 | 2021-Q1 | SRDF/A 9.0 — write pacing algorithm update | Not yet verified |
 
 ## Key Terminology
 

@@ -16,13 +16,18 @@ Version history and release notes for VMware vSphere Replication.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.8 | 2024-Q1 | vSphere Replication 8.8 — improved RPO granularity | [Release Notes](#) |
-| 8.7 | 2023-Q3 | vSphere Replication 8.7 — vSAN replication improvements | [Release Notes](#) |
-| 8.6 | 2022-Q4 | vSphere Replication 8.6 — SRM 8.6 alignment | [Release Notes](#) |
-| 8.5 | 2022-Q2 | vSphere Replication 8.5 — cloud provider support | [Release Notes](#) |
-| 8.4 | 2021-Q4 | vSphere Replication 8.4 — replication traffic compression | [Release Notes](#) |
+| 8.8 | 2024-Q1 | vSphere Replication 8.8 — improved RPO granularity | Not yet verified |
+| 8.7 | 2023-Q3 | vSphere Replication 8.7 — vSAN replication improvements | Not yet verified |
+| 8.6 | 2022-Q4 | vSphere Replication 8.6 — SRM 8.6 alignment | Not yet verified |
+| 8.5 | 2022-Q2 | vSphere Replication 8.5 — cloud provider support | Not yet verified |
+| 8.4 | 2021-Q4 | vSphere Replication 8.4 — replication traffic compression | Not yet verified |
 
 ## Key Terminology
 

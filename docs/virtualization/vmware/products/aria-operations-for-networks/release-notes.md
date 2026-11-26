@@ -16,13 +16,18 @@ Version history and release notes for VMware Aria Operations for Networks.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 6.13 | 2024-Q3 | Aria for Networks 6.13 — NSX 4.1 topology support | [Release Notes](#) |
-| 6.11 | 2024-Q1 | Aria for Networks 6.11 — path tracing improvements | [Release Notes](#) |
-| 6.9 | 2023-Q3 | Aria for Networks 6.9 — vRNI rebrand to Aria | [Release Notes](#) |
-| 6.7 | 2023-Q1 | Aria for Networks 6.7 — AWS VPC flow log analysis | [Release Notes](#) |
-| 6.5 | 2022-Q3 | vRNI 6.5 — application security planning | [Release Notes](#) |
+| 6.13 | 2024-Q3 | Aria for Networks 6.13 — NSX 4.1 topology support | Not yet verified |
+| 6.11 | 2024-Q1 | Aria for Networks 6.11 — path tracing improvements | Not yet verified |
+| 6.9 | 2023-Q3 | Aria for Networks 6.9 — vRNI rebrand to Aria | Not yet verified |
+| 6.7 | 2023-Q1 | Aria for Networks 6.7 — AWS VPC flow log analysis | Not yet verified |
+| 6.5 | 2022-Q3 | vRNI 6.5 — application security planning | Not yet verified |
 
 ## Key Terminology
 

@@ -1671,6 +1671,37 @@ if _co70 and os.path.isdir(ASSETS):
             warn(issues, f'assets/{fname}: child box extends past its container')
 
 
+# ── Check 71: dead "(#)" links / unflagged unverified release-notes tables ───
+# Found 2026-11-25 (cert-KB Phase A): all 90 release-notes.md pages came from a
+# template linking each version row to "[...](#)", and many tables hold invented
+# versions (COD 3.2, DCNM 12.x, a "90-day max validity" rule). A release-notes
+# version table with no real (http) source must carry the warning admonition
+# added by scripts/fix_unverified_release_notes.py until Phase B verifies it.
+issues = check(71, 'Dead "(#)" links or unflagged unverified release-notes table')
+for _p in all_md():
+    _t = open(_p, encoding='utf-8').read()
+    _rel = os.path.relpath(_p, DOCS)
+    for _n, _line in enumerate(_t.split('\n'), 1):
+        if re.search(r'\]\(#\)', _line):
+            warn(issues, f'{_rel}:{_n}: dead "(#)" link')
+    if _p.endswith('release-notes.md') and '| Version |' in _t:
+        _table = _t.split('| Version |', 1)[1].split('\n\n', 1)[0]
+        if not re.search(r'https?://', _table) and 'Unverified version history' not in _t:
+            warn(issues, f'{_rel}: version table has no source links and no "Unverified version history" warning')
+
+
+# ── Check 72: stale public TLS certificate lifetime ──────────────────────────
+# Found 2026-11-25: pages stated the 397/398-day public TLS maximum as current.
+# CA/B Forum ballot SC081: 200 days from 2026-03-15, 100 days from 2027-03-15,
+# 47 days from 2029-03-15. A line citing 397/398 days must also give the
+# current limit (mention 200 days) or it is flagged.
+issues = check(72, 'Stale public TLS certificate lifetime (397/398 days as current)')
+for _p in all_md():
+    for _n, _line in enumerate(open(_p, encoding='utf-8'), 1):
+        if re.search(r'\b39[78][ -]day', _line) and not re.search(r'\b200[ -]day', _line):
+            warn(issues, f'{os.path.relpath(_p, DOCS)}:{_n}: cites 397/398-day TLS limit without the current 200-day rule')
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')

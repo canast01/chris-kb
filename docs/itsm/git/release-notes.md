@@ -15,13 +15,18 @@ Version history and release notes for Git.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2.46 | 2024-Q3 | Git 2.46 — multi-pack bitmap improvements | [Release Notes](#) |
-| 2.44 | 2024-Q1 | Git 2.44 — bundle URI improvements | [Release Notes](#) |
-| 2.42 | 2023-Q3 | Git 2.42 — new reftable format | [Release Notes](#) |
-| 2.40 | 2023-Q1 | Git 2.40 — improved fetch negotiation | [Release Notes](#) |
-| 2.38 | 2022-Q3 | Git 2.38 — bundle URI preview, scalar updates | [Release Notes](#) |
+| 2.46 | 2024-Q3 | Git 2.46 — multi-pack bitmap improvements | Not yet verified |
+| 2.44 | 2024-Q1 | Git 2.44 — bundle URI improvements | Not yet verified |
+| 2.42 | 2023-Q3 | Git 2.42 — new reftable format | Not yet verified |
+| 2.40 | 2023-Q1 | Git 2.40 — improved fetch negotiation | Not yet verified |
+| 2.38 | 2022-Q3 | Git 2.38 — bundle URI preview, scalar updates | Not yet verified |
 
 ## Key Terminology
 

@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | Security Monitoring — SIEM rule library v4 | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | Security Monitoring — UEBA baseline update | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | Security Monitoring — cloud-native detection rules | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | Security Monitoring — XDR integration GA | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | Security Monitoring — SOC playbook automation | [Release Notes](#) |
+| 2024-Q4 | 2024-Q4 | Security Monitoring — SIEM rule library v4 | Not yet verified |
+| 2024-Q2 | 2024-Q2 | Security Monitoring — UEBA baseline update | Not yet verified |
+| 2023-Q4 | 2023-Q4 | Security Monitoring — cloud-native detection rules | Not yet verified |
+| 2023-Q2 | 2023-Q2 | Security Monitoring — XDR integration GA | Not yet verified |
+| 2022-Q4 | 2022-Q4 | Security Monitoring — SOC playbook automation | Not yet verified |
 
 ## Key Terminology
 

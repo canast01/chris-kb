@@ -15,13 +15,18 @@ Version history and release notes for Active Directory.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2025 FL | 2024-Q4 | AD Forest Level 2025 — DC functional level update | [Release Notes](#) |
-| 2022 FL | 2021-Q4 | AD Forest Level 2022 — default policy changes | [Release Notes](#) |
-| 2019 FL | 2018-Q4 | AD Forest Level 2019 — AES-256 preferred | [Release Notes](#) |
-| 2016 FL | 2016-Q3 | AD Forest Level 2016 — PAM and Just-in-Time access | [Release Notes](#) |
-| 2012 R2 | 2013-Q4 | AD Forest Level 2012 R2 — Protected Users group | [Release Notes](#) |
+| 2025 FL | 2024-Q4 | AD Forest Level 2025 — DC functional level update | Not yet verified |
+| 2022 FL | 2021-Q4 | AD Forest Level 2022 — default policy changes | Not yet verified |
+| 2019 FL | 2018-Q4 | AD Forest Level 2019 — AES-256 preferred | Not yet verified |
+| 2016 FL | 2016-Q3 | AD Forest Level 2016 — PAM and Just-in-Time access | Not yet verified |
+| 2012 R2 | 2013-Q4 | AD Forest Level 2012 R2 — Protected Users group | Not yet verified |
 
 ## Key Terminology
 

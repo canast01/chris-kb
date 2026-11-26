@@ -15,13 +15,18 @@ Version history and release notes for Cisco MDS.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 9.4(3) | 2024-Q3 | MDS NX-OS 9.4(3) — 64G FC GA | [Release Notes](#) |
-| 9.4(2) | 2024-Q1 | MDS NX-OS 9.4(2) — CFS improvements | [Release Notes](#) |
-| 9.3(2) | 2023-Q3 | MDS NX-OS 9.3(2) — IVR NAT enhancements | [Release Notes](#) |
-| 9.3(1) | 2023-Q1 | MDS NX-OS 9.3(1) — Smart Zoning scale | [Release Notes](#) |
-| 9.2(2) | 2022-Q3 | MDS NX-OS 9.2(2) — DPPM improvements | [Release Notes](#) |
+| 9.4(3) | 2024-Q3 | MDS NX-OS 9.4(3) — 64G FC GA | Not yet verified |
+| 9.4(2) | 2024-Q1 | MDS NX-OS 9.4(2) — CFS improvements | Not yet verified |
+| 9.3(2) | 2023-Q3 | MDS NX-OS 9.3(2) — IVR NAT enhancements | Not yet verified |
+| 9.3(1) | 2023-Q1 | MDS NX-OS 9.3(1) — Smart Zoning scale | Not yet verified |
+| 9.2(2) | 2022-Q3 | MDS NX-OS 9.2(2) — DPPM improvements | Not yet verified |
 
 ## Key Terminology
 

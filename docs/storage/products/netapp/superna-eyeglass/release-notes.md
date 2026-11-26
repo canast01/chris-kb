@@ -15,13 +15,18 @@ Version history and release notes for Superna Eyeglass.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2.9 | 2024-Q2 | Eyeglass 2.9 — OneFS 9.7 failover support | [Release Notes](#) |
-| 2.8 | 2023-Q4 | Eyeglass 2.8 — ransomware defender improvements | [Release Notes](#) |
-| 2.7 | 2023-Q2 | Eyeglass 2.7 — multi-cluster DR orchestration | [Release Notes](#) |
-| 2.6 | 2022-Q4 | Eyeglass 2.6 — SyncIQ policy automation | [Release Notes](#) |
-| 2.5 | 2022-Q1 | Eyeglass 2.5 — configuration replication engine v2 | [Release Notes](#) |
+| 2.9 | 2024-Q2 | Eyeglass 2.9 — OneFS 9.7 failover support | Not yet verified |
+| 2.8 | 2023-Q4 | Eyeglass 2.8 — ransomware defender improvements | Not yet verified |
+| 2.7 | 2023-Q2 | Eyeglass 2.7 — multi-cluster DR orchestration | Not yet verified |
+| 2.6 | 2022-Q4 | Eyeglass 2.6 — SyncIQ policy automation | Not yet verified |
+| 2.5 | 2022-Q1 | Eyeglass 2.5 — configuration replication engine v2 | Not yet verified |
 
 ## Key Terminology
 

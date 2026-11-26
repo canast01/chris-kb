@@ -15,13 +15,18 @@ Version history and release notes for NetApp SnapMirror.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 9.15.1 | 2024-Q4 | SnapMirror active sync — asymmetric access GA | [Release Notes](#) |
-| 9.14.1 | 2024-Q1 | SnapMirror cloud — S3 endpoint expansion | [Release Notes](#) |
-| 9.13.1 | 2023-Q3 | FlexGroup SnapMirror active sync support | [Release Notes](#) |
-| 9.12.1 | 2023-Q1 | SnapMirror business continuity v2 enhancements | [Release Notes](#) |
-| 9.11.1 | 2022-Q3 | SnapMirror active sync — VMFS datastores GA | [Release Notes](#) |
+| 9.15.1 | 2024-Q4 | SnapMirror active sync — asymmetric access GA | Not yet verified |
+| 9.14.1 | 2024-Q1 | SnapMirror cloud — S3 endpoint expansion | Not yet verified |
+| 9.13.1 | 2023-Q3 | FlexGroup SnapMirror active sync support | Not yet verified |
+| 9.12.1 | 2023-Q1 | SnapMirror business continuity v2 enhancements | Not yet verified |
+| 9.11.1 | 2022-Q3 | SnapMirror active sync — VMFS datastores GA | Not yet verified |
 
 ## Key Terminology
 

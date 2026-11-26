@@ -15,13 +15,18 @@ Version history and release notes for PostgreSQL.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 17 | 2024-Q4 | PostgreSQL 17 — incremental backup, MERGE improvements | [Release Notes](#) |
-| 16 | 2023-Q4 | PostgreSQL 16 — logical replication from standby | [Release Notes](#) |
-| 15 | 2022-Q4 | PostgreSQL 15 — MERGE command, improved sorting | [Release Notes](#) |
-| 14 | 2021-Q4 | PostgreSQL 14 — pipeline mode, ranges multirange | [Release Notes](#) |
-| 13 | 2020-Q4 | PostgreSQL 13 — partitioned table improvements | [Release Notes](#) |
+| 17 | 2024-Q4 | PostgreSQL 17 — incremental backup, MERGE improvements | Not yet verified |
+| 16 | 2023-Q4 | PostgreSQL 16 — logical replication from standby | Not yet verified |
+| 15 | 2022-Q4 | PostgreSQL 15 — MERGE command, improved sorting | Not yet verified |
+| 14 | 2021-Q4 | PostgreSQL 14 — pipeline mode, ranges multirange | Not yet verified |
+| 13 | 2020-Q4 | PostgreSQL 13 — partitioned table improvements | Not yet verified |
 
 ## Key Terminology
 

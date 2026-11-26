@@ -15,13 +15,18 @@ Version history and release notes for Dell Secure Connect Gateway.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 5.16 | 2024-Q3 | SCG 5.16 — PowerMax 10.1 telemetry support | [Release Notes](#) |
-| 5.14 | 2024-Q1 | SCG 5.14 — virtual edition scale improvements | [Release Notes](#) |
-| 5.12 | 2023-Q3 | SCG 5.12 — REST API v2 | [Release Notes](#) |
-| 5.10 | 2023-Q1 | SCG 5.10 — automated alert routing | [Release Notes](#) |
-| 5.8 | 2022-Q3 | SCG 5.8 — proactive monitoring expansion | [Release Notes](#) |
+| 5.16 | 2024-Q3 | SCG 5.16 — PowerMax 10.1 telemetry support | Not yet verified |
+| 5.14 | 2024-Q1 | SCG 5.14 — virtual edition scale improvements | Not yet verified |
+| 5.12 | 2023-Q3 | SCG 5.12 — REST API v2 | Not yet verified |
+| 5.10 | 2023-Q1 | SCG 5.10 — automated alert routing | Not yet verified |
+| 5.8 | 2022-Q3 | SCG 5.8 — proactive monitoring expansion | Not yet verified |
 
 ## Key Terminology
 

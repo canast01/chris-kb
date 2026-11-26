@@ -15,13 +15,18 @@ Version history and release notes for Pure FlashArray.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 6.6.10 | 2024-Q3 | Purity//FA 6.6 — NVMe/TCP enhancements | [Release Notes](#) |
-| 6.5.7 | 2024-Q1 | Purity//FA 6.5 — SafeMode ransomware protection | [Release Notes](#) |
-| 6.4.10 | 2023-Q3 | Purity//FA 6.4 — ActiveCluster improvements | [Release Notes](#) |
-| 6.3.14 | 2023-Q1 | Purity//FA 6.3 — pod replication scale | [Release Notes](#) |
-| 6.2.6 | 2022-Q3 | Purity//FA 6.2 — DirectFlash fabric support | [Release Notes](#) |
+| 6.6.10 | 2024-Q3 | Purity//FA 6.6 — NVMe/TCP enhancements | Not yet verified |
+| 6.5.7 | 2024-Q1 | Purity//FA 6.5 — SafeMode ransomware protection | Not yet verified |
+| 6.4.10 | 2023-Q3 | Purity//FA 6.4 — ActiveCluster improvements | Not yet verified |
+| 6.3.14 | 2023-Q1 | Purity//FA 6.3 — pod replication scale | Not yet verified |
+| 6.2.6 | 2022-Q3 | Purity//FA 6.2 — DirectFlash fabric support | Not yet verified |
 
 ## Key Terminology
 

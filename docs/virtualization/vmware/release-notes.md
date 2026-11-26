@@ -15,13 +15,18 @@ Version history and release notes for VMware.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| vSphere 8.0 U3 | 2024-Q3 | vSphere 8.0 U3 — multi-product patch release | [Release Notes](#) |
-| vSphere 8.0 U2 | 2024-Q1 | vSphere 8.0 U2 — vCenter HA improvements | [Release Notes](#) |
-| vSphere 8.0 U1 | 2023-Q2 | vSphere 8.0 U1 — stability and security | [Release Notes](#) |
-| vSphere 8.0 GA | 2022-Q4 | vSphere 8.0 GA — DPU offload, vSAN ESA | [Release Notes](#) |
-| vSphere 7.0 U3 | 2022-Q1 | vSphere 7.0 U3 — lifecycle management LTS | [Release Notes](#) |
+| vSphere 8.0 U3 | 2024-Q3 | vSphere 8.0 U3 — multi-product patch release | Not yet verified |
+| vSphere 8.0 U2 | 2024-Q1 | vSphere 8.0 U2 — vCenter HA improvements | Not yet verified |
+| vSphere 8.0 U1 | 2023-Q2 | vSphere 8.0 U1 — stability and security | Not yet verified |
+| vSphere 8.0 GA | 2022-Q4 | vSphere 8.0 GA — DPU offload, vSAN ESA | Not yet verified |
+| vSphere 7.0 U3 | 2022-Q1 | vSphere 7.0 U3 — lifecycle management LTS | Not yet verified |
 
 ## Key Terminology
 

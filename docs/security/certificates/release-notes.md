@@ -19,13 +19,17 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | Certificates — 90-day max validity enforcement | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | Certificates — ACME protocol rollout expansion | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | Certificates — CT log monitoring integration | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | Certificates — auto-renewal pipeline update | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | Certificates — SHA-1 deprecation enforcement | [Release Notes](#) |
+| 2024-Q2 | 2024-Q2 | Certificates — ACME protocol rollout expansion | Not yet verified |
+| 2023-Q4 | 2023-Q4 | Certificates — CT log monitoring integration | Not yet verified |
+| 2023-Q2 | 2023-Q2 | Certificates — auto-renewal pipeline update | Not yet verified |
+| 2022-Q4 | 2022-Q4 | Certificates — SHA-1 deprecation enforcement | Not yet verified |
 
 ## Key Terminology
 

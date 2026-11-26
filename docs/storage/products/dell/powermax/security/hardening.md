@@ -199,7 +199,7 @@ notAfter=Jan 15 10:23:45 2026 GMT
 | Key size | RSA 4096 or ECDSA P-256/P-384 |
 | Signature algorithm | SHA-256 or stronger |
 | SAN (Subject Alternative Name) | Must include the FQDN and IP address used to access Unisphere |
-| Validity period | Maximum 2 years (398 days for public CAs) |
+| Validity period | Maximum 2 years for internal-CA certificates; public CAs: 200 days max since 2026-03-15 (100 days from 2027-03-15, CA/B Forum SC081) |
 | Renewal trigger | 30 days before expiry — monitor with cron or a cert management tool |
 
 ### Network Access Hardening

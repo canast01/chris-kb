@@ -15,13 +15,18 @@ Version history and release notes for PowerShell.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 7.4 LTS | 2024-Q1 | PowerShell 7.4 LTS — .NET 8 baseline | [Release Notes](#) |
-| 7.3 | 2022-Q4 | PowerShell 7.3 — tab completion improvements | [Release Notes](#) |
-| 7.2 LTS | 2021-Q4 | PowerShell 7.2 LTS — .NET 6 baseline | [Release Notes](#) |
-| 7.1 | 2020-Q4 | PowerShell 7.1 — ForEach-Object -Parallel GA | [Release Notes](#) |
-| 7.0 | 2020-Q1 | PowerShell 7.0 GA — cross-platform LTS | [Release Notes](#) |
+| 7.4 LTS | 2024-Q1 | PowerShell 7.4 LTS — .NET 8 baseline | Not yet verified |
+| 7.3 | 2022-Q4 | PowerShell 7.3 — tab completion improvements | Not yet verified |
+| 7.2 LTS | 2021-Q4 | PowerShell 7.2 LTS — .NET 6 baseline | Not yet verified |
+| 7.1 | 2020-Q4 | PowerShell 7.1 — ForEach-Object -Parallel GA | Not yet verified |
+| 7.0 | 2020-Q1 | PowerShell 7.0 GA — cross-platform LTS | Not yet verified |
 
 ## Key Terminology
 

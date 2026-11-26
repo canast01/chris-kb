@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 2024-Q4 | 2024-Q4 | Patching — 30-day critical SLA policy update | [Release Notes](#) |
-| 2024-Q2 | 2024-Q2 | Patching — automated compliance reporting v2 | [Release Notes](#) |
-| 2023-Q4 | 2023-Q4 | Patching — WSUS replacement with SCCM/MECM | [Release Notes](#) |
-| 2023-Q2 | 2023-Q2 | Patching — OS patch ring framework update | [Release Notes](#) |
-| 2022-Q4 | 2022-Q4 | Patching — third-party app patching baseline | [Release Notes](#) |
+| 2024-Q4 | 2024-Q4 | Patching — 30-day critical SLA policy update | Not yet verified |
+| 2024-Q2 | 2024-Q2 | Patching — automated compliance reporting v2 | Not yet verified |
+| 2023-Q4 | 2023-Q4 | Patching — WSUS replacement with SCCM/MECM | Not yet verified |
+| 2023-Q2 | 2023-Q2 | Patching — OS patch ring framework update | Not yet verified |
+| 2022-Q4 | 2022-Q4 | Patching — third-party app patching baseline | Not yet verified |
 
 ## Key Terminology
 

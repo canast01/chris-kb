@@ -15,13 +15,18 @@ Version history and release notes for Veritas NetBackup.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 10.4 | 2024-Q3 | NetBackup 10.4 — workload accelerator enhancements | [Release Notes](#) |
-| 10.3 | 2024-Q1 | NetBackup 10.3 — Flex Scale HA improvements | [Release Notes](#) |
-| 10.2 | 2023-Q3 | NetBackup 10.2 — cloud-first policy management | [Release Notes](#) |
-| 10.1 | 2023-Q1 | NetBackup 10.1 — Kubernetes CSI snapshot backup | [Release Notes](#) |
-| 10.0 | 2022-Q2 | NetBackup 10.0 GA — containerised media server | [Release Notes](#) |
+| 10.4 | 2024-Q3 | NetBackup 10.4 — workload accelerator enhancements | Not yet verified |
+| 10.3 | 2024-Q1 | NetBackup 10.3 — Flex Scale HA improvements | Not yet verified |
+| 10.2 | 2023-Q3 | NetBackup 10.2 — cloud-first policy management | Not yet verified |
+| 10.1 | 2023-Q1 | NetBackup 10.1 — Kubernetes CSI snapshot backup | Not yet verified |
+| 10.0 | 2022-Q2 | NetBackup 10.0 GA — containerised media server | Not yet verified |
 
 ## Key Terminology
 

@@ -19,13 +19,18 @@ No special prerequisites — review the version table and cross-reference your d
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 24.3 | 2024-Q3 | Venafi 24.3 — TLS Protect Cloud improvements | [Release Notes](#) |
-| 24.1 | 2024-Q1 | Venafi 24.1 — Kubernetes cert-manager integration | [Release Notes](#) |
-| 23.4 | 2023-Q4 | Venafi 23.4 — CodeSign Protect updates | [Release Notes](#) |
-| 23.2 | 2023-Q2 | Venafi 23.2 — machine identity firewall | [Release Notes](#) |
-| 22.4 | 2022-Q4 | Venafi 22.4 — TrustNet improvements | [Release Notes](#) |
+| 24.3 | 2024-Q3 | Venafi 24.3 — TLS Protect Cloud improvements | Not yet verified |
+| 24.1 | 2024-Q1 | Venafi 24.1 — Kubernetes cert-manager integration | Not yet verified |
+| 23.4 | 2023-Q4 | Venafi 23.4 — CodeSign Protect updates | Not yet verified |
+| 23.2 | 2023-Q2 | Venafi 23.2 — machine identity firewall | Not yet verified |
+| 22.4 | 2022-Q4 | Venafi 22.4 — TrustNet improvements | Not yet verified |
 
 ## Key Terminology
 

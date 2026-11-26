@@ -16,13 +16,18 @@ Version history and release notes for VMware Aria Operations.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8.18 | 2024-Q3 | Aria Operations 8.18 — AI-driven workload balancing | [Release Notes](#) |
-| 8.16 | 2024-Q1 | Aria Operations 8.16 — cost driver enhancements | [Release Notes](#) |
-| 8.14 | 2023-Q3 | Aria Operations 8.14 — vROps rebrand to Aria | [Release Notes](#) |
-| 8.12 | 2023-Q1 | Aria Operations 8.12 — continuous availability cluster | [Release Notes](#) |
-| 8.10 | 2022-Q3 | vROps 8.10 — Kubernetes monitoring GA | [Release Notes](#) |
+| 8.18 | 2024-Q3 | Aria Operations 8.18 — AI-driven workload balancing | Not yet verified |
+| 8.16 | 2024-Q1 | Aria Operations 8.16 — cost driver enhancements | Not yet verified |
+| 8.14 | 2023-Q3 | Aria Operations 8.14 — vROps rebrand to Aria | Not yet verified |
+| 8.12 | 2023-Q1 | Aria Operations 8.12 — continuous availability cluster | Not yet verified |
+| 8.10 | 2022-Q3 | vROps 8.10 — Kubernetes monitoring GA | Not yet verified |
 
 ## Key Terminology
 

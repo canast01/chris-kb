@@ -16,13 +16,18 @@ Version history and release notes for VMware Horizon.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 8 2312 | 2024-Q1 | Horizon 2312 — Windows 11 23H2 gold image support | [Release Notes](#) |
-| 8 2309 | 2023-Q4 | Horizon 2309 — App Volumes 4.10 integration | [Release Notes](#) |
-| 8 2306 | 2023-Q2 | Horizon 2306 — Teams media optimisation improvements | [Release Notes](#) |
-| 8 2303 | 2023-Q1 | Horizon 2303 — RDSH scaling enhancements | [Release Notes](#) |
-| 8 2212 | 2022-Q4 | Horizon 2212 — Blast Extreme protocol update | [Release Notes](#) |
+| 8 2312 | 2024-Q1 | Horizon 2312 — Windows 11 23H2 gold image support | Not yet verified |
+| 8 2309 | 2023-Q4 | Horizon 2309 — App Volumes 4.10 integration | Not yet verified |
+| 8 2306 | 2023-Q2 | Horizon 2306 — Teams media optimisation improvements | Not yet verified |
+| 8 2303 | 2023-Q1 | Horizon 2303 — RDSH scaling enhancements | Not yet verified |
+| 8 2212 | 2022-Q4 | Horizon 2212 — Blast Extreme protocol update | Not yet verified |
 
 ## Key Terminology
 

@@ -15,13 +15,18 @@ Version history and release notes for Dell ECS.
 
 ## Version History
 
+!!! warning "Unverified version history"
+    This table has not yet been checked against the vendor's official release
+    notes. Treat the versions, dates and summaries below as unconfirmed until
+    they are verified.
+
 | Version | Released | Summary | Notes |
 |---------|----------|---------|-------|
-| 3.8 | 2024-Q2 | ECS 3.8 — HDFS connector v2, S3 object lock GA | [Release Notes](#) |
-| 3.7 | 2023-Q3 | ECS 3.7 — IAM compatibility improvements | [Release Notes](#) |
-| 3.6 | 2022-Q4 | ECS 3.6 — multi-region federation | [Release Notes](#) |
-| 3.5 | 2022-Q1 | ECS 3.5 — NFS v4 protocol support | [Release Notes](#) |
-| 3.4 | 2021-Q2 | ECS 3.4 — REST management API v3 | [Release Notes](#) |
+| 3.8 | 2024-Q2 | ECS 3.8 — HDFS connector v2, S3 object lock GA | Not yet verified |
+| 3.7 | 2023-Q3 | ECS 3.7 — IAM compatibility improvements | Not yet verified |
+| 3.6 | 2022-Q4 | ECS 3.6 — multi-region federation | Not yet verified |
+| 3.5 | 2022-Q1 | ECS 3.5 — NFS v4 protocol support | Not yet verified |
+| 3.4 | 2021-Q2 | ECS 3.4 — REST management API v3 | Not yet verified |
 
 ## Key Terminology
 
