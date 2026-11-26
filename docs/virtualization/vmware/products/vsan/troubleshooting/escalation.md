@@ -13,7 +13,7 @@ description: "How to escalate VMware vSAN issues to Broadcom support: what data 
 <div class="kb-summary">
 How to escalate VMware vSAN issues to Broadcom support: what data to collect, how to run vm-support and cmmds-tool, step-by-step case creation on support.broadcom.com, and the escalation path when progress stalls.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Escalation](../../../../../assets/virtualization-vmware-vsan-troubleshooting-escalation.svg)
 
@@ -107,7 +107,7 @@ Run these before opening the case.
 | Check | Command | Expected result |
 |---|---|---|
 | vSAN cluster state | vSphere Client → vSAN cluster → Monitor → vSAN → Health | All health checks green |
-| Resync status | `esxcli vsan resync get` (any host) or vSphere Client → Monitor → vSAN → Resync | No stalled resync; total remaining bytes ≠ stuck at same value |
+| Resync status | `esxcli vsan debug resync summary get` (any host) or vSphere Client → Monitor → vSAN → Resync | No stalled resync; total remaining bytes ≠ stuck at same value |
 | Cluster member hosts | `esxcli vsan cluster get` | All expected hosts listed as `Member` |
 | vSAN version | `esxcli vsan cluster get` | Note `vSAN cluster UUID` and build |
 | Object health | vSphere Client → vSAN cluster → Monitor → vSAN → Virtual Objects | No objects in `Degraded` or `Absent` state |
@@ -240,8 +240,8 @@ In vSphere Client: navigate to the vSAN cluster → **Monitor** → **vSAN** →
 Export the health check results (click **Export** at the top right of the Health view).
 
 ```bash
-# From ESXi CLI: resync status (shows remaining bytes by priority)
-esxcli vsan resync get
+# From ESXi CLI: resync summary (objects and bytes left to resync)
+esxcli vsan debug resync summary get
 
 # Disk health
 esxcli vsan storage list
@@ -254,40 +254,8 @@ esxcli vsan debug object list | grep -i "inaccessible\|degraded\|absent"
 ```
 
 
-```text title="Expected output"
-Resync Status:
-  Resync Completion Percentage: 87
-  Bytes Remaining (High Priority): 2147483648
-  Bytes Remaining (Low Priority): 536870912
-  Estimated Time Remaining: 3600 seconds
-
-Storage Health:
-  Disk Group 1:
-    UUID: 52e0e3d4-8f2a-4c1b-9e7a-1a2b3c4d5e6f
-    Health State: Healthy
-    Capacity: 1099511627776 bytes
-    Free Space: 274877906944 bytes
-  Disk Group 2:
-    UUID: 7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c
-    Health State: Degraded
-    Capacity: 1099511627776 bytes
-    Free Space: 68719476736 bytes
-
-Network Health:
-  vmk1 (vSAN vmkernel):
-    Peer: esx-node-02.lab.local (192.168.100.12)
-    Latency: 0.45 ms
-    Packet Loss: 0%
-  vmk1 (vSAN vmkernel):
-    Peer: esx-node-03.lab.local (192.168.100.13)
-    Latency: 0.52 ms
-    Packet Loss: 0%
-
-Object Accessibility:
-  Object UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
-  State: degraded
-  Component Count: 3
-  Accessible Components: 2
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -310,7 +278,7 @@ Changes in 24h before the issue:
   - 14:35: 3 VMs on that host show I/O errors
 Steps already taken:
   - cmmds-tool: several components show "absent" on esxi-04 disk groups
-  - esxcli vsan resync get: 450 GB stuck at same byte count for 2 hours
+  - esxcli vsan debug resync summary get: 450 GB stuck at same byte count for 2 hours
   - Did NOT power off esxi-04 or pull disks
   - Did NOT remove disk groups
 Blast radius: 3 VMs on esxi-04 have I/O errors; FTT=1 — one more failure = data loss
@@ -326,7 +294,7 @@ Blast radius: 3 VMs on esxi-04 have I/O errors; FTT=1 — one more failure = dat
 
 3. Under **Product**, select **VMware vSAN**. If your issue is also vSphere-related (ESXi host panic, vCenter issue), select the appropriate product.
 
-4. Under **Version**, select your vSAN version (7.x or 8.x).
+4. Under **Version**, select your vSAN version (9.x or 8.x).
 
 5. Under **Severity**, select:
    - **Severity 1 — Critical**: vSAN objects are inaccessible; VMs have I/O errors and are not responding; data is at immediate risk; no workaround; production is halted
@@ -390,7 +358,7 @@ Step 6 — For data loss, ongoing I/O unavailability, or prolonged Sev1:
 | Power off a host when the cluster is degraded | Each host holds component data; powering off may push the cluster below quorum, making objects inaccessible | Leave all hosts running; wait for GSS direction before any host power state change |
 | Pull disks from a disk group without GSS guidance | A disk showing "failed" may still hold component data needed for resync | Let GSS review cmmds-tool output to confirm which disk is safe to remove |
 | Remove or rebuild a disk group mid-incident | Destroys all component data on that disk group; may cause data loss | Only remove disk groups when GSS has confirmed the data is fully resync'd elsewhere |
-| Run `esxcli vsan debug object repair-objects` without GSS | May trigger unnecessary resync that changes the state GSS is analysing | Let GSS direct the exact repair command with parameters |
+| Trigger an immediate object repair (e.g. PowerCLI `Add-VsanObjectToRepairQueue`) without GSS | May trigger unnecessary resync that changes the state GSS is analysing | Let GSS direct the exact repair command with parameters |
 | vMotion or Storage vMotion VMs during resync | Adds to resync traffic; may delay or stall the recovery resync | Freeze all migrations until the resync queue is empty and objects are healthy |
 | Enter maintenance mode on additional hosts mid-incident | Takes CMMDS partitions offline; can tip a recoverable state into quorum loss | Freeze all maintenance mode operations during a P1 vSAN incident |
 
@@ -408,7 +376,7 @@ cmmds-tool find -t DOM_OBJECT -f text | grep -i "health\|state"
 cmmds-tool find -t LSOM_OBJECT -f text | head -100
 
 # Resync progress
-esxcli vsan resync get
+esxcli vsan debug resync summary get
 
 # Object accessibility
 esxcli vsan debug object list | grep -i "inaccessible\|degraded\|absent"
@@ -416,58 +384,21 @@ esxcli vsan debug object list | grep -i "inaccessible\|degraded\|absent"
 # Network health (run on one host)
 esxcli vsan network list
 
-# Performance data (latency snapshot)
-esxcli vsan debug vmdk perf
+# VMDKs on the local vSAN datastore (per-VMDK latency comes from the
+# vSAN performance service in the vSphere Client)
+esxcli vsan debug vmdk list
 ```
 
 
-```text title="Expected output"
-Cluster UUID: 52d4a8f1-7c3e-4a2b-9e1f-3b8c2a5d6e9f
-Cluster mode: Enabled
-Health state: Healthy
-
-Storage device list:
-  Device: naa.5001405a1b2c3d4e
-    Capacity: 1.7 TB
-    Used: 892.3 GB
-    Health: Healthy
-  Device: naa.5001405a1b2c3d4f
-    Capacity: 1.7 TB
-    Used: 887.1 GB
-    Health: Healthy
-
-DOM_OBJECT health: HEALTHY
-DOM_OBJECT state: ACTIVE
-LSOM_OBJECT health: HEALTHY
-LSOM_OBJECT state: ACTIVE
-LSOM_OBJECT health: HEALTHY
-LSOM_OBJECT state: ACTIVE
-
-Resync progress: 0%
-Resync objects: 0
-Resync bytes: 0 B
-
-Object list:
-  Object UUID: 8f2e1a3c-5b7d-4e9f-a1b2-c3d4e5f6a7b8
-  State: ACCESSIBLE
-  Redundancy: SATISFIED
-
-Network health: HEALTHY
-Partition: CONNECTED
-Quorum: QUORUM_PRESENT
-Network latency: 2.3 ms
-
-VMDK perf snapshot:
-  Read latency: 1.2 ms
-  Write latency: 2.8 ms
-  Outstanding IOs: 45
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: vSAN cluster is not enabled on this host` | Run `esxcli vsan cluster new` to initialize the cluster or verify the host is part of an existing vSAN cluster. |
-    | `Error: CMMDS server is not running` | Restart the CMMDS service with `systemctl restart cmmds` or reboot the host if the service fails to start. |
+    | `Error: CMMDS server is not running` | Restart the CMMDS daemon with `/etc/init.d/cmmdsd restart` ([Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410)); open a case if it keeps failing. |
     | `Error: Network partition detected - Quorum: QUORUM_ABSENT` | Check physical network connectivity between hosts and verify vSAN VMkernel ports are on the correct VLAN with no packet loss. |
 ---
 
@@ -491,7 +422,7 @@ VMDK perf snapshot:
 
 ## Verify resolution
 
-- Run `esxcli vsan resync get` and confirm remaining bytes is 0 (resync complete)
+- Run `esxcli vsan debug resync summary get` and confirm remaining bytes is 0 (resync complete)
 - Check vSphere Client → Monitor → vSAN → Health: all health checks show green
 - Check vSphere Client → Monitor → vSAN → Virtual Objects: all objects show `Healthy`
 - Check vSphere Client → Configure → vSAN → Disk Management: no disks in Failed or Degraded state

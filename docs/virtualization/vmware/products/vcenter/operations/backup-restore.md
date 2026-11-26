@@ -11,7 +11,7 @@ description: "Backup & Restore reference covering Alert on Backup Failure, Resto
 <div class="kb-summary">
 Backup & Restore reference covering Alert on Backup Failure, Restore Procedure, Recovery Scenarios, Certificates to Track Before Any Restore, vCenter High Availability (vCHA) vs. Backup and 1 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Backup & Restore](../../../../../assets/virtualization-vmware-vcenter-operations-backup-restore.svg)
 
@@ -58,7 +58,7 @@ Backup & Restore reference covering Alert on Backup Failure, Restore Procedure, 
 service-control --status --all
 
 # Check for any service failures
-service-control --status vpxd
+service-control --status vmware-vpxd
 service-control --status vmware-vpostgres
 service-control --status vmware-stsd
 
@@ -98,7 +98,7 @@ Post-restore checklist:
 ### When to Troubleshoot In Place
 
 Troubleshoot first if:
-- A single service (vpxd, vmware-sts) can be restarted successfully
+- A single service (vmware-vpxd, vmware-stsd) can be restarted successfully
 - Disk space can be freed to restore normal function
 - A single certificate or SSO issue can be repaired using `certificate-manager`
 - Database is accessible and only needs a service restart

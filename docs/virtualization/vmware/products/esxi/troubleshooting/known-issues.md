@@ -12,7 +12,7 @@ description: "Catalog of known ESXi bugs, error codes, and workarounds. Each ent
 <div class="kb-summary">
 Catalog of known ESXi bugs, error codes, and workarounds. Each entry includes the affected version range, cause, and resolution status.
 
-*Applies to: ESXi 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![VMware ESXi — Known Issues and Error Codes](../../../../../assets/virtualization-vmware-esxi-troubleshooting-known-issues.svg)
 

@@ -13,7 +13,7 @@ description: "Step-by-step guide to deploying a new ESXi host: hardware readines
 <div class="kb-summary">
 Step-by-step guide to deploying a new ESXi host: hardware readiness, installation, network and storage configuration, vCenter join, and baseline hardening.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 
 ![ESXi Deploy Stages](../../../../../assets/esxi-deploy-stages.svg)
@@ -198,7 +198,7 @@ Tag added to vmk1.
     | Error | Fix |
     |---|---|
     | `Error: The object already exists.` | Verify the VMkernel interface name does not already exist with `esxcli network ip interface list`. |
-    | `Error: The portgroup 'vMotion' does not exist.` | Create the vMotion portgroup on the vSwitch before adding the interface using `esxcli vswitch standard portgroup add`. |
+    | `Error: The portgroup 'vMotion' does not exist.` | Create the vMotion portgroup on the vSwitch before adding the interface using `esxcli network vswitch standard portgroup add --portgroup-name vMotion --vswitch-name vSwitch0`. |
     | `Error: The tag 'VMotion' is not a valid tag.` | Use the correct tag name `vMotion` (case-sensitive) instead of `VMotion` with `esxcli network ip interface tag add --interface-name vmk1 --tagname vMotion`. |
 **Create vSAN VMkernel**
 
@@ -259,7 +259,7 @@ round-trip min/avg/max = 3.721/3.826/3.912 ms
     | Error | Fix |
     |---|---|
     | `vmkping: Unknown interface vmk2` | Verify the VMkernel interface exists with `esxcli network ip interface list` and use the correct interface name. |
-    | `PING 10.20.1.1 (10.20.1.1): 8972 data bytes ... 100% packet loss` | Confirm the gateway IP is reachable and that the MTU is set to 9000 on both the ESXi interface and upstream switch port with `esxcli network ip interface get -i vmk2`. |
+    | `PING 10.20.1.1 (10.20.1.1): 8972 data bytes ... 100% packet loss` | Confirm the gateway IP is reachable and that the MTU is set to 9000 on both the ESXi interface and upstream switch port with `esxcli network ip interface list` (shows the MTU of each VMkernel interface). |
 **List all VMkernel interfaces**
 
 ```bash
@@ -410,7 +410,7 @@ vmhba6:C0:T2:L0                   active    0             2            0
     | `Error: The specified path is not valid for this device` | Ensure all paths are properly discovered and active by rescanning storage with `esxcli storage core adapter rescan --adapter vmhbaX`. |
 **VAAI plugin**
 
-Install the array vendor's VAAI plugin via VUM/LCM if the array supports hardware acceleration (XCOPY, ATS, WriteSame). Verify:
+Install the array vendor's VAAI plugin via vSphere Lifecycle Manager (add it to the cluster image) if the array supports hardware acceleration (XCOPY, ATS, WriteSame). Verify:
 
 ```bash
 esxcli storage core device vaai status get
@@ -454,7 +454,7 @@ Mount Point                                        Volume Name      UUID        
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Could not get list of filesystems` | Verify the esxcli service is running with `systemctl status esxcli` and check network connectivity to the ESXi host. |
+    | `Error: Could not get list of filesystems` | Run the command in the ESXi Shell/SSH session on the host; if host management is unresponsive, restart hostd (`/etc/init.d/hostd restart`, Broadcom KB 320280: https://knowledge.broadcom.com/external/article/320280). |
     | `Error: Permission denied` | Run the command as root or with appropriate vSphere credentials; non-root users cannot access esxcli storage commands. |
 ---
 
@@ -522,7 +522,7 @@ vmware-fdm is running (pid 2847)
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `vmware-fdm is stopped` | Start the service with `/etc/init.d/vmware-fdm start` and verify cluster membership with `esxcli cluster get`. |
+    | `vmware-fdm is stopped` | Check the host's vSphere HA state in the vSphere Client. ESXCLI has no HA-cluster namespace (`esxcli vsan cluster get` reports vSAN membership only). |
     | `Command not found: /etc/init.d/vmware-fdm` | Verify you are on an ESXi host with vSAN or HA enabled; if not present, the service is not installed on this host. |
 ---
 
@@ -640,6 +640,9 @@ Syslog Config:
     | `Error: Unknown option or malformed command.` | Verify the syslog server hostname is reachable and the UDP port 514 is not blocked by upstream firewalls; use `esxcli network firewall ruleset list` to confirm syslog ruleset exists. |
 **LCM baseline remediation**
 
+!!! note "Baselines are ESXi 8.x only"
+    From vSphere 9.0, vSphere Lifecycle Manager baselines (VUM) cannot patch 9.x ESX hosts, ISO import and ISO-based upgrades are blocked, Rollup bulletins are no longer released, and new clusters and standalone hosts are image-managed (vLCM) by default. 8.x hosts in a baseline-managed cluster can still be patched to any 8.x version. Use vLCM images for ESX 9.x — see [Broadcom KB 379388](https://knowledge.broadcom.com/external/article/379388).
+
 1. vCenter → **Menu → Lifecycle Manager**
 2. Attach the cluster baseline to the host
 3. **Check Compliance** — note missing patches
@@ -654,7 +657,7 @@ Syslog Config:
 |---|---|---|
 | Host connected | vCenter inventory | Connected |
 | HA agent running | `/etc/init.d/vmware-fdm status` | Running |
-| NTP synced | `esxcli system ntp get` | NTP enabled, peers shown |
+| NTP synced | `esxcli system ntp get` | NTP enabled, servers listed |
 | Syslog forwarding | `esxcli system syslog config get` | loghost set |
 | SSH disabled | vCenter → Security Profile | Stopped |
 | Lockdown mode | vCenter → Security Profile | Normal |
@@ -676,4 +679,4 @@ Syslog Config:
 - **Host connected:** vSphere Client → host status shows Connected (green)
 - **NTP sync:** `esxcli system time get` — time within 5 seconds of authoritative source
 - **Network:** `esxcli network ip interface list` — vmk0 (management) shows Up
-- **SSH disabled:** `esxcli system ssh get` — Policy: off (re-enable only when needed)
+- **SSH disabled:** ESXi Host Client → Host → Manage → Services shows the SSH service stopped (KB 320280 documents this view) (re-enable only when needed)

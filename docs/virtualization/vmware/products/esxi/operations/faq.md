@@ -7,7 +7,7 @@ description: "Common questions about VMware ESXi operations, configuration, and 
 ---
 # VMware ESXi — Frequently Asked Questions
 
-*Applies to: VMware ESXi 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 
 <div class="kb-summary">
 Common questions about VMware ESXi operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
@@ -17,7 +17,7 @@ Common questions about VMware ESXi operations, configuration, and troubleshootin
 ## General
 
 **Q: What ESXi version is recommended for new deployments?**
-A: ESXi 8.0 Update 3 is the current recommendation. Check: `vmware -v` from ESXi shell or vCenter → Host → Summary → ESXi Version. Always align with the vCenter compatibility matrix.
+A: The current release line is ESX 9.x, delivered with VCF 9 / VVF 9 (latest: ESX 9.1.2.0, build 25946735, 24 Nov 2026 — [ESX 9.1.2.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-2-0-release-notes/esx-9-1-2-0-release-notes.html)). On vSphere 8 the latest patch level is ESXi 8.0 Update 3m (build 25926933, in VCF 5.2.5, 19 Nov 2026 — [KB 314608](https://knowledge.broadcom.com/external/article/314608)); vSphere 8 End of General Support is 11 Oct 2027 ([KB 459135](https://knowledge.broadcom.com/external/article/459135)). Check: `vmware -v` from ESXi shell or vCenter → Host → Summary → ESXi Version. Always align with the vCenter compatibility matrix.
 
 **Q: How do I check the current VMware ESXi version?**
 A: `vmware -v`

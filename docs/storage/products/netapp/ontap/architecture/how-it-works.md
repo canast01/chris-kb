@@ -10,7 +10,7 @@ description: "Internal architecture and data-path reference: HA pair design, WAF
 <div class="kb-summary">
 Internal architecture and data-path reference: HA pair design, WAFL filesystem, Aggregate-SVM-Volume hierarchy, data protocols, SnapMirror, MetroCluster, ONTAP Mediator, and SnapCenter integration.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![NetApp ONTAP — How It Works](../../../../../assets/storage-netapp-ontap-architecture-how-it-works.svg)
 

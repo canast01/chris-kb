@@ -11,7 +11,7 @@ description: "How It Works reference covering Storage Architecture Modes, Object
 <div class="kb-summary">
 How It Works reference covering Storage Architecture Modes, Objects and Components, Write Path, Read Path, Core Components and 1 more sections.
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — How It Works](../../../../../assets/virtualization-vmware-vsan-architecture-how-it-works.svg)
 

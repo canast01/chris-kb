@@ -11,7 +11,7 @@ description: "ESXi Access Control reference covering Exception Users, Local Acco
 <div class="kb-summary">
 ESXi Access Control reference covering Exception Users, Local Account Management, vCenter Role-Based Access Control, ESXi Shell and SSH Access Controls, Firewall Ruleset Management and 1 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi Access Control](../../../../../assets/virtualization-vmware-esxi-security-access-control.svg)
 
@@ -282,7 +282,7 @@ Ruleset: sshServer
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown option or flag '--ruleset-id sshServer'` | Use the correct flag syntax: `esxcli network firewall ruleset set --rulesetid sshServer` (no hyphen between ruleset and id). |
+    | `Error: Unknown option or flag` | The documented flag is `--ruleset-id` (short form `-r`), e.g. `esxcli network firewall ruleset set --ruleset-id sshServer --allowed-all false`. |
     | `Error: The IP address 10.0.1.0/24 is invalid` | Verify the CIDR notation is correct and the network address matches the subnet (e.g., use `10.0.1.0/24` not `10.0.1.5/24`). |
 ---
 
@@ -296,42 +296,16 @@ ESXi's host-based firewall controls which services are accessible and from which
 # All rulesets and their state
 esxcli network firewall ruleset list
 
-# Specific ruleset detail
-esxcli network firewall ruleset get --ruleset-id sshServer
-esxcli network firewall ruleset get --ruleset-id webAccess
-esxcli network firewall ruleset get --ruleset-id vSphereClient
+# Specific ruleset detail (rules and allowed IPs)
+esxcli network firewall ruleset list --ruleset-id sshServer
+esxcli network firewall ruleset rule list --ruleset-id sshServer
+esxcli network firewall ruleset allowedip list --ruleset-id sshServer
 ```
 
 
 ```text title="Expected output"
-Ruleset                             Enabled
-----------------------------------  -------
-sshServer                           true
-webAccess                           true
-vSphereClient                       true
-vMotion                             false
-faultTolerance                      false
-vSAN                                false
-NFC                                 false
-...
-
-Name: sshServer
-Enabled: true
-Implicit Allow: false
-Logging Enabled: false
-Description: SSH access to ESXi host
-
-Name: webAccess
-Enabled: true
-Implicit Allow: false
-Logging Enabled: false
-Description: vSphere Web Client access
-
-Name: vSphereClient
-Enabled: true
-Implicit Allow: false
-Logging Enabled: false
-Description: vSphere Client access
+Output varies by host (one row per ruleset / rule / allowed IP). See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_network.html
 ```
 
 !!! warning "Common errors"
@@ -365,7 +339,7 @@ esxcli network firewall ruleset set --enabled false --ruleset-id ftpClient
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown option or flag '--ruleset-id'.` | Use the correct flag name `--ruleset-id` or check your ESXi version; some versions use `--rulesetid` without the hyphen. |
+    | `Error: Unknown option or flag '--ruleset-id'.` | The documented flag is `--ruleset-id` (short form `-r`); check spelling and placement after the subcommand. |
     | `Error: Ruleset 'ftpClient' not found.` | Verify the exact ruleset name with `esxcli network firewall ruleset list` before disabling, as ruleset IDs are case-sensitive. |
 ### Host Profile Enforcement
 

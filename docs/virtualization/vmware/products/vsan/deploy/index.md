@@ -13,7 +13,7 @@ description: "End-to-end deployment guide from bare metal to a validated vSAN cl
 <div class="kb-summary">
 End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 1–3 cover the physical and hypervisor foundation; Phases 4–7 cover vSAN-specific enablement, policy configuration, and end-to-end validation.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ![vSAN Deploy Stages](../../../../../assets/vsan-deploy-stages.svg)
@@ -478,33 +478,20 @@ esxcli vsan cluster get
 # All hosts should appear in the member list; one is Master
 
 # Run initial health check
-esxcli vsan health cluster get
-# All tests should PASS
+esxcli vsan health cluster list
+# All tests should be green
 ```
 
 
-```text title="Expected output"
-Cluster UUID: 52d4a8f1-7c2e-4f3a-9b1a-8e3d2c1f5a9b
-Cluster Master: esx-prod-01.lab.local
-Member UUIDs:
-  52d4a8f1-7c2e-4f3a-9b1a-8e3d2c1f5a9b (esx-prod-01.lab.local)
-  63e5b9g2-8d3f-5g4b-0c2b-9f4e3d2g6b0c (esx-prod-02.lab.local)
-  74f6c0h3-9e4g-6h5c-1d3c-0g5f4e3h7c1d (esx-prod-03.lab.local)
-
-Cluster Health Status: HEALTHY
-Test Results:
-  Cluster: PASS
-  Physical disk: PASS
-  Memory: PASS
-  Network: PASS
-  Connectivity: PASS
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Cluster UUID: <unknown>` | Ensure all hosts are licensed for vSAN and the cluster has been properly initialized with `esxcli vsan cluster new`. |
-    | `Cluster Health Status: DEGRADED` | Check individual host health with `esxcli vsan health host get` and verify network connectivity between cluster members. |
+    | `Cluster Health Status: DEGRADED` | Check individual health checks with `esxcli vsan health cluster list` and verify network connectivity between cluster members. |
 **From vSphere Client:**
 Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before proceeding.
 
@@ -561,9 +548,12 @@ Without this, performance metrics are not collected and the Performance view in 
 
 ## Phase 6 — Aria Suite Lifecycle and Monitoring (Optional)
 
-**Exit criterion:** If Aria Operations is in scope, vSAN adapter configured and dashboards showing cluster data.
+**Exit criterion:** If VCF Operations (formerly Aria Operations) is in scope, vSAN adapter configured and dashboards showing cluster data.
 
-This phase is optional — skip if not deploying Aria Operations.
+This phase is optional — skip if not deploying it.
+
+!!! note "VCF/VVF 9.x naming"
+    In VCF 9.x the product is VCF Operations (formerly Aria Operations; [Broadcom KB 438533](https://knowledge.broadcom.com/external/article/438533)). The Aria Suite Lifecycle steps below describe the 8.x (Aria Operations 8.x) path; Aria Operations 8.x can be upgraded to VCF Operations 9.0 through Aria Suite Lifecycle ([Broadcom KB 433805](https://knowledge.broadcom.com/external/article/433805)).
 
 ### Deploy Aria Suite Lifecycle Manager
 
@@ -606,13 +596,13 @@ Cluster → Monitor → vSAN → Skyline Health
 
 ```bash
 # CLI equivalent
-esxcli vsan health cluster get | grep -v PASS
+esxcli vsan health cluster list
 # Expected: no output (all tests pass)
 ```
 
 
-```text title="Expected output"
-(no output — command completes silently)
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -754,7 +744,7 @@ Store the baseline numbers in a runbook. They become the reference for future tr
 - [ ] Performance baseline recorded
 - [ ] vSAN HCL compliance confirmed for all disks
 - [ ] Capacity headroom > 30% confirmed
-- [ ] Monitoring alerts configured (if Aria Operations deployed)
+- [ ] Monitoring alerts configured (if VCF Operations / Aria Operations deployed)
 - [ ] Runbook updated with cluster-specific IPs, VLANs, and disk NAAs
 
 ---

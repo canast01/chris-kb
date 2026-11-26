@@ -13,7 +13,7 @@ description: "ESXi diagnostic commands: read vmkernel.log and hostd.log for erro
 <div class="kb-summary">
 ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli for live storage and network state, run esxtop in batch mode to capture CPU/memory/disk/network metrics, restart hostd and vpxa, test connectivity to vCenter, and collect the vm-support bundle for VMware SRs.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Diagnostics](../../../../../assets/virtualization-vmware-esxi-troubleshooting-diagnostics.svg)
 
@@ -34,7 +34,7 @@ L: "tail /var/log/vmkernel.log  grep ERROR" {shape: rectangle}
 M: "M" {shape: rectangle}
 N: "esxcli storage core path list | grep dead\nCheck storage network and switch zoning" {shape: rectangle}
 O: "Check storage array; check esxtop DAVG vs KAVG\nKAVG high = queue depth issue on host" {shape: rectangle}
-P: "esxcli network vm list -w vm-name\nCheck vmkping to test VMkernel adapters" {shape: rectangle}
+P: "esxcli network vm list\nCheck vmkping to test VMkernel adapters" {shape: rectangle}
 Q: "esxtop batch: esxtop -b -d 2 -n 30\nFilter CSV for %RDY > 10 or MCTLSZ > 0" {shape: rectangle}
 R: "tail /var/log/fdm.log | grep -i error\nCheck HA heartbeat datastores" {shape: rectangle}
 S: "Collect vm-support bundle\nvm-support -n -w /tmp/" {shape: rectangle}

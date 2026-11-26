@@ -12,7 +12,7 @@ description: "Technical and operational reference for VMware vSAN. Covers storag
 <div class="kb-summary">
 Technical and operational reference for VMware vSAN. Covers storage policies, disk groups, capacity management, resync operations, health monitoring, and troubleshooting for software-defined storage in vSphere clusters.
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ![vSAN Capabilities Overview](../../../../assets/vsan-capabilities-overview.svg)

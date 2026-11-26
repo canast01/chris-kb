@@ -9,7 +9,7 @@ description: "Recommended reading order for NetApp ONTAP. Follow these stages in
 <div class="kb-summary">
 Recommended reading order for NetApp ONTAP. Follow these stages in order to build a complete mental model before working with it in production.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 ```d2

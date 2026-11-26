@@ -11,7 +11,7 @@ description: "Operational how-to guides for day-to-day vSAN management. Each sec
 <div class="kb-summary">
 Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ## Before you begin
@@ -281,26 +281,13 @@ Always use vCenter, not the ESXi shell — vSAN health validation runs automatic
 **Step 1 — Confirm cluster is healthy and resync is at zero**
 
 ```bash
-esxcli vsan health cluster get
+esxcli vsan health cluster list
 esxcli vsan debug resync summary get
 ```
 
 
-```text title="Expected output"
-Cluster Status: HEALTHY
-Cluster UUID: 52d4a8c1-7f2e-4c9a-b1e3-9a2c5d8f1b4e
-Cluster Name: VSAN-Cluster-01
-Member Count: 4
-Disk Groups: 4
-Physical Disks: 16
-Capacity: 5.45 TB
-Used Capacity: 2.18 TB
-Free Capacity: 3.27 TB
-
-Resync Objects: 12
-Resync Data Size: 847.3 GB
-Resync Rate: 125.4 MB/s
-Estimated Time Remaining: 1h 52m
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -348,7 +335,7 @@ Last resync completion: 2024-01-15 14:32:18 UTC
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Could not connect to the vSAN health service` | Ensure the vSAN service is running on the ESXi host with `systemctl status vsanvpd` and restart if needed. |
+    | `Could not connect to the vSAN health service` | Ensure the vSAN management daemon is running on the ESXi host; restart it with `/etc/init.d/vsanmgmtd restart` if needed ([Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410)). |
     | `Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator role assigned in vCenter. |
     | `vSAN is not enabled on this host` | Verify vSAN is properly configured on the cluster and the host is a vSAN participant using `esxcli vsan cluster get`. |
 **Step 4 — Exit maintenance mode after work is complete**
@@ -498,7 +485,7 @@ Last Updated: 2024-01-15 14:32:18 UTC
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Could not connect to the local vSAN service` | Ensure vSAN is enabled on the host and the vSAN service is running with `systemctl status vsand`. |
+    | `Error: Could not connect to the local vSAN service` | Ensure vSAN is enabled on the host (`esxcli vsan cluster get`); restart any stopped vSAN daemon per [Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410). |
     | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator permissions. |
 Wait until `Active resyncing components = 0` before applying further changes.
 
@@ -594,7 +581,8 @@ Total Resync Operations: 2
 **Step 3 — PowerCLI view**
 
 ```powershell
-Get-VsanResyncStatus -Cluster (Get-Cluster "VSAN-LON-01")
+Get-VsanResyncingOverview -Cluster (Get-Cluster "VSAN-LON-01")
+Get-VsanResyncingComponent -Cluster (Get-Cluster "VSAN-LON-01")
 ```
 
 **Step 4 — UI view**
@@ -609,41 +597,36 @@ Cluster → Monitor → vSAN → Resyncing Objects
 **Step 1 — Check the current throttle setting**
 
 ```bash
-esxcli vsan debug resync throttle get
+esxcli vsan resync throttle get
 ```
 
 
-```text title="Expected output"
-Resync Throttle Configuration:
-  Throttle Enabled: true
-  Max Outstanding Resync Operations: 128
-  Max Resync Network Bandwidth (MB/s): 500
-  Resync Task Concurrency: 4
-  Resync Priority: normal
-  Last Modified: 2024-01-15 14:32:18 UTC
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown command or namespace path: vsan debug resync throttle get` | Verify the vSAN cluster is properly initialized and the ESXCLI vSAN plugin is installed by running `esxcli vsan cluster get`. |
+    | `Error: Unknown command or namespace path: vsan resync throttle get` | Verify the vSAN cluster is properly initialized and the ESXCLI vSAN plugin is installed by running `esxcli vsan cluster get`. |
     | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator role permissions on the ESXi host. |
-0 = unlimited. Any positive value = IOPS cap per host.
+The level is in Mbps (0-512); 0 means no throttling.
 
 **Step 2 — Apply throttle during business hours**
 
 ```bash
-esxcli vsan debug resync throttle set --throttle 500
+esxcli vsan resync throttle set --level 500
 ```
 
 ```powershell
-Set-VsanResyncThrottle -Cluster (Get-Cluster "VSAN-LON-01") -IopsForResync 500
+# Cluster-wide: resync traffic limit in Mbps per disk group (1-512; 0 = no limit)
+Set-VsanClusterConfiguration -Configuration (Get-Cluster "VSAN-LON-01") -ResyncThrottlingMbps 500
 ```
 
 **Step 3 — Remove throttle during maintenance window**
 
 ```bash
-esxcli vsan debug resync throttle set --throttle 0
+esxcli vsan resync throttle set --level 0
 ```
 
 
@@ -654,8 +637,8 @@ esxcli vsan debug resync throttle set --throttle 0
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown option or subcommand 'debug'` | Verify the vSAN plugin is installed and loaded with `esxcli plugin list | grep vsan`. |
-    | `Error: The VSAN service is not running` | Start the vSAN service with `systemctl start vsanvpd` or enable it in the vSphere Client. |
+    | `Error: Missing required parameter --level` | The level is required: `--level <0-512>` (Mbps; 0 = no throttling). |
+    | `Error: The VSAN service is not running` | Restart the stopped vSAN daemon on the host per [Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410) (for example `/etc/init.d/vsanmgmtd restart`). |
 ### Adjust the Absent Component Timer
 
 ![Adjust the Absent Component Timer](../../../../../assets/vsan-proc-adjust-the-absent-component-timer.svg)
@@ -855,27 +838,22 @@ Cluster → Configure → vSAN → Disk Management → select new host → Claim
 
 **Step 4 — Monitor rebalance**
 
-vSAN rebalances data automatically. To trigger manually:
+vSAN rebalances data automatically. To trigger manually (PowerCLI; `esxcli` has no rebalance command):
 
-```bash
-esxcli vsan cluster rebalance start
+```powershell
+Start-VsanClusterRebalance -Cluster (Get-Cluster "VSAN-LON-01")
 ```
 
 
-```text title="Expected output"
-Rebalance operation started on cluster domain-c8
-Cluster UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
-Rebalance task ID: task-1847
-Initial data movement estimate: 2.3 TB
-Estimated completion time: 4 hours 32 minutes
-Current cluster capacity utilization: 78%
+```text
+Output varies; see the cmdlet help in VMware.VimAutomation.Storage: https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: Unable to start rebalance operation. Cluster is not in a healthy state.` | Run `esxcli vsan cluster get` to verify cluster health and resolve any failed disks or hosts before retrying. |
-    | `Error: Rebalance operation already in progress on this cluster.` | Wait for the current rebalance to complete using `esxcli vsan cluster rebalance status` or cancel it with `esxcli vsan cluster rebalance stop`. |
+    | `Error: Rebalance operation already in progress on this cluster.` | Wait for the current rebalance to complete (`Get-VsanResyncingOverview -Cluster <cluster>`) or stop it with `Stop-VsanClusterRebalance -Cluster <cluster>`. |
 **Option B — Add disks to an existing host**
 
 **Step 1 — Add capacity disks to an existing disk group**
@@ -940,34 +918,19 @@ esxcli vsan cluster get
 ```
 
 ```powershell
-Get-VsanFaultDomainConfiguration -Cluster (Get-Cluster "VSAN-LON-01")
+Get-VsanFaultDomain -Cluster (Get-Cluster "VSAN-LON-01")
 ```
 
 **Step 2 — Test witness host connectivity**
 
 ```bash
-esxcli vsan debug network test
+# The witness must appear in the unicast agent list of every data host
+esxcli vsan cluster unicastagent list
 ```
 
 
-```text title="Expected output"
-Unicast Ping Test
-=================
-Target: 192.168.1.45
-Packets sent: 10
-Packets received: 10
-Min latency: 0.234 ms
-Max latency: 1.842 ms
-Avg latency: 0.687 ms
-
-Multicast Test
-==============
-Group: 224.1.1.1
-Packets sent: 10
-Packets received: 10
-Loss: 0%
-
-Network connectivity test completed successfully.
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -1013,34 +976,19 @@ Both data sites and the witness site must show as connected. A partition between
 **Step 1 — Confirm cluster health before starting**
 
 ```bash
-esxcli vsan health cluster get
+esxcli vsan health cluster list
 esxcli vsan debug resync summary get
 ```
 
 
-```text title="Expected output"
-Cluster Health Status
-   Overall Health: yellow
-   Cluster Status: degraded
-   Memory Health: green
-   Network Health: green
-   Physical Disk Health: yellow
-   Data Health: yellow
-   Connectivity Health: green
-
-Resync Summary
-   Bytes to Sync: 1247483648
-   Bytes Synced: 892341760
-   Resync Rate (MB/s): 45.2
-   Time Remaining (minutes): 420
-   Objects Waiting for Resync: 12
-   Resync Operations In Progress: 3
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Could not connect to the vSAN health service` | Ensure the vSAN health service is running on all cluster nodes with `systemctl status vsanvpd` and restart if needed. |
+    | `Error: Could not connect to the vSAN health service` | Ensure the vSAN management daemon is running on all cluster nodes; restart it with `/etc/init.d/vsanmgmtd restart` if needed ([Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410)). |
     | `Error: vSAN cluster is not configured` | Verify vSAN is enabled on the cluster and at least three ESXi hosts are present using `esxcli vsan cluster get`. |
 All objects healthy; zero active resync required.
 
@@ -1168,40 +1116,15 @@ c7d8e9f0-a1b2-c3d4-e5f6-7a8b-9c0d-1e2f  2x3y4z5a-6b7c-8d9e-0f1g-2h3i4j5k6l7m  51
     |---|---|
     | `Error: Unknown command or namespace vsan debug vmdk` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status. |
     | `Error: Permission denied` | Execute the command with root privileges or ensure your user account has vSAN administrator role permissions. |
-**Disk-level stats — IOPS, latency, errors:**
+**Disk-level detail — health, capacity, congestion** (per-disk IOPS and latency come from the vSAN performance service: vSphere Client or PowerCLI `Get-VsanStat`):
 
 ```bash
-esxcli vsan storage stats get
+esxcli vsan debug disk list
 ```
 
 
-```text title="Expected output"
-Virtual SAN Storage Statistics
-==============================
-
-Node: esx-01.lab.local
-  Physical Capacity: 10.95 TB
-  Used Capacity: 7.32 TB
-  Free Capacity: 3.63 TB
-  Reservation: 512.00 GB
-  Deduplication Ratio: 1.8x
-  Compression Ratio: 2.1x
-
-Node: esx-02.lab.local
-  Physical Capacity: 10.95 TB
-  Used Capacity: 6.89 TB
-  Free Capacity: 4.06 TB
-  Reservation: 512.00 GB
-  Deduplication Ratio: 1.7x
-  Compression Ratio: 2.0x
-
-Node: esx-03.lab.local
-  Physical Capacity: 10.95 TB
-  Used Capacity: 7.15 TB
-  Free Capacity: 3.80 TB
-  Reservation: 512.00 GB
-  Deduplication Ratio: 1.9x
-  Compression Ratio: 2.2x
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -1301,28 +1224,12 @@ round-trip min/avg/max = 2.156/2.279/2.412 ms
 **Step 2 — Confirm witness appears in unicast agent list**
 
 ```bash
-esxcli vsan network ipconfig list
+esxcli vsan cluster unicastagent list
 ```
 
 
-```text title="Expected output"
-vmnic0
-   IPv4 Address: 192.168.1.42
-   Subnet Mask: 255.255.255.0
-   Default Gateway: 192.168.1.1
-   MAC Address: 00:50:56:c0:00:01
-
-vmnic1
-   IPv4 Address: 192.168.100.42
-   Subnet Mask: 255.255.255.0
-   Default Gateway: 192.168.100.1
-   MAC Address: 00:50:56:c0:00:02
-
-vmnic2
-   IPv4 Address: 192.168.200.42
-   Subnet Mask: 255.255.255.0
-   Default Gateway: 192.168.200.1
-   MAC Address: 00:50:56:c0:00:03
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -1355,7 +1262,7 @@ Cluster → Configure → vSAN → Fault Domains → Edit → select the witness
 **Step 3 — Verify fault domain configuration**
 
 ```powershell
-Get-VsanFaultDomainConfiguration -Cluster (Get-Cluster "VSAN-LON-01")
+Get-VsanFaultDomain -Cluster (Get-Cluster "VSAN-LON-01")
 ```
 
 **Step 4 — Test connectivity from both data sites**
@@ -1387,33 +1294,12 @@ round-trip min/avg/max = 2.156/2.279/2.412 ms
 **Step 5 — Verify cluster health**
 
 ```bash
-esxcli vsan health cluster get
+esxcli vsan health cluster list
 ```
 
 
-```text title="Expected output"
-Cluster Health Status
-   Overall Health: yellow
-   Cluster Status: degraded
-   Groups Affected: 1
-   
-Cluster Information
-   Cluster UUID: 52d4a8c1-7f2e-4c9a-b1e3-9a2c5d8f1b4a
-   Cluster Name: VSAN-Prod-Cluster
-   Node Count: 4
-   
-Health Groups
-   Group Name: vsan-cluster-connectivity
-   Status: yellow
-   Description: One or more hosts have network connectivity issues
-   
-   Group Name: vsan-disk-health
-   Status: green
-   Description: All disks are healthy
-   
-   Group Name: vsan-memory-health
-   Status: green
-   Description: Memory usage is normal
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -1483,7 +1369,7 @@ The pre-check validates cluster health and capacity. Resolve all failures before
 
 ```powershell
 $cluster = Get-Cluster "VSAN-LON-01"
-Get-VsanDiskFormatVersion -Cluster $cluster
+Get-VsanDiskGroup -Cluster $cluster | Select-Object VMHost, Name, DiskFormatVersion
 ```
 
 **Step 3 — Start the upgrade**
@@ -1637,7 +1523,7 @@ GatewayHeartbeatEnabled: false
     | Error | Fix |
     |---|---|
     | `Error: Unknown option or malformed command` | Verify the correct vmkernel interface name exists with `esxcli network ip interface list` and use the exact name. |
-    | `Error: Could not get interface tag information` | Ensure you have root or administrative privileges and the vSAN service is running with `systemctl status vsanvpd`. |
+    | `Error: Could not get interface tag information` | Ensure you have root or administrative privileges and the host management agent is running (`/etc/init.d/hostd restart`, [Broadcom KB 320280](https://knowledge.broadcom.com/external/article/320280)). |
 If the VSAN tag is missing, add it from vCenter:
 
 **From vCenter UI:**
@@ -2028,7 +1914,7 @@ Last Updated: 2025-01-15T10:42:31Z
     |---|---|
     | `Connection refused: vSAN cluster not initialized` | Ensure vSAN is enabled on the cluster and the host is part of a vSAN-enabled cluster. |
     | `Permission denied: insufficient privileges` | Run the command with root privileges or ensure your user account has vSAN administrator role permissions. |
-    | `vSAN service is not running` | Restart the vSAN service with `systemctl restart vsand` or reboot the ESXi host. |
+    | `vSAN service is not running` | Restart the stopped vSAN daemon on the host per [Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410) (for example `/etc/init.d/vsanmgmtd restart`). |
 Expected duration: several hours. Do not add or remove hosts during encryption enablement.
 
 ### Rotate Encryption Keys
@@ -2043,10 +1929,13 @@ Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Reke
 **Step 2 — Initiate via PowerCLI**
 
 ```powershell
-Invoke-VsanEncryptionRekey -Cluster (Get-Cluster "VSAN-LON-01") -DeepRekey
+# Shallow rekey: new key encryption key (KEK)
+Start-VsanEncryptionConfiguration -Cluster (Get-Cluster "VSAN-LON-01") -ShallowRekey
+# Deep rekey: all disks re-encrypted with new data encryption keys (DEKs)
+Start-VsanEncryptionConfiguration -Cluster (Get-Cluster "VSAN-LON-01") -DeepRekey
 ```
 
-`-DeepRekey` re-encrypts all data. Without it, only the DEK is rotated, not the KEK.
+A shallow rekey changes only the key encryption key (KEK) and rewraps the DEKs; a deep rekey re-encrypts all disks with new DEKs and takes a long time to finish.
 
 **Step 3 — Verify rekey completed**
 
@@ -2068,7 +1957,7 @@ Last Rekey Time: 2024-01-15 14:32:18
     | Error | Fix |
     |---|---|
     | `Error: Unknown command or namespace vsan` | Verify VSAN is licensed and enabled on the host by running `esxcli vsan cluster get`. |
-    | `grep: (standard input) has no matches` | VSAN encryption is not enabled; this is normal if encryption was never configured, so verify with `esxcli vsan storage get`. |
+    | `grep: (standard input) has no matches` | VSAN encryption is not enabled; this is normal if encryption was never configured, so verify with `esxcli vsan encryption info get`. |
 ### Verify Encryption Status
 
 ![Verify Encryption Status](../../../../../assets/vsan-proc-verify-encryption-status.svg)
@@ -2296,8 +2185,11 @@ Every 60.0s: esxcli vsan debug resync summary get
 **Step 1 — List domains and member hosts**
 
 ```powershell
-Get-VsanFaultDomainConfiguration -Cluster (Get-Cluster "VSAN-LON-01") |
-    Select Name, @{N='Hosts';E={$_.Hosts.Name -join ', '}}
+# Fault domains, then the fault domain of each host
+Get-VsanFaultDomain -Cluster (Get-Cluster "VSAN-LON-01") | Select-Object Name
+Get-VMHost -Location (Get-Cluster "VSAN-LON-01") | ForEach-Object {
+    [PSCustomObject]@{ Host = $_.Name; FaultDomain = (Get-VsanFaultDomain -VMHost $_).Name }
+}
 ```
 
 **Step 2 — Verify in vCenter UI**
@@ -2319,9 +2211,9 @@ A host in the "Default" domain is treated as its own single-host fault domain an
 **Step 2 — Verify no hosts remain in the Default domain**
 
 ```powershell
-Get-VsanFaultDomainConfiguration -Cluster (Get-Cluster "VSAN-LON-01") |
-    Where-Object { $_.Name -eq "Default" } |
-    Select Name, @{N='Hosts';E={$_.Hosts.Name -join ', '}}
+# Hosts with no fault domain assigned
+Get-VMHost -Location (Get-Cluster "VSAN-LON-01") |
+    Where-Object { -not (Get-VsanFaultDomain -VMHost $_) } | Select-Object Name
 # Expected: no output
 ```
 
@@ -2337,33 +2229,14 @@ Run this routine before any ESXi host or vSphere upgrade. It confirms the cluste
 
 ```bash
 # Run from any host in the cluster
-esxcli vsan health cluster get
+esxcli vsan health cluster list
 
 # All tests must pass. Investigate any failures before proceeding.
 ```
 
 
-```text title="Expected output"
-Cluster Health Status
-   Overall Health: green
-   Cluster Status: Healthy
-   
-   Object Repair Timer: 0
-   Reduced Redundancy Objects: 0
-   Orphaned Objects: 0
-   Physical Disk Issues: 0
-   
-   Network Connectivity: green
-   Component Metadata Health: green
-   Memory Pool Health: green
-   
-   Host Status:
-      esx-prod-01.lab.local: green
-      esx-prod-02.lab.local: green
-      esx-prod-03.lab.local: green
-      esx-prod-04.lab.local: green
-   
-   Last Health Check: 2024-01-15 14:32:18 UTC
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -2476,28 +2349,19 @@ Use this workflow when a VM reports slow storage performance. Work through each 
 Rule out infrastructure-level issues first:
 
 ```bash
-esxcli vsan health cluster get | grep -i fail
+esxcli vsan health cluster list | grep -i fail
 ```
 
 
-```text title="Expected output"
-Cluster: vsan-cluster-prod
-Health Status: Degraded
-Component: vSAN Object Repair Timer
-Status: FAILED
-Component: vSAN Disk Balance
-Status: FAILED
-Component: vSAN Network Connectivity
-Status: OK
-Component: vSAN Memory Usage
-Status: WARNING
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown command or namespace vsan health cluster get` | Verify vSAN is licensed and enabled on the cluster, then run `esxcli vsan cluster list` to confirm vSAN cluster membership. |
-    | `Error: Unable to connect to Management Agent on localhost.localdomain` | Ensure the ESXi host is powered on and the Management Agent service is running with `systemctl status hostd`. |
+    | `Error: Unknown command or namespace vsan health cluster list` | Verify vSAN is licensed and enabled on the cluster, then run `esxcli vsan cluster get` to confirm vSAN cluster membership. |
+    | `Error: Unable to connect to Management Agent on localhost.localdomain` | Ensure the ESXi host is powered on; restart the management agent with `/etc/init.d/hostd restart` ([Broadcom KB 320280](https://knowledge.broadcom.com/external/article/320280)). |
 **From vCenter UI:**
 Cluster → Monitor → vSAN → Skyline Health — any red/yellow items here can cause performance problems cluster-wide.
 
@@ -2581,7 +2445,7 @@ backup-vm-04.vmdk                             a5d6e7f8-9a0b-1c2d-3e4f-5a6b7c8d9e
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Could not connect to the vSAN cluster` | Verify the ESXi host is part of an active vSAN cluster and the vSAN service is running with `systemctl status vsand`. |
+    | `Error: Could not connect to the vSAN cluster` | Verify the ESXi host is part of an active vSAN cluster (`esxcli vsan cluster get`); restart any stopped vSAN daemon per [Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410). |
     | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator role assigned in vCenter. |
     | `Error: VMDK not found in vSAN object database` | Confirm the VM is powered on and its storage is actually on vSAN (not local or NFS) using `esxcli vsan cluster get`. |
 **From vCenter UI:**

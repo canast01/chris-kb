@@ -9,7 +9,7 @@ description: "Security hardening for ONTAP focuses on reducing attack surface, e
 <div class="kb-summary">
 Security hardening for ONTAP focuses on reducing attack surface, enforcing strong authentication, encrypting management and data traffic, and enabling comprehensive audit logging. Apply this baseline to all production clusters at build and validate quarterly.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Hardening](../../../../../assets/storage-netapp-ontap-security-hardening.svg)
 
@@ -34,12 +34,12 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 - [ ] Built-in `diag` account locked: `security login lock -username diag`
 - [ ] All service/automation accounts use minimum-privilege custom RBAC roles
 - [ ] No shared accounts; each administrator has an individual named account
-- [ ] SSH idle session timeout configured: `security session timeout modify -timeout 600`
+- [ ] SSH idle session timeout configured: `system timeout modify -timeout 10` (value is in minutes)
 - [ ] SSH host key type restricted to Ed25519 or RSA-4096+
 
 ### Protocol Security
 
-- [ ] TLS 1.2 minimum enforced for HTTPS management: `security config modify -interface HTTPS -min-protocol-version TLSv1.2`
+- [ ] TLS 1.2 minimum enforced for HTTPS management: `security config modify -supported-protocols TLSv1.3,TLSv1.2`
 - [ ] Telnet and RSH disabled: `security protocol show` confirms both are `false`
 - [ ] SNMPv1 and SNMPv2c community strings deleted; SNMPv3 only
 - [ ] SMB1 disabled on all CIFS SVMs: `vserver cifs options modify -smb1-enabled false`
@@ -81,10 +81,10 @@ security login publickey show -username admin
 # ssh -i /path/to/key admin@<cluster-mgmt-ip>
 
 # Remove password-based SSH login for admin
-security login delete -username admin -application ssh -authentication-method password
+security login delete -user-or-group-name admin -application ssh -authentication-method password
 
 # Confirm only publickey method remains
-security login show -username admin
+security login show -user-or-group-name admin
 ```
 
 
@@ -128,7 +128,7 @@ Public Key Hash: SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdEfG==
 security login lock -username diag -vserver <cluster-name>
 
 # Verify it is locked
-security login show -username diag -fields is-account-locked
+security login show -user-or-group-name diag -fields is-account-locked
 # Expected: is-account-locked: true
 ```
 
@@ -145,36 +145,32 @@ prod-cluster diag     true
     | Error | Fix |
     |---|---|
     | `Error: "diag" is not a valid username for Vserver "prod-cluster"` | Verify the cluster name with `cluster show` and ensure the diag account exists on that specific Vserver. |
-    | `Error: This operation is not permitted: User "admin" does not have permission to execute the command "security login lock"` | Confirm your user account has the "admin" or equivalent security role by running `security login show -username <your-user>`. |
+    | `Error: This operation is not permitted: User "admin" does not have permission to execute the command "security login lock"` | Confirm your user account has the "admin" or equivalent security role by running `security login show -user-or-group-name <your-user>`. |
 ### Session Timeout
 
 ```bash
-# Set CLI SSH idle timeout to 10 minutes (600 seconds)
-security session timeout modify -timeout 600
+# Set CLI session idle timeout to 10 minutes (-timeout is in minutes; 0 disables)
+system timeout modify -timeout 10
 
 # Verify timeout
-security session timeout show
+system timeout show
 ```
 
 
 ```text title="Expected output"
-(no output — command completes silently)
-
-Session Timeout
----------------
-Idle Timeout: 600 seconds
+system timeout show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/system-timeout-show.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: "security session timeout modify" is not a valid command.` | Verify you are running ONTAP 9.1 or later, as this command was introduced in that version. |
-    | `Error: Invalid value "600" for parameter "timeout".` | Use a value between 0 and 86400 seconds; 600 seconds is valid, so check for typos or ensure the parameter name matches your ONTAP version exactly. |
+    | Timeout far longer than expected | `-timeout` is in minutes, not seconds (`-timeout 10` = 10 minutes; `0` disables the timeout) per the [system timeout modify reference](https://docs.netapp.com/us-en/ontap-cli/system-timeout-modify.html). |
 ### Account Lockout Policy
 
 ONTAP does not have a configurable account lockout after N failed attempts in the same way as Active Directory. Enforce this compensating control:
 
-- Monitor failed login events via EMS: `event log show -messagename security.authentication.failed`
+- Monitor failed login events via EMS: `event log show -message-name security.authentication.failed`
 - Use LDAP/AD-integrated accounts where lockout is enforced at the IdP
 - For local accounts, review `security audit log show` for repeated failed attempts
 
@@ -186,13 +182,13 @@ ONTAP does not have a configurable account lockout after N failed attempts in th
 
 ```bash
 # Enforce TLS 1.2 minimum for HTTPS management interfaces
-security config modify -interface HTTPS -min-protocol-version TLSv1.2
+security config modify -supported-protocols TLSv1.3,TLSv1.2
 
 # Verify current TLS configuration
 security config show
 
 # For highest security environments, enforce TLS 1.2 only on both interfaces
-security config modify -interface SSL -min-protocol-version TLSv1.2
+security config modify -supported-protocols TLSv1.3,TLSv1.2
 
 # Verify with an external SSL test
 openssl s_client -connect <cluster-mgmt-ip>:443 -tls1_1
@@ -217,7 +213,7 @@ CONNECTED(00000000)
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Invalid value for "-min-protocol-version": "TLSv1.2"` | Verify the exact protocol version string supported by your ONTAP version (may be `TLSv1.2` or `TLSV1_2` depending on release); check the admin guide for valid enum values. |
+    | `security config modify` rejected | `-supported-protocols` is an advanced-privilege parameter (run `set -privilege advanced` first); valid values are TLSv1.3, TLSv1.2, TLSv1.1, TLSv1, SSLv3 per the [security config modify reference](https://docs.netapp.com/us-en/ontap-cli/security-config-modify.html). |
     | `Error: command not found: openssl` | Install openssl on your management workstation or use a dedicated SSL testing tool; the ONTAP cluster itself does not require openssl for this configuration. |
     | `Error: Connection refused` | Ensure the cluster management IP is correct and reachable from your test host, and verify the HTTPS management interface is enabled with `network interface show -vserver <cluster> -role mgmt`. |
 ### SSH Cipher Hardening
@@ -227,7 +223,7 @@ CONNECTED(00000000)
 security ssh modify \
     -vserver <cluster-name> \
     -ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com \
-    -macs hmac-sha2-256,hmac-sha2-512
+    -mac-algorithms hmac-sha2-256,hmac-sha2-512
 
 # Verify SSH settings
 security ssh show -vserver <cluster-name>
@@ -334,23 +330,16 @@ system snmp community delete -community-name private
 system snmp community show
 # Expected: no entries
 
-# Create an SNMPv3 user with authentication and privacy
-system snmp user create \
-    -username snmpv3monitor \
-    -authmethod sha \
-    -authpassword <strong-auth-passphrase> \
-    -privmethod aes128 \
-    -privpassword <strong-priv-passphrase>
+# Create an SNMPv3 user (USM); ONTAP prompts for the authentication protocol
+# and password, then the privacy protocol (aes128) and password
+security login create -user-or-group-name snmpv3monitor -application snmp -authentication-method usm
 
 # Add the monitoring server as an SNMPv3 trap host
-system snmp traphost add -ipaddr <monitoring-server-ip> -username snmpv3monitor
-
-# Enable SNMP
-system snmp modify -is-enabled true
+system snmp traphost add -peer-address <monitoring-server-ip> -usm-username snmpv3monitor
 
 # Verify SNMP configuration
 system snmp show
-system snmp user show
+security login show -application snmp
 system snmp traphost show
 ```
 
@@ -363,38 +352,21 @@ system snmp community delete -community-name private
 system snmp community show
 (no entries)
 
-system snmp user create -username snmpv3monitor -authmethod sha -authpassword ••••••••••••••• -privmethod aes128 -privpassword •••••••••••••••
-(no output — command completes silently)
+security login create -user-or-group-name snmpv3monitor -application snmp -authentication-method usm
+Enter the authoritative entity's EngineID [local EngineID]:
+Which authentication protocol do you want to choose (none, md5, sha, sha2-256, sha512) [none]:
+(vendor example prompts; source:
+https://docs.netapp.com/us-en/ontap/networking/configure_snmpv3_users_in_a_cluster.html)
 
-system snmp traphost add -ipaddr 192.168.1.45 -username snmpv3monitor
-(no output — command completes silently)
-
-system snmp modify -is-enabled true
-(no output — command completes silently)
-
-system snmp show
-SNMP Status: enabled
-SNMP Traps: enabled
-Authentication Traps: enabled
-Contact: admin@example.com
-Location: Data Center 1
-
-system snmp user show
-User Name: snmpv3monitor
-Auth Protocol: sha
-Privacy Protocol: aes128
-Engine ID: 80:00:1f:88:03:00:08:c0:a8:01:2d
-
-system snmp traphost show
-IP Address: 192.168.1.45
-Username: snmpv3monitor
-Port: 162
+system snmp show / system snmp traphost show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/system-snmp-show.html
+https://docs.netapp.com/us-en/ontap-cli/system-snmp-traphost-show.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: entry already exists.` | Verify the community string or user does not already exist before creation; use `system snmp community show` or `system snmp user show` to check. |
+    | `Error: entry already exists.` | Verify the community string or user does not already exist before creation; use `system snmp community show` or `security login show -application snmp` to check. |
     | `Error: Invalid IP address <monitoring-server-ip>` | Replace the placeholder with a valid IPv4 or IPv6 address in dotted-decimal or colon-hexadecimal notation. |
     | `Error: Authentication failed: invalid password complexity` | Ensure both `<strong-auth-passphrase>` and `<strong-priv-passphrase>` meet minimum length (8 characters) and complexity requirements. |
 ---
@@ -405,40 +377,40 @@ AutoSupport transmits cluster telemetry to NetApp and optionally to internal add
 
 ```bash
 # Set all nodes to use HTTPS for AutoSupport delivery
-autosupport modify -node * -transport https
+system node autosupport modify -node * -transport https
 
 # Configure a proxy if the cluster management LIF cannot reach the internet directly
-autosupport modify -node * -proxy-url http://proxy.example.local:8080
+system node autosupport modify -node * -proxy-url http://proxy.example.local:8080
 
 # Set the internal notification address for callhome events
-autosupport modify -node * -noteto ops-storage@corp.local
+system node autosupport modify -node * -noteto ops-storage@corp.local
 
 # Verify HTTPS connectivity to NetApp AutoSupport endpoints
-autosupport check show
+system node autosupport check show
 
 # Test AutoSupport delivery
-autosupport invoke -node * -type test
+system node autosupport invoke -node * -type test
 
 # Confirm test message was delivered
-autosupport history show -node * -most-recent 3
+system node autosupport history show -node *
 # Look for status: sent-successful
 ```
 
 
 ```text title="Expected output"
-node-1::*> autosupport modify -node * -transport https
-node-2::*> autosupport modify -node * -transport https
+node-1::*> system node autosupport modify -node * -transport https
+node-2::*> system node autosupport modify -node * -transport https
 (no output — command completes silently)
 
-node-1::*> autosupport modify -node * -proxy-url http://proxy.example.local:8080
-node-2::*> autosupport modify -node * -proxy-url http://proxy.example.local:8080
+node-1::*> system node autosupport modify -node * -proxy-url http://proxy.example.local:8080
+node-2::*> system node autosupport modify -node * -proxy-url http://proxy.example.local:8080
 (no output — command completes silently)
 
-node-1::*> autosupport modify -node * -noteto ops-storage@corp.local
-node-2::*> autosupport modify -node * -noteto ops-storage@corp.local
+node-1::*> system node autosupport modify -node * -noteto ops-storage@corp.local
+node-2::*> system node autosupport modify -node * -noteto ops-storage@corp.local
 (no output — command completes silently)
 
-node-1::*> autosupport check show
+node-1::*> system node autosupport check show
 Node: node-1
   Connectivity Status: PASSED
   HTTPS Connectivity: PASSED
@@ -451,11 +423,11 @@ Node: node-2
   Proxy Configuration: PASSED
   DNS Resolution: PASSED
 
-node-1::*> autosupport invoke -node * -type test
+node-1::*> system node autosupport invoke -node * -type test
 node-1: AutoSupport test message queued for delivery
 node-2: AutoSupport test message queued for delivery
 
-node-1::*> autosupport history show -node * -most-recent 3
+node-1::*> system node autosupport history show -node *
 Node: node-1
   Sequence Number: 4521
   Subject: AutoSupport DAILY [node-1] 192.168.1.10
@@ -485,7 +457,7 @@ Node: node-2
     |---|---|
     | `Error: Proxy URL is invalid or unreachable` | Verify the proxy hostname resolves and is reachable from the cluster management LIF using `network ping -vserver Cluster -destination proxy.example.local`. |
     | `Error: AutoSupport check show reports FAILED for HTTPS Connectivity` | Confirm port 443 is not blocked to NetApp AutoSupport endpoints by checking firewall rules and running `network traceroute -destination support.netapp.com`. |
-    | `Error: autosupport history show displays status: sent-failed` | Check the AutoSupport destination email address is correct and review logs with `autosupport history show -node <node> -fields subject,status,error-detail` to identify the delivery failure reason. |
+    | `Error: system node autosupport history show displays status: sent-failed` | Check the AutoSupport destination email address is correct and review logs with `system node autosupport history show -node <node> -fields subject,status,error` to identify the delivery failure reason. |
 ---
 
 ## Audit and SIEM Forwarding
@@ -499,13 +471,13 @@ All CLI, System Manager, and API operations by authenticated users are recorded 
 security audit log show
 
 # Filter by username
-security audit log show -user admin
+security audit log show -username admin
 
-# Filter by time range (last 24 hours)
-security audit log show -time-range "24h"
+# Filter by timestamp (vendor example format)
+security audit log show -timestamp "Mon Jan 03 18:37:05 2022"
 
-# Filter by command
-security audit log show -cmdname "security login"
+# Filter by command text
+security audit log show -input "security login*"
 ```
 
 
@@ -547,7 +519,7 @@ Time                     User   Vserver      Command                          Re
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Invalid time range format "24h"` | Use valid ONTAP time format such as "2024-01-14T00:00:00" or specify "-time-range -24h" with a leading dash for relative time. |
+    | No match for a timestamp filter | Use the `-timestamp` date format shown in the [security audit log show reference](https://docs.netapp.com/us-en/ontap-cli/security-audit-log-show.html). |
     | `Error: Access denied for user 'readonly' to command 'security audit log show'` | Ensure the user account has the "admin" or "security" role assigned via `security login modify`. |
 ### EMS Syslog Forwarding to SIEM
 
@@ -635,9 +607,7 @@ vserver audit enable -vserver <svm>
 
 # Verify audit configuration
 vserver audit show -vserver <svm>
-
-# Show audit log files
-vserver audit event-log show -vserver <svm>
+# Audit logs are written as files to the -destination path (see vserver audit create)
 ```
 
 
@@ -654,14 +624,6 @@ Vserver Audit Configuration for SVM "prod-svm-01":
                   Rotate Schedule Hour: 0
               Rotate Schedule Dayofweek: 0
                             Enabled: true
-
-Vserver Audit Event Log Files for SVM "prod-svm-01":
-Index  Filename                          Size      Timestamp
------  --------------------------------  --------  -------------------------
-1      20240115_000000_audit.xml        12.4MB    Jan 15 2024 00:00:15 +0000
-2      20240114_000000_audit.xml        50.0MB    Jan 14 2024 00:00:08 +0000
-3      20240113_000000_audit.xml        50.0MB    Jan 13 2024 00:00:12 +0000
-...
 ```
 
 !!! warning "Common errors"
@@ -669,7 +631,7 @@ Index  Filename                          Size      Timestamp
     |---|---|
     | `Error: destination path "/audit_logs" does not exist` | Create the volume and mount it at the junction path before configuring the audit destination. |
     | `Error: vserver audit create: command failed: Audit is already enabled on vserver "prod-svm-01"` | Run `vserver audit delete -vserver <svm>` first to remove the existing audit configuration, then recreate it. |
-    | `Error: Invalid event type "file-ops"` | Use valid event types such as `file-ops`, `cifs-logon-logoff`, `cap-staging`, or `file-share-access` separated by commas without spaces. |
+    | `Error: Invalid event type "file-ops"` | Use valid event types such as `file-ops`, `cifs-logon-logoff`, `cap-staging`, or `file-share` separated by commas without spaces. |
 ---
 
 ## RBAC Hardening for Service Accounts
@@ -699,7 +661,7 @@ security login role create -role monitoring-ro -cmddirname "event log show" -acc
 
 # Create the monitoring service account
 security login create \
-    -username svc-monitoring \
+    -user-or-group-name svc-monitoring \
     -application ssh \
     -authentication-method publickey \
     -role monitoring-ro \
@@ -746,7 +708,7 @@ cluster1::> security login role create -role monitoring-ro -cmddirname "event lo
 (no output — command completes silently)
 
 cluster1::> security login create \
-    -username svc-monitoring \
+    -user-or-group-name svc-monitoring \
     -application ssh \
     -authentication-method publickey \
     -role monitoring-ro \
@@ -765,7 +727,7 @@ cluster1::> security login publickey create \
     |---|---|
     | `Error: "monitoring-ro" already exists.` | Drop the existing role with `security login role delete -role monitoring-ro -cmddirname DEFAULT` before recreating it, or use a different role name. |
     | `Error: Invalid vserver name "<cluster-name>"` | Replace `<cluster-name>` with the actual cluster name (e.g., `cluster1`) or omit the `-vserver` parameter to use the admin vserver. |
-    | `Error: User "svc-monitoring" already exists.` | Delete the existing user with `security login delete -username svc-monitoring -application ssh` before recreating it. |
+    | `Error: User "svc-monitoring" already exists.` | Delete the existing user with `security login delete -user-or-group-name svc-monitoring -application ssh` before recreating it. |
 ### SnapCenter / Backup Role
 
 ```bash
@@ -779,7 +741,7 @@ security login role create -role backup-role -cmddirname "volume clone" -access 
 security login role create -role backup-role -cmddirname "lun show" -access readonly
 
 security login create \
-    -username svc-snapcenter \
+    -user-or-group-name svc-snapcenter \
     -application http \
     -authentication-method password \
     -role backup-role \
@@ -802,7 +764,7 @@ cluster1::> security login role create -role backup-role -cmddirname "volume clo
 (no output — command completes silently)
 cluster1::> security login role create -role backup-role -cmddirname "lun show" -access readonly
 (no output — command completes silently)
-cluster1::> security login create -username svc-snapcenter -application http -authentication-method password -role backup-role -vserver cluster1
+cluster1::> security login create -user-or-group-name svc-snapcenter -application http -authentication-method password -role backup-role -vserver cluster1
 Please enter a password for user "svc-snapcenter":
 Please confirm the password:
 (no output — command completes silently)
@@ -813,7 +775,7 @@ Please confirm the password:
     |---|---|
     | `Role "backup-role" already exists.` | Delete the existing role with `security login role delete -role backup-role` before recreating it. |
     | `"<cluster-name>" is not a valid vserver name.` | Replace `<cluster-name>` with the actual cluster name (e.g., `cluster1`) or use `-vserver *` for cluster-scoped access. |
-    | `User "svc-snapcenter" already exists.` | Use `security login delete -username svc-snapcenter -application http` to remove the existing user first, or choose a different username. |
+    | `User "svc-snapcenter" already exists.` | Use `security login delete -user-or-group-name svc-snapcenter -application http` to remove the existing user first, or choose a different username. |
 ---
 
 ## Compliance Mode and Audit Readiness
@@ -830,8 +792,8 @@ For regulated environments (PCI-DSS, HIPAA, FedRAMP, ISO 27001):
 | Log forwarding to SIEM | EMS syslog notifications | `event notification destination show` |
 | Key management | External KMIP | `security key-manager external show` |
 | FIPS 140-2 | ONTAP FIPS mode | `security config show -fields is-fips-enabled` |
-| Vulnerability management | AutoSupport + Active IQ | `autosupport history show` |
-| Change management | AutoSupport maintenance messages | `autosupport invoke -type all` |
+| Vulnerability management | AutoSupport + Active IQ | `system node autosupport history show` |
+| Change management | AutoSupport maintenance messages | `system node autosupport invoke -type all` |
 
 ---
 

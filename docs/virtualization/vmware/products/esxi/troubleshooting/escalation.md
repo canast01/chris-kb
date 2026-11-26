@@ -13,7 +13,7 @@ description: "How to escalate ESXi host issues to Broadcom support: what data to
 <div class="kb-summary">
 How to escalate ESXi host issues to Broadcom support: what data to collect, how to run the support bundle, step-by-step SR submission on the Broadcom portal, and the escalation path when progress stalls.
 
-*Applies to: ESXi 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Escalation](../../../../../assets/virtualization-vmware-esxi-troubleshooting-escalation.svg)
 
@@ -83,25 +83,16 @@ Run all of these before opening the SR. SSH to the ESXi host as root.
 ```bash
 # ESXi version — note the full build number, not just the release
 esxcli system version get
-# Example output:
-#   Product: VMware ESXi
-#   Version: 8.0.2
-#   Build: Releasebuild-23305546
 
 # Also get hardware info for the SR description
-esxcli hardware cpu get | grep -E "CPU Packages|CPU Cores|Hyperthreading"
+esxcli hardware cpu global get
 esxcli hardware memory get
 ```
 
 
 ```text title="Expected output"
-Product: VMware ESXi
-Version: 8.0.2
-Build: Releasebuild-23305546
-   CPU Packages: 2
-   CPU Cores: 16
-   Hyperthreading: Enabled
-Physical Memory: 256 GB
+Output varies by host (product, version, build; CPU package/core/thread counts; physical memory). See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_hardware.html
 ```
 
 !!! warning "Common errors"
@@ -277,7 +268,7 @@ Free: 549755813888
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `State: dead` | Run `esxcli storage nmp path set --state=active --path=vmhba2:C0:T2:L0` to reactivate the path, or verify SAN connectivity and zoning. |
+    | `State: dead` | A dead path reflects lost connectivity: verify SAN connectivity and zoning, then rescan with `esxcli storage core adapter rescan --all`. (`esxcli storage core path set --state active|off --path <path>` only toggles a path's administrative state.) |
     | `error: Unknown command or namespace` | Ensure you are running these commands directly on the ESXi host via SSH or local console, not through vCenter. |
     | `TransportState: error` | Check HBA driver logs with `esxcli system syslog config get` and verify Fibre Channel switch port status and SFP transceiver health. |
 ### 6. Write the timeline

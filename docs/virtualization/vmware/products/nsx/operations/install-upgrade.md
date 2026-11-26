@@ -7,7 +7,7 @@ tags:
 ---
 # NSX — Install and Upgrade
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 ![NSX — Install and Upgrade](../../../../../assets/virtualization-vmware-nsx-operations-install-upgrade.svg)
 
 ```bash
@@ -30,9 +30,12 @@ IP Ranges: 192.168.200.10–192.168.200.254
 ```bash
 # Verify from Manager CLI after preparation
 nsxcli
-get transport-nodes
-get transport-node-status
+get transport-nodes status
 # All hosts should show "UP"
+```
+
+```text title="Expected output"
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 ```text
 1. NSX Manager (all 3 nodes) — control plane first
@@ -212,7 +215,7 @@ Member: edge-node-02 (Standby)
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification, or import the NSX Manager certificate into your CA bundle. |
     | `401 Unauthorized` | Verify the admin credentials in the curl command are correct and the user has API access permissions in NSX Manager. |
-    | `Cluster Status: UNSTABLE` | Check the NSX Manager node connectivity and logs with `get log follow` to identify which manager is down, then restart the failed node's services. |
+    | `Cluster Status: UNSTABLE` | Check the NSX Manager node connectivity and logs with `get log-file manager.log follow` to identify which manager is down, then restart the failed node's services. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

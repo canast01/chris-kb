@@ -7,7 +7,7 @@ description: "Common questions about NetApp ONTAP operations, configuration, and
 ---
 # NetApp ONTAP — Frequently Asked Questions
 
-*Applies to: NetApp ONTAP 9.x*
+*Applies to: NetApp ONTAP 9.18.1–9.20.1*
 
 <div class="kb-summary">
 Common questions about NetApp ONTAP operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
@@ -17,7 +17,7 @@ Common questions about NetApp ONTAP operations, configuration, and troubleshooti
 ## General
 
 **Q: What ONTAP version is recommended for new deployments?**
-A: ONTAP 9.14.1 or 9.15.1 (latest P-releases) are recommended. Check with `version` from ONTAP CLI or System Manager → Cluster → Software. Always apply the latest patch release.
+A: The current release is ONTAP 9.20.1 (November 2026); 9.19.1 (July 2026) and 9.18.1 (November 2025) are the previous releases ([ONTAP 9 release support](https://docs.netapp.com/us-en/ontap/release-notes/release-support-reference.html)). Choose a release supported on your hardware (NetApp Hardware Universe) and apply its latest patch release; NetApp publishes Minimum Recommended ONTAP releases on the NetApp Support Site. Check with `version` from ONTAP CLI or System Manager → Cluster → Software. Always apply the latest patch release.
 
 **Q: How do I check the current NetApp ONTAP version?**
 A: `version`
@@ -33,7 +33,7 @@ A: `volume efficiency on -volume vol1` enables inline dedup and compression. Ver
 ## Operations
 
 **Q: How do I perform an ONTAP rolling upgrade without downtime?**
-A: Use ONTAP automatic non-disruptive upgrade (ANDU): `system image update -package <url> -replace-package true`. ANDU upgrades nodes one at a time, taking over and giving back storage. Verify with `cluster image show`.
+A: Use ONTAP automated non-disruptive upgrade (ANDU): download the image with `cluster image package get -url <url>`, then start the update with `cluster image update -version <version>`. ANDU upgrades nodes one at a time, taking over and giving back storage. Monitor with `cluster image show-update-progress` and verify with `cluster image show`.
 
 **Q: What is the correct procedure to create a new SVM and NFS export?**
 A: `vserver create -vserver nfs_svm -rootvolume root -rootvolume-security-style unix`. Add data LIF. Create volume. Add export policy. Verify: `vserver show -vserver nfs_svm`. Test mount from a client.
@@ -44,7 +44,7 @@ A: `vserver create -vserver nfs_svm -rootvolume root -rootvolume-security-style 
 A: Aggregate space usage is above 90%. ONTAP restricts new volume creation and thin-provisioned writes above 98%. Add drives, move volumes to another aggregate, or delete snapshots to reclaim space immediately.
 
 **Q: NFS/iSCSI latency increased — where do I start?**
-A: Check `qos statistics performance show` for workload latency breakdown. Review `statistics show -object volume` for per-volume IOPS. Check aggregate disk busy % with `aggr show-space`. Review network with `network interface show`.
+A: Check `qos statistics performance show` for workload latency breakdown. Review `statistics show -object volume` for per-volume IOPS. Check aggregate disk busy % with `storage aggregate show-space`. Review network with `network interface show`.
 
 ## Backup and Recovery
 

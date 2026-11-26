@@ -13,7 +13,7 @@ description: "Firewall port reference for NetApp ONTAP clusters. Covers cluster 
 <div class="kb-summary">
 Firewall port reference for NetApp ONTAP clusters. Covers cluster management, data protocol LIFs (NFS, SMB, iSCSI, NVMe-oF), SnapMirror/SnapVault replication, AutoSupport, and Active Directory integration.
 
-*Applies to: ONTAP 9.10+*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![NetApp ONTAP — Ports and Network Requirements](../../../../../assets/storage-netapp-ontap-architecture-ports.svg)
 

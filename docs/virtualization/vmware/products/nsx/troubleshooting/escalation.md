@@ -13,7 +13,7 @@ description: "How to escalate NSX networking issues to Broadcom support: what da
 <div class="kb-summary">
 How to escalate NSX networking issues to Broadcom support: what data to collect, how to generate the NSX support bundle, step-by-step SR submission on the Broadcom portal, and the escalation path when progress stalls.
 
-*Applies to: NSX 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 ![NSX — Escalation](../../../../../assets/virtualization-vmware-nsx-troubleshooting-escalation.svg)
 
@@ -209,51 +209,18 @@ curl -sk -u admin:<password> "https://<nsx-manager>/api/v1/alarms?status=OPEN&se
 ### 3. Generate the NSX support bundle (takes 10–30 minutes)
 
 ```bash
-# Trigger support bundle generation via API
+# Trigger support bundle collection via API for the listed node UUIDs.
+# The response body is the bundle archive (application/octet-stream).
 curl -sk -u admin:<password> \
   -X POST \
   -H "Content-Type: application/json" \
-  -d '{"log_age": 48, "components": ["MANAGER", "CONTROLLER", "EDGE", "HOST"]}' \
-  "https://<nsx-manager>/api/v1/node/support-bundles"
-# Note the bundle ID returned in the response
-
-# Poll for completion — repeat until status shows "SUCCESS"
-curl -sk -u admin:<password> \
-  "https://<nsx-manager>/api/v1/node/support-bundles/status"
-
-# Download the bundle (URL provided in the status response)
-curl -sk -u admin:<password> \
-  -O "https://<nsx-manager>/api/v1/node/support-bundles/download/<bundle-id>"
+  -d '{"nodes": ["<node-uuid-1>", "<node-uuid-2>"], "log_age_limit": 2}' \
+  -o nsx_support_archive.tar \
+  "https://<nsx-manager>/api/v1/administration/support-bundles?action=collect"
 ```
 
-
 ```text title="Expected output"
-{
-  "bundle_id": "support-bundle-20240115-143052-a7f2c9e1",
-  "status": "IN_PROGRESS",
-  "progress": 0,
-  "timestamp": "2024-01-15T14:30:52.000Z"
-}
-
-{
-  "bundle_id": "support-bundle-20240115-143052-a7f2c9e1",
-  "status": "IN_PROGRESS",
-  "progress": 45,
-  "timestamp": "2024-01-15T14:30:52.000Z"
-}
-
-{
-  "bundle_id": "support-bundle-20240115-143052-a7f2c9e1",
-  "status": "SUCCESS",
-  "progress": 100,
-  "file_size": 524288000,
-  "download_url": "/api/v1/node/support-bundles/download/support-bundle-20240115-143052-a7f2c9e1",
-  "timestamp": "2024-01-15T14:35:18.000Z"
-}
-
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  500M  100  500M    0     0  45.2M      0  0:00:11  0:00:11 --:--:-- support-bundle-20240115-143052-a7f2c9e1.tar.gz
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -382,11 +349,9 @@ nsxcli
 get cluster status
 get managers
 get services
-get corfu-cluster status
 
-# Transport node and tunnel status
-get transport-node-status
-get tunnel status
+# Transport node status
+get transport-nodes status
 
 # Edge node CLI (SSH to each Edge: ssh admin@<edge-ip>)
 get version
@@ -394,6 +359,7 @@ get services
 get bgp neighbor summary
 get edge-cluster status
 get interfaces
+get bfd-sessions
 
 # From NSX Manager API (curl from management workstation)
 # Manager cluster
@@ -405,105 +371,12 @@ curl -sk -u admin:<pw> "https://<mgr>/api/v1/transport-nodes/status?status=DOWN"
 # All active alarms
 curl -sk -u admin:<pw> "https://<mgr>/api/v1/alarms?status=OPEN" | python3 -m json.tool
 
-# Logical router status (for BGP/routing issues)
-curl -sk -u admin:<pw> "https://<mgr>/api/v1/logical-routers" | python3 -m json.tool
+# Tier-0 gateways (for BGP/routing issues)
+curl -sk -u admin:<pw> "https://<mgr>/policy/api/v1/infra/tier-0s" | python3 -m json.tool
 ```
 
-
 ```text title="Expected output"
-nsx-manager-01> nsxcli
-nsx-manager-01# get cluster status
-Cluster Status: STABLE
-Node ID: 42a7c8d1-9f2e-4b6c-a1e3-7d5f9c2b8e4a
-Node IP: 192.168.1.10
-Node Status: UP
-Cluster Node Count: 3
-
-nsx-manager-01# get managers
-Manager Nodes:
-  192.168.1.10  nsx-manager-01  UP
-  192.168.1.11  nsx-manager-02  UP
-  192.168.1.12  nsx-manager-03  UP
-
-nsx-manager-01# get services
-Service Name              Status    PID
-nsx-manager              UP        4521
-policy-service           UP        5847
-cluster-service          UP        3294
-corfu-service            UP        2156
-messaging-service        UP        6123
-
-nsx-manager-01# get corfu-cluster status
-Corfu Cluster Status: READY
-Cluster Size: 3
-Layout Epoch: 127
-
-nsx-manager-01# get transport-node-status
-Transport Node Status Summary:
-  UP: 24
-  DOWN: 1
-  DEGRADED: 0
-
-nsx-manager-01# get tunnel status
-Tunnel Status Summary:
-  UP: 156
-  DOWN: 3
-  UNKNOWN: 0
-
-edge-01> get version
-NSX Edge Version: 3.2.1.0
-Build: 18414822
-Release Date: 2023-11-15
-
-edge-01> get services
-Service Name              Status    PID
-nsx-edge                 UP        7234
-datapath                 UP        8156
-bgp-service              UP        5421
-
-edge-01> get bgp neighbor summary
-Neighbor Address    AS      State       Uptime
-10.0.0.1           65001   Established 14d 5h 23m
-10.0.0.2           65001   Established 8d 12h 44m
-10.0.0.3           65002   Connect     0h 2m 15s
-
-edge-01> get edge-cluster status
-Edge Cluster: edge-cluster-01
-Status: ACTIVE
-Member Count: 2
-Active Members: 2
-
-edge-01> get interfaces
-Interface Name    IP Address        Status    MTU
-eth0              10.20.30.41/24    UP        1500
-eth1              10.20.30.42/24    UP        1500
-eth2              10.20.30.43/24    UP        1500
-
-{
-  "cluster_status": "STABLE",
-  "node_count": 3,
-  "online_nodes": 3,
-  "offline_nodes": 0,
-  "degraded_nodes": 0
-}
-
-{
-  "results": [
-    {
-      "transport_node_id": "tn-456",
-      "display_name": "esx-host-07",
-      "status": "DOWN",
-      "last_heartbeat_timestamp": 1699564821000
-    }
-  ],
-  "result_count": 1
-}
-
-{
-  "results": [
-    {
-      "id": "alarm-789",
-      "title": "Transport Node Connectivity Lost",
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 ---
 

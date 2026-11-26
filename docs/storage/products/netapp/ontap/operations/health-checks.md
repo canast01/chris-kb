@@ -9,7 +9,7 @@ description: "Health Checks reference covering Health Check Decision Flow, Daily
 <div class="kb-summary">
 Health Checks reference covering Health Check Decision Flow, Daily Checks, Health Check, Cluster Health, Pre-Change Checklist and 1 more sections.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 ## Before you begin
@@ -25,12 +25,12 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 
 1. **Cluster health** — `cluster show -health true` — all nodes should return Healthy
 2. **Node status** — `system node show` — all nodes should be Online
-3. **Volume health** — `volume show -health-status degraded` — should return no entries
-4. **Aggregate status** — `aggr show -state !online` — should return no entries
-5. **Disk health** — `disk show -state !present` and `disk show -broken-count` — count should be 0
-6. **SVM status** — `vserver show -state !running` — all SVMs should be Running
-7. **SnapMirror health** — `snapmirror show -health false` — should return empty
-8. **NVRAM battery** — `system node show -fields nvram-battery-status` — all should show Ok
+3. **Volume health** — `volume show -state !online` — should return no entries
+4. **Aggregate status** — `storage aggregate show -state !online` — should return no entries
+5. **Disk health** — `storage disk show -broken` — should return no entries
+6. **SVM status** — `vserver show -operational-state !running` — all SVMs should be Running
+7. **SnapMirror health** — `snapmirror show -healthy false` — should return empty
+8. **NVRAM battery** — `system node environment sensors show -type battery-life` — no sensor outside its normal range
 
 ## Health Check Decision Flow
 
@@ -78,7 +78,7 @@ alertCheck -> done
 | [ ] Run `system health alert show` | `system health alert show` | review and action any active health alerts |
 | [ ] Run `storage failover show` | `storage failover show` | confirm HA takeover state is normal on all nodes |
 | [ ] Run `volume show -fields volume,state,percent-used` | `volume show -fields volume,state,percent-used` | confirm all volumes are online and below threshold |
-| [ ] Run `event log show -messagename callhome.*` | `event log show -messagename callhome.*` | check for any callhome EMS events since last check |
+| [ ] Run `event log show -message-name callhome.*` | `event log show -message-name callhome.*` | check for any callhome EMS events since last check |
 
 ## Health Check
 
@@ -91,7 +91,7 @@ alertCheck -> done
 - [ ] No active health alerts with severity `error` or higher
 - [ ] All SVMs are running: `svm show -state running`
 - [ ] Network interfaces all online: `network interface show -status-oper down` returns no results
-- [ ] AutoSupport last sent within expected interval: `autosupport history show`
+- [ ] AutoSupport last sent within expected interval: `system node autosupport history show`
 
 ```bash
 # Cluster node and HA status
@@ -114,7 +114,7 @@ storage disk show -broken
 system health alert show
 
 # Recent callhome EMS events
-event log show -messagename callhome.*
+event log show -message-name callhome.*
 
 # SVM and LIF status
 svm show
@@ -223,7 +223,7 @@ Status: ok
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Node prod-node-02 health: false` | Check node logs with `system node run -node prod-node-02 syslog tail` and resolve hardware or software faults before proceeding. |
+    | `Node prod-node-02 health: false` | Check node logs with `system node run -node prod-node-02 -command syslog tail` and resolve hardware or software faults before proceeding. |
     | `Eligibility: false for prod-node-03` | Verify the node has completed boot and cluster join with `cluster ring show -node prod-node-03`, then wait for automatic recovery or manually rejoin if needed. |
 ### Node Health
 
@@ -368,7 +368,7 @@ vol_temp          online     true
     | Error | Fix |
     |---|---|
     | `Error: command not found: volume` | Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a standard Linux shell. |
-    | `Error: invalid field name "state"` | Verify the field name is correct for your ONTAP version; use `volume show -help` to list available fields. |
+    | `Error: invalid field name "state"` | Verify the field name is correct for your ONTAP version; use `volume show -fields ?` to list available fields. |
 ### Interface Health
 
 ![Interface Health](../../../../../assets/storage-netapp-ontap-hc-interface-health.svg)
@@ -402,7 +402,7 @@ svm_nfs         e0e             172.16.8.20     up/down
 ![EMS Events (Recent Errors)](../../../../../assets/storage-netapp-ontap-hc-ems-events-recent-errors.svg)
 
 ```bash
-event log show -severity ERROR -time-range "1h"
+event log show -severity ERROR -time >1h
 event log show -severity CRITICAL
 ```
 

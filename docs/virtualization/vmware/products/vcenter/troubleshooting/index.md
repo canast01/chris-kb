@@ -13,7 +13,7 @@ description: "Troubleshooting reference for VMware vCenter Server. Covers common
 <div class="kb-summary">
 Troubleshooting reference for VMware vCenter Server. Covers common VCSA failure patterns, SSO and certificate issues, diagnostic commands, log collection, and escalation procedures.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <div class="kb-grid kb-grid-3">

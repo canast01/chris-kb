@@ -12,7 +12,7 @@ description: "Catalog of known NSX-T / NSX 4.x bugs, error codes, and workaround
 <div class="kb-summary">
 Catalog of known NSX-T / NSX 4.x bugs, error codes, and workarounds covering management plane, data plane, and overlay networking issues.
 
-*Applies to: NSX-T 3.x / NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 ![VMware NSX — Known Issues and Error Codes](../../../../../assets/virtualization-vmware-nsx-troubleshooting-known-issues.svg)
 
@@ -54,7 +54,7 @@ certificates -> resolution
 | Error / Symptom | Affected Versions | Cause | Workaround / Fix | Fixed In |
 |---|---|---|---|---|
 | NSX Manager UI shows `Degraded` — 3-node cluster | NSX-T 3.x / NSX 4.x | One Manager node lost quorum (disk full, crash, network partition) | SSH to each Manager; run `get cluster status`; restore quorum or redeploy failed node | N/A |
-| `Configuration out of sync` on transport node | NSX-T 3.x | MPA (Management Plane Agent) disconnect on transport node | On transport node: `esxcli software vib list | grep nsx`; restart MPA via `nsxcli -c 'restart process mpa'` | Varies |
+| `Configuration out of sync` on transport node | NSX-T 3.x | MPA (Management Plane Agent) disconnect on transport node | On transport node: `esxcli software vib list | grep nsx`; restart the agent service with `restart service <service-name>` (service names from `get services`) | Varies |
 | Firewall rules not pushed to hosts after policy change | NSX-T 3.x / 4.x | Message bus (RabbitMQ) queue backed up | Check 5671 reachability from ESXi to NSX Manager; restart `netcpa` on affected host | N/A |
 | NSX Manager API returns `503` for all requests | NSX 4.x | `proton` process OOM killed | SSH to Manager: `st restart proton`; check disk usage (`df -h`) | N/A |
 
@@ -70,7 +70,7 @@ certificates -> resolution
 
 | Error / Symptom | Affected Versions | Cause | Workaround / Fix | Fixed In |
 |---|---|---|---|---|
-| BGP session flapping on Tier-0 Gateway | NSX-T 3.x | BFD interval too aggressive for physical switch capability | Increase BFD min-interval (`set bfd-config`); align with upstream switch capability | N/A |
+| BGP session flapping on Tier-0 Gateway | NSX-T 3.x | BFD interval too aggressive for physical switch capability | Increase the BFD interval in the Tier-0 BGP/BFD configuration (NSX Manager UI or Policy API); align with upstream switch capability | N/A |
 | `ECMP route missing` after Edge node reboot | NSX-T 3.x | BGP reconvergence delay — routes not re-advertised fast enough | Reduce BGP hold-timer; check Edge node memory (OOM can cause route withdraw) | N/A |
 | NAT rule not applying to traffic | NSX-T 3.x / 4.x | Rule priority conflict; lower-priority rule matching first | Review NAT rule priority; NAT rules apply lowest-priority-first | N/A |
 

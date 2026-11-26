@@ -14,7 +14,7 @@ description: "Firewall port reference for VMware ESXi hosts. Covers management, 
 <div class="kb-summary">
 Firewall port reference for VMware ESXi hosts. Covers management, VM console, vMotion, Fault Tolerance, storage, and NSX overlay traffic. Use this when building firewall change requests for host onboarding or network re-segmentation.
 
-*Applies to: ESXi 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Ports and Network Requirements](../../../../../assets/virtualization-vmware-esxi-architecture-ports.svg)
 

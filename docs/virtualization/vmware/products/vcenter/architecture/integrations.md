@@ -11,11 +11,11 @@ description: "Integrations reference covering Veeam Backup & Replication, Identi
 <div class="kb-summary">
 Integrations reference covering Veeam Backup & Replication, Identity and Authentication Integration, Monitoring Integration, NSX Integration.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Integrations](../../../../../assets/virtualization-vmware-vcenter-architecture-integrations.svg)
 
-- **IWA**: Uses the machine account of the VCSA; requires VCSA joined to AD domain
+- **IWA (legacy, 8.x only)**: Uses the machine account of the VCSA joined to the AD domain; deprecated since 7.0 and removed in vCenter 9.0 — leave the domain and move to LDAPS or Identity Federation before upgrading ([KB 314324](https://knowledge.broadcom.com/external/article/314324/removal-of-integrated-windows-authentica.html))
 - **LDAP**: Explicit bind account; use LDAPS (port 636) for encrypted queries
 
 ## Identity Integration

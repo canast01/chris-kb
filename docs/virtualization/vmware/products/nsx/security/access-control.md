@@ -7,7 +7,7 @@ tags:
 ---
 # NSX — Access Control
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 ![NSX — Access Control](../../../../../assets/virtualization-vmware-nsx-security-access-control.svg)
 
 ```bash
@@ -126,57 +126,22 @@ curl -sk -u 'admin:password' \
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store. |
     | `{"httpStatus": 401, "error_code": 5003, "module_name": "Common", "error_message": "Authentication failed"}` | Verify the admin credentials are correct and the user has API access permissions enabled in NSX Manager. |
-    | `{"httpStatus": 400, "error_code": 5000, "error_message": "Invalid project_id: project-tenant-a"}` | Confirm the project ID exists in NSX Manager by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/projects` and use a valid project ID from the response. |
-```bash
-# SSH to NSX Manager node
-nsxcli
+    | `{"httpStatus": 400, "error_code": 5000, "error_message": "Invalid project_id: project-tenant-a"}` | Confirm the project ID exists in NSX Manager by running `curl -sk -u 'admin:password' https://<nsx-manager>/policy/api/v1/orgs/default/projects` and use a valid project ID from the response. |
 
-# Allow API access only from admin jump hosts and monitoring
-set firewall rule 1 source-ip 10.0.1.0/24 dest-port 443 action allow
-set firewall rule 2 source-ip 10.0.2.10/32 dest-port 443 action allow
-set firewall rule 3 dest-port 443 action deny
+The NSX CLI has no command for creating source-IP access rules on the NSX Manager itself, so restrict API (443) and SSH (22) access to the management interface with network controls in front of the managers. Command reference: [NSX 9.1 CLI Guide](https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html).
 
-# Allow SSH from jump hosts only
-set firewall rule 10 source-ip 10.0.1.0/24 dest-port 22 action allow
-set firewall rule 11 dest-port 22 action deny
-
-get firewall rules
-```
-
-```text title="Expected output"
-NSX CLI (build 20.0.3.1-18414822)
-Connected to NSX Manager at 192.168.100.15
-
-firewall rule 1 configured: source-ip 10.0.1.0/24 dest-port 443 action allow
-firewall rule 2 configured: source-ip 10.0.2.10/32 dest-port 443 action allow
-firewall rule 3 configured: dest-port 443 action deny
-firewall rule 10 configured: source-ip 10.0.1.0/24 dest-port 22 action allow
-firewall rule 11 configured: dest-port 22 action deny
-
-Firewall Rules:
-Rule ID | Source IP      | Dest Port | Action | Protocol
---------|----------------|-----------|--------|----------
-1       | 10.0.1.0/24    | 443       | allow  | tcp
-2       | 10.0.2.10/32   | 443       | allow  | tcp
-3       | any            | 443       | deny   | tcp
-10      | 10.0.1.0/24    | 22        | allow  | tcp
-11      | any            | 22        | deny   | tcp
-```
-
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `Error: firewall rule 1 already exists` | Delete the existing rule with `delete firewall rule 1` before reconfiguring it. |
-    | `Error: Invalid source-ip format: 10.0.1.0/24` | Verify CIDR notation is correct and the NSX version supports subnet-based rules; use individual IPs if needed. |
-    | `Error: Access denied — insufficient privileges` | Ensure your NSX user account has admin role; check with `get user <username>`. |
 ```bash
 # List existing principal identities
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/aaa/principal-identities"
+  "https://<nsx-manager>/api/v1/trust-management/principal-identities"
 
 # Verify certificate binding for an identity
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/aaa/principal-identities/<pi-id>"
+  "https://<nsx-manager>/api/v1/trust-management/principal-identities/<pi-id>"
+```
+
+```text title="Expected output"
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 ```powershell
 # PowerCLI — cross-check NSX role bindings against AD group membership

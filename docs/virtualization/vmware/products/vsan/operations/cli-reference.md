@@ -11,7 +11,7 @@ description: "Commonly used ESXi shell and PowerCLI commands for managing and tr
 <div class="kb-summary">
 Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting vSAN clusters. vSAN is VMware's hyper-converged storage solution — it pools the local disks of multiple ESXi hosts into a shared datastore.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN Operations — CLI Reference](../../../../../assets/virtualization-vmware-vsan-operations-cli-reference.svg)
 
@@ -29,21 +29,21 @@ Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting 
 | Task | Command |
 |---|---|
 | Cluster membership and health | `esxcli vsan cluster get` |
-| Run all health checks | `esxcli vsan health cluster get` |
-| Health failures only | `esxcli vsan health cluster get \| grep -i fail` |
+| List all health checks and status | `esxcli vsan health cluster list` |
+| Details for one health check | `esxcli vsan health cluster get -t "<test name>"` |
 | List disk groups | `esxcli vsan storage list` |
 | Object health summary | `esxcli vsan debug object list \| grep -v healthy` |
 | Resync queue | `esxcli vsan debug resync summary get` |
 | Resync detail | `esxcli vsan debug resync list` |
-| Check resync throttle | `esxcli vsan debug resync throttle get` |
-| Set resync throttle | `esxcli vsan debug resync throttle set --throttle 500` |
-| Network connectivity test | `esxcli vsan debug network test` |
+| Check resync throttle | `esxcli vsan resync throttle get` |
+| Set resync throttle (Mbps, 0-512; 0 = no throttling) | `esxcli vsan resync throttle set --level 500` |
+| Network performance test (PowerCLI) | `Test-VsanNetworkPerformance -Cluster <cluster>` |
 | MTU jumbo frame test | `vmkping -I vmk2 -d -s 8972 <peer_vmk_ip>` |
 | Add disk group | `esxcli vsan storage add -s <ssd_naa> -d <cap_naa>` |
 | Remove disk group | `esxcli vsan storage remove -s <ssd_naa>` |
 | Performance service status | `esxcli vsan perf get` |
 | Per-VMDK performance stats | `esxcli vsan debug vmdk list` |
-| Disk-level IOPS/latency stats | `esxcli vsan storage stats get` |
+| Per-disk vSAN detail (health, capacity) | `esxcli vsan debug disk list` |
 
 ---
 
@@ -55,30 +55,13 @@ Cluster → Monitor → vSAN → Skyline Health
 Equivalent CLI commands (run from any host in the cluster):
 
 ```bash
-esxcli vsan health cluster get | grep -i fail
-esxcli vsan health cluster get | grep -i warning
+esxcli vsan health cluster list
+esxcli vsan health cluster get -t "<test name>"
 ```
 
 
-```text title="Expected output"
-Cluster Health Status:
-  Overall Health: yellow
-  Cluster UUID: 52d4a8f1-7c2e-4a9b-8b3c-1a2b3c4d5e6f
-  Cluster Domain UUID: 52d4a8f1-7c2e-4a9b-8b3c-1a2b3c4d5e6f
-
-Health Check Results:
-  vSAN Build Health: yellow
-    Build Mismatch Detected: warning
-    Host esxi-01.lab.local: Build 20348
-    Host esxi-02.lab.local: Build 20347
-  Network Health: yellow
-    Unicast Agent Health: warning
-    Multicast Health: warning
-  Physical Disk Health: red
-    Disk mpx.vmhba0:C0:T0:L0 FAILED on esxi-03.lab.local
-    Disk mpx.vmhba1:C0:T1:L0 FAILED on esxi-03.lab.local
-  Memory Health: yellow
-    Memory Reservation Warning on esxi-02.lab.local
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -124,7 +107,7 @@ Last Updated: 2024-01-15 14:32:18 UTC
     |---|---|
     | `Error: Could not connect to the vSAN cluster` | Verify the ESXi host is part of an active vSAN cluster and network connectivity to vSAN management is available. |
     | `Error: Permission denied` | Ensure your user account has the required vSAN.Cluster.Read permission on the vSAN cluster object. |
-    | `Error: vSAN service is not running` | Restart the vSAN service using `systemctl restart vsanvpd` or reboot the ESXi host. |
+    | `Error: vSAN service is not running` | Check the vSAN daemons on the host and restart the stopped one (for example `/etc/init.d/vsanmgmtd restart`), per [Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410). |
 ---
 
 ## Health & Diagnostics
@@ -133,8 +116,7 @@ vSAN health checks validate everything from disk capacity to network connectivit
 
 ```bash
 # Summary health (pass/fail for all health checks)
-esxcli vsan health cluster get
-esxcli vsan health summary get
+esxcli vsan health cluster list
 
 # Detailed trace output
 esxcli vsan trace get
@@ -152,69 +134,13 @@ esxcli vsan debug object list | grep -i absent
 esxcli vsan debug resync list
 esxcli vsan debug resync summary get
 
-# Component status (individual chunks of VM data)
-esxcli vsan debug component list
+# Object health summary (counts of objects per health state)
+esxcli vsan debug object health summary get
 ```
 
 
-```text title="Expected output"
-Cluster Health Status:
-  Health: green
-  Timestamp: 2024-01-15T14:32:18Z
-
-Summary Health:
-  Overall Health: green
-  Cluster Capacity Health: green
-  Member Health: green
-  Network Health: green
-  Disk Format Version: 13
-  Upgrade Status: No upgrade in progress
-
-Trace Output:
-  [2024-01-15T14:32:19.847Z] vsan: cluster UUID esx-cluster-01-uuid-a1b2c3d4e5f6
-  [2024-01-15T14:32:19.851Z] vsan: node esxi-01.lab.local joined cluster
-  [2024-01-15T14:32:19.855Z] vsan: resync task initiated for object vm-123-disk-1
-  [2024-01-15T14:32:19.862Z] vsan: component rebuild 45% complete on host esxi-02
-
-VM Object Components:
-  Object UUID: 52d1e2f3-4a5b-6c7d-8e9f-0a1b2c3d4e5f
-  Object Name: vm-prod-01-disk-1
-  Health: green
-  Components: 3 (policy: RAID-1)
-  ...
-  Object UUID: 62e2f3g4-5b6c-7d8e-9f0a-1b2c3d4e5f6g
-  Object Name: vm-prod-02-disk-1
-  Health: yellow
-  Components: 3 (policy: RAID-1, 1 absent)
-
-Unhealthy Objects:
-  Object UUID: 62e2f3g4-5b6c-7d8e-9f0a-1b2c3d4e5f6g
-  Object Name: vm-prod-02-disk-1
-  Health Status: yellow (degraded)
-
-Absent Components:
-  Object UUID: 62e2f3g4-5b6c-7d8e-9f0a-1b2c3d4e5f6g
-  Component UUID: 7f3g4h5i-6j7k-8l9m-0n1o-2p3q4r5s6t7u
-  Host: esxi-03.lab.local (status: disconnected)
-  Data Size: 102400 MB
-
-Active Resync Operations:
-  Object UUID: 62e2f3g4-5b6c-7d8e-9f0a-1b2c3d4e5f6g
-  Operation: rebuild
-  Progress: 67%
-  Estimated Time Remaining: 12 minutes
-  Source Host: esxi-01.lab.local
-  Target Host: esxi-02.lab.local
-
-Resync Summary:
-  Total Objects Resyncing: 1
-  Total Data to Resync: 102400 MB
-  Average Progress: 67%
-  Estimated Completion: 2024-01-15T14:44:30Z
-
-Component Status:
-  Component UUID: 5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d
-  Object: vm-prod-01-
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 ---
 
@@ -271,47 +197,17 @@ VSAN UUID: 52534e41-4d4f-4445-a14d-7c2d1f8b9a4d
 ### Disk and Group Statistics
 
 ```bash
-# I/O stats per disk (reads, writes, errors, latency)
-esxcli vsan storage stats get
+# Per-disk vSAN detail (health, capacity, congestion); I/O metrics come from the
+# vSAN performance service (vSphere Client or PowerCLI Get-VsanStat)
+esxcli vsan debug disk list
 
 # Per-disk detail (include health state)
 esxcli vsan storage list | grep -E "naa\.|Health|State"
 ```
 
 
-```text title="Expected output"
-VSAN Storage I/O Statistics:
-Disk: naa.5001b1c58d1e2f4a
-  Read Operations: 2847392
-  Write Operations: 1563841
-  Read Latency (ms): 1.24
-  Write Latency (ms): 2.87
-  Read Errors: 0
-  Write Errors: 0
-Disk: naa.5001b1c58d1e2f4b
-  Read Operations: 2891204
-  Write Operations: 1598372
-  Read Latency (ms): 1.31
-  Write Latency (ms): 2.94
-  Read Errors: 0
-  Write Errors: 2
-Disk: naa.5001b1c58d1e2f4c
-  Read Operations: 2756183
-  Write Operations: 1521847
-  Read Latency (ms): 1.18
-  Write Latency (ms): 3.12
-  Read Errors: 0
-  Write Errors: 0
-
-naa.5001b1c58d1e2f4a
-Health: Healthy
-State: In Use
-naa.5001b1c58d1e2f4b
-Health: Healthy
-State: In Use
-naa.5001b1c58d1e2f4c
-Health: Degraded
-State: In Use
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -353,11 +249,14 @@ vSAN rebalancing initiated.
     | `Error: Disk group does not exist or SSD is not a valid cache device` | Confirm the SSD NAA is correct and the disk group UUID exists by running `esxcli vsan storage list`. |
 ### Evacuate Before Removal
 
-Always evacuate data before removing a disk — otherwise object components go absent:
+Always evacuate data before removing a disk — otherwise object components go absent. `esxcli` has no standalone evacuate command: check the impact with the evacuation pre-check, then evacuate as part of the removal with `-m evacuateAllData`:
 
 ```bash
-# Evacuate a disk (moves data to other hosts — waits for completion)
-esxcli vsan storage evacuate -d <device_naa>
+# Pre-check: what it takes to evacuate this disk, disk group or host
+esxcli vsan debug evacuation precheck -e <device_naa>
+
+# Remove the disk and evacuate all of its data first
+esxcli vsan storage remove -d <device_naa> -m evacuateAllData
 
 # Check resync progress during evacuation
 esxcli vsan debug resync list
@@ -367,21 +266,8 @@ esxcli vsan storage list | grep <device_naa>
 ```
 
 
-```text title="Expected output"
-Evacuation of device naa.5001405a1b2c3d4e started successfully.
-Evacuation UUID: 550e8400-e29b-41d4-a716-446655440000
-Waiting for evacuation to complete...
-
-Resync Objects: 247
-Resync Bytes: 1.2 TB
-Resync Rate: 450 MB/s
-Estimated Time Remaining: 45 minutes
-Current Progress: 68%
-
-Device naa.5001405a1b2c3d4e:
-  Capacity: 1.6 TB
-  Used: 0 B
-  Status: Evacuated
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -391,7 +277,7 @@ Device naa.5001405a1b2c3d4e:
     | `Error: Evacuation failed — insufficient free space on cluster` | Ensure the cluster has at least 30% free capacity before evacuating; add hosts or expand existing disks if needed. |
     | `Error: Device is in use by another operation` | Wait for any ongoing rebalancing or maintenance operations to complete, or check `esxcli vsan debug resync list` for blocking tasks. |
 !!! danger "Removes entire disk group — triggers rebuild"
-    `esxcli vsan storage remove -s` removes the cache SSD and all associated capacity disks as a unit. All vSAN objects on that disk group are evacuated to other nodes before removal. Do not run if the cluster has degraded objects or insufficient free space (< 25%). Always verify with `esxcli vsan health cluster get` before proceeding.
+    `esxcli vsan storage remove -s` removes the cache SSD and all associated capacity disks as a unit. All vSAN objects on that disk group are evacuated to other nodes before removal. Do not run if the cluster has degraded objects or insufficient free space (< 25%). Always verify with `esxcli vsan health cluster list` before proceeding.
 
 ### Remove a Disk Group
 
@@ -418,7 +304,7 @@ Resyncing remaining disks in group
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Disk group is not empty. Please evacuate data before removal.` | Run `esxcli vsan storage evacuate -s <ssd_naa>` first and wait for completion before removing. |
+    | `Error: Disk group is not empty. Please evacuate data before removal.` | Run `esxcli vsan debug evacuation precheck -e <ssd_naa>`, then remove with `esxcli vsan storage remove -s <ssd_naa> -m evacuateAllData`. |
     | `Error: Invalid NAA identifier <ssd_naa>. Disk not found.` | Verify the correct NAA ID using `esxcli vsan storage list` and ensure you're using the full naa.* format. |
     | `Error: Cannot remove capacity disk while rebalancing is in progress.` | Wait for the current rebalancing operation to complete using `esxcli vsan cluster get` before attempting removal. |
 ### Disk Group Health
@@ -428,34 +314,15 @@ Resyncing remaining disks in group
 esxcli vsan debug object list | grep -v healthy
 
 # vSAN health check — disk layer
-esxcli vsan health cluster get | grep -i disk
+esxcli vsan health cluster list | grep -i disk
 
-# Overall health summary
-esxcli vsan health summary get
+# Object health summary
+esxcli vsan debug object health summary get
 ```
 
 
-```text title="Expected output"
-Name: vsanDatastore
-UUID: 52d4a8f1-7c2e-4f9a-b1e3-9a2c5d8f1b4a
-Object UUID: 7f3e2c1a-9d8b-4e5f-a2c1-3b4d5e6f7a8b
-Health: degraded
-Policy: raid1
-Components: 3
-Unhealthy Components: 1
-
-Name: vsanDatastore
-UUID: 52d4a8f1-7c2e-4f9a-b1e3-9a2c5d8f1b4a
-Health Status: warning
-Disk Layer Status: degraded
-Disk Capacity: 89%
-Disk Latency: 45ms
-
-Cluster Health Status: warning
-Disk Layer: degraded
-Memory Layer: healthy
-Network Layer: healthy
-Overall Health: 2 components unhealthy, 1 disk absent
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -485,58 +352,32 @@ vSAN requires a dedicated VMkernel adapter tagged for vSAN traffic. All hosts in
 # List VMkernel adapters tagged for vSAN traffic
 esxcli vsan network list
 
-# Unicast agent config — shows peer IPs for each vSAN VMkernel
-esxcli vsan network ipconfig list
+# Unicast agent list — shows the peer IPs this host sends vSAN traffic to
+esxcli vsan cluster unicastagent list
 ```
 
 
-```text title="Expected output"
-VMkernel Adapters
-   Adapter: vmk1
-      VSAN Traffic: true
-      Enabled: true
-      IP Address: 192.168.100.42
-      Netmask: 255.255.255.0
-      MTU: 9000
-   Adapter: vmk2
-      VSAN Traffic: true
-      Enabled: true
-      IP Address: 192.168.101.43
-      Netmask: 255.255.255.0
-      MTU: 9000
-
-Unicast Agent Configuration
-   Agent Address: 192.168.100.42
-   Peer Address 1: 192.168.100.41
-   Peer Address 2: 192.168.100.40
-   Peer Address 3: 192.168.100.39
-   Agent Address: 192.168.101.43
-   Peer Address 1: 192.168.101.41
-   Peer Address 2: 192.168.101.40
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Could not retrieve vSAN network information` | Verify the host is vSAN-enabled and the vSAN service is running with `systemctl status vsanvpd`. |
+    | `Error: Could not retrieve vSAN network information` | Verify the host is vSAN-enabled with `esxcli vsan cluster get`; if a vSAN daemon is stopped, restart it per [Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410). |
     | `Error: No vSAN VMkernel adapters found` | Ensure at least one VMkernel adapter is tagged for vSAN traffic in the host's networking configuration. |
 ### Connectivity Test
 
-```bash
-# Test vSAN network connectivity to all cluster peers
-esxcli vsan debug network test
-# Sends UDP probes to all known unicast agents and reports latency / loss
+`esxcli vsan` has no network test command. Use the vSAN network performance test from PowerCLI (or the vSAN health network checks), and `vmkping` for per-peer checks:
+
+```powershell
+# vSAN network performance test across the cluster (PowerCLI, VMware.VimAutomation.Storage)
+Test-VsanNetworkPerformance -Cluster <cluster>
 ```
 
 
-```text title="Expected output"
-Probing vSAN network connectivity...
-Peer: esx-node-01.lab.local (192.168.100.11) - RTT: 0.342ms, Loss: 0%
-Peer: esx-node-02.lab.local (192.168.100.12) - RTT: 0.418ms, Loss: 0%
-Peer: esx-node-03.lab.local (192.168.100.13) - RTT: 0.521ms, Loss: 0%
-Peer: esx-node-04.lab.local (192.168.100.14) - RTT: 2.847ms, Loss: 0%
-Summary: 4 peers probed, 0 failures detected
-Network health: HEALTHY
+```text
+Output varies; see the cmdlet help in VMware.VimAutomation.Storage: https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617
 ```
 
 !!! warning "Common errors"
@@ -646,9 +487,9 @@ esxcli vsan network ip remove -i vmk2
 
 | Symptom | Check |
 |---|---|
-| Cluster health: Network issues | `esxcli vsan debug network test` — look for packet loss |
+| Cluster health: Network issues | `Test-VsanNetworkPerformance -Cluster <cluster>` (PowerCLI) and Skyline Health network checks |
 | High vSAN latency | `vmkping -d -s 8972` — check MTU along path |
-| Host isolated from cluster | `esxcli vsan network ipconfig list` — unicast agents populated? |
+| Host isolated from cluster | `esxcli vsan cluster unicastagent list` — unicast agents populated? |
 | vSAN VMkernel missing | `esxcli network ip interface tag get` — VSAN tag present? |
 
 ---
@@ -674,13 +515,14 @@ Get-VsanDiskGroup -VMHost <host>
 Get-VsanDisk -VMHost <host>
 
 # Resync status — active rebuilds and rebalances
-Get-VsanResyncStatus -Cluster <cluster>
+Get-VsanResyncingOverview -Cluster <cluster>
+Get-VsanResyncingComponent -Cluster <cluster>
 
 # Capacity usage
 Get-VsanSpaceUsage -Cluster <cluster>
 
-# Fault domain / witness configuration
-Get-VsanFaultDomainConfiguration -Cluster <cluster>
+# Fault domains
+Get-VsanFaultDomain -Cluster <cluster>
 
 # Full vSAN health check via API (detailed)
 $vhs = Get-VsanView -Id VsanVcClusterHealthSystem-vsan-cluster-health-system
@@ -694,7 +536,10 @@ $vhs.VsanQueryVcClusterHealthSummary(
 
 ## RVC Commands (Legacy)
 
-RVC (Ruby vSphere Console) was the primary vSAN diagnostic tool before vSAN 6.7. It remains available on vCenter appliances for backwards-compatible diagnostics. Most workflows have moved to `esxcli vsan` and the Skyline Health UI.
+!!! warning "RVC is deprecated starting with VCF 9.0"
+    Starting with VCF 9.0, the Ruby vSphere Console (RVC) and its Ruby components (Rbvmomi) in vCenter are deprecated; Broadcom recommends PowerCLI, DCLI or the vCenter UI instead ([VCF 9.0 vSAN product support notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsan.html)). The commands below are legacy, for vSAN 8.x and earlier, and use only command names listed in [Broadcom KB 326527](https://knowledge.broadcom.com/external/article/326527).
+
+RVC (Ruby vSphere Console) was the primary vSAN diagnostic tool before vSAN 6.7. Most workflows have moved to `esxcli vsan`, PowerCLI and the Skyline Health UI.
 
 ### Connecting to RVC
 
@@ -755,32 +600,16 @@ cluster-test-01
     |---|---|
     | `Error: Unknown command 'cd localhost/<datacenter>/computers/<cluster>/'` | Use forward slashes and navigate one level at a time, or use the full path like `cd localhost/Datacenters/Datacenter-1/computers/cluster-prod-01/`. |
     | `Error: Connection refused` | Verify vCenter FQDN is correct, the appliance is running, and port 443 is accessible from your network. |
-### Health Checks
+### Cluster Information
 
 ```bash
-# Full vSAN health check against a cluster
-vsan.health.health_check <cluster_path>
-
-# Quiet mode — only failed checks
-vsan.health.health_check <cluster_path> --quiet
+# Cluster summary per host (legacy 8.x)
+vsan.cluster_info <cluster_path>
 ```
 
 
-```text title="Expected output"
-Cluster Health Status: /datacenter/cluster-prod-01
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Component                          Status      Details
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Cluster connectivity               HEALTHY     4/4 nodes reachable
-vSAN disk format                   HEALTHY     All disks v13 compatible
-Network latency                    HEALTHY     Max latency 2.3ms
-Object resync                      HEALTHY     0 objects resyncing
-Physical disk health               WARNING     1 disk at 87% capacity (esx-04)
-Memory usage                       HEALTHY     Avg 64% utilization
-vSAN license                       HEALTHY     Enterprise Plus, expires 2025-06-15
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Overall Status: HEALTHY (1 warning)
-Timestamp: 2024-01-19T14:32:47Z
+```text
+Output varies; see Broadcom KB 326527: https://knowledge.broadcom.com/external/article/326527
 ```
 
 !!! warning "Common errors"
@@ -795,102 +624,48 @@ Timestamp: 2024-01-19T14:32:47Z
 # Disk stats per host in the cluster
 vsan.disks_stats <cluster_path>
 
-# Object inventory and compliance state
-vsan.obj_status_report <cluster_path>
-
 # Detail for a specific object UUID
 vsan.object_info <cluster_path> <object_uuid>
 ```
 
 
-```text title="Expected output"
-=== Disk Stats for /datacenter/cluster-prod ===
-Host: esx-01.lab.local
-  Physical Capacity: 5.45 TB
-  Used Capacity: 3.22 TB
-  Free Capacity: 2.23 TB
-  Disk Groups: 3
-  Components: 1247
-
-Host: esx-02.lab.local
-  Physical Capacity: 5.45 TB
-  Used Capacity: 3.18 TB
-  Free Capacity: 2.27 TB
-  Disk Groups: 3
-  Components: 1243
-
-Host: esx-03.lab.local
-  Physical Capacity: 5.45 TB
-  Used Capacity: 3.25 TB
-  Free Capacity: 2.20 TB
-  Disk Groups: 3
-  Components: 1251
-
-=== Object Inventory & Compliance ===
-Total Objects: 847
-Compliant: 823 (97.2%)
-Non-Compliant: 24 (2.8%)
-Degraded: 8
-Inaccessible: 0
-
-=== Object Details: 52d4a8c1-7f3e-4a2b-9c1d-e8f2a5b3c4d6 ===
-Name: prod-vm-db-01.vmdk
-Size: 256 GB
-Policy: RAID-1 (2 copies, 1 failure tolerated)
-Status: Compliant
-Component Count: 4
-Placement: esx-01, esx-02
-Last Updated: 2024-01-15 14:32:18 UTC
+```text
+Output varies; see Broadcom KB 326527: https://knowledge.broadcom.com/external/article/326527
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: Cluster path not found or invalid` | Verify the cluster path syntax matches your vCenter inventory structure (e.g., `/Datacenters/DC1/Clusters/vsan-cluster`). |
-    | `Error: Object UUID does not exist in cluster` | Confirm the UUID is correct and the object has not been deleted; use `vsan.obj_status_report` to list valid object UUIDs. |
+    | `Error: Object UUID does not exist in cluster` | Confirm the UUID is correct and the object has not been deleted; use `vsan.vm_object_info` on the VM to list its object UUIDs. |
 ### Resync Dashboard
 
 ```bash
 # Active resync operations (rebuilds, migrations)
 vsan.resync_dashboard <cluster_path>
-
-# Refresh every 10 seconds
-vsan.resync_dashboard <cluster_path> --refresh-rate 10
 ```
 
 
-```text title="Expected output"
-Cluster: /datacenter1/cluster-vsan-prod
-Resync Operations Dashboard
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Object UUID                          | Status    | Progress | Type      | ETA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-52e4a1c9-7f2b-4a8c-b1d3-9e6c2f5a8b4d | Resyncing | 67%      | Rebuild   | 4m 23s
-8f3d2c1a-9b4e-5f7c-a2d1-6e8c3f9a1b5d | Resyncing | 34%      | Migration | 8m 12s
-1a9c5e2d-3f7b-8c4a-d1e9-2b6f4a8c5e3d | Queued    | 0%       | Rebuild   | --
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Total Objects: 3 | Active: 2 | Queued: 1 | Completed: 47
-Cluster Health: Degraded | Resync Rate: 245 MB/s | Network Saturation: 62%
-
-[Refreshing every 10 seconds... Press Ctrl+C to exit]
+```text
+Output varies; see Broadcom KB 326527: https://knowledge.broadcom.com/external/article/326527
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `vsan.resync_dashboard: command not found` | Ensure the vSAN CLI tools are installed and the PATH includes the vSAN bin directory, or use the full path to the command. |
-    | `Error: Invalid cluster path '<cluster_path>'` | Verify the cluster path exists and is accessible; use `vsan.cluster_list` to confirm the correct path format. |
+    | `Error: Invalid cluster path '<cluster_path>'` | Verify the cluster path exists and is accessible; use `ls` from `/localhost` to confirm the correct path format. |
     | `Error: Unable to connect to vCenter Server` | Confirm vCenter credentials are configured in your environment and the vCenter service is running. |
 ### RVC vs Modern Alternatives
 
 | RVC Command | Modern Equivalent |
 |---|---|
-| `vsan.health.health_check` | vSAN Health UI / `esxcli vsan health summary get` |
-| `vsan.disks_stats` | `esxcli vsan storage stats get` |
-| `vsan.resync_dashboard` | `esxcli vsan debug resync list` |
-| `vsan.obj_status_report` | `esxcli vsan debug object list` |
+| `vsan.cluster_info` | `esxcli vsan cluster get` / `Get-VsanClusterConfiguration` |
+| `vsan.disks_stats` | `esxcli vsan debug disk list` |
+| `vsan.resync_dashboard` | `esxcli vsan debug resync summary get` / `Get-VsanResyncingOverview` |
+| `vsan.object_info` | `esxcli vsan debug object list -u <object_uuid>` |
 
-RVC is still useful for scripted checks against older vSAN clusters (6.0–6.5) where `esxcli vsan` commands are limited.
+RVC is deprecated starting with VCF 9.0; use it only against legacy vSAN 8.x and earlier clusters.
 
 ---
 
@@ -924,7 +699,7 @@ Data Retention Period: 7 days
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: vSAN Performance Service is not running` | Restart the vSAN Performance Service with `esxcli vsan perf restart` or check service status with `systemctl status vsanperf`. |
+    | `Error: vSAN Performance Service is not running` | Enable it with `esxcli vsan perf set --enabled true` or in the vSphere Client. |
     | `Error: Unable to connect to vSAN cluster` | Verify the host is part of an active vSAN cluster with `esxcli vsan cluster get` and confirm network connectivity between cluster nodes. |
     | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator permissions in vCenter. |
 ### Per-VMDK Stats
@@ -955,57 +730,22 @@ Look for high `ReadLatency` or `WriteLatency` values (milliseconds). Sustained v
 
 ### Disk-Level Stats
 
+`esxcli vsan` has no per-disk I/O statistics command. Per-disk IOPS and latency come from the vSAN performance service (vSAN performance views in the vSphere Client, or PowerCLI `Get-VsanStat`). For per-disk vSAN state from the host shell:
+
 ```bash
-# Per-physical-disk IOPS, latency, and error counters
-esxcli vsan storage stats get
+# Per-disk vSAN detail (health, capacity, congestion)
+esxcli vsan debug disk list
 ```
 
 
-```text title="Expected output"
-Physical Disk IOPS Statistics:
-  Disk: naa.5001405a1b2c3d4e
-    Read IOPS: 1247.3
-    Write IOPS: 892.1
-    Total IOPS: 2139.4
-  Disk: naa.5001405a1b2c3d4f
-    Read IOPS: 1156.8
-    Write IOPS: 756.2
-    Total IOPS: 1913.0
-  Disk: naa.5001405a1b2c3d50
-    Read IOPS: 1389.5
-    Write IOPS: 1024.7
-    Total IOPS: 2414.2
-
-Physical Disk Latency Statistics (ms):
-  Disk: naa.5001405a1b2c3d4e
-    Read Latency: 2.34
-    Write Latency: 3.12
-  Disk: naa.5001405a1b2c3d4f
-    Read Latency: 2.18
-    Write Latency: 2.89
-  Disk: naa.5001405a1b2c3d50
-    Read Latency: 2.67
-    Write Latency: 3.45
-
-Physical Disk Error Counters:
-  Disk: naa.5001405a1b2c3d4e
-    Read Errors: 0
-    Write Errors: 0
-    SMART Errors: 0
-  Disk: naa.5001405a1b2c3d4f
-    Read Errors: 0
-    Write Errors: 0
-    SMART Errors: 0
-  Disk: naa.5001405a1b2c3d50
-    Read Errors: 2
-    Write Errors: 0
-    SMART Errors: 1
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Could not connect to VSAN cluster` | Verify the host is part of an active vSAN cluster and the vSAN service is running with `systemctl status vsand`. |
+    | `Error: Could not connect to VSAN cluster` | Verify the host is part of an active vSAN cluster with `esxcli vsan cluster get`; if a vSAN daemon is stopped, restart it per [Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410). |
     | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator permissions in vCenter. |
 ### Cache Buffer Utilisation (OSA only)
 

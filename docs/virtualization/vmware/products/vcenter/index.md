@@ -10,7 +10,7 @@ description: "Technical and operational reference for VMware vCenter Server (VCS
 <div class="kb-summary">
 Technical and operational reference for VMware vCenter Server (VCSA). Covers architecture, cluster management, lifecycle, security, and troubleshooting for the vSphere management plane.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ![vCenter Capabilities Overview](../../../../assets/vcenter-capabilities-overview.svg)

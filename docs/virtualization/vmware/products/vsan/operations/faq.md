@@ -7,7 +7,7 @@ description: "Common questions about VMware vSAN operations, configuration, and 
 ---
 # VMware vSAN — Frequently Asked Questions
 
-*Applies to: VMware vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 
 <div class="kb-summary">
 Common questions about VMware vSAN operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
@@ -17,7 +17,7 @@ Common questions about VMware vSAN operations, configuration, and troubleshootin
 ## General
 
 **Q: What vSAN version is recommended?**
-A: vSAN ships with vSphere — use the version matching your vCenter/ESXi 8.0 Update 3 deployment. Check: vCenter → Cluster → Configure → vSAN → General → vSAN Version.
+A: vSAN ships with vSphere/ESX — use the version that matches your vCenter/ESX build: vSAN 9.x in VCF/VVF 9 (current train VCF 9.1, latest patch 9.1.2.0 released 2026-11-24), or vSAN 8.0 Update 3 for 8.x clusters (End of General Support 2027-10-11). See [Release Notes](../../release-notes/). Check: vCenter → Cluster → Configure → vSAN → General → vSAN Version.
 
 **Q: How do I check the current VMware vSAN version?**
 A: `vCenter → Cluster → Configure → vSAN → General → vSAN Version`

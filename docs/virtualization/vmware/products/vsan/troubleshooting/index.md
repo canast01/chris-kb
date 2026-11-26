@@ -13,7 +13,7 @@ description: "Troubleshooting reference for VMware vSAN. Covers common failure p
 <div class="kb-summary">
 Troubleshooting reference for VMware vSAN. Covers common failure patterns, diagnostic commands, log collection, and escalation procedures for engaging VMware support.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 <div class="kb-grid kb-grid-3">

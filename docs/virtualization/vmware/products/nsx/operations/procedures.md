@@ -11,7 +11,7 @@ description: "Step-by-step NSX procedures — segments, T0/T1 gateways, DFW secu
 <div class="kb-summary">
 Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies, NAT, load balancers, IPsec VPN, certificate rotation, backup/restore, and upgrade validation. Includes API commands.
 
-*Applies to: NSX-T 3.x / NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 
 ---
@@ -117,23 +117,12 @@ Confirms a segment is operationally UP and that VMs have connected logical ports
 ```bash
 nsxcli
 get logical-switches | grep seg-prod-app
-get logical-switch <id> status
-# Expected: Admin State: UP  Operational Status: UP
+get logical-switch <vni-or-uuid>
+# Check the admin state and VNI in the output
 ```
 
-
 ```text title="Expected output"
-NSX CLI (build 20230415.1)
-Connected to: nsx-manager-01.lab.local (192.168.100.50)
-
-seg-prod-app-01                 LS-4a7f2c9e-b1d4-47e9-9c2f-1a8b3d5e6f7g
-seg-prod-app-02                 LS-5b8e3d0f-c2e5-48f0-ad3g-2b9c4e6f7g8h
-
-Logical Switch: LS-4a7f2c9e-b1d4-47e9-9c2f-1a8b3d5e6f7g
-Admin State: UP
-Operational Status: UP
-Transport Zone: TZ-prod-overlay
-Replication Mode: mtep
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
@@ -156,59 +145,13 @@ VNI                 : 5001
     | `error: unknown command 'get'` | Ensure you are in the NSX Manager CLI context; if using a shell script, prefix with `nsxcli` or connect to NSX Manager first via SSH. |
     | `error: logical-switch not found` | Verify the logical switch ID exists by running `list logical-switches` first to confirm the correct ID. |
 ```bash
+# Segment ports (Policy API)
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/logical-ports?logical_switch_id=<segment-id>&attachment_type=VIF"
+  "https://<nsx-manager>/policy/api/v1/infra/segments/<segment-id>/ports"
 ```
 
-
 ```text title="Expected output"
-{
-  "result_count": 3,
-  "results": [
-    {
-      "id": "lport-42a8c9d1-7f3e-4b2a-9c1e-5d8f2a3b4c5d",
-      "logical_switch_id": "lswitch-8f2e1a9c-3d5b-4e7a-2f1c-9a8b7d6e5f4a",
-      "attachment_type": "VIF",
-      "attachment": {
-        "id": "vm-1234:ethernet-0",
-        "context": {
-          "resource_type": "VifAttachmentContext",
-          "vlan_id": 0
-        }
-      },
-      "admin_state": "UP",
-      "operational_state": "UP"
-    },
-    {
-      "id": "lport-5c3d2e1f-8a9b-4d6e-1a2c-7f8e9d0a1b2c",
-      "logical_switch_id": "lswitch-8f2e1a9c-3d5b-4e7a-2f1c-9a8b7d6e5f4a",
-      "attachment_type": "VIF",
-      "attachment": {
-        "id": "vm-5678:ethernet-0",
-        "context": {
-          "resource_type": "VifAttachmentContext",
-          "vlan_id": 0
-        }
-      },
-      "admin_state": "UP",
-      "operational_state": "UP"
-    },
-    {
-      "id": "lport-9e8d7c6b-5a4f-3e2d-1c0b-9a8f7e6d5c4b",
-      "logical_switch_id": "lswitch-8f2e1a9c-3d5b-4e7a-2f1c-9a8b7d6e5f4a",
-      "attachment_type": "VIF",
-      "attachment": {
-        "id": "vm-9012:ethernet-0",
-        "context": {
-          "resource_type": "VifAttachmentContext",
-          "vlan_id": 0
-        }
-      },
-      "admin_state": "UP",
-      "operational_state": "DOWN"
-    }
-  ]
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -230,42 +173,23 @@ Creates or updates a T1 gateway and configures route advertisement so that conne
 5. Optionally apply a DNS and DHCP profile.
 
 ```bash
-# Verify existing route advertisement config
+# Verify existing route advertisement config (route_advertisement_types field)
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/policy/api/v1/infra/tier-1s/<t1-id>/route-advertisement"
+  "https://<nsx-manager>/policy/api/v1/infra/tier-1s/<t1-id>"
 
-# Enable TIER1_CONNECTED if not already set
+# Enable TIER1_CONNECTED (PATCH replaces the whole route_advertisement_types list,
+# so include every type you want advertised)
 curl -sk -u 'admin:password' \
   -X PATCH \
   -H "Content-Type: application/json" \
   -d '{
-    "enabled": true,
-    "advertise_connected": true
+    "route_advertisement_types": ["TIER1_CONNECTED"]
   }' \
-  "https://<nsx-manager>/policy/api/v1/infra/tier-1s/<t1-id>/route-advertisement"
+  "https://<nsx-manager>/policy/api/v1/infra/tier-1s/<t1-id>"
 ```
 
-
 ```text title="Expected output"
-{
-  "resource_type": "RouteAdvertisement",
-  "id": "RouteAdvertisement",
-  "display_name": "RouteAdvertisement",
-  "path": "/infra/tier-1s/tier1-prod-01/route-advertisement",
-  "relative_path": "route-advertisement",
-  "parent_path": "/infra/tier-1s/tier1-prod-01",
-  "marked_for_delete": false,
-  "overridden": false,
-  "enabled": true,
-  "advertise_connected": true,
-  "advertise_static_routes": false,
-  "advertise_nat_routes": false,
-  "_create_time": 1698765432145,
-  "_modify_time": 1698765432145,
-  "_system_owned": false,
-  "_protection": "NOT_PROTECTED",
-  "_revision": 2
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -364,7 +288,7 @@ BGP neighbor is 10.0.0.5, remote AS 65001
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `% Invalid command` | Verify the correct syntax is `get bgp neighbor <neighbor-ip> summary` or use `show bgp neighbors` depending on your NSX version. |
+    | `% Invalid command` | Verify the syntax: `get bgp neighbor summary` (all peers) or `get bgp neighbor <neighbor-ip>` (one peer). |
     | `BGP neighbor 10.0.0.5 not found` | Confirm the neighbor IP address is correct and the BGP session has been configured on this Tier-0 VRF. |
     | `% Incomplete command` | Ensure you are in the correct VRF context by running `show vrf` first to list available Tier-0 VRFs. |
 ---
@@ -373,49 +297,36 @@ BGP neighbor is 10.0.0.5, remote AS 65001
 
 Manually fails over the active Edge node to its standby so that maintenance can be performed on the currently active node without extended downtime. Run during Edge node patching or when the active Edge shows hardware faults.
 
-1. Identify which Edge node is currently standby (`get edge-cluster status`).
-2. SSH to the **standby** Edge node (not the active one).
-3. Issue the failover command — the standby promotes itself to active.
-4. BGP reconverges via BFD, typically within 10–30 seconds.
-5. Verify the new active/standby state and that BGP neighbors are re-established.
+1. Identify which Edge node is currently active (`get edge-cluster status` and `get high-availability status` on the Edge node).
+2. The NSX CLI has no failover command. Put the **active** Edge node into NSX maintenance mode (UI or Policy API) so the standby takes over.
+3. BGP reconverges via BFD, typically within 10–30 seconds.
+4. Verify the new active/standby state and that BGP neighbors are re-established.
+5. Exit maintenance mode when the work on the node is complete.
 
 ```bash
-# SSH to the currently STANDBY Edge node (check with: get edge-cluster status)
-set edge-cluster failover
-# The standby becomes active; the previously active Edge becomes standby
-# BGP reconverges — typically within 10–30 seconds with BFD
+# Put the currently ACTIVE Edge node into maintenance mode (Policy API)
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/policy/api/v1/infra/sites/default/enforcement-points/default/edge-transport-nodes/<edge-tn-id>/action/enter-maintenance-mode"
+# The standby becomes active; BGP reconverges — typically within 10–30 seconds with BFD
 
-# Verify new state
+# Verify new state (Edge node CLI)
 get edge-cluster status
 get bgp neighbor summary
+
+# When maintenance is complete
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/policy/api/v1/infra/sites/default/enforcement-points/default/edge-transport-nodes/<edge-tn-id>/action/exit-maintenance-mode"
 ```
 
-
 ```text title="Expected output"
-NSX Edge Cluster Failover initiated
-Failover in progress... (this may take 10-30 seconds)
-Failover completed successfully
-
-edge-cluster status:
-  Node: edge-node-01.lab.local (10.20.30.41) — ACTIVE
-  Node: edge-node-02.lab.local (10.20.30.42) — STANDBY
-  Cluster Health: HEALTHY
-  Last Failover: 2024-01-15 14:32:18 UTC
-  Failover Count: 3
-
-BGP Neighbor Summary:
-  Neighbor          State       Uptime      Routes Received
-  192.168.1.1       Established 0:00:08     145
-  192.168.1.2       Established 0:00:12     142
-  10.50.0.1         Established 0:00:05     89
-  10.50.0.2         Established 0:00:06     87
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Cannot failover — both nodes in FAILED state` | Check node connectivity and hardware status with `get edge-cluster health-check` before attempting failover. |
-    | `Error: BGP session timeout — neighbor 192.168.1.1 DOWN` | Verify BGP configuration and network connectivity on the newly active node with `get bgp neighbor 192.168.1.1 detail`. |
+    | `Error: Cannot failover — both nodes in FAILED state` | Check node connectivity and state with `get edge-cluster status` and `get high-availability status` before attempting failover. |
+    | `Error: BGP session timeout — neighbor 192.168.1.1 DOWN` | Verify BGP configuration and network connectivity on the newly active node with `get bgp neighbor 192.168.1.1`. |
     | `Error: Failover not permitted — cluster has only 1 node` | Deploy a second Edge node to the cluster before initiating failover operations. |
 ---
 
@@ -884,61 +795,35 @@ curl -v https://<dest-vm-ip>/
 For automated traceflow via API:
 
 ```bash
+# Policy API: create (PUT) a traceflow from a segment port
 curl -sk -u 'admin:password' \
-  -X POST \
+  -X PUT \
   -H "Content-Type: application/json" \
   -d '{
+    "segment_port_path": "/infra/segments/<segment-id>/ports/<port-id>",
     "packet": {
-      "eth_type": 2048,
-      "ip_protocol": 6,
-      "src_ip": "10.0.2.10",
-      "dst_ip": "10.0.3.20",
-      "dst_port": 443,
-      "src_port": 54321,
-      "ttl": 64
-    },
-    "port_id": "<source-logical-port-id>"
+      "resource_type": "FieldsPacketData",
+      "transport_type": "UNICAST",
+      "ip_header": {"src_ip": "10.0.2.10", "dst_ip": "10.0.3.20", "protocol": 6, "ttl": 64},
+      "transport_header": {"tcp_header": {"src_port": 54321, "dst_port": 443}}
+    }
   }' \
-  "https://<nsx-manager>/api/v1/traceflows"
+  "https://<nsx-manager>/policy/api/v1/infra/traceflows/<traceflow-id>"
+
+# Read the hop-by-hop observations
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/policy/api/v1/infra/traceflows/<traceflow-id>/observations"
 ```
 
-
 ```text title="Expected output"
-{
-  "id": "traceflow-12847",
-  "resource_type": "Traceflow",
-  "display_name": "traceflow-12847",
-  "packet": {
-    "eth_type": 2048,
-    "ip_protocol": 6,
-    "src_ip": "10.0.2.10",
-    "dst_ip": "10.0.3.20",
-    "src_port": 54321,
-    "dst_port": 443,
-    "ttl": 64
-  },
-  "port_id": "lport-847a3c9e-2b41-4d8f-9f12-5c8d7e9a1b2c",
-  "state": "SUCCEEDED",
-  "result": [
-    {
-      "hop_index": 0,
-      "resource_type": "TraceflowHop",
-      "transport_node_name": "esx-compute-01.lab.local"
-    },
-    {
-      "hop_index": 1,
-      "resource_type": "TraceflowHop",
-      "transport_node_name": "esx-compute-02.lab.local"
-    }
-  ]
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; ensure curl supports SSL). |
-    | `{"httpStatus":400,"error_code":65506,"module_name":"common","error_message":"Invalid port_id"}` | Verify the source logical port ID exists by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/logical-ports` and copy a valid UUID. |
+    | Invalid source port | Verify the source segment port exists by running `curl -sk -u 'admin:password' https://<nsx-manager>/policy/api/v1/infra/segments/<segment-id>/ports` and use its path. |
     | `{"httpStatus":401,"error_code":65507,"module_name":"common","error_message":"Invalid credentials"}` | Confirm NSX Manager admin credentials are correct and the user has API access permissions. |
 ---
 
@@ -1349,20 +1234,11 @@ curl -sk -u 'admin:password' \
 # Trigger an on-demand backup immediately
 curl -sk -u 'admin:password' \
   -X POST \
-  "https://<nsx-manager>/api/v1/cluster/backups?action=backup_to_remote_file_server"
+  "https://<nsx-manager>/api/v1/cluster?action=backup_to_remote"
 ```
 
-
 ```text title="Expected output"
-{
-  "backup_id": "backup-20240115-143022",
-  "status": "STARTED",
-  "backup_type": "FULL",
-  "timestamp": "2024-01-15T14:30:22.456Z",
-  "remote_server": "backup.corp.local",
-  "estimated_duration_seconds": 1800,
-  "message": "Backup operation initiated successfully"
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -1559,38 +1435,24 @@ Collects diagnostic logs and system state from all NSX Manager and Edge nodes in
 1. Initiate the support bundle collection via API or UI (Support > Support Bundle).
 2. Specify which nodes to include — always include all managers and the affected Edge nodes.
 3. Wait for collection to complete (typically 2–10 minutes depending on cluster size).
-4. Download the bundle from NSX Manager.
+4. Save the archive: the API call returns the bundle as the response body (or set `remote_file_server` in the request to copy it to an SFTP server).
 
 ```bash
-# Initiate support bundle collection
+# Collect a support bundle for the listed node UUIDs (logs from the last 7 days)
+# and save the returned archive
 curl -sk -u 'admin:password' \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{
-    "components": ["MANAGER", "CONTROLLER", "EDGE"],
-    "log_age": "WEEK",
-    "notes": "Support bundle for ticket SR-12345"
+    "nodes": ["<manager-node-uuid>", "<edge-node-uuid>"],
+    "log_age_limit": 7
   }' \
+  -o nsx_support_archive.tar \
   "https://<nsx-manager>/api/v1/administration/support-bundles?action=collect"
 ```
 
-
 ```text title="Expected output"
-{
-  "bundle_id": "support-bundle-20240215-a7f3e2c1",
-  "status": "COLLECTING",
-  "components": [
-    "MANAGER",
-    "CONTROLLER",
-    "EDGE"
-  ],
-  "log_age": "WEEK",
-  "notes": "Support bundle for ticket SR-12345",
-  "created_time": "2024-02-15T14:32:18.456Z",
-  "estimated_size_mb": 2847,
-  "progress_percent": 5,
-  "expected_completion_time": "2024-02-15T14:47:18.456Z"
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -1599,54 +1461,6 @@ curl -sk -u 'admin:password' \
     | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
     | `{"error_code": 401, "error_message": "Invalid credentials"}` | Verify the NSX Manager admin username and password are correct and the account has not been locked. |
     | `curl: (7) Failed to connect to <nsx-manager>: Name or service not known` | Replace `<nsx-manager>` with the actual NSX Manager hostname or IP address (e.g., `nsx-mgr.example.com` or `192.168.1.100`). |
-```bash
-# Poll collection status
-curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/administration/support-bundles/status"
-```
-
-
-```text title="Expected output"
-{
-  "bundle_id": "support-bundle-20240115-084532",
-  "status": "COLLECTING",
-  "progress": 65,
-  "start_time": "2024-01-15T08:45:32.123Z",
-  "estimated_completion": "2024-01-15T08:52:15.000Z",
-  "node_id": "nsx-manager-01.lab.local",
-  "bundle_size_mb": 245,
-  "files_collected": 1847,
-  "files_total": 2841
-}
-```
-
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error persists, verify NSX Manager certificate is valid). |
-    | `curl: (7) Failed to connect to <nsx-manager>: Name or service not known` | Replace `<nsx-manager>` with the actual NSX Manager hostname or IP address (e.g., `192.168.1.50` or `nsx-mgr.example.com`). |
-    | `{"error_code": 401, "error_message": "Invalid credentials"}` | Verify the admin username and password are correct and the account has API access permissions. |
-```bash
-# Download completed bundle (file_id returned in status response)
-curl -sk -u 'admin:password' \
-  -O \
-  "https://<nsx-manager>/api/v1/administration/support-bundles/download?file_id=<file-id>"
-```
-
-
-```text title="Expected output"
-% Total    % Received % Xferd  Average Speed   Time    Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  1247M  100  1247M    0     0  45.2M      0  0:00:27 0:00:27 --:--:--  45.2M
-nsx-manager-support-bundle-10.20.30.40-20240115-143022.tar.gz
-```
-
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed). |
-    | `curl: (401) Unauthorized` | Verify admin credentials are correct and the user has support bundle download permissions in NSX Manager. |
-    | `curl: (404) Not Found` | Confirm the file_id is valid and the bundle generation completed successfully by checking the status endpoint first. |
 ---
 
 ## Change Control Record — Pre and Post Verification
@@ -1811,12 +1625,12 @@ curl -v https://<dest-vm-ip>/
     | `curl: (7) Failed to connect to 192.168.100.45 port 443: No route to host` | Confirm network connectivity and NSX logical routing/switching is configured correctly; verify the destination VM's network segment is reachable from your management network. |
 ## Configure a Load Balancer
 
-NSX-T load balancer supports L4 (TCP/UDP) and L7 (HTTP/HTTPS) with virtual servers, server pools, and health monitors.
+NSX load balancer supports L4 (TCP/UDP) and L7 (HTTP/HTTPS) with virtual servers, server pools, and health monitors. The Manager API load balancer paths (`loadbalancer/...`) are not in the NSX 9.1 API; use the Policy API (PATCH creates or updates an object with the ID in the URL).
 
 ```bash
 # 1. Create a server pool
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/loadbalancer/pools" \
+curl -sk -u 'admin:password' -X PATCH \
+  "https://<nsx-manager>/policy/api/v1/infra/lb-pools/web-pool" \
   -H "Content-Type: application/json" \
   -d '{
     "display_name": "web-pool",
@@ -1824,97 +1638,57 @@ curl -sk -u 'admin:password' -X POST \
     "members": [
       {"ip_address": "<member-1-ip>", "port": "443", "weight": 1},
       {"ip_address": "<member-2-ip>", "port": "443", "weight": 1}
-    ],
-    "active_monitor_ids": []
+    ]
   }'
 
-# 2. Create a virtual server
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/loadbalancer/virtual-servers" \
+# 2. Create an LB service attached to a T1 gateway
+curl -sk -u 'admin:password' -X PATCH \
+  "https://<nsx-manager>/policy/api/v1/infra/lb-services/web-lb-service" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "web-lb-service",
+    "connectivity_path": "/infra/tier-1s/<t1-gateway-id>",
+    "size": "SMALL"
+  }'
+
+# 3. Create a virtual server on that LB service
+curl -sk -u 'admin:password' -X PATCH \
+  "https://<nsx-manager>/policy/api/v1/infra/lb-virtual-servers/web-vs" \
   -H "Content-Type: application/json" \
   -d '{
     "display_name": "web-vs",
     "ip_address": "<vip-ip>",
-    "port": "443",
-    "pool_id": "<pool-id>",
-    "application_profile_id": "<https-profile-id>",
+    "ports": ["443"],
+    "pool_path": "/infra/lb-pools/web-pool",
+    "lb_service_path": "/infra/lb-services/web-lb-service",
+    "application_profile_path": "/infra/lb-app-profiles/<app-profile-id>",
     "enabled": true
-  }'
-
-# 3. Attach LB service to a T1 gateway
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/loadbalancer/services" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "display_name": "web-lb-service",
-    "attachment": {"target_id": "<t1-gateway-id>", "target_type": "LogicalRouter"},
-    "size": "SMALL",
-    "virtual_server_ids": ["<virtual-server-id>"]
   }'
 
 # 4. Verify LB service status
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/loadbalancer/services/<lb-service-id>/status"
-# operational_status should be UP
+  "https://<nsx-manager>/policy/api/v1/infra/lb-services/web-lb-service/detailed-status"
 ```
 
-
 ```text title="Expected output"
-{
-  "id": "pool-8f4c2a91-7e3d-4b9a-8c1f-d2e5a9b3c7f1",
-  "display_name": "web-pool",
-  "algorithm": "ROUND_ROBIN",
-  "members": [
-    {"ip_address": "10.20.30.101", "port": 443, "weight": 1},
-    {"ip_address": "10.20.30.102", "port": 443, "weight": 1}
-  ],
-  "active_monitor_ids": [],
-  "resource_type": "LbPool"
-}
-{
-  "id": "vs-a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6",
-  "display_name": "web-vs",
-  "ip_address": "10.20.40.50",
-  "port": 443,
-  "pool_id": "pool-8f4c2a91-7e3d-4b9a-8c1f-d2e5a9b3c7f1",
-  "application_profile_id": "https-profile-default",
-  "enabled": true,
-  "resource_type": "LbVirtualServer"
-}
-{
-  "id": "lb-service-5d6e7f8g-9h0i-1j2k-3l4m-5n6o7p8q9r0s",
-  "display_name": "web-lb-service",
-  "attachment": {"target_id": "t1-router-prod-01", "target_type": "LogicalRouter"},
-  "size": "SMALL",
-  "virtual_server_ids": ["vs-a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6"],
-  "resource_type": "LbService"
-}
-{
-  "service_id": "lb-service-5d6e7f8g-9h0i-1j2k-3l4m-5n6o7p8q9r0s",
-  "operational_status": "UP",
-  "detailed_status": [
-    {"component": "virtual_server", "status": "UP"},
-    {"component": "pool_member_10.20.30.101", "status": "UP"},
-    {"component": "pool_member_10.20.30.102", "status": "UP"}
-  ]
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `{"error_code": 401, "error_message": "Invalid credentials"}` | Verify NSX Manager hostname, username, and password are correct in the curl command. |
-    | `{"error_code": 400, "error_message": "pool_id not found"}` | Ensure the pool was created successfully in step 1 and use the returned pool ID in the virtual server creation request. |
-    | `{"error_code": 409, "error_message": "IP address 10.20.40.50 already in use"}` | Choose a different VIP address that is not already assigned to another virtual server or resource. |
+    | Virtual server rejected because a path does not exist | Create the pool and LB service first, and use their policy paths (`/infra/lb-pools/<id>`, `/infra/lb-services/<id>`). |
+    | VIP address conflict | Choose a VIP address that is not already assigned to another virtual server or resource. |
 Health monitor for HTTPS:
 
 ```bash
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/loadbalancer/monitors" \
+curl -sk -u 'admin:password' -X PATCH \
+  "https://<nsx-manager>/policy/api/v1/infra/lb-monitor-profiles/https-monitor" \
   -H "Content-Type: application/json" \
   -d '{
     "display_name": "https-monitor",
-    "resource_type": "LbHttpsMonitor",
+    "resource_type": "LBHttpsMonitorProfile",
     "interval": 5,
     "timeout": 15,
     "fall_count": 3,
@@ -1923,54 +1697,28 @@ curl -sk -u 'admin:password' -X POST \
     "request_method": "GET",
     "response_status_codes": [200]
   }'
+# Then reference it from the pool: "active_monitor_paths": ["/infra/lb-monitor-profiles/https-monitor"]
 ```
 
-
 ```text title="Expected output"
-{
-  "resource_type": "LbHttpsMonitor",
-  "id": "lbmonitor-1",
-  "display_name": "https-monitor",
-  "interval": 5,
-  "timeout": 15,
-  "fall_count": 3,
-  "rise_count": 2,
-  "request_url": "/health",
-  "request_method": "GET",
-  "response_status_codes": [
-    200
-  ],
-  "_self": {
-    "href": "/api/v1/loadbalancer/monitors/lbmonitor-1",
-    "rel": "self"
-  },
-  "_links": [
-    {
-      "href": "/api/v1/loadbalancer/monitors/lbmonitor-1",
-      "rel": "self"
-    }
-  ],
-  "_schema": "/api/v1/schema/LbHttpsMonitor"
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error persists, verify NSX Manager certificate is valid). |
-    | `{"httpStatus":400,"error_code":107,"module_name":"common","error_message":"Invalid request body"}` | Validate JSON syntax and ensure all required fields match the NSX API schema version for your release. |
     | `{"httpStatus":401,"error_code":401,"module_name":"common","error_message":"Unauthorized"}` | Verify admin credentials are correct and the user has API access permissions in NSX Manager. |
 ## Configure IPsec VPN
 
-Policy-based IPsec VPN between NSX T0 and a remote peer (on-prem firewall or cloud gateway).
+Policy-based IPsec VPN between NSX T0 and a remote peer (on-prem firewall or cloud gateway). The Manager API IPsec paths (`vpn/ipsec/...`) are not in the NSX 9.1 API; use the Policy API.
 
 ```bash
 # 1. Create IKE profile (IKEv2 recommended)
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/vpn/ipsec/ike-profiles" \
+curl -sk -u 'admin:password' -X PATCH \
+  "https://<nsx-manager>/policy/api/v1/infra/ipsec-vpn-ike-profiles/ike-profile-aes256" \
   -H "Content-Type: application/json" \
   -d '{
-    "display_name": "ike-profile-aes256",
     "ike_version": "IKE_V2",
     "encryption_algorithms": ["AES_256"],
     "digest_algorithms": ["SHA2_256"],
@@ -1979,11 +1727,10 @@ curl -sk -u 'admin:password' -X POST \
   }'
 
 # 2. Create tunnel profile
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/vpn/ipsec/tunnel-profiles" \
+curl -sk -u 'admin:password' -X PATCH \
+  "https://<nsx-manager>/policy/api/v1/infra/ipsec-vpn-tunnel-profiles/tunnel-profile-aes256" \
   -H "Content-Type: application/json" \
   -d '{
-    "display_name": "tunnel-profile-aes256",
     "encryption_algorithms": ["AES_256"],
     "digest_algorithms": ["SHA2_256"],
     "dh_groups": ["GROUP14"],
@@ -1991,96 +1738,42 @@ curl -sk -u 'admin:password' -X POST \
     "enable_perfect_forward_secrecy": true
   }'
 
-# 3. Create local endpoint (T0 uplink IP)
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/vpn/ipsec/local-endpoints" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "display_name": "local-endpoint",
-    "local_id": "<t0-uplink-ip>",
-    "local_address": "<t0-uplink-ip>",
-    "logical_router_id": "<t0-router-id>"
-  }'
+# 3. Create the IPSec VPN service on the T0 locale-service
+VPN="https://<nsx-manager>/policy/api/v1/infra/tier-0s/<t0-id>/locale-services/<locale-service-id>/ipsec-vpn-services/vpn-svc"
+curl -sk -u 'admin:password' -X PATCH "$VPN" \
+  -H "Content-Type: application/json" -d '{"enabled": true}'
 
-# 4. Create peer endpoint
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/vpn/ipsec/peer-endpoints" \
+# 4. Create local endpoint (T0 uplink IP)
+curl -sk -u 'admin:password' -X PATCH "$VPN/local-endpoints/local-endpoint" \
+  -H "Content-Type: application/json" \
+  -d '{"local_address": "<t0-uplink-ip>", "local_id": "<t0-uplink-ip>"}'
+
+# 5. Create the policy-based IPsec session (peer details are part of the session)
+curl -sk -u 'admin:password' -X PATCH "$VPN/sessions/vpn-to-onprem" \
   -H "Content-Type: application/json" \
   -d '{
-    "display_name": "remote-peer",
-    "peer_id": "<remote-peer-ip>",
+    "resource_type": "PolicyBasedIPSecVpnSession",
     "peer_address": "<remote-peer-ip>",
+    "peer_id": "<remote-peer-ip>",
     "authentication_mode": "PSK",
     "psk": "<pre-shared-key>",
-    "ike_profile_id": "<ike-profile-id>",
-    "tunnel_profile_id": "<tunnel-profile-id>"
-  }'
-
-# 5. Create IPsec session
-curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/vpn/ipsec/sessions" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "display_name": "vpn-to-onprem",
-    "resource_type": "PolicyBasedIPSecVpnSession",
-    "local_endpoint_id": "<local-endpoint-id>",
-    "peer_endpoint_id": "<peer-endpoint-id>",
-    "peer_subnets": ["<remote-cidr>"],
-    "local_subnets": ["<local-cidr>"],
+    "ike_profile_path": "/infra/ipsec-vpn-ike-profiles/ike-profile-aes256",
+    "tunnel_profile_path": "/infra/ipsec-vpn-tunnel-profiles/tunnel-profile-aes256",
+    "local_endpoint_path": "/infra/tier-0s/<t0-id>/locale-services/<locale-service-id>/ipsec-vpn-services/vpn-svc/local-endpoints/local-endpoint",
+    "rules": [{
+      "id": "rule-1",
+      "sources": [{"subnet": "<local-cidr>"}],
+      "destinations": [{"subnet": "<remote-cidr>"}]
+    }],
     "enabled": true
   }'
 
 # 6. Verify tunnel status
-curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/vpn/ipsec/sessions/<session-id>/status"
-# ike_status.ike_session_state should be UP; tunnel_status.fail_count should be 0
+curl -sk -u 'admin:password' "$VPN/sessions/vpn-to-onprem/detailed-status"
 ```
 
-
 ```text title="Expected output"
-{
-  "resource_type": "IKEProfile",
-  "id": "ike-profile-aes256-8f4c2a91-7e3d-4b12-9c1f-2d8e5a6b4c3f",
-  "display_name": "ike-profile-aes256",
-  "ike_version": "IKE_V2",
-  "encryption_algorithms": ["AES_256"],
-  "digest_algorithms": ["SHA2_256"],
-  "dh_groups": ["GROUP14"],
-  "sa_life_time": 86400
-}
-{
-  "resource_type": "IPSecTunnelProfile",
-  "id": "tunnel-profile-aes256-5d9e1c47-3a2b-4f8e-a1d6-7c9f2e5b8a3d",
-  "display_name": "tunnel-profile-aes256",
-  "encryption_algorithms": ["AES_256"],
-  "digest_algorithms": ["SHA2_256"],
-  "dh_groups": ["GROUP14"],
-  "sa_life_time": 3600,
-  "enable_perfect_forward_secrecy": true
-}
-{
-  "resource_type": "IPSecLocalEndpoint",
-  "id": "local-endpoint-9b2f4e8c-1a5d-47c3-8f2e-6d9a3c5b1e7f",
-  "display_name": "local-endpoint",
-  "local_id": "192.168.1.100",
-  "local_address": "192.168.1.100",
-  "logical_router_id": "t0-router-8d3c5a9f-2b1e-4c7a-9d2f-5e8a1b3c6d4f"
-}
-{
-  "resource_type": "IPSecPeerEndpoint",
-  "id": "remote-peer-7c4a2f9e-5b1d-48e2-a3f6-8c1e9d2a5b3f",
-  "display_name": "remote-peer",
-  "peer_id": "203.0.113.50",
-  "peer_address": "203.0.113.50",
-  "authentication_mode": "PSK",
-  "ike_profile_id": "ike-profile-aes256-8f4c2a91-7e3d-4b12-9c1f-2d8e5a6b4c3f",
-  "tunnel_profile_id": "tunnel-profile-aes256-5d9e1c47-3a2b-4f8e-a1d6-7c9f2e5b8a3d"
-}
-{
-  "resource_type": "PolicyBasedIPSecVpnSession",
-  "id": "vpn-to-onprem-6e5f3a1c-9d2b-4e7f-a2c5-1d8e4b6a9f3c",
-  "display_name": "vpn-to-onprem",
-  "local_endpoint_id": "local-endpoint-9b2f4
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 ## Add a Transport Zone
 
@@ -2113,53 +1806,13 @@ curl -sk -u 'admin:password' -X POST \
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/transport-zones" | jq '.results[] | {name: .display_name, type: .transport_type, id: .id}'
 
-# Verify transport nodes are in the zone
+# Verify the zones as seen by the Policy API
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/transport-zones/<tz-id>/transport-zone-profiles"
+  "https://<nsx-manager>/policy/api/v1/infra/sites/default/enforcement-points/default/transport-zones"
 ```
 
-
 ```text title="Expected output"
-{
-  "resource_type": "TransportZone",
-  "id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
-  "display_name": "tz-overlay-prod",
-  "description": "Production overlay transport zone",
-  "transport_type": "OVERLAY",
-  "host_switch_name": "nsxHostSwitch",
-  "is_default": false,
-  "_create_time": 1704067200000,
-  "_last_modified_time": 1704067200000
-}
-{
-  "resource_type": "TransportZone",
-  "id": "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
-  "display_name": "tz-vlan-uplink",
-  "transport_type": "VLAN",
-  "host_switch_name": "nsxHostSwitch",
-  "_create_time": 1704067201000,
-  "_last_modified_time": 1704067201000
-}
-{
-  "name": "tz-overlay-prod",
-  "type": "OVERLAY",
-  "id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
-}
-{
-  "name": "tz-vlan-uplink",
-  "type": "VLAN",
-  "id": "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q"
-}
-{
-  "resource_type": "TransportZoneProfile",
-  "results": [
-    {
-      "id": "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
-      "display_name": "default-overlay-profile",
-      "transport_zone_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
-    }
-  ]
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -2177,10 +1830,10 @@ Required before Edge Node hardware maintenance, upgrade, or redeployment. Drains
 ```bash
 # 1. Identify Edge Node IDs
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/fabric/nodes?resource_type=EdgeNode" | \
+  "https://<nsx-manager>/api/v1/transport-nodes?node_types=EdgeNode" | \
   jq '.results[] | {name: .display_name, id: .id}'
 
-# 2. Check Edge cluster membership and current active/standby state
+# 2. Check Edge cluster membership
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/edge-clusters" | \
   jq '.results[] | {cluster: .display_name, members: [.members[].transport_node_id]}'
@@ -2191,65 +1844,27 @@ curl -sk -u 'admin:password' \
   jq '.node_status'
 # Must be UP before proceeding
 
-# 4. Enter maintenance mode
+# 4. Enter maintenance mode (Policy API)
+EP="https://<nsx-manager>/policy/api/v1/infra/sites/default/enforcement-points/default"
 curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/transport-nodes/<edge-node-id>?action=enter_maintenance_mode"
+  "$EP/edge-transport-nodes/<edge-node-id>/action/enter-maintenance-mode"
 
-# 5. Monitor drain progress
+# 5. Monitor the Edge node state
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/transport-nodes/<edge-node-id>" | \
-  jq '.maintenance_mode'
-# Wait for: "ENTERING_MAINTENANCE_MODE" → "MAINTENANCE_MODE"
+  "https://<nsx-manager>/api/v1/transport-nodes/<edge-node-id>/state"
 
-# 6. Verify all gateways have failed over to peer
+# 6. Verify the gateways are still realized (Tier-0 list)
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/logical-routers" | \
-  jq '.results[] | select(.edge_cluster_member_indices != null) | {router: .display_name}'
+  "https://<nsx-manager>/policy/api/v1/infra/tier-0s" | \
+  jq '.results[] | {gateway: .display_name}'
 
 # Exit maintenance mode after work is complete
 curl -sk -u 'admin:password' -X POST \
-  "https://<nsx-manager>/api/v1/transport-nodes/<edge-node-id>?action=exit_maintenance_mode"
+  "$EP/edge-transport-nodes/<edge-node-id>/action/exit-maintenance-mode"
 ```
 
-
 ```text title="Expected output"
-{
-  "name": "edge-node-01",
-  "id": "497f6eca-6276-4993-bfff-51d977ce64a2"
-}
-{
-  "name": "edge-node-02",
-  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-}
-
-{
-  "cluster": "edge-cluster-primary",
-  "members": [
-    "497f6eca-6276-4993-bfff-51d977ce64a2",
-    "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-  ]
-}
-
-{
-  "node_status": "UP"
-}
-
-(no output — command completes silently)
-
-{
-  "maintenance_mode": "ENTERING_MAINTENANCE_MODE"
-}
-
-{
-  "router": "T0-gateway-prod",
-  "edge_cluster_member_indices": [0, 1]
-}
-{
-  "router": "T1-internal-router",
-  "edge_cluster_member_indices": [1]
-}
-
-(no output — command completes silently)
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -2290,57 +1905,24 @@ curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/cluster/backups/history" | \
   jq '.backup_list[0] | {timestamp: .end_time, status: .success}'
 
-# 6. Check upgrade coordinator pre-check (NSX 3.x+)
+# 6. Run the upgrade coordinator pre-checks, then list any failures
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/upgrade?action=execute_pre_upgrade_checks"
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/upgrade/pre-upgrade-checks" | \
-  jq '.checks[] | select(.status != "SUCCESS") | {check: .type, status: .status, detail: .issues}'
-# All checks must pass before proceeding with upgrade
+  "https://<nsx-manager>/api/v1/upgrade/pre-upgrade-checks/failures" | \
+  jq '.result_count'
+# Must be 0 before proceeding with upgrade
 
-# 7. Verify NSX-T version across all components
+# 7. Verify NSX version across all components
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/node" | jq '.node_version'
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/fabric/nodes?resource_type=EdgeNode" | \
-  jq '.results[] | {name: .display_name, version: .node_version}'
+  "https://<nsx-manager>/api/v1/upgrade/nodes?component_type=EDGE" | \
+  jq '.results[] | {name: .display_name, version: .component_version}'
 ```
 
-
 ```text title="Expected output"
-{
-  "control_plane": "STABLE",
-  "mgmt_cluster": "STABLE"
-}
-{
-  "name": "nsx-manager-1.corp.local",
-  "role": "MANAGER",
-  "status": "192.168.1.10"
-}
-{
-  "name": "nsx-manager-2.corp.local",
-  "role": "MANAGER",
-  "status": "192.168.1.11"
-}
-{
-  "name": "nsx-manager-3.corp.local",
-  "role": "MANAGER",
-  "status": "192.168.1.12"
-}
-0
-0
-{
-  "timestamp": "2024-01-15T14:32:18.000Z",
-  "status": true
-}
-[]
-3.2.1.0.0.17834787
-{
-  "name": "edge-node-01.corp.local",
-  "version": "3.2.1.0.0.17834787"
-}
-{
-  "name": "edge-node-02.corp.local",
-  "version": "3.2.1.0.0.17834787"
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -2373,21 +1955,11 @@ curl -sk -u 'admin:password' \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{"url": "https://depot.example.local/nsx-upgrade.mub"}' \
-  "https://<nsx-manager>/api/v1/upgrade/bundles?action=upload_from_url"
+  "https://<nsx-manager>/api/v1/upgrade/bundles"
 ```
 
-
 ```text title="Expected output"
-{
-  "id": "bundle-20240115-4a7c9e2f",
-  "version": "4.1.2.1",
-  "bundle_type": "upgrade",
-  "size_bytes": 2147483648,
-  "checksum": "sha256:a3f8d9c2e1b4f7a9c5d8e2f1a4b7c9d2e5f8a1b4c7d9e2f1a4b7c9d2e5f8a1",
-  "upload_status": "COMPLETED",
-  "upload_timestamp": "2024-01-15T14:32:18.456Z",
-  "ready_for_deployment": true
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -2445,35 +2017,19 @@ curl -sk -u 'admin:password' \
 ```bash
 # Verify Edge node versions post-upgrade
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/fabric/nodes?resource_type=EdgeNode" | \
-  jq '.results[] | {name: .display_name, version: .node_version}'
+  "https://<nsx-manager>/api/v1/upgrade/nodes?component_type=EDGE" | \
+  jq '.results[] | {name: .display_name, version: .component_version}'
 ```
 
-
 ```text title="Expected output"
-{
-  "name": "edge-node-01.prod.local",
-  "version": "3.2.1.0.0.20180221"
-}
-{
-  "name": "edge-node-02.prod.local",
-  "version": "3.2.1.0.0.20180221"
-}
-{
-  "name": "edge-node-03.prod.local",
-  "version": "3.2.1.0.0.20180221"
-}
-{
-  "name": "edge-node-04.prod.local",
-  "version": "3.2.0.0.0.20171015"
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed). |
-    | `jq: parse error: Cannot index number with string "display_name"` | Verify the API response structure matches your NSX version; use `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/fabric/nodes?resource_type=EdgeNode" | jq '.'` to inspect raw output first. |
+    | `jq: parse error: Cannot index number with string "display_name"` | Verify the API response structure matches your NSX version; use `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/upgrade/nodes?component_type=EDGE" | jq '.'` to inspect raw output first. |
     | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Confirm the NSX Manager hostname/IP is correct and the management API service is running with `ssh admin@<nsx-manager>` and checking service status. |
 ### Step 4 — Upgrade ESXi Transport Nodes
 
@@ -2525,52 +2081,27 @@ curl -sk -u 'admin:password' \
 ![Step 5 — Post-Upgrade Validation](../../../../../assets/nsx-proc-step-5-post-upgrade-validation.svg)
 
 ```bash
-# Confirm all fabric nodes are on the target version
+# Confirm all upgrade units (nodes) are on the target version
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/fabric/nodes" | \
-  jq '.results[] | {name: .display_name, type: .resource_type, version: .node_version}'
+  "https://<nsx-manager>/api/v1/upgrade/nodes" | \
+  jq '.results[] | {name: .display_name, type: .type, version: .component_version}'
 
 # Re-run upgrade readiness check to confirm a clean post-upgrade state
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/upgrade/pre_upgrade_checks?action=run_all" \
-  -X POST | jq '.checks[] | select(.status != "SUCCESS")'
+  "https://<nsx-manager>/api/v1/upgrade?action=execute_pre_upgrade_checks" -X POST
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/upgrade/pre-upgrade-checks/failures" | jq '.results'
 ```
 
-
 ```text title="Expected output"
-{
-  "name": "nsxmgr-01.lab.local",
-  "type": "FabricNode",
-  "version": "3.2.1.0"
-}
-{
-  "name": "edge-01.lab.local",
-  "type": "EdgeNode",
-  "version": "3.2.1.0"
-}
-{
-  "name": "edge-02.lab.local",
-  "type": "EdgeNode",
-  "version": "3.2.1.0"
-}
-{
-  "name": "host-esx-01.lab.local",
-  "type": "HostNode",
-  "version": "3.2.1.0"
-}
-{
-  "name": "host-esx-02.lab.local",
-  "type": "HostNode",
-  "version": "3.2.1.0"
-}
-(no output — all checks passed with SUCCESS status)
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the NSX Manager certificate into your trust store. |
-    | `jq: parse error: Invalid JSON` | Verify NSX Manager is responding with valid JSON by testing `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/fabric/nodes"` without piping to jq first. |
+    | `jq: parse error: Invalid JSON` | Verify NSX Manager is responding with valid JSON by testing `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/upgrade/nodes"` without piping to jq first. |
     | `401 Unauthorized` | Confirm the admin credentials are correct and the user account has API access permissions in NSX Manager. |
 - [ ] All NSX Manager nodes on target version
 - [ ] All Edge nodes on target version

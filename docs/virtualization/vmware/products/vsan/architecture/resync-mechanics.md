@@ -11,7 +11,7 @@ description: "Why vSAN resyncs happen, how CLOM decides when and where to rebuil
 <div class="kb-summary">
 Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives resync throughput and duration, and the capacity headroom requirement that makes rebuilds possible.
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ---
@@ -57,28 +57,22 @@ This is policy-driven resync. It runs against VMs that are powered on and runnin
 
 When a new host is added to the cluster or the distribution of components across hosts becomes uneven, vSAN rebalances by migrating components to equalise utilisation. This is proactive and non-urgent — it runs in the background with lower priority than failure-driven rebuilds.
 
-Rebalance can also be triggered manually:
+Rebalance can also be triggered manually from PowerCLI (`esxcli` has no rebalance command):
 
-```bash
-esxcli vsan cluster rebalance start
+```powershell
+Start-VsanClusterRebalance -Cluster (Get-Cluster "<cluster>")
 ```
 
 
-```text title="Expected output"
-Rebalance operation started on cluster domain-c8.
-Cluster UUID: 522e3d4a-1b2c-4d8f-9e7a-3c5b8f2a1d9e
-Rebalance task ID: task-12847
-Status: RUNNING
-Estimated time remaining: 2 hours 15 minutes
-Data to rebalance: 847.3 GB
-Current throughput: 12.5 MB/s
+```text
+Output varies; see the cmdlet help in VMware.VimAutomation.Storage: https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: VSAN cluster is not enabled on this host` | Verify VSAN is enabled on all hosts in the cluster using `esxcli vsan cluster get`. |
-    | `Error: Rebalance operation already in progress` | Wait for the current rebalance to complete or cancel it with `esxcli vsan cluster rebalance stop` before starting a new one. |
+    | `Error: Rebalance operation already in progress` | Wait for the current rebalance to complete or stop it with `Stop-VsanClusterRebalance -Cluster <cluster>` before starting a new one. |
     | `Error: Insufficient resources to start rebalance` | Ensure all hosts in the cluster are in maintenance mode is not active and have adequate free capacity (minimum 30% recommended). |
 ### Trigger 4 — Configuration Changes
 
@@ -196,40 +190,38 @@ Resync Queue Summary:
 
 ## The Throttle: Trading Speed for VM Stability
 
-The resync throttle limits the IOPS consumed by rebuild operations per host. It protects VM performance during production hours at the cost of slower recovery.
+The resync throttle limits the bandwidth (in Mbps) consumed by resync traffic on each host. It protects VM performance during production hours at the cost of slower recovery.
 
 ```bash
 # Check current throttle
-esxcli vsan debug resync throttle get
+esxcli vsan resync throttle get
 
-# Set to 500 IOPS per host (business-hours safe)
-esxcli vsan debug resync throttle set --throttle 500
+# Set to 500 Mbps (valid range 0-512)
+esxcli vsan resync throttle set --level 500
 
-# Remove throttle — run at full speed (maintenance windows)
-esxcli vsan debug resync throttle set --throttle 0
+# Remove throttle — run at full speed (0 = no throttling)
+esxcli vsan resync throttle set --level 0
 ```
 
 
-```text title="Expected output"
-Current resync throttle setting: 100 IOPS
-(no output — command completes silently)
-(no output — command completes silently)
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown command or namespace vsan debug resync` | Verify the ESXi host is vSAN-enabled and running vSAN 6.6 or later; check with `esxcli vsan cluster get`. |
-    | `Error: Invalid --throttle value: 500. Must be between 0 and 100000` | Adjust the throttle value to fall within the valid range (typically 0–100000 IOPS depending on vSAN version). |
+    | `Error: Unknown command or namespace vsan resync` | Verify the ESXi host is vSAN-enabled; check with `esxcli vsan cluster get`. |
+    | Value rejected for `--level` | The level is an integer in Mbps from 0 to 512 (0 = no throttling). |
 **Recommended schedule:**
 
 | Time | Throttle | Rationale |
 |---|---|---|
-| Business hours (9–17) | 500 IOPS | Protect VM latency |
+| Business hours (9–17) | 500 Mbps | Protect VM latency |
 | Off-hours / weekend | 0 (unlimited) | Complete rebuilds before business hours |
 | During P1 (data at risk) | 0 regardless | Fast recovery trumps performance |
 
-**Important:** A throttled resync extends the window during which the cluster has reduced redundancy. A DEGRADED object under a 500-IOPS throttle might take 3× longer to rebuild. If another failure occurs during that window, you have a data loss event.
+**Important:** A throttled resync extends the window during which the cluster has reduced redundancy. A DEGRADED object under a throttle takes longer to rebuild. If another failure occurs during that window, you have a data loss event.
 
 If a disk has failed and FTT=1 objects are DEGRADED, set throttle to 0 and accept the I/O impact.
 

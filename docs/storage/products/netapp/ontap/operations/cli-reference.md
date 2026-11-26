@@ -9,7 +9,7 @@ description: "NetApp ONTAP is the operating system that runs on NetApp storage a
 <div class="kb-summary">
 NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FAS, ONTAP Select). The CLI uses a dot-separated namespace — `storage aggregate show`, `network interface create` — and runs at the `cluster::>` prompt.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — CLI Reference](../../../../../assets/storage-netapp-ontap-operations-cli-reference.svg)
 
@@ -47,15 +47,15 @@ cluster time-service ntp server create -server <ip>
 cluster time-service ntp server delete -server <ip>
 
 # Node status
-node show
-node show -fields node,health,uptime,model,serial-number
+system node show
+system node show -fields node,health,uptime,model,serialnumber
 
-# Node-level diagnostics (drops to node shell)
-node run -node <node> sysconfig
-node run -node <node> sysconfig -a
-node run -node <node> sysconfig -r
-node run -node <node> df -h
-node run -node <node> environment status
+# Node-level diagnostics (runs one nodeshell command; see system node run)
+system node run -node <node> -command sysconfig
+system node run -node <node> -command sysconfig -a
+system node run -node <node> -command sysconfig -r
+system node run -node <node> -command df -h
+system node run -node <node> -command environment status
 ```
 
 
@@ -72,9 +72,8 @@ NTP Server           true               true
 NTP Server IP        192.168.1.50       -
 NTP Server IP        10.20.30.40        -
 
-Node                Health  Uptime        Model         Serial Number
-node-01             true    45d 3h 22m    A400          4141000001
-node-02             true    45d 3h 18m    A400          4141000002
+system node show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/system-node-show.html
 
 System Configuration for node-01:
 System Serial Number: 4141000001
@@ -101,7 +100,7 @@ Temperature Sensor 2: 31°C (OK)
     |---|---|
     | `Error: command not found: cluster show` | Ensure you are connected to the ONTAP cluster management interface (SSH to cluster IP, not node IP). |
     | `Error: NTP server 192.168.1.50 is already configured` | Delete the existing NTP server entry first with `cluster time-service ntp server delete -server 192.168.1.50` before creating a new one. |
-    | `Error: node-01: command not found: sysconfig` | Verify the node name is correct and the node is in a healthy state; use `node show` to confirm node availability. |
+    | `Error: node-01: command not found: sysconfig` | Verify the node name is correct and the node is in a healthy state; use `system node show` to confirm node availability. |
 ---
 
 ## System Health & Events
@@ -113,7 +112,6 @@ Overall health status, active alerts, the EMS event log, firmware updates, and A
 system health status show                     # expected: ok
 system health alert show                      # unresolved alerts
 system health subsystem show
-system health node-connectivity show
 
 # EMS event log
 event log show
@@ -123,7 +121,7 @@ event log show -severity error
 event log show -node <node_name>
 event log show -time ">1h"
 event log show -time ">24h"
-event log show -messagename wafl.vol.full
+event log show -message-name wafl.vol.full
 
 # EMS notification destinations (email, syslog)
 event notification show
@@ -132,8 +130,7 @@ event notification destination show
 # Software images
 system node image show
 
-# Firmware updates (disk, shelf, SP)
-system node firmware update -node <node>
+# Upgrade/revert status
 system node upgrade-revert show
 
 # AutoSupport
@@ -230,12 +227,12 @@ storage disk unfail -disk <disk_name>               # re-add after investigation
 storage disk assign -disk <disk_name> -owner <node_name>
 
 # RAID groups
-storage aggregate show-raidtree -aggregate <aggr>
+storage aggregate show-status -aggregate <aggr>
 storage aggregate show -fields raidtype
 
 # Disk shelves
 storage shelf show
-storage shelf show -detail
+storage shelf show -instance
 ```
 
 
@@ -305,7 +302,7 @@ volume efficiency stop -vserver <svm> -volume <vol>
 volume clone create -vserver <svm> -flexclone <name> -parent-volume <vol>
 volume clone create -vserver <svm> -flexclone <name> -parent-volume <vol> -parent-snapshot <snap>
 volume clone split start -vserver <svm> -flexclone <name>
-volume clone split status -vserver <svm> -flexclone <name>
+volume clone split show -vserver <svm> -flexclone <name>
 ```
 
 
@@ -360,9 +357,8 @@ volume snapshot delete -vserver <svm> -volume <vol> -snapshot * -force true   # 
 # Rename
 volume snapshot rename -vserver <svm> -volume <vol> -snapshot <old_name> -new-name <new_name>
 
-# Restore (volume must be offline or quiesced)
+# Restore (reverts the volume to the snapshot; changes since are lost)
 volume snapshot restore -vserver <svm> -volume <vol> -snapshot <snap_name>
-volume snapshot restore -vserver <svm> -volume <vol> -snapshot <snap_name> -online true
 
 # Snapshot policies
 volume snapshot policy show
@@ -414,7 +410,7 @@ Volume snapshot restore: Command completed successfully.
     | Error | Fix |
     |---|---|
     | `Error: command failed: Snapshot "snap_name" does not exist on volume "data_vol"` | Verify the snapshot name exists with `volume snapshot show -vserver <svm> -volume <vol>` before attempting deletion or restore. |
-    | `Error: command failed: Cannot restore snapshot while volume is online and in use` | Either take the volume offline with `volume offline -vserver <svm> -volume <vol>` or use the `-online true` parameter to restore while online. |
+    | `Error: command failed: Cannot restore snapshot while volume is online and in use` | Check the restore prerequisites in the [volume snapshot restore reference](https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-restore.html); the command has no `-online` parameter. |
     | `Error: command failed: Snapshot reserve space is insufficient` | Increase the snapshot reserve percentage with `volume modify -vserver <svm> -volume <vol> -percent-snapshot-space <higher_value>`. |
 ---
 
@@ -451,7 +447,7 @@ network interface create -vserver <svm_name> -lif <lif_name> -role data \
     -data-protocol nfs -home-node <node_name> -home-port <port> \
     -address <ip> -netmask <mask>
 network interface migrate -vserver <svm_name> -lif <lif_name> \
-    -dest-node <node_name> -dest-port <port>
+    -destination-node <node_name> -destination-port <port>
 
 # Join SVM to Active Directory (CIFS)
 vserver cifs create -vserver <svm_name> -cifs-server <netbios_name> \
@@ -529,13 +525,13 @@ network interface create -vserver <svm> -lif <lif> -role data -data-protocol nfs
     -home-node <node> -home-port <port> -address <ip> -netmask <mask>
 network interface modify -vserver <svm> -lif <lif> -address <ip> -netmask <mask>
 network interface delete -vserver <svm> -lif <lif>
-network interface migrate -vserver <svm> -lif <lif> -dest-node <node> -dest-port <port>
+network interface migrate -vserver <svm> -lif <lif> -destination-node <node> -destination-port <port>
 network interface revert -vserver <svm> -lif <lif>
 network interface failover-groups show
 
 # Ports
 network port show
-network port show -role data
+network port show -type physical
 network port show -fields node,port,speed,health-status,link-status
 network port ifgrp show
 network port vlan show
@@ -616,10 +612,11 @@ vserver export-policy rule delete -vserver <svm> -policyname <name> -ruleindex <
 volume modify -vserver <svm> -volume <vol> -policy <export-policy>
 
 # Verify client access
-vserver nfs check-client -vserver <svm> -client-ip <ip>
+vserver export-policy check-access -vserver <svm> -volume <vol> -client-ip <ip> \
+    -authentication-method sys -protocol nfs3 -access-type read-write
 
 # Connected NFS clients
-nfs connected-client show -vserver <svm>
+vserver nfs connected-clients show -vserver <svm>
 ```
 
 
@@ -650,18 +647,10 @@ Allow SUID?: true
 
 Volume modify successful: volume vol-data01 export policy set to clients-rw
 
-Vserver: svm-prod-01
-Client IP: 10.20.15.42
-Access Level: read-write
-Auth Flavor: sys
-Mounted Path: /vol/vol-data01
-
-Vserver: svm-prod-01
-Client IP: 10.20.15.42
-Client Hostname: app-server-03.prod.local
-Access Level: read-write
-NFS Version: nfsv4.1
-...
+vserver export-policy check-access: see the vendor example output at
+https://docs.netapp.com/us-en/ontap-cli/vserver-export-policy-check-access.html
+vserver nfs connected-clients show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-nfs-connected-clients-show.html
 ```
 
 !!! warning "Common errors"
@@ -754,19 +743,19 @@ Present LUNs to hosts via iSCSI or Fibre Channel. LUNs are mapped to igroups (in
 # iSCSI service
 vserver iscsi show
 vserver iscsi create -vserver <svm>
-vserver iscsi modify -vserver <svm> -is-admin-enabled true
+vserver iscsi modify -vserver <svm> -status-admin up
 
 # LUNs
 lun show
 lun show -vserver <svm>
-lun show -fields path,vserver,size,state,mapped,os-type
+lun show -fields path,vserver,size,state,mapped,ostype
 lun create -vserver <svm> -path <path> -size <size> -ostype vmware
 lun delete -vserver <svm> -path <path>
 lun resize -vserver <svm> -path <path> -size <size>
-lun online -vserver <svm> -path <path>
-lun offline -vserver <svm> -path <path>
-lun map -vserver <svm> -path <path> -igroup <igroup>
-lun unmap -vserver <svm> -path <path> -igroup <igroup>
+lun modify -vserver <svm> -path <path> -state online
+lun modify -vserver <svm> -path <path> -state offline
+lun mapping create -vserver <svm> -path <path> -igroup <igroup>
+lun mapping delete -vserver <svm> -path <path> -igroup <igroup>
 lun mapping show
 lun mapping show -vserver <svm>
 
@@ -781,10 +770,10 @@ lun igroup delete -vserver <svm> -igroup <name>
 # Fibre Channel
 vserver fcp show
 vserver fcp create -vserver <svm>
-fcp adapter show
-fcp adapter show -fields node,adapter,state,speed,fabric-established
-fcp interface show
-fcp initiator show
+network fcp adapter show
+network fcp adapter show -fields node,adapter,status-oper,speed,fabric-established
+vserver fcp interface show
+vserver fcp initiator show
 lun igroup create -vserver <svm> -igroup <name> -protocol fcp -ostype vmware
 ```
 
@@ -815,12 +804,8 @@ svm_prod  igroup_esxi_01    /vol/datastore01/lun_vm_prod_001  0
 svm_prod  igroup_esxi_01    /vol/datastore01/lun_vm_prod_002  1
 svm_prod  igroup_esxi_02    /vol/backup/lun_backup_001        0
 
-Node      Adapter State  Speed Fabric-Established
---------- ------- ------ ----- ------------------
-node-01   0a      online 16Gb  true
-node-01   0b      online 16Gb  true
-node-02   0a      online 16Gb  true
-node-02   0b      online 16Gb  false
+network fcp adapter show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/network-fcp-adapter-show.html
 ```
 
 !!! warning "Common errors"
@@ -828,7 +813,7 @@ node-02   0b      online 16Gb  false
     |---|---|
     | `Error: command failed: LUN /vol/datastore01/lun_vm_prod_001 is already mapped to igroup igroup_esxi_01` | Verify the LUN is not already mapped to the target igroup before attempting to map it again. |
     | `Error: command failed: igroup igroup_esxi_01 does not exist` | Create the igroup first using `lun igroup create` before adding initiators or mapping LUNs to it. |
-    | `Error: command failed: LUN /vol/datastore01/lun_vm_prod_001 cannot be deleted while it is mapped` | Unmap the LUN from all igroups using `lun unmap` before attempting deletion. |
+    | `Error: command failed: LUN /vol/datastore01/lun_vm_prod_001 cannot be deleted while it is mapped` | Unmap the LUN from all igroups using `lun mapping delete` before attempting deletion. |
 ---
 
 ## SnapMirror
@@ -839,8 +824,8 @@ SnapMirror replicates volumes between SVMs or clusters for disaster recovery. Th
 # View relationships
 snapmirror show
 snapmirror show -destination-path <svm>:<vol>
-snapmirror show -fields source-path,destination-path,state,lag-time,health
-snapmirror show -health false                                          # unhealthy only
+snapmirror show -fields source-path,destination-path,state,lag-time,healthy
+snapmirror show -healthy false                                         # unhealthy only
 
 # Create
 snapmirror create \
@@ -859,10 +844,10 @@ snapmirror break -destination-path <svm>:<vol>         # make destination writab
 snapmirror resync -destination-path <svm>:<vol>        # re-establish after break
 snapmirror abort -destination-path <svm>:<vol>
 
-# Monitoring
-snapmirror history show -destination-path <svm>:<vol>
-snapmirror lag show
-snapmirror show -transfer-progress
+# Monitoring (lag is the lag-time field of snapmirror show)
+snapmirror show-history -destination-path <svm>:<vol>
+snapmirror show -fields lag-time
+snapmirror show -fields status,total-progress
 ```
 
 
@@ -879,13 +864,9 @@ prod-svm:vol_logs     dr-svm:vol_logs         Snapmirrored    00:08:47  true
 Source                Destination             State           Health
 prod-svm:vol_archive  dr-svm:vol_archive      Snapmirrored    false
 
-Transfer Status
-Source Destination                Progress  Elapsed
-prod-svm:vol_data  dr-svm:vol_data  45%       00:23:18
-
-Operation ID                             Job ID  State      Start Time
-snapmirror_initialize_1702145632         12345   completed  11/09/2024 14:27:12
-snapmirror_update_1702145891             12346   completed  11/09/2024 14:31:31
+snapmirror show-history / snapmirror show -fields ...: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/snapmirror-show-history.html
+https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html
 ```
 
 !!! warning "Common errors"
@@ -1060,12 +1041,12 @@ User login accounts, role-based access control, certificate management, and CIFS
 security login show
 security login show -vserver <svm>
 security login create \
-    -username <user> \
+    -user-or-group-name <user> \
     -application ssh \
     -authentication-method password \
     -role admin \
     -vserver <svm>
-security login delete -username <user> -application ssh -vserver <svm>
+security login delete -user-or-group-name <user> -application ssh -vserver <svm>
 security login password -username <user> -vserver <svm>
 security login lock -username <user> -vserver <svm>
 security login unlock -username <user> -vserver <svm>
@@ -1140,29 +1121,29 @@ AutoSupport sends telemetry and event data to NetApp support. It enables proacti
 
 ```bash
 # Status
-autosupport show
-autosupport show -node <node>
-autosupport show -fields last-subject-sent,last-successful-destination
+system node autosupport show
+system node autosupport show -node <node>
+system node autosupport show -fields last-subject-sent,last-successful-destination
 
 # Send messages
-autosupport invoke -node <node> -type test
-autosupport invoke -node <node> -type all -message "Manual upload for case SR-XXXXX"
+system node autosupport invoke -node <node> -type test
+system node autosupport invoke -node <node> -type all -message "Manual upload for case SR-XXXXX"
 
 # History
-autosupport history show
-autosupport history show -node <node>
-autosupport history show -fields seq-num,status,triggered-time,destination
+system node autosupport history show
+system node autosupport history show -node <node>
+system node autosupport history show -fields seq-num,status,triggered-time,destination
 
 # Configuration
-autosupport modify -node <node> -state enable
-autosupport modify -node <node> -state disable
-autosupport modify -node <node> -mail-hosts <smtp_server>
-autosupport modify -node <node> -proxy-url http://proxy.example.local:8080
-autosupport modify -node <node> -noteto ops@corp.local
-autosupport modify -node <node> -transport https
+system node autosupport modify -node <node> -state enable
+system node autosupport modify -node <node> -state disable
+system node autosupport modify -node <node> -mail-hosts <smtp_server>
+system node autosupport modify -node <node> -proxy-url http://proxy.example.local:8080
+system node autosupport modify -node <node> -noteto ops@corp.local
+system node autosupport modify -node <node> -transport https
 
 # Verify HTTPS connectivity
-autosupport check show
+system node autosupport check show
 ```
 
 
@@ -1206,7 +1187,7 @@ AutoSupport HTTPS Connectivity Check Results:
     |---|---|
     | `Error: "cluster1-03" is not a valid node name` | Verify the node name matches output from `cluster show` and use the correct node identifier. |
     | `Error: SMTP server "invalid.mail.local" is not reachable` | Confirm the mail host is resolvable and accessible on port 25 from the cluster management network. |
-    | `Error: AutoSupport invoke failed: transport https not configured` | Enable HTTPS transport first using `autosupport modify -node <node> -transport https` before invoking HTTPS-based AutoSupport messages. |
+    | `Error: AutoSupport invoke failed: transport https not configured` | Enable HTTPS transport first using `system node autosupport modify -node <node> -transport https` before invoking HTTPS-based AutoSupport messages. |
 ---
 
 ## Verify

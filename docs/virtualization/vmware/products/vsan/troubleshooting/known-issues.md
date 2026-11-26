@@ -12,7 +12,7 @@ description: "Catalog of known vSAN bugs, error codes, and workarounds including
 <div class="kb-summary">
 Catalog of known vSAN bugs, error codes, and workarounds including degraded component handling, resync issues, and health check false positives.
 
-*Applies to: vSAN 7.x / 8.x (ESA and OSA)*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![VMware vSAN — Known Issues and Error Codes](../../../../../assets/virtualization-vmware-vsan-troubleshooting-known-issues.svg)
 
@@ -54,7 +54,7 @@ stretched_cluster -> resolution
 | Error / Symptom | Affected Versions | Cause | Workaround / Fix | Fixed In |
 |---|---|---|---|---|
 | Resync stuck at 0 bytes remaining but objects still degraded | vSAN 7.x | DOM owner reassignment race during resync | Run `esxcli vsan debug resync summary get`; restart DOM owner VM or reboot ESXi host | 7.0 U3 |
-| Objects show `Absent` after host maintenance exit | vSAN 7.x / 8.x | Component rebuild delayed by 60-minute timer | Wait 60 minutes after maintenance exit; accelerate with `esxcli vsan debug resync start` | N/A |
+| Objects show `Absent` after host maintenance exit | vSAN 7.x / 8.x | Component rebuild delayed by 60-minute timer | Wait 60 minutes after maintenance exit; to queue repair earlier use PowerCLI `Add-VsanObjectToRepairQueue` | N/A |
 | `Immediate resync` not triggering after disk replacement | vSAN 7.0 U1 | Disk claimed but DOM not triggering rebuild | Restart `vsanmgmtd` on owning host | 7.0 U2 |
 
 ## Health Check False Positives
@@ -62,7 +62,7 @@ stretched_cluster -> resolution
 | Error / Symptom | Affected Versions | Cause | Workaround / Fix | Fixed In |
 |---|---|---|---|---|
 | `vSAN Build Recommendation` health alarm after upgrade | vSAN 7.x / 8.x | CEIP / Cloud Health comparison uses stale build database | Disable or acknowledge; update CEIP opt-in to refresh | N/A |
-| `Controller firmware` health check fails on qualified HBA | vSAN 7.x | HBA firmware on HCL but health check uses stale HCL cache | Sync HCL database: `esxcli vsan cluster hcl-db sync` | N/A |
+| `Controller firmware` health check fails on qualified HBA | vSAN 7.x | HBA firmware on HCL but health check uses stale HCL cache | Update the HCL database: PowerCLI `Update-VsanHclDatabase` (or vSphere Client) | N/A |
 | `Unicast agent` alarm on healthy stretched cluster witness | vSAN 7.x | Witness appliance reports unicast agent warning falsely | Confirm witness connectivity via `esxcli vsan cluster unicastagent list` | 7.0 U3 |
 
 ## Capacity and Encryption

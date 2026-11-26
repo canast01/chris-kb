@@ -10,7 +10,7 @@ description: "NetApp ONTAP knowledge base — architecture, operations, security
 <div class="kb-summary">
 NetApp ONTAP knowledge base — architecture, operations, security, and troubleshooting for AFF, FAS, and ONTAP Select platforms.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 <div class="kb-grid kb-grid-3">

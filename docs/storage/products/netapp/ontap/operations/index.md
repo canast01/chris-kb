@@ -9,7 +9,7 @@ description: "ONTAP — Operations reference: Health Checks, Procedures, CLI Ref
 <div class="kb-summary">
 ONTAP — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 <div class="kb-grid kb-grid-3">

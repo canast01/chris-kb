@@ -11,7 +11,7 @@ description: "Encryption reference covering vSAN Encryption, Certificate Encrypt
 <div class="kb-summary">
 Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryption Key Flow, vSphere Trust Authority (vTA), Certificate Management and 3 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter Security — Encryption](../../../../../assets/virtualization-vmware-vcenter-security-encryption.svg)
 
@@ -142,7 +142,7 @@ All services restarted successfully.
     |---|---|
     | `Authentication failed for user administrator@vsphere.local` | Verify the password is correct and the user account is not locked; reset credentials via DCUI if needed. |
     | `Certificate replacement failed: Certificate chain validation error` | Ensure VMCA root certificate is valid and not expired by checking `/etc/vmware-vpx/ssl/vmca_issued_certs.pem`. |
-    | `Service restart timeout: vmware-vpxd did not respond within 120 seconds` | Wait 2-3 minutes for services to stabilize, then manually restart with `service-control --restart --all` if the issue persists. |
+    | `Service restart timeout: vmware-vpxd did not respond within 120 seconds` | Wait 2-3 minutes for services to stabilize, then stop and start all services with `service-control --stop --all && service-control --start --all` (KB 344633) if the issue persists. |
 After renewal:
 ```bash
 # Verify new certificate dates

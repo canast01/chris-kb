@@ -12,7 +12,7 @@ description: "How It Works reference covering Networking Architecture, VMkernel 
 <div class="kb-summary">
 How It Works reference covering Networking Architecture, VMkernel Adapters (vmk), Storage Architecture, CPU and Memory Scheduling, HA and DRS and 3 more sections.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — How It Works](../../../../../assets/virtualization-vmware-esxi-architecture-how-it-works.svg)
 
@@ -141,7 +141,7 @@ DRS balances VM load across the cluster using vMotion:
 Get-Cluster "CL-PROD" | Get-DrsRecommendation
 
 # Apply all pending recommendations
-Get-Cluster "CL-PROD" | Get-DrsRecommendation | Apply-DrsRecommendation
+Get-Cluster "CL-PROD" | Get-DrsRecommendation | Invoke-DrsRecommendation
 ```
 
 ---

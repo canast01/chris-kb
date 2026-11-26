@@ -4,14 +4,14 @@ tags:
   - vmware
   - vsan
   - vsphere-8
-description: "Integrations reference covering NSX Integration, Stretched Cluster Witness, File Services, Aria Operations."
+description: "Integrations reference covering NSX Integration, Stretched Cluster Witness, File Services, VCF Operations (formerly Aria Operations)."
 ---
 # vSAN — Integrations
 
 <div class="kb-summary">
-Integrations reference covering NSX Integration, Stretched Cluster Witness, File Services, Aria Operations.
+Integrations reference covering NSX Integration, Stretched Cluster Witness, File Services, VCF Operations (formerly Aria Operations).
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Integrations](../../../../../assets/virtualization-vmware-vsan-architecture-integrations.svg)
 
@@ -88,9 +88,9 @@ File Services is suited for:
 - Legacy applications requiring SMB file shares without a separate NAS.
 - Multi-VM shared storage scenarios.
 
-## Aria Operations
+## VCF Operations (formerly Aria Operations)
 
-The vSAN management pack in Aria Operations (vROps) provides detailed visibility into vSAN performance, capacity, and health.
+In VCF/VVF 9.x the operations product is VCF Operations (formerly Aria Operations, and vROps before that; [Broadcom KB 438533](https://knowledge.broadcom.com/external/article/438533)). Its vSAN management pack provides detailed visibility into vSAN performance, capacity, and health.
 
 **Metrics available:**
 
@@ -102,7 +102,7 @@ The vSAN management pack in Aria Operations (vROps) provides detailed visibility
 | Capacity | Used/free/reserved capacity with forecast |
 | Health | Health score from Skyline Health, degraded object count |
 
-**Alerting:** Configure alerts in Aria Operations for:
+**Alerting:** Configure alerts in VCF Operations for:
 
 - Resync throughput above threshold (indicates recovery in progress).
 - Health score below 80%.

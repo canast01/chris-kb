@@ -11,7 +11,7 @@ description: "Common vCenter procedures — adding and reconnecting ESXi hosts, 
 <div class="kb-summary">
 Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and storage migrations, snapshot management, tag management, HA reconfiguration, content library, certificate replacement, file-based backup, roles/permissions, SSO identity sources, alarms, cluster config, and VCSA upgrade.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 Service restart order for manual recovery:
@@ -309,54 +309,21 @@ vCenter certificate replacement is required when certificates expire, are compro
 # Method 1: Auto-renew machine SSL cert via VAMI (for VMCA-signed certs)
 # https://<vcenter-fqdn>:5480 → Certificate Management → Machine SSL Certificate → Renew
 
-# Method 2: Replace with custom CA cert using certificate-manager
+# Method 2: Replace certificates with vSphere Certificate Manager (KB 318946)
 ssh root@<vcenter-fqdn>
 /usr/lib/vmware-vmca/bin/certificate-manager
-# Option 1: Replace Machine SSL certificate with custom certificate
-# Option 6: Replace Solution User certificates with custom certificate
-# Provide: root CA cert, signed machine cert, private key
+# Option 1: Replace the Machine SSL certificate with a Custom CA Certificate
+# Option 5: Replace the Solution User Certificates with Custom CA Certificates
+# Option 8: Reset all certificates (use when Machine SSL and Solution User certificates have expired)
+# Log: /var/log/vmware/vmcad/certificate-manager.log
 
-# Method 3: STS certificate renewal (required every 2 years for VMCA-signed)
-# STS certs do not auto-renew — check expiry:
-python /usr/lib/vmware-vmafd/bin/lstool.py list --url http://localhost:7080/lookupservice/sdk 2>/dev/null | grep -i expire
-
-# Renew STS cert (vSphere 7+):
-/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS
-# Use certificate-manager → Option 8: Reset all certificates
+# Check expiry of every VECS store entry (command from KB 318946)
+for i in $(/usr/lib/vmware-vmafd/bin/vecs-cli store list); do echo STORE $i; /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store $i --text | egrep "Alias|Not After"; done
 ```
 
 
 ```text title="Expected output"
-root@vcenter.example.com [ ~ ]# /usr/lib/vmware-vmca/bin/certificate-manager
-
-	 *** Welcome to Certificate Manager ***
-
-Please select an option [1-9]:
-1. Replace Machine SSL certificate with Custom Certificate
-2. Replace VMCA-signed Machine SSL certificate with VMCA signed certificate
-3. Regenerate a new VMCA Root Certificate
-4. Replace Solution User certificates with custom certificate
-5. Replace Solution User certificates with VMCA signed certificate
-6. Regenerate a new Solution User certificate
-7. Reset all Certificates
-8. Replace Machine SSL certificate with VMCA signed certificate
-9. Exit
-
-Option [1-9]: 1
-Please provide a Certificate file [.crt/.cer]: /root/machine-cert.crt
-Please provide a Private Key file [.key]: /root/machine-key.key
-Please provide a Root CA Certificate file [.crt/.cer]: /root/root-ca.crt
-Certificate replaced successfully. Please restart all services.
-
-root@vcenter.example.com [ ~ ]# python /usr/lib/vmware-vmafd/bin/lstool.py list --url http://localhost:7080/lookupservice/sdk 2>/dev/null | grep -i expire
-Expires: 2025-03-15T18:42:31.000Z
-Expires: 2025-03-15T18:42:31.000Z
-
-root@vcenter.example.com [ ~ ]# /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS
-Entry 0
-	Alias: __MACHINE_CERT
-	Type: X.509 Certificate
-	Expires: 2026-03-14 18:42:31 UTC
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/318946/using-vsphere-certificate-manager-to-rep.html (the menu shows 8 options; required inputs per option are listed there).
 ```
 
 !!! warning "Common errors"
@@ -372,9 +339,9 @@ Post-replacement validation:
 echo | openssl s_client -connect <vcenter-fqdn>:443 2>/dev/null | openssl x509 -noout -dates -subject
 # Confirm NotAfter shows new expiry
 
-# Verify services are healthy after restart
-vmon-cli --status | grep -E "RUNNING|STOPPED"
-# All critical services should be RUNNING
+# Verify services are healthy after restart (KB 415673)
+vmon-cli -l                 # list services monitored by vmon
+vmon-cli -s vpxd            # RunState should be STARTED, HealthState HEALTHY
 
 # Verify vCenter is accessible from vSphere Client
 # Verify ESXi hosts still show Connected
@@ -385,32 +352,33 @@ vmon-cli --status | grep -E "RUNNING|STOPPED"
 notBefore=Jan 15 10:23:45 2024 GMT
 notAfter=Jan 15 10:23:45 2025 GMT
 subject=C = US, ST = California, L = San Francisco, O = Acme Corp, CN = vcenter.acme.local
-vpxd                                    RUNNING
-vpxd:vpxd                               RUNNING
-vpxd:vpostgres                          RUNNING
-vsphere-ui                              RUNNING
-vsphere-ui:vsphere-ui                   RUNNING
-sps                                     RUNNING
-sps:sps                                 RUNNING
-netdump                                 RUNNING
+root@vcsa01 [ ~ ]# vmon-cli -s vpxd
+Name: vpxd
+Starttype: AUTOMATIC
+RunState: STARTED
+RunAsUser: vpxd
+CurrentRunStateDuration(ms): 511
+HealthState: HEALTHY
+FailStop: N/A
+MainProcessId: 6142
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `connect: Connection refused` | Verify vCenter is running and port 443 is accessible; check firewall rules and vmon-cli --status output. |
-    | `STOPPED` | Restart the stopped service using `vmon-cli --restart <service-name>` and wait 2–3 minutes for full initialization. |
+    | `connect: Connection refused` | Verify vCenter is running and port 443 is accessible; check firewall rules and `vmon-cli -s <service>` output (KB 415673). |
+    | `RunState` not `STARTED` | Start the service with `service-control --start <servicename>` (KB 344633), then re-check with `vmon-cli -s <service>`. |
     | `unable to load certificate` | Confirm the certificate file path is correct and readable; verify the certificate was properly imported using `certificate-manager` utility. |
 ## vCenter File-Based Backup
 
-vCenter supports scheduled file-based backups to NFS, SFTP, FTPS, HTTP, or HTTPS locations.
+vCenter file-based backups (VAMI on port 5480 or the Appliance Recovery Backup API) can target FTP, FTPS, HTTP, HTTPS, SFTP, NFS or SMB locations (SCP on 6.5/6.7 only) — see [KB 322371](https://knowledge.broadcom.com/external/article/322371/common-ports-for-protocols-used-in-vami.html) for ports and the backup API `LocationType` enumeration.
 
 ```bash
 # Configure backup via VAMI: https://<vcenter-fqdn>:5480
 # Backup → Configure → set protocol, location, credentials, schedule, retention
 
-# Trigger manual backup via API
-curl -sk -X POST "https://<vcenter-fqdn>/api/vcenter/deployment/backup/schedules?vmw-task=true" \
+# Trigger a manual backup via API (Appliance Recovery Backup Job create)
+curl -sk -X POST "https://<vcenter-fqdn>/api/appliance/recovery/backup/job" \
   -H "vmware-api-session-id: <session-id>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -418,17 +386,18 @@ curl -sk -X POST "https://<vcenter-fqdn>/api/vcenter/deployment/backup/schedules
     "location": "sftp://backup-srv/vcenter-backups",
     "location_user": "vcbackup",
     "location_password": "<password>",
-    "parts": ["SEAT"]
+    "parts": ["<part-id>"]
   }'
 
-# SEAT = Statistics, Events, Alarms, Tasks (recommended addition to core backup)
+# Optional parts: list valid IDs with GET /api/appliance/recovery/backup/parts
+# Reference: https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/appliance/recovery/backup/job/post/
 ```
 
 ```powershell
-# Monitor backup job status
+# List backup jobs, then query one job by ID (GET /api/appliance/recovery/backup/job/{id})
 $headers = @{ "vmware-api-session-id" = $sessionId }
-Invoke-RestMethod "https://<vcenter-fqdn>/api/vcenter/deployment/backup/job" -Headers $headers |
-  Select-Object id, state, end_time, messages
+Invoke-RestMethod "https://<vcenter-fqdn>/api/appliance/recovery/backup/job" -Headers $headers
+Invoke-RestMethod "https://<vcenter-fqdn>/api/appliance/recovery/backup/job/<job-id>" -Headers $headers
 ```
 
 Backup includes: vCenter database, configuration, inventory, and optionally historical data (SEAT). Restore requires the vCenter ISO and backup archive.
@@ -479,7 +448,7 @@ Required before AD accounts/groups can authenticate to vCenter.
 
 1. vCenter → **Administration** → **Single Sign On** → **Configuration** → **Identity Sources**
 2. Click **Add Identity Source**
-3. Select **Active Directory (Integrated Windows Authentication)** for domain-joined VCSA, or **Active Directory as an LDAP Server** for explicit LDAP binding
+3. Select **Active Directory over LDAP** (use LDAPS, port 636 or Global Catalog 3269) or configure Identity Federation. Integrated Windows Authentication (IWA) was deprecated in 7.0 and is removed in vCenter 9.0 — on 8.x, leave the AD domain and migrate IWA sources to LDAPS before upgrading ([KB 314324](https://knowledge.broadcom.com/external/article/314324/removal-of-integrated-windows-authentica.html))
 4. For LDAP binding:
    - **Domain name**: `EXAMPLE.LOCAL`
    - **Domain alias**: `EXAMPLE`
@@ -623,25 +592,16 @@ vCenter upgrades use the VCSA installer ISO and run a 2-phase migration: deploy 
 curl -sk "https://<new-vcenter-fqdn>:5480/rest/appliance/system/version" \
   -u "administrator@vsphere.local:<password>"
 
-# Check all services running
+# Check all services running (KB 344633)
 ssh root@<new-vcenter-fqdn>
-vmon-cli --status | grep -v RUNNING
+service-control --status --all
 
 # Verify ESXi hosts still show Connected in the new vCenter
 ```
 
 
 ```text title="Expected output"
-{
-  "version": "7.0.3.00000",
-  "product": "VMware vCenter Server",
-  "build": "19480866",
-  "type": "vcsa"
-}
-STOPPED  vmware-vpxd-svcs
-STOPPED  vmware-mbcs
-root@vcenter.lab.local [ ~ ]# vmon-cli --status | grep -v RUNNING
-root@vcenter.lab.local [ ~ ]#
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html (version-to-build mapping).
 ```
 
 !!! warning "Common errors"
@@ -789,34 +749,22 @@ Enhanced Linked Mode joins multiple vCenter instances into a federated Single Si
 3. Click the second vCenter's tree — it should expand without re-authentication (single sign-on)
 
 ```bash
-# Confirm SSO replication from vCenter CLI
-/usr/lib/vmware-vmafd/bin/vdcrepadmin -f showservers -h localhost -u administrator -w <password>
-# Output should list both vCenters as replication partners
+# Confirm SSO (vmdir) replication partner status from the vCenter shell (KB 410816)
+/usr/lib/vmware-vmdir/bin/vdcrepadmin -f showpartnerstatus -h localhost -u administrator
+# Each partner should report "Host available: Yes"
 ```
 
 
 ```text title="Expected output"
-Replication Partners:
-	CN=vcenter-01.corp.local,OU=Domain Controllers,DC=vsphere,DC=local
-	CN=vcenter-02.corp.local,OU=Domain Controllers,DC=vsphere,DC=local
-
-Partner: vcenter-01.corp.local
-	Status: Up
-	Last Heartbeat: 2024-01-15T14:32:18.456Z
-
-Partner: vcenter-02.corp.local
-	Status: Up
-	Last Heartbeat: 2024-01-15T14:32:15.123Z
-
-Replication Latency: 3ms
+Output varies by environment; see https://knowledge.broadcom.com/external/article/410816/error-cannot-see-replication-partner-whe.html (use `-u administrator`, not the full UPN).
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Cannot connect to localhost:389 (Connection refused)` | Verify the vCenter SSO service is running with `systemctl status vmware-vmafd` and restart if needed. |
+    | `Error: Cannot connect to localhost:389 (Connection refused)` | Verify the VMware Directory Service is running with `service-control --status vmdird` (KB 344633) and start it if needed. |
     | `Error: Authentication failed for user 'administrator' (Invalid credentials)` | Confirm the SSO administrator password is correct and hasn't expired by testing login in the vSphere Client. |
-    | `Error: vdcrepadmin: command not found` | Ensure you are running this command directly on a vCenter Server appliance (not a remote host) where the vmafd tools are installed. |
+    | `Error: vdcrepadmin: command not found` | Ensure you are running this command directly on a vCenter Server appliance (not a remote host) and use the full path `/usr/lib/vmware-vmdir/bin/vdcrepadmin`. |
 ### Step 3 — Configure Cross-vCenter Permissions (Optional)
 
 ![Step 3 — Configure Cross-vCenter Permissions (Optional)](../../../../../assets/vcenter-proc-step-3-configure-cross-vcenter-permissions-optional.svg)

@@ -9,7 +9,7 @@ description: "Standards reference covering Naming Conventions, Build Baseline, S
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelines, Configuration Checklist.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Standards](../../../../../assets/storage-netapp-ontap-architecture-design-standards.svg)
 

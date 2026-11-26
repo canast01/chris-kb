@@ -7,7 +7,7 @@ description: "Version history and release notes for VMware vCenter."
 ---
 # VMware vCenter — Release Notes
 
-*Applies to: VMware vCenter 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 
 <div class="kb-summary">
 Version history and release notes for VMware vCenter.
@@ -17,18 +17,22 @@ Version history and release notes for VMware vCenter.
 
 ## Version History
 
-!!! warning "Unverified version history"
-    This table has not yet been checked against the vendor's official release
-    notes. Treat the versions, dates and summaries below as unconfirmed until
-    they are verified.
+Versions, release dates and builds below are taken from Broadcom [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) (checked 2026-11-25).
 
-| Version | Released | Summary | Notes |
-|---------|----------|---------|-------|
-| 8.0 U3 | 2024-Q3 | vCenter HA improvements, SDDC Manager integration | Not yet verified |
-| 8.0 U2 | 2024-Q1 | Reduced footprint appliance, converged management | Not yet verified |
-| 8.0 U1 | 2023-Q2 | vCenter Server 8.0 U1 stability and security patches | Not yet verified |
-| 8.0 GA | 2022-Q4 | vCenter 8 GA — vSphere Distributed Services Engine | Not yet verified |
-| 7.0 U3 | 2022-Q1 | vCenter 7.0 U3 — end of gen LTS baseline | Not yet verified |
+| Version | Released | Build | Notes | Source |
+|---------|----------|-------|-------|--------|
+| 9.1.2.0 | 2026-11-24 | 25946533 | Latest vCenter 9.1 release | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 9.1.1.0 | 2026-09-03 | 25712839 | vCenter 9.1 update | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 9.1 | 2026-05-12 | 25370922 | vCenter 9.1 GA | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 9.0.2.0200 | 2026-11-19 | 25901331 | Latest vCenter 9.0 release | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 9.0.0.0 | 2025-06-17 | 24755230 | vCenter 9.0 GA | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 8.0 U3m (8.0.3.01200) | 2026-11-19 | 25934264 | Latest 8.0 patch; vCenter 8.x EoGS 2027-10-11 ([KB 459135](https://knowledge.broadcom.com/external/article/459135/end-of-general-support-for-vsphere-80.html)) | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 8.0 U3 (8.0.3.00000) | 2024-06-25 | 24022515 | vCenter 8.0 Update 3 | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 8.0 U2 (8.0.2.00000) | 2023-09-21 | 22385739 | vCenter 8.0 Update 2 | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 8.0 U1 (8.0.1.00000) | 2023-04-18 | 21560480 | vCenter 8.0 Update 1 | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 8.0 GA (8.0.0.10000) | 2022-10-11 | 20519528 | vCenter 8.0 GA | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 7.0 U3w (7.0.3.02500) | 2025-09-29 | 24927011 | Latest 7.0 patch listed | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
+| 7.0 U3 (7.0.3.00000) | 2021-10-05 | 18700403 | vCenter 7.0 Update 3 | [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) |
 
 ## Key Terminology
 

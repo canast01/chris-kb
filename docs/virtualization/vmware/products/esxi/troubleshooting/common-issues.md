@@ -13,7 +13,7 @@ description: "Common Issues reference covering Resolution Steps, All Paths Down 
 <div class="kb-summary">
 Common Issues reference covering Resolution Steps, All Paths Down (APD) — Storage, High CPU Ready Time, High Memory Ballooning or Swapping, PSOD (Purple Screen of Death) and 3 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Common Issues](../../../../../assets/virtualization-vmware-esxi-troubleshooting-common-issues.svg)
 
@@ -373,8 +373,8 @@ Ballooning is expected and acceptable. Active host swapping (non-zero SWR/s, SWW
 ### Resolution
 
 ```bash
-# Check memory reservation on the host
-esxcli system stats memory get
+# Host physical memory (ESXCLI has no memory-statistics command; use esxtop memory view for ballooning/swap)
+esxcli hardware memory get
 
 # Identify which VMs are ballooning most
 # In esxtop: sort by MCTLSZ descending (key: shift+S → column name)
@@ -382,18 +382,8 @@ esxcli system stats memory get
 
 
 ```text title="Expected output"
-MemTotal:                 65536 MB
-MemFree:                  12288 MB
-MemReserved:              8192 MB
-MemShared:                4096 MB
-MemSwapped:               2048 MB
-MemBalloon:               15360 MB
-MemHeap:                  512 MB
-MemHardwareMem:           65536 MB
-MemPhysicalMem:           65536 MB
-MemEffective:             49152 MB
-MemConsumed:              53248 MB
-MemOverhead:              1024 MB
+Output varies by host and release. See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_hardware.html
 ```
 
 !!! warning "Common errors"
@@ -517,28 +507,20 @@ esxcli storage core adapter rescan --all
 esxcli storage filesystem list | grep -v "^Name"
 
 # Mount a VMFS volume that appears unmounted
-esxcli storage filesystem mount -v <volume-uuid>
+esxcli storage filesystem mount -u <volume-uuid>
 ```
 
 
 ```text title="Expected output"
-Adapter rescan initiated for all adapters.
-Adapter rescan completed successfully.
-
-VMFS-6                                    /vmfs/volumes/datastore1-uuid-abc123   262144  204800  77%  MOUNTED
-VMFS-6                                    /vmfs/volumes/datastore2-uuid-def456   131072  98304   75%  MOUNTED
-VMFS-6                                    /vmfs/volumes/datastore3-uuid-ghi789   524288  156000 30%  UNMOUNTED
-vfat                                      /boot                                   4096    2048    50%  MOUNTED
-
-Volume mount initiated for volume: 5a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d
-Volume mounted successfully.
+Output varies by host (one row per mounted/unmounted volume; mount returns no output on success). See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_storage.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: Could not find a matching volume for UUID <volume-uuid>` | Verify the UUID is correct by running `esxcli storage filesystem list` and copy the exact UUID from the output. |
-    | `Error: Volume is already mounted at /vmfs/volumes/<datastore-name>` | The volume is already mounted; use `esxcli storage filesystem unmount -v <volume-uuid>` first if you need to remount it. |
+    | `Error: Volume is already mounted at /vmfs/volumes/<datastore-name>` | The volume is already mounted; use `esxcli storage filesystem unmount -u <volume-uuid>` first if you need to remount it. |
 ### Recover from Snapshot Consolidation Failure
 
 ```bash
@@ -550,9 +532,6 @@ vim-cmd vmsvc/snapshot.removeall <vmid>
 
 # If snapshots cannot be removed via API, check for orphaned delta files
 find /vmfs/volumes/<datastore>/<vm-folder>/ -name "*-delta.vmdk" -o -name "*-0000*.vmdk"
-
-# Consolidate via PowerCLI
-Get-VM "<vm-name>" | Invoke-VMConsolidation
 ```
 
 
@@ -572,11 +551,6 @@ Snapshot removal completed successfully.
 /vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-000002-delta.vmdk
 /vmfs/volumes/datastore1/vm-prod-01/vm-prod-01-000003-delta.vmdk
 
-Get-VM "vm-prod-01" | Invoke-VMConsolidation
-Name                 State   Snapshots
-----                 -----   ---------
-vm-prod-01           Running 0
-Consolidation task completed successfully.
 ```
 
 !!! warning "Common errors"
@@ -584,7 +558,6 @@ Consolidation task completed successfully.
     |---|---|
     | `Snapshot removal failed: The task was cancelled.` | Ensure the VM is not actively writing to snapshots and retry after stopping any backup jobs. |
     | `find: '/vmfs/volumes/datastore1': No such file or directory` | Verify the datastore name with `ls /vmfs/volumes/` and correct the path in the find command. |
-    | `Invoke-VMConsolidation : The object 'vm-prod-01' could not be found.` | Confirm the exact VM name with `Get-VM` and ensure you have vSphere PowerCLI module loaded with `Import-Module VMware.PowerCLI`. |
 ---
 
 ## NTP Drift Causing Authentication Failures
@@ -660,8 +633,8 @@ NTP daemon started
     | Error | Fix |
     |---|---|
     | `ntpdate[2048]: no servers can be used, exiting` | Verify NTP server hostnames resolve correctly with `nslookup ntp1.example.local` and confirm network connectivity to the NTP servers. |
-    | `command not found: ntpq` | Install the NTP client tools package using `esxcli software vib install -n ntpclient` or use `esxcli system ntp status` as an alternative verification method. |
-    | `ntpd: unrecognized service` | Use the correct ESXi service restart command: `esxcli system service restart --service-name=ntpd` instead of `/etc/init.d/ntpd restart`. |
+    | `command not found: ntpq` | Use `esxcli system ntp test` (NTP service operational status) and `esxcli system ntp stats get` (ntpd operational state) instead. |
+    | `ntpd: unrecognized service` | Stop and start the NTP agent with `esxcli system ntp set --enabled false` followed by `esxcli system ntp set --enabled true` (`--enabled` starts or stops ntpd). |
 If the ESXi host is a VM guest (rare in production), disable host-time synchronisation in the VM settings and use NTP independently.
 
 ---
@@ -676,12 +649,7 @@ After re-deploying a host or replacing its SSL certificate, vCenter may refuse t
 2. When prompted about the new thumbprint, review and accept
 3. Or remove and re-add the host: **Right-click host → Remove** → **Add Host** (preserves VMs if in the same datacenter)
 
-```powershell
-# PowerCLI — force reconnect all disconnected hosts
-Get-VMHost | Where-Object {$_.ConnectionState -eq "Disconnected"} | ForEach-Object {
-    Connect-VMHost -VMHost $_ -Confirm:$false
-}
-```
+To find disconnected hosts with PowerCLI, run `Get-VMHost | Where-Object {$_.ConnectionState -eq "Disconnected"}`, then reconnect them from vCenter (steps above).
 
 For bulk certificate replacement across all hosts, use vCenter Certificate Manager or vSphere Lifecycle Manager certificate remediation.
 

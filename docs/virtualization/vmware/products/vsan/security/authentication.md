@@ -11,7 +11,7 @@ description: "vSAN does not have its own authentication system. All access to vS
 <div class="kb-summary">
 vSAN does not have its own authentication system. All access to vSAN management functions is authenticated through vCenter Server, which in turn delegates identity verification to the vSphere SSO domain and configured identity sources.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Authentication](../../../../../assets/virtualization-vmware-vsan-security-authentication.svg)
 
@@ -59,7 +59,7 @@ Note: When an external IdP is configured, the vsphere.local domain remains avail
 | Account | Purpose | Required Role |
 |---|---|---|
 | `svc-veeam-vcenter` | Veeam backup integration | Veeam-defined custom role (backup operator) |
-| `svc-aria-vcenter` | Aria Operations monitoring | Read Only + vSAN performance access |
+| `svc-aria-vcenter` | VCF Operations (formerly Aria Operations) monitoring | Read Only + vSAN performance access |
 | `svc-ansible-vcenter` | Ansible automation | Custom role with required task permissions |
 | `svc-vlcm-agent` | vLCM hardware manager | Administrator (restricted to cluster scope) |
 
@@ -325,9 +325,8 @@ VMCA Certificate Chain Status
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unable to connect to localhost:443` | Verify the ESXi host management network is reachable and the certificate service is running with `systemctl status vmware-vpxd`. |
+    | `Error: Unable to connect to localhost:443` | Verify the ESXi host management network is reachable and restart the host management agent with `/etc/init.d/hostd restart` ([Broadcom KB 320280](https://knowledge.broadcom.com/external/article/320280)). |
     | `Certificate has expired` | Regenerate the host certificate using `esxcli system certificate install` or request a new signed certificate from your VMCA. |
-    | `VMCA service is not running` | Start the VMCA service with `/etc/init.d/vmware-vpxd restart` or check logs in `/var/log/vmware/vpxd/vpxd.log`. |
 **Custom CA certificates:** Replace VMCA-issued certificates with certificates from an enterprise CA (Microsoft CA, HashiCorp Vault PKI) if your security policy requires it. vSAN continues to function after certificate replacement — vCenter orchestrates the replacement rolling.
 
 vSphere Client → vCenter → Administration → Certificate Management → Replace VMCA Root Certificate

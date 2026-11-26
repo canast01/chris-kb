@@ -3,11 +3,11 @@ tags:
   - esxi
   - vmware
   - vsphere-8
-description: "Version history and release notes for VMware ESXi."
+description: "Version history and release notes for VMware ESX 9.x and ESXi 8.x."
 ---
 # VMware ESXi — Release Notes
 
-*Applies to: VMware ESXi 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 
 <div class="kb-summary">
 Version history and release notes for VMware ESXi.
@@ -17,18 +17,33 @@ Version history and release notes for VMware ESXi.
 
 ## Version History
 
-!!! warning "Unverified version history"
-    This table has not yet been checked against the vendor's official release
-    notes. Treat the versions, dates and summaries below as unconfirmed until
-    they are verified.
+Versions, builds and dates below were checked on 2026-11-25 against the Broadcom
+ESX release notes and [Broadcom KB 314608](https://knowledge.broadcom.com/external/article/314608) (VCF-to-component version mapping).
+For ESXi 8.x the date is the VCF 5.x release that shipped that build (per KB 314608),
+not necessarily the standalone ESXi GA date. vSphere 8.0 (GA 11 Oct 2022) reaches End of
+General Support on 11 Oct 2027 ([KB 459135](https://knowledge.broadcom.com/external/article/459135)).
 
-| Version | Released | Summary | Notes |
-|---------|----------|---------|-------|
-| 8.0 U3 | 2024-Q3 | Security hardening, NVMe-oF initiator improvements | Not yet verified |
-| 8.0 U2 | 2024-Q1 | TPM 2.0 attestation enhancements, vTPM migration | Not yet verified |
-| 8.0 U1 | 2023-Q2 | ESXi 8.0 U1 — driver compatibility and stability | Not yet verified |
-| 8.0 GA | 2022-Q4 | ESXi 8 GA — Intel TDX, AMD SEV-SNP support | Not yet verified |
-| 7.0 U3 | 2022-Q1 | ESXi 7.0 U3 — lifecycle LTS baseline | Not yet verified |
+| Version | Build | Released | Source |
+|---------|-------|----------|--------|
+| ESX 9.1.2.0 | 25946735 | 24 Nov 2026 (VCF 9.1.2.0) | [ESX 9.1.2.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-2-0-release-notes/esx-9-1-2-0-release-notes.html) |
+| ESX 9.1.1.0 | 25714478 | 03 Sep 2026 (VCF 9.1.1) | [ESX 9.1.1.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/esx-9-1-1-0-release-notes.html) |
+| ESX 9.1.0.0100 | 25433460 | 05 Jun 2026 (patch) | [ESX 9.1.0.0100 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/esx/esx-9-1-0-0100-release-notes.html) |
+| ESX 9.1.0.0 | 25370933 | 12 May 2026 (VCF 9.1.0) | [VCF 9.1.0 bill of materials](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vmware-cloud-foundation-bill-of-materials.html) |
+| ESX 9.0.2.0 | 25148076 | 20 Jan 2026 (VCF 9.0.2.0) | [ESX 9.0.2.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-9-0-2-release-notes/esx-9-0-2-0000.html) |
+| ESX 9.0.1.0 | 24957456 | 29 Sep 2025 (VCF 9.0.1.0) | [ESX 9.0.1.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-9-0-1-0-release-notes/esx-9-0-1-0000.html) |
+| ESX 9.0.0.0 | 24755229 | 17 Jun 2025 (VCF 9.0) | [VCF 9.0 bill of materials](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/vmware-cloud-foundation-bill-of-materials.html) |
+| ESXi 8.0 U3m | 25926933 | 19 Nov 2026 (VCF 5.2.5) | [KB 314608](https://knowledge.broadcom.com/external/article/314608) |
+| ESXi 8.0 U3j | 25429389 | 27 May 2026 (VCF 5.2.4) | [KB 314608](https://knowledge.broadcom.com/external/article/314608) |
+| ESXi 8.0 U3i | 25205845 | 24 Feb 2026 (VCF 5.2.3) | [KB 314608](https://knowledge.broadcom.com/external/article/314608) |
+| ESXi 8.0 U3g | 24859861 | 05 Sep 2025 (VCF 5.2.2) | [KB 314608](https://knowledge.broadcom.com/external/article/314608) |
+| ESXi 8.0 U3 | 24022510 | 23 Jul 2024 (VCF 5.2) | [KB 314608](https://knowledge.broadcom.com/external/article/314608) |
+| ESXi 8.0 U2 | 22380479 | 07 Nov 2023 (VCF 5.1) | [KB 314608](https://knowledge.broadcom.com/external/article/314608) |
+| ESXi 8.0 U1a | 21813344 | 01 Jun 2023 (VCF 5.0) | [KB 314608](https://knowledge.broadcom.com/external/article/314608) |
+| ESXi 8.0 GA | — | 11 Oct 2022 | [KB 459135](https://knowledge.broadcom.com/external/article/459135) |
+
+Naming: from 9.0 Broadcom calls the hypervisor "ESX" (VMware vSphere Hypervisor (ESX)); 8.x and
+earlier are "ESXi". From vSphere 9.0, ESX 9.x hosts must be lifecycle-managed with vLCM images —
+baselines (VUM) cannot patch 9.x hosts ([KB 379388](https://knowledge.broadcom.com/external/article/379388)).
 
 ## Key Terminology
 

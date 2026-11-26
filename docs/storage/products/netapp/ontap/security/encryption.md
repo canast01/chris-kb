@@ -9,7 +9,7 @@ description: "ONTAP provides encryption at rest via NetApp Volume Encryption (NV
 <div class="kb-summary">
 ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for management interfaces and Kerberos/IPsec for data protocols.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Encryption](../../../../../assets/storage-netapp-ontap-security-encryption.svg)
 
@@ -81,7 +81,7 @@ svm_prod    prod_data   true     encrypted
     | Error | Fix |
     |---|---|
     | `Error: command failed: Encryption is not licensed on this cluster` | Verify NetApp Volume Encryption (NVE) license is installed with `system license show -package VE`. |
-    | `Error: command failed: Cannot create volume on aggregate aggr1: aggregate does not support encryption` | Use an aggregate with Self-Encrypting Drives (SEDs) or enable software encryption; check aggregate encryption capability with `storage aggregate show -fields encrypt`. |
+    | `Error: command failed: Cannot create volume on aggregate aggr1: aggregate does not support encryption` | Use an aggregate with Self-Encrypting Drives (SEDs) or enable software encryption; check aggregate encryption capability with `storage aggregate show -fields encrypt-with-aggr-key`. |
 ### Enabling NVE on an Existing Volume
 
 Encrypting an existing volume requires re-keying — ONTAP rewrites the volume data with the new DEK. This is an online, non-disruptive operation for most workloads but runs in the background and affects I/O performance temporarily.
@@ -115,7 +115,7 @@ svm1    data_vol01  full
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: command failed: volume encryption conversion is not supported on this volume` | Verify the volume is not a SnapMirror destination, MetroCluster volume, or using an unsupported aggregate encryption type with `storage aggregate show -fields encrypt`. |
+    | `Error: command failed: volume encryption conversion is not supported on this volume` | Verify the volume is not a SnapMirror destination, MetroCluster volume, or using an unsupported aggregate encryption type with `storage aggregate show -fields encrypt-with-aggr-key`. |
     | `Error: Vserver "svm1" does not exist` | Confirm the SVM name is correct and exists by running `vserver show`. |
     | `Error: Volume "data_vol01" does not exist` | Check the volume name spelling and verify it exists in the target SVM with `volume show -vserver svm1`. |
 ### NVE Key Operations
@@ -124,8 +124,8 @@ svm1    data_vol01  full
 # Show encryption status for all volumes
 volume show -fields encrypt,encryption-state
 
-# Show the key ID protecting a volume
-volume encryption show-key-id -vserver <svm> -volume <vol_name>
+# Show the key ID protecting a volume (key-id field of volume show)
+volume show -vserver <svm> -volume <vol_name> -fields key-id
 
 # Rekey a volume (rotate the DEK)
 volume encryption rekey start -vserver <svm> -volume <vol_name>
@@ -142,10 +142,8 @@ svm_prod  vol_backup        false    none
 svm_dev   vol_test          true     encrypted
 svm_dev   vol_logs          false    none
 
-Key ID protecting volume vol_data_01:
-Vserver: svm_prod
-Volume: vol_data_01
-Key ID: 47a8c9f2-1b3d-4e5f-9a2c-8d7e6f5g4h3i
+volume show -fields key-id: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/volume-show.html
 
 Rekey operation started for volume vol_data_01.
 
@@ -158,7 +156,7 @@ svm_prod  vol_data_01       in-progress  45%
     | Error | Fix |
     |---|---|
     | `Error: command failed: Invalid volume name <vol_name>` | Replace `<vol_name>` with an actual volume name and verify it exists with `volume show`. |
-    | `Error: This operation is not supported on unencrypted volumes` | Ensure the volume has encryption enabled; enable it first with `volume encryption enable -vserver <svm> -volume <vol_name>`. |
+    | `Error: This operation is not supported on unencrypted volumes` | Ensure the volume has encryption enabled; encrypt it first with `volume encryption conversion start -vserver <svm> -volume <vol_name>`. |
     | `Error: Rekey operation already in progress for this volume` | Wait for the current rekey to complete by checking status with `volume encryption rekey show`, or contact NetApp support if stuck. |
 ---
 
@@ -198,26 +196,23 @@ Encrypt With Aggr Key: true
 ### Converting an Existing Aggregate to NAE
 
 ```bash
-# Start NAE conversion (background, non-disruptive)
-storage aggregate encryption rekey start -aggregate <aggr_name>
+# Convert a non-NAE aggregate to an NAE aggregate
+storage aggregate modify -aggregate <aggr_name> -node <node_name> -encrypt-with-aggr-key true
 
-# Monitor progress
-storage aggregate encryption rekey show -aggregate <aggr_name>
+# Verify the aggregate is enabled for aggregate-level encryption
+storage aggregate show -aggregate <aggr_name> -fields encrypt-with-aggr-key
 ```
 
 
 ```text title="Expected output"
-Aggregate encryption rekey operation started for aggregate "aggr_ssd_01".
-
-Aggregate         Rekey Status      Progress  Estimated Time Remaining
-aggr_ssd_01       In Progress       45%       2h 15m
+Output varies; see the vendor procedure:
+https://docs.netapp.com/us-en/ontap/encryption-at-rest/enable-aggregate-level-encryption-nve-license-task.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: aggregate <aggr_name> not found` | Verify the aggregate name with `storage aggregate show` and use the correct name. |
-    | `Error: Rekey operation already in progress on aggregate <aggr_name>` | Wait for the current rekey to complete or cancel it with `storage aggregate encryption rekey abort` before starting a new one. |
 ### NAE vs NVE Decision
 
 | Consideration | NVE | NAE |
@@ -289,11 +284,14 @@ security key-manager onboard enable
 # CRITICAL: Store the passphrase in a secure vault (CyberArk, HashiCorp Vault, or password manager)
 # Without the passphrase, encrypted data is unrecoverable after a cluster loss
 
-# Show OKM status
-security key-manager onboard show
+# Show configured key managers (keystores) and their state
+security key-manager keystore show
 
-# Show key IDs managed by OKM
-security key-manager key query -key-manager-type onboard
+# Display OKM backup information (store it securely with the passphrase)
+security key-manager onboard show-backup
+
+# Show key IDs in the configured key managers
+security key-manager key query
 
 # Synchronize OKM keys to a new node added to the cluster
 security key-manager onboard sync
@@ -305,17 +303,10 @@ Enter a passphrase for onboard key management: ****
 Re-enter the passphrase: ****
 Onboard Key Management has been enabled successfully.
 
-Cluster: prod-cluster-01
-Onboard Key Management Status: enabled
-Key Manager Type: onboard
-Passphrase Set: yes
-Last Key Rotation: 2024-01-15 09:32:15
-
-Key ID                                    Key Type      Status
-----------------------------------------  -----------   --------
-550e8400-e29b-41d4-a716-446655440000     NSE-256       available
-550e8400-e29b-41d4-a716-446655440001     NSE-256       available
-550e8400-e29b-41d4-a716-446655440002     NSE-256       available
+keystore show / onboard show-backup / key query: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-keystore-show.html
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-show-backup.html
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html
 
 Synchronizing OKM keys to node2...
 Node2: Key synchronization completed successfully (3 keys synced)
@@ -324,7 +315,7 @@ Node2: Key synchronization completed successfully (3 keys synced)
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Onboard Key Management is already enabled on this cluster` | Run `security key-manager onboard show` first to verify current status before attempting re-enablement. |
+    | `Error: Onboard Key Management is already enabled on this cluster` | Run `security key-manager keystore show` first to verify current status before attempting re-enablement. |
     | `Error: Failed to synchronize keys to node2: Authentication failed` | Ensure the node is fully joined to the cluster with `cluster show` and that network connectivity exists between nodes. |
 ### External KMIP Key Manager
 
@@ -339,7 +330,7 @@ KMIP (Key Management Interoperability Protocol) integrates ONTAP with an enterpr
 security certificate install -vserver <admin-svm> -type client-ca
 
 # Install the KMS server CA certificate
-security certificate install -vserver <admin-svm> -type server-ca -server-name <kmip-server>
+security certificate install -vserver <admin-svm> -type server-ca
 
 # Enable external KMIP key manager
 security key-manager external enable \
@@ -355,11 +346,10 @@ security key-manager external add-servers \
 
 # Verify KMS connectivity
 security key-manager external show
-security key-manager external check
-# Expected: connectivity: available
+security key-manager external show-status
 
-# Show keys managed by external KMS
-security key-manager key query -key-manager-type external
+# Show keys in the configured key managers
+security key-manager key query
 ```
 
 
@@ -384,19 +374,9 @@ Client Certificate: ontap-kmip-client
 Server CA Certificates: kmip-server-ca
 Status: configured
 
-Checking KMS connectivity...
-Key Server: 10.45.12.88:5696
-  Connectivity: available
-Key Server: 10.45.12.89:5696
-  Connectivity: available
-
-Vserver: cluster1-admin
-Key Manager Type: external
-Key ID                           Status
--------------------------------- --------
-550e8400-e29b-41d4-a716-446655440001  available
-550e8400-e29b-41d4-a716-446655440002  available
-550e8400-e29b-41d4-a716-446655440003  available
+external show-status / key query: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-show-status.html
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html
 ```
 
 !!! warning "Common errors"
@@ -426,60 +406,35 @@ q3 -> okm
 ### Key Manager Health Checks
 
 ```bash
-# Show overall key manager status
-security key-manager show-key-query
+# Show key IDs and whether they are restored on each node
+security key-manager key query
 
-# Show key manager type and status
-security key-manager show
+# Show key manager (keystore) type and state
+security key-manager keystore show
 
-# For OKM
-security key-manager onboard show
+# For OKM: confirm backup information is available
+security key-manager onboard show-backup
 
-# For KMIP
+# For KMIP: server configuration and connectivity
 security key-manager external show
-security key-manager external check
+security key-manager external show-status
 ```
 
 
 ```text title="Expected output"
-Key Manager Status:
-  Key Manager Type: onboard
-  Key Manager Status: available
-  Node: cluster1-01
-  Key Store Status: available
-  Key Store Type: NSE
-
-Key Manager Configuration:
-  Key Manager Type: onboard
-  Status: available
-  Nodes: 2
-  Node cluster1-01: available
-  Node cluster1-02: available
-
-Onboard Key Manager Status:
-  Status: available
-  Backup Status: completed
-  Backup Date: 2024-01-15 14:32:18 UTC
-  Node cluster1-01: available
-  Node cluster1-02: available
-
-External Key Manager (KMIP) Configuration:
-  Status: not configured
-  KMIP Server: not configured
-  Connection Status: N/A
-
-External Key Manager Check:
-  KMIP Server: not configured
-  Status: N/A
-  Last Check: never
+Output varies; see
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-keystore-show.html
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-show-backup.html
+https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-show-status.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Key manager is not configured` | Run `security key-manager onboard create` to initialize onboard key management or configure KMIP servers with `security key-manager external add-servers`. |
-    | `Error: Connection failed to KMIP server <ip>:5696` | Verify network connectivity to the KMIP server, confirm firewall rules allow port 5696, and check that the KMIP server certificate is valid with `security key-manager external check`. |
-    | `Error: Backup status is failed` | Manually trigger an onboard key manager backup with `security key-manager onboard create-backup` and verify sufficient disk space is available. |
+    | `Error: Key manager is not configured` | Run `security key-manager onboard enable` to initialize onboard key management or configure KMIP servers with `security key-manager external add-servers`. |
+    | `Error: Connection failed to KMIP server <ip>:5696` | Verify network connectivity to the KMIP server, confirm firewall rules allow port 5696, and check server status with `security key-manager external show-status`. |
+    | OKM backup not recorded | Display the OKM backup data with `security key-manager onboard show-backup` and store it, with the passphrase, outside the cluster. |
 ---
 
 ## TLS and SSH Hardening
@@ -488,7 +443,7 @@ External Key Manager Check:
 
 ```bash
 # Set minimum TLS version for HTTPS management
-security config modify -interface HTTPS -min-protocol-version TLSv1.2
+security config modify -supported-protocols TLSv1.3,TLSv1.2
 
 # Show current TLS/SSL configuration
 security config show
@@ -549,7 +504,7 @@ SSL-Session:
 security ssh modify \
     -vserver <cluster-name> \
     -ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com \
-    -macs hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+    -mac-algorithms hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
 
 # Verify SSH configuration
 security ssh show -vserver <cluster-name>
@@ -561,7 +516,7 @@ security ssh modify -vserver <cluster-name> \
 
 
 ```text title="Expected output"
-cluster1::> security ssh modify -vserver cluster1 -ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com -macs hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+cluster1::> security ssh modify -vserver cluster1 -ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com -mac-algorithms hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
 (no output — command completes silently)
 
 cluster1::> security ssh show -vserver cluster1
@@ -762,7 +717,7 @@ security certificate delete -vserver <svm> -common-name <cn> -type server
 # Generate a new CSR, get it signed, and install as above
 
 # Activate the new certificate for HTTPS
-security ssl modify -vserver <svm> -certificate-name <new-cert-common-name>
+security ssl modify -vserver <svm> -common-name <new-cert-common-name> -ca <issuing-ca> -serial <serial>
 
 # Verify the active SSL certificate
 security ssl show -vserver <svm>
@@ -773,8 +728,8 @@ security ssl show -vserver <svm>
 cluster1::> security certificate delete -vserver svm1 -common-name ontap.example.com -type server
 (no output — command completes silently)
 
-cluster1::> security ssl modify -vserver svm1 -certificate-name ontap.example.com
-(no output — command completes silently)
+cluster1::> security ssl modify -vserver svm1 -common-name ontap.example.com -ca <issuing-ca> -serial <serial>
+(output varies; see https://docs.netapp.com/us-en/ontap-cli/security-ssl-modify.html)
 
 cluster1::> security ssl show -vserver svm1
 Vserver: svm1
@@ -798,13 +753,14 @@ Set up EMS alerting for certificate expiry:
 
 ```bash
 # Check if any EMS events fire for certificate expiry
-event log show -messagename sslcert.expired*
-event log show -messagename sslcert.expiring*
+event log show -message-name sslcert.expired*
+event log show -message-name sslcert.expiring*
 
 # Configure email alert for certificate expiry events
 event notification destination create -name cert-alerts -email ops@corp.local
+event filter create -filter-name cert-filter
+event filter rule add -filter-name cert-filter -type include -message-name sslcert.*
 event notification create -filter-name cert-filter -destinations cert-alerts
-event filter create -filter-name cert-filter -type include -messagename sslcert.*
 ```
 
 

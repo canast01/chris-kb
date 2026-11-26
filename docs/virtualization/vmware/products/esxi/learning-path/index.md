@@ -11,7 +11,7 @@ description: "Recommended reading order for ESXi. Follow these stages in order t
 <div class="kb-summary">
 Recommended reading order for ESXi. Follow these stages in order to build a complete mental model before working with it in production.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 
 ```d2

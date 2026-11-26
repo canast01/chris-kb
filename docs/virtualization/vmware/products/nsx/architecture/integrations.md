@@ -11,7 +11,7 @@ description: "Integrations reference covering Host Transport Node Profiles, VMwa
 <div class="kb-summary">
 Integrations reference covering Host Transport Node Profiles, VMware Cloud Foundation (VCF) Integration, Physical Underlay Requirements, BGP Integration with Physical Network, Active Directory / LDAP Integration and 2 more sections.
 
-*Applies to: NSX-T 3.x · NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 ![NSX — Integrations](../../../../../assets/virtualization-vmware-nsx-architecture-integrations.svg)
 
@@ -129,7 +129,7 @@ Status  Network            NextHop      Metric LocPrf Weight Path
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `% Unknown command` | Verify the correct vrf ID with `get vrf` and ensure you are using the exact command syntax for your NSX-T version. |
+    | `% Unknown command` | Verify the correct vrf ID with `get logical-routers` and ensure you are using the exact command syntax for your NSX-T version. |
     | `Peer 10.0.0.1 not found` | Confirm the BGP neighbor IP is configured and the peer relationship is established by checking `get bgp neighbor summary` first. |
 ---
 
@@ -155,51 +155,22 @@ Test connectivity before saving. NSX will validate the bind DN and base DN.
 ### Verify LDAP Integration via API
 
 ```bash
-# List configured identity sources
+# List configured LDAP identity sources
 curl -sk -u 'admin:password' \
-  https://<nsx-manager>/api/v1/aaa/vidm/status
+  https://<nsx-manager>/policy/api/v1/aaa/ldap-identity-sources
 
-# Test LDAP search
+# Test LDAP search against one identity source
 curl -sk -u 'admin:password' \
   -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"search_query": "nsxadmin", "cursor": "0"}' \
-  "https://<nsx-manager>/api/v1/aaa/ldap/search"
+  "https://<nsx-manager>/policy/api/v1/aaa/ldap-identity-sources/<ldap-source-id>/search?filter_value=nsxadmin"
+
+# VMware Identity Manager (vIDM) integration status, if used
+curl -sk -u 'admin:password' \
+  https://<nsx-manager>/api/v1/node/aaa/providers/vidm/status
 ```
 
-
 ```text title="Expected output"
-{
-  "vidm_servers": [
-    {
-      "server_address": "vidm.corp.local",
-      "port": 443,
-      "status": "UP",
-      "thumbprint": "a1:b2:c3:d4:e5:f6:7g:8h:9i:0j:1k:2l:3m:4n:5o:6p",
-      "last_heartbeat": "2024-01-15T14:32:18.456Z"
-    }
-  ],
-  "ldap_servers": [
-    {
-      "server_address": "ldap.corp.local",
-      "port": 389,
-      "status": "UP",
-      "bind_dn": "cn=nsx-bind,ou=service-accounts,dc=corp,dc=local"
-    }
-  ]
-}
-{
-  "results": [
-    {
-      "username": "nsxadmin",
-      "full_name": "NSX Administrator",
-      "email": "nsxadmin@corp.local",
-      "distinguished_name": "cn=nsxadmin,ou=users,dc=corp,dc=local"
-    }
-  ],
-  "cursor": "1",
-  "result_count": 1
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -294,41 +265,29 @@ NSX components forward syslog via the NSX Manager CLI or API:
 ```bash
 # Add syslog target on NSX Manager
 nsxcli
-set service syslog exporter siem-01 level info protocol TLS server 10.0.0.100 port 6514
+set logging-server 10.0.0.100:6514 proto tls level info serverca <siem-ca-file>
 
 # Verify
-get service syslog exporters
+get logging-servers
 
 # Add syslog on Edge node (SSH to Edge)
-set service syslog exporter siem-01 level info protocol UDP server 10.0.0.100 port 514
+set logging-server 10.0.0.100:514 proto udp level info
 ```
 
-
 ```text title="Expected output"
-NSX CLI (build 21624528)
-(no output — command completes silently)
-
-Syslog Exporters:
-  Exporter ID: siem-01
-  Level: info
-  Protocol: TLS
-  Server: 10.0.0.100
-  Port: 6514
-  Status: connected
-
-(no output — command completes silently)
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Exporter siem-01 already exists` | Use `delete service syslog exporter siem-01` before re-adding, or modify with `set service syslog exporter siem-01` to update existing configuration. |
+    | Duplicate logging server entry | Check existing entries with `get logging-servers` and remove the old entry (same host, port, proto and level) before re-adding. |
     | `Error: Connection refused to 10.0.0.100:6514` | Verify the syslog server is running and listening on the specified port, and that network connectivity exists from NSX Manager/Edge to the syslog server. |
 Key log sources to forward:
 
 | Source | Path / Method | Content |
 |---|---|---|
-| NSX Manager | `set service syslog exporter` | API audit, policy changes, alarms |
+| NSX Manager | `set logging-server` | API audit, policy changes, alarms |
 | Edge Node | Same CLI command on each Edge | BGP events, NAT, LB pool changes |
 | ESXi DFW | ESXi host syslog with DFW tag | Firewall rule hits, drops |
 | NSX Manager audit | `/var/log/vmware/nsx-manager/audit.log` | Admin actions, role changes |

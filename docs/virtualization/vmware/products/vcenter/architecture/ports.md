@@ -14,7 +14,7 @@ description: "Firewall port reference for vCenter Server Appliance (VCSA). Use t
 <div class="kb-summary">
 Firewall port reference for vCenter Server Appliance (VCSA). Use this to build firewall change requests and validate network segmentation before deployment or migration.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Ports and Network Requirements](../../../../../assets/virtualization-vmware-vcenter-architecture-ports.svg)
 

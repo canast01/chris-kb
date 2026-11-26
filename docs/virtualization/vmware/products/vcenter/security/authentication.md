@@ -11,7 +11,7 @@ description: "Authentication reference covering SSO Security, TLS Configuration,
 <div class="kb-summary">
 Authentication reference covering SSO Security, TLS Configuration, Certificates to Track, Certificate Replacement Process, Validation After Replacement and 5 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter Security — Authentication](../../../../../assets/virtualization-vmware-vcenter-security-authentication.svg)
 
@@ -90,7 +90,7 @@ Please select an option [1-8]:
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unable to connect to VMware Certificate Authority. Please check VMCA service status.` | Verify VMCA service is running with `systemctl status vmware-vmca` and restart if needed. |
+    | `Error: Unable to connect to VMware Certificate Authority. Please check VMCA service status.` | Verify the VMware Certificate Service is running with `service-control --status vmcad` (KB 344633) and start it if needed. |
     | `Error: Certificate file not found at /path/to/cert.pem` | Ensure the certificate file path is correct and readable by the root user before proceeding. |
     | `Error: Private key does not match certificate. Certificate installation failed.` | Verify the private key and certificate are from the same CSR and were not corrupted during transfer. |
 Replacement requires vCenter services restart. Plan a maintenance window.
@@ -234,27 +234,20 @@ Disconnect-VIServer * -Confirm:$false
 ### Unlock administrator@vsphere.local
 
 ```bash
-# SSH to VCSA
-/usr/lib/vmware-vmafd/bin/dir-cli user unlock \
-    --account administrator \
-    --domain vsphere.local \
-    --password <current-password>
-
-# If the password is also lost, reset via VCSA console (single-user mode)
-# See VMware KB 2069041 for the reset procedure
+# KB 326186: unlock from the vSphere Client as another SSO administrator
+#   Administration > Single Sign-On > Users and Groups > Users > select account > More > Unlock
+# If no other SSO administrator exists or the password is forgotten, reset it from the VCSA Bash shell:
+shell.set --enabled true    # in the appliance shell, then type: shell
+/usr/lib/vmware-vmdir/bin/vdcadmintool
+# Select option 3 (Reset account password); Account UPN: administrator@vsphere.local
+# Log in with the generated temporary password and change it
 ```
 
 
 ```text title="Expected output"
-(no output — command completes silently)
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/326186/resetting-forgotten-or-locked-vcenter-se.html (vdcadmintool shows a menu; option 3 prints a temporary password). In Enhanced Linked Mode the new password replicates to all linked vCenters.
 ```
 
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `dir-cli: error while loading shared libraries: libvmafd.so.0: cannot open shared object file` | Ensure you are running the command from the VCSA appliance itself, not a remote system, as the vmafd libraries are only available locally. |
-    | `Error: Authentication failed for user 'administrator@vsphere.local'` | Verify the current password is correct and that the administrator account exists in the vsphere.local domain. |
-    | `Error: Account 'administrator' is not locked` | Confirm the account is actually locked before attempting to unlock it; use `dir-cli user list` to check account status first. |
 ### Unlock an AD Account (from vCenter)
 
 AD account lockouts caused by vCenter (e.g. cached wrong password in identity source):
@@ -264,9 +257,13 @@ AD account lockouts caused by vCenter (e.g. cached wrong password in identity so
    # On a domain controller
    Unlock-ADAccount -Identity jsmith
    ```
-3. Restart `vmware-sts-idmd` service to clear any cached authentication state:
+3. If authentication state still looks stale, restart the Security Token Service (stop, then start — KB 344633):
    ```bash
-   service-control --restart vmware-sts-idmd
+   service-control --stop vmware-stsd && service-control --start vmware-stsd
+   ```
+
+   ```text title="Expected output"
+   Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html
    ```
 ---
 

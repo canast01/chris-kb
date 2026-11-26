@@ -11,7 +11,7 @@ description: "Access Control reference covering Built-in Roles, Custom Roles, SS
 <div class="kb-summary">
 Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and Identity Sources, Audit Logging — Access Events, PowerCLI — Permission Management and 3 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter Security — Access Control](../../../../../assets/virtualization-vmware-vcenter-security-access-control.svg)
 
@@ -64,7 +64,7 @@ Navigate to **Administration → Single Sign On → Configuration → Identity S
 
 | Field | Value |
 |---|---|
-| Type | Active Directory (Integrated Windows Authentication) or LDAP |
+| Type | Active Directory over LDAP (LDAPS) or Identity Federation — IWA is deprecated since 7.0 and removed in vCenter 9.0 ([KB 314324](https://knowledge.broadcom.com/external/article/314324/removal-of-integrated-windows-authentica.html)) |
 | Domain name | `corp.example.com` |
 | Domain alias | `CORP` |
 | LDAP URL | `ldaps://dc01.corp.example.com:636` |
@@ -254,25 +254,20 @@ Access review checklist:
 If `administrator@vsphere.local` is locked out:
 
 ```bash
-# SSH to VCSA as root
-/usr/lib/vmware-vmafd/bin/dir-cli user unlock \
-    --account administrator \
-    --domain vsphere.local \
-    --password <vmdir-admin-password>
+# KB 326186: unlock from the vSphere Client as another SSO administrator
+#   Administration > Single Sign-On > Users and Groups > Users > select account > More > Unlock
+# If no other SSO administrator exists or the password is forgotten, reset it from the VCSA Bash shell:
+shell.set --enabled true    # in the appliance shell, then type: shell
+/usr/lib/vmware-vmdir/bin/vdcadmintool
+# Select option 3 (Reset account password); Account UPN: administrator@vsphere.local
+# Log in with the generated temporary password and change it
 ```
 
 
 ```text title="Expected output"
-Unlocking user [administrator] in domain [vsphere.local]...
-User [administrator] unlocked successfully.
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/326186/resetting-forgotten-or-locked-vcenter-se.html (vdcadmintool shows a menu; option 3 prints a temporary password). In Enhanced Linked Mode the new password replicates to all linked vCenters.
 ```
 
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `Error: Cannot connect to directory service on localhost:389` | Ensure the vCenter Directory Service (vmdir) is running with `service vmdir status` and restart if needed. |
-    | `Error: Authentication failed for user [administrator]` | Verify the vmdir-admin-password is correct; if unknown, reset it using the VCSA management interface or recovery mode. |
-    | `Error: User [administrator] not found in domain [vsphere.local]` | Confirm the domain name matches your vCenter configuration (check `/etc/vmware-vpx/vcdb.properties` for the correct domain). |
 If the root password is unknown, use the VCSA VM console (via ESXi DCUI) to boot into single-user mode and reset it — documented in VMware KB 2069041.
 
 Store the break-glass password for `administrator@vsphere.local` in an offline vault (e.g., printed and sealed, or HSM-backed secrets manager) separate from the primary password manager. The break-glass procedure must be documented and tested annually.

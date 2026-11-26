@@ -7,7 +7,7 @@ description: "Common questions about VMware NSX operations, configuration, and t
 ---
 # VMware NSX — Frequently Asked Questions
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 
 <div class="kb-summary">
 Common questions about VMware NSX operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
@@ -17,7 +17,7 @@ Common questions about VMware NSX operations, configuration, and troubleshooting
 ## General
 
 **Q: What NSX version is recommended for new deployments?**
-A: NSX 4.1.x or 4.2.x is the current recommendation. Check: NSX Manager → System → Overview → Version. Always align NSX version with vCenter and ESXi compatibility matrix.
+A: For VCF 9 deployments, NSX 9.x is current (latest 9.1.2.0, released 2026-11-24); NSX 4.2.x (latest 4.2.5, released 2026-11-19) is the line used with VCF 5.x. Source: [Broadcom KB 317797](https://knowledge.broadcom.com/external/article/317797). Check: NSX Manager → System → Overview → Version. Always align NSX version with vCenter and ESXi compatibility matrix.
 
 **Q: How do I check the current VMware NSX version?**
 A: `NSX Manager → System → Overview → Version`
@@ -41,10 +41,10 @@ A: NSX Manager → Networking → Tier-1 Gateways → Add. Link to existing T0. 
 ## Troubleshooting
 
 **Q: NSX shows 'Edge node tunnel is down'. What does it mean?**
-A: The GENEVE tunnel between the Edge node and transport nodes is failing. Check TEP IP reachability, MTU, and the uplink profile. Verify physical switch ports carrying the TEP VLAN are up. Review `get tunnel-port` from the Edge node CLI.
+A: The GENEVE tunnel between the Edge node and transport nodes is failing. Check TEP IP reachability, MTU, and the uplink profile. Verify physical switch ports carrying the TEP VLAN are up. Review `get tunnel-ports` and `get bfd-sessions` from the Edge node CLI.
 
 **Q: North-south throughput through NSX Edge is below expected — where do I start?**
-A: Check Edge node CPU utilisation (DPDKs are single-threaded per core). Verify ECMP is configured across multiple Edge uplinks. Review DPDK queue statistics via Edge node CLI: `get dataplane l2fwd`. Add Edge nodes if throughput is near the per-node limit.
+A: Check Edge node CPU utilisation (DPDKs are single-threaded per core). Verify ECMP is configured across multiple Edge uplinks. Review data-plane CPU statistics via Edge node CLI: `get dataplane cpu stats`. Add Edge nodes if throughput is near the per-node limit.
 
 ## Backup and Recovery
 

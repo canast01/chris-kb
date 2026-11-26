@@ -9,7 +9,7 @@ description: "ONTAP — Security reference: Access Control, Encryption, Authenti
 <div class="kb-summary">
 ONTAP — Security reference: Access Control, Encryption, Authentication, Hardening.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 <div class="kb-grid kb-grid-3">

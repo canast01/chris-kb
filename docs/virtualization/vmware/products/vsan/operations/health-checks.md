@@ -11,7 +11,7 @@ description: "Health Checks reference covering Weekly Checks, Performance Baseli
 <div class="kb-summary">
 Health Checks reference covering Weekly Checks, Performance Baseline, Network Health, Stretched Cluster Checks, Change Readiness.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ## Before you begin
@@ -32,7 +32,7 @@ echo "=== 1. Cluster membership ==="
 esxcli vsan cluster get | grep -E "Member|Master|Sub-Cluster UUID|Health"
 
 echo "=== 2. Overall health tests ==="
-esxcli vsan health cluster get | grep -E "TestName|Health:" | grep -v "PASS"
+esxcli vsan health cluster list
 
 echo "=== 3. Disk group state ==="
 esxcli vsan storage list | grep -E "Disk Group UUID|Is SSD|Health|State|Tier"
@@ -61,61 +61,8 @@ echo "=== Done ==="
 ```
 
 
-```text title="Expected output"
-=== 1. Cluster membership ===
-Member: esx-node-01.lab.local
-Member: esx-node-02.lab.local
-Member: esx-node-03.lab.local
-Master: esx-node-01.lab.local
-Sub-Cluster UUID: 52d4a8c1-7f2e-4a9b-b1c3-8e9f2d5c6a7b
-Health: Healthy
-
-=== 2. Overall health tests ===
-TestName: Network MTU
-Health: FAIL
-TestName: Congestion
-Health: WARN
-
-=== 3. Disk group state ===
-Disk Group UUID: 5a8c3f1e-2b9d-4c7a-9e1f-3d6b8a2c5e7f
-Is SSD: true
-Health: Healthy
-State: Enabled
-Tier: All-Flash
-
-Disk Group UUID: 6b9d4g2f-3c0e-5d8b-0f2g-4e7c9b3d6f8g
-Is SSD: false
-Health: Healthy
-State: Enabled
-Tier: Capacity
-
-=== 4. Object health summary ===
-3
-unhealthy objects (0 = all good)
-
-=== 5. Resync queue ===
-Resync Queue Length: 12
-Resync Rate (MB/s): 45.2
-Estimated Time Remaining: 18 minutes
-
-=== 6. Capacity ===
-Used Capacity: 2.8 TB
-Total Capacity: 8.6 TB
-Free Capacity: 5.8 TB
-
-=== 7. Non-compliant policy check ===
-Object: vsan:6384e8c1-2f5a-b8d3-92c4-001569c3d8e1 - Policy: RAID-1 (Non-Compliant - 1 replica missing)
-Object: vsan:7495f9d2-3g6b-c9e4-03d5-002670d4e9f2 - Policy: RAID-5 (Non-Compliant - degraded)
-
-=== 8. Network MTU test (update IPs) ===
-3 packets transmitted, 3 received, 0% loss
-3 packets transmitted, 3 received, 0% loss
-
-=== 9. NIC error check ===
-Errors: 0
-Dropped: 0
-
-=== Done ===
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -215,43 +162,18 @@ esxcli vsan debug object list | awk '{print $NF}' | sort | uniq -c | sort -rn
 esxcli vsan debug object list | grep -v "Healthy"
 
 # Show detail for a specific object (get UUID from above)
-esxcli vsan debug object get -u <object-uuid>
+esxcli vsan debug object list -u <object-uuid>
 
-# List all absent components (quick degradation indicator)
-esxcli vsan debug component list | grep -i "absent"
+# Objects with absent components (quick degradation indicator)
+esxcli vsan debug object list | grep -i "absent"
 
 # Resync detail — which objects are currently rebuilding
 esxcli vsan debug resync list
 ```
 
 
-```text title="Expected output"
-8 Healthy
-      2 Degraded
-      1 Absent
-Non-Healthy Objects:
-52d4a8f0-1234-5678-abcd-ef0123456789 Degraded
-7f8c9d1a-2345-6789-bcde-f01234567890 Absent
-
-Object UUID: 52d4a8f0-1234-5678-abcd-ef0123456789
-Health: Degraded
-Policy: raid1 (2 replicas)
-Components: 2
-  Component 1: Present (Host: esx-prod-01.local)
-  Component 2: Absent (Host: esx-prod-02.local)
-Resync Progress: 45%
-
-Absent Components:
-52d4a8f0-1234-5678-abcd-ef0123456789.1 Absent (esx-prod-02.local)
-7f8c9d1a-2345-6789-bcde-f01234567890.0 Absent (esx-prod-03.local)
-
-Current Resync Operations:
-Object UUID: 52d4a8f0-1234-5678-abcd-ef0123456789
-Progress: 67%
-Estimated Time: 12m 34s
-Object UUID: 9a1b2c3d-4567-89ab-cdef-0123456789ab
-Progress: 23%
-Estimated Time: 45m 18s
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -291,7 +213,7 @@ Skyline Health in vCenter groups all checks into categories. The most important 
 | Limits | Hosts, disk groups, VMs per cluster | Approaching vSAN cluster maximums |
 | Encryption | KMS connectivity, key status | KMS unreachable, key rotation needed |
 
-Run `Get-VsanClusterHealthSummary -Cluster (Get-Cluster "VSAN-LON-01") -FetchFromCache:$false` in PowerCLI for a full programmatic health report.
+Run `Test-VsanClusterHealth -Cluster (Get-Cluster "VSAN-LON-01")` in PowerCLI for a full programmatic health report (add `-UseCache` to return cached results).
 
 ---
 
@@ -311,47 +233,8 @@ Normal operating ranges for a healthy vSAN cluster. Values vary by workload — 
 | Resync throughput | 0 MB/s during steady state | > 0 sustained without active maintenance |
 | Congestion | 0 | Any non-zero value |
 
-```bash
-# Per-host latency and IOPS from ESXi shell
-esxcli vsan perf query -e host-domclient -st 2024-01-01T00:00:00
-```
+Per-host latency and IOPS are not available from an `esxcli vsan` command; use the vSAN performance views in the vSphere Client, or PowerCLI `Get-VsanStat` ([VMware.VimAutomation.Storage](https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617)).
 
-
-```text title="Expected output"
-Host: esx-01.lab.local
-  Timestamp: 2024-01-01T00:00:00Z
-  Read Latency (ms): 2.34
-  Write Latency (ms): 3.12
-  Read IOPS: 8456
-  Write IOPS: 5623
-  Read Throughput (MB/s): 342.1
-  Write Throughput (MB/s): 218.7
-
-Host: esx-02.lab.local
-  Timestamp: 2024-01-01T00:00:00Z
-  Read Latency (ms): 2.18
-  Write Latency (ms): 2.89
-  Read IOPS: 9124
-  Write IOPS: 6012
-  Read Throughput (MB/s): 365.4
-  Write Throughput (MB/s): 241.3
-
-Host: esx-03.lab.local
-  Timestamp: 2024-01-01T00:00:00Z
-  Read Latency (ms): 3.45
-  Write Latency (ms): 4.67
-  Read IOPS: 7234
-  Write IOPS: 4891
-  Read Throughput (MB/s): 289.6
-  Write Throughput (MB/s): 195.2
-```
-
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `Error: vSAN performance service not ready` | Wait 2-3 minutes after cluster formation or reboot for the vSAN performance service to initialize, then retry the query. |
-    | `Error: Invalid entity type 'host-domclient'` | Verify the entity type with `esxcli vsan perf query --help` and use a valid option such as `host-domclient`, `host-storage-adapter`, or `vsan-cluster`. |
-    | `Error: No data available for the specified time range` | Ensure the timestamp is within the last 24 hours of collected metrics and that vSAN performance monitoring is enabled on the cluster. |
 ---
 
 ## Network Health
@@ -427,7 +310,7 @@ Run before any host maintenance, upgrade, or cluster configuration change.
 
 | Item | Status | Command / Location |
 |---|---|---|
-| All health tests green | | `Get-VsanClusterHealthSummary` |
+| All health tests green | | `Test-VsanClusterHealth -Cluster <cluster>` |
 | No active resync | | vCenter → vSAN → Resyncing Objects |
 | Disk group capacity < 70% per host | | vCenter → vSAN → Monitor → Capacity |
 | No other hosts in maintenance mode | | One host at a time only |

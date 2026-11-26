@@ -9,7 +9,7 @@ description: "Authentication in ONTAP controls how administrators and service ac
 <div class="kb-summary">
 Authentication in ONTAP controls how administrators and service accounts gain access to cluster and SVM management interfaces. ONTAP supports local accounts, Active Directory (LDAP/Kerberos), SSH public keys, and SAML-based SSO for System Manager.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Authentication](../../../../../assets/storage-netapp-ontap-security-authentication.svg)
 
@@ -95,7 +95,7 @@ security login show -fields username,application,authmethod,role,is-account-lock
 
 # Create a local account with password authentication
 security login create \
-    -username <user> \
+    -user-or-group-name <user> \
     -application ssh \
     -authentication-method password \
     -role admin \
@@ -103,7 +103,7 @@ security login create \
 
 # Create a local account with public key authentication
 security login create \
-    -username svc-monitor \
+    -user-or-group-name svc-monitor \
     -application ssh \
     -authentication-method publickey \
     -role monitor-role \
@@ -119,7 +119,7 @@ security login lock -username <user> -vserver <svm>
 security login unlock -username <user> -vserver <svm>
 
 # Delete an account
-security login delete -username <user> -application ssh -vserver <svm>
+security login delete -user-or-group-name <user> -application ssh -vserver <svm>
 ```
 
 
@@ -147,7 +147,7 @@ cluster1  admin      ssh           password     admin             false
 cluster1  backup-svc ssh           publickey    backup            false
 svm-prod  dataadmin  ssh           password     vsadmin           false
 svm-prod  monitor    ssh           publickey    monitor-role      false
-cluster1::> security login create -username svc-backup -application ssh -authentication-method password -role admin -vserver cluster1
+cluster1::> security login create -user-or-group-name svc-backup -application ssh -authentication-method password -role admin -vserver cluster1
 Enter a password for user "svc-backup":
 Confirm the password:
 (no output — command completes silently)
@@ -159,7 +159,7 @@ cluster1::> security login lock -username monitor -vserver svm-prod
 (no output — command completes silently)
 cluster1::> security login unlock -username monitor -vserver svm-prod
 (no output — command completes silently)
-cluster1::> security login delete -username svc-backup -application ssh -vserver cluster1
+cluster1::> security login delete -user-or-group-name svc-backup -application ssh -vserver cluster1
 (no output — command completes silently)
 ```
 
@@ -252,10 +252,10 @@ After confirming key authentication works, disable password auth for the admin a
 ```bash
 # Verify key authentication is working first (test in a separate SSH session)
 # Then remove the password-based login method
-security login delete -username admin -application ssh -authentication-method password
+security login delete -user-or-group-name admin -application ssh -authentication-method password
 
 # Confirm only publickey auth remains for admin
-security login show -username admin
+security login show -user-or-group-name admin
 ```
 
 
@@ -271,7 +271,7 @@ admin                   cluster1                publickey
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: entry doesn't exist` | Verify the admin user exists and the authentication method is currently set to password using `security login show -username admin` before deletion. |
+    | `Error: entry doesn't exist` | Verify the admin user exists and the authentication method is currently set to password using `security login show -user-or-group-name admin` before deletion. |
     | `Error: Cannot delete the last authentication method` | Ensure key-based authentication is already configured and tested for admin before removing the password method, or use a different user account for the deletion command. |
 ### Key Rotation
 
@@ -281,9 +281,6 @@ security login publickey create -username admin -index 1 -publickey "ssh-ed25519
 
 # After confirming new key works, delete the old key
 security login publickey delete -username admin -index 0
-
-# Renumber index if needed
-security login publickey modify -username admin -index 1 -new-index 0
 ```
 
 
@@ -316,7 +313,7 @@ vserver cifs create \
     -ou "OU=StorageServers,DC=domain,DC=corp"
 
 # Verify CIFS domain join and DC connectivity
-vserver cifs domain info -vserver <svm>
+vserver cifs domain discovered-servers show -vserver <svm>
 
 # Check AD join status
 vserver cifs show -vserver <svm> -fields ad-status
@@ -358,7 +355,7 @@ Domain accounts can be granted ONTAP management access without requiring a local
 ```bash
 # Grant an AD user SSH access with a specific role
 security login create \
-    -username "DOMAIN\\admin-user" \
+    -user-or-group-name "DOMAIN\\admin-user" \
     -application ssh \
     -authentication-method domain \
     -role admin \
@@ -366,7 +363,7 @@ security login create \
 
 # Grant an AD group access (ONTAP 9.8+)
 security login create \
-    -username "DOMAIN\\StorageAdmins" \
+    -user-or-group-name "DOMAIN\\StorageAdmins" \
     -application ssh \
     -authentication-method domain \
     -role admin \
@@ -378,10 +375,10 @@ security login show -authentication-method domain
 
 
 ```text title="Expected output"
-cluster1::> security login create -username "DOMAIN\admin-user" -application ssh -authentication-method domain -role admin -vserver cluster1
+cluster1::> security login create -user-or-group-name "DOMAIN\admin-user" -application ssh -authentication-method domain -role admin -vserver cluster1
 (no output — command completes silently)
 
-cluster1::> security login create -username "DOMAIN\StorageAdmins" -application ssh -authentication-method domain -role admin -vserver cluster1
+cluster1::> security login create -user-or-group-name "DOMAIN\StorageAdmins" -application ssh -authentication-method domain -role admin -vserver cluster1
 (no output — command completes silently)
 
 cluster1::> security login show -authentication-method domain
@@ -399,7 +396,7 @@ DOMAIN\StorageAdmins         ssh         domain     false  admin
     |---|---|
     | `Error: "DOMAIN\admin-user" is not a valid user name` | Escape the backslash properly in your shell context or use single quotes around the username string. |
     | `Error: This user already exists` | The login entry already exists; use `security login modify` to change its role or authentication method instead. |
-    | `Error: Domain authentication is not configured` | Configure LDAP or Active Directory on the cluster first using `security config modify -authentication-method domain`. |
+    | `Error: Domain authentication is not configured` | For cluster (admin SVM) domain accounts, configure an authentication tunnel through a CIFS-enabled data SVM with `security login domain-tunnel create -vserver <data_svm>`. |
 ---
 
 ## LDAP Integration
@@ -416,14 +413,15 @@ vserver services name-service ldap client create \
     -servers <ldap-server-ip> \
     -base-dn "DC=domain,DC=corp" \
     -schema RFC-2307 \
-    -bind-dn "CN=svc-ontap-ldap,OU=Service Accounts,DC=domain,DC=corp" \
-    -bind-password <password>
+    -bind-dn "CN=svc-ontap-ldap,OU=Service Accounts,DC=domain,DC=corp"
+
+# Set the bind password (prompted)
+vserver services name-service ldap client modify-bind-password -vserver <svm> -client-config <ldap-config-name>
 
 # Apply LDAP client config to the SVM
 vserver services name-service ldap create \
     -vserver <svm> \
-    -client-config <ldap-config-name> \
-    -client-enabled true
+    -client-config <ldap-config-name>
 
 # Show LDAP configuration for an SVM
 vserver services name-service ldap show -vserver <svm>
@@ -513,20 +511,16 @@ bootparams  files
 SNMP is used for monitoring integration (Nagios, Zabbix, Prometheus via SNMP exporters). Only SNMPv3 should be used in production — SNMPv1 and v2c transmit community strings in plaintext.
 
 ```bash
-# Configure an SNMPv3 user with authentication and privacy (AES-128 encryption)
-system snmp user create \
-    -username snmpv3monitor \
-    -authmethod sha \
-    -authpassword <auth-passphrase> \
-    -privmethod aes128 \
-    -privpassword <priv-passphrase>
+# Configure an SNMPv3 user (USM). ONTAP prompts for engine ID, authentication
+# protocol/password and privacy protocol (choose aes128)/password.
+security login create -user-or-group-name snmpv3monitor -application snmp -authentication-method usm
 
 # Add an SNMPv3 trap host (monitoring server)
-system snmp traphost add -ipaddr <monitoring-host-ip> -username snmpv3monitor
+system snmp traphost add -peer-address <monitoring-host-ip> -usm-username snmpv3monitor
 
 # Verify SNMP configuration
 system snmp show
-system snmp user show
+security login show -application snmp
 
 # Delete all SNMPv1/v2c community strings
 system snmp community delete -community-name public
@@ -539,37 +533,29 @@ system snmp community show
 
 
 ```text title="Expected output"
-SNMPv3 user "snmpv3monitor" created successfully.
-Trap host 192.168.45.120 added for user snmpv3monitor.
-
-SNMP Status:
-  Status: enabled
-  Auth Traps Enabled: true
-  Contact: 
-  Location: 
-
-SNMPv3 Users:
-  User Name: snmpv3monitor
-  Engine ID: 800007E5A1A2B3C4D5E6F7A8B9C0D1E2F3
-  Auth Protocol: sha
-  Privacy Protocol: aes128
-  Access Level: admin
-
-SNMPv1/v2c Communities:
-  (no entries)
+# security login create prompts (vendor example, authPriv):
+Enter the authoritative entity's EngineID [local EngineID]:
+Which authentication protocol do you want to choose (none, md5, sha, sha2-256, sha512) [none]:
+Enter the authentication protocol password (minimum 8 characters long):
+Enter the authentication protocol password again:
+Which privacy protocol do you want to choose (none, des, aes128) [none]:
+Enter privacy protocol password (minimum 8 characters long):
+Enter privacy protocol password again:
+# Source: https://docs.netapp.com/us-en/ontap/networking/configure_snmpv3_users_in_a_cluster.html
+# Other commands: output varies; see https://docs.netapp.com/us-en/ontap-cli/system-snmp-show.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: SNMP user "snmpv3monitor" already exists` | Delete the existing user with `system snmp user delete -username snmpv3monitor` before recreating it. |
+    | `Error: SNMP user "snmpv3monitor" already exists` | Delete the existing login with `security login delete -user-or-group-name snmpv3monitor -application snmp -authentication-method usm` before recreating it. |
     | `Error: Invalid IP address <monitoring-host-ip>` | Replace `<monitoring-host-ip>` with a valid IPv4 address (e.g., 192.168.45.120) and ensure the monitoring host is reachable from the cluster. |
     | `Error: Community string "public" does not exist` | Verify the community name exists first by running `system snmp community show` before attempting deletion. |
 Recommended SNMPv3 security levels:
 
 | Parameter | Recommended Value | Notes |
 |---|---|---|
-| Auth method | SHA (SHA-256 preferred) | MD5 is deprecated; use SHA |
+| Auth method | SHA-256 (`sha2-256`) or SHA-512 (`sha512`, ONTAP 9.20.1+) | MD5 is weak; use SHA |
 | Privacy method | AES-128 | DES is deprecated; use AES |
 | Security level | authPriv | Both auth and encryption required |
 
@@ -587,11 +573,8 @@ security saml-sp create \
     -idp-uri <idp-metadata-url> \
     -sp-host <cluster-management-fqdn>
 
-# Show SAML SP configuration
+# Show SAML SP configuration (includes the configured IdP URI)
 security saml-sp show
-
-# Show SAML IdP configuration
-security saml-sp idp show
 ```
 
 
@@ -605,11 +588,6 @@ Enabled: true
 Binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
 NameID Format: urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
 
-Vserver: cluster
-IdP URI: https://idp.example.com/metadata.xml
-IdP Cert Issuer: CN=idp.example.com,O=Example Corp,C=US
-IdP Cert Serial: 4A:B2:C3:D4:E5:F6:7A:8B
-IdP Cert Expiry: 2026-03-15
 ```
 
 !!! warning "Common errors"
@@ -632,7 +610,7 @@ SAML enforcement locks out password-based System Manager login. Maintain a local
 # SAML applies to HTTP (System Manager) only
 # SSH with local admin account always works regardless of SAML state
 # Verify local admin SSH key access before enabling SAML
-security login show -username admin -application ssh
+security login show -user-or-group-name admin -application ssh
 ```
 
 

@@ -11,7 +11,7 @@ description: "Install & Upgrade reference covering ESA Migration, Driver and Fir
 <div class="kb-summary">
 Install & Upgrade reference covering ESA Migration, Driver and Firmware.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Install & Upgrade](../../../../../assets/virtualization-vmware-vsan-operations-install-upgrade.svg)
 

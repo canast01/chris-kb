@@ -14,7 +14,7 @@ description: "Firewall port reference for VMware vSAN. Covers intra-cluster data
 <div class="kb-summary">
 Firewall port reference for VMware vSAN. Covers intra-cluster data plane, health service, iSCSI target, stretched cluster witness, and HCI Mesh cross-cluster traffic. Required for any L3 boundary in the vSAN path.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Ports and Network Requirements](../../../../../assets/virtualization-vmware-vsan-architecture-ports.svg)
 

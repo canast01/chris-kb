@@ -11,7 +11,7 @@ description: "Health checks for NSX — Manager cluster status, transport node h
 <div class="kb-summary">
 Health checks for NSX — Manager cluster status, transport node health, Edge BGP sessions, DFW policy state, certificate expiry, alarm review, backup age, and post-change verification.
 
-*Applies to: NSX-T 3.x / NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 
 ## Before you begin
@@ -136,7 +136,7 @@ Peer             VRF  Local AS  Remote AS  State         Uptime
     | Error | Fix |
     |---|---|
     | `vrf <tier0-vrf-id>: unknown command` | Verify the VRF ID is numeric (e.g., `vrf 0`) and that you are in nsxcli context, not a sub-shell. |
-    | `get bgp neighbor summary: command not found` | Ensure BGP is enabled on the Tier-0 router and the Edge VM has completed initialization; check `get bgp config` first. |
+    | `get bgp neighbor summary: command not found` | Ensure BGP is enabled on the Tier-0 router and the Edge VM has completed initialization; check the Tier-0 BGP configuration in NSX Manager first. |
 ```bash
 # 5. DFW security policy list — confirm policies are published and not in ERROR state
 curl -sk -u 'admin:password' \
@@ -252,7 +252,7 @@ CRITICAL alarms open: 3
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store. |
-    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the NSX Manager hostname/IP is correct and reachable, and confirm the admin credentials are valid by testing with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/status`. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the NSX Manager hostname/IP is correct and reachable, and confirm the admin credentials are valid by testing with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/cluster/status`. |
     | `KeyError: 'results'` | Check that the API response contains the expected schema; this may occur if the NSX version differs from documentation—add error handling with `.get('results', [])` to gracefully handle missing keys. |
 ```bash
 # 9. Manager backup history — last backup must be within 24 hours
@@ -345,35 +345,15 @@ get cluster status
 # Individual node reachability (all should show CONNECTED)
 get managers
 
-# Corfu (Raft DB) — control plane health
-get corfu-cluster status
+# Per-group cluster detail (datastore, controller, manager, ...)
+get cluster status verbose
 
 # All services running (output should be empty — grep removes "running" lines)
 get services | grep -v " running"
 ```
 
-
 ```text title="Expected output"
-NSX CLI (Build 21.0.0.0.21176841)
-nsx> get cluster status
-Cluster Status: STABLE
-Leader: nsx-manager-1.corp.local (192.168.1.10)
-Follower: nsx-manager-2.corp.local (192.168.1.11)
-Follower: nsx-manager-3.corp.local (192.168.1.12)
-
-nsx> get managers
-UUID                                   Hostname                    IP              Status
-550e8400-e29b-41d4-a716-446655440001   nsx-manager-1.corp.local    192.168.1.10    CONNECTED
-550e8400-e29b-41d4-a716-446655440002   nsx-manager-2.corp.local    192.168.1.11    CONNECTED
-550e8400-e29b-41d4-a716-446655440003   nsx-manager-3.corp.local    192.168.1.12    CONNECTED
-
-nsx> get corfu-cluster status
-Corfu Cluster Status: HEALTHY
-Quorum: 3/3 nodes online
-Replication Status: IN_SYNC
-
-nsx> get services | grep -v " running"
-(no output — all services running)
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
@@ -381,7 +361,6 @@ nsx> get services | grep -v " running"
     |---|---|
     | `Cluster Status: UNSTABLE` | Check network connectivity between NSX Manager nodes and verify no node is isolated; restart the cluster if a node is permanently down. |
     | `Status: DISCONNECTED` | SSH to the disconnected manager node and verify network connectivity to other cluster members; check firewall rules for ports 5672, 8472, and 9090. |
-    | `Corfu Cluster Status: UNHEALTHY` | Verify all three NSX Manager nodes are online and reachable; if a node is down, restore it from backup or remove it from the cluster and re-add it. |
 ## Alarm Review
 
 ![Alarm Review](../../../../../assets/virtualization-vmware-nsx-hc-alarm-review.svg)

@@ -7,7 +7,7 @@ description: "Common questions about VMware vCenter operations, configuration, a
 ---
 # VMware vCenter — Frequently Asked Questions
 
-*Applies to: VMware vCenter 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 
 <div class="kb-summary">
 Common questions about VMware vCenter operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="../">Operations</a> section.
@@ -17,7 +17,7 @@ Common questions about VMware vCenter operations, configuration, and troubleshoo
 ## General
 
 **Q: What vCenter version is recommended for new deployments?**
-A: vCenter 8.0 Update 3 is the current recommendation. Check: VCSA VAMI (https://vcenter:5480) → Summary → Version. vCenter must be at least equal to or newer than all managed ESXi hosts.
+A: For new deployments use vCenter 9.x (latest per [KB 326316](https://knowledge.broadcom.com/external/article/326316/vmware-vcenter-server-versions-and-build.html) on 2026-11-25: 9.1.2.0, released 2026-11-24, part of VCF/VVF 9). vCenter 8.0 U3 (latest patch 8.0 U3m, 8.0.3.01200) is supported until End of General Support on 2027-10-11 ([KB 459135](https://knowledge.broadcom.com/external/article/459135/end-of-general-support-for-vsphere-80.html)). Check: VCSA VAMI (https://vcenter:5480) → Summary → Version. vCenter must be at least equal to or newer than all managed ESXi hosts.
 
 **Q: How do I check the current VMware vCenter version?**
 A: `https://<vcenter>:5480 → Summary → Version`

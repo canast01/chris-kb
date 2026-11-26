@@ -11,7 +11,7 @@ description: "How It Works reference covering Deployment Model, Core Services, M
 <div class="kb-summary">
 How It Works reference covering Deployment Model, Core Services, Main Dependencies, vCenter HA (VCHA), Service Startup Order and 7 more sections.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — How It Works](../../../../../assets/virtualization-vmware-vcenter-architecture-how-it-works.svg)
 
@@ -38,7 +38,7 @@ vcenter -> ntp: UDP 123
 vcenter -> esxi: TCP 443·902
 esxi -> vsan: vSAN traffic
 vcenter -> nsx: REST API 443
-vcenter -> backup: SCP·SFTP
+vcenter -> backup: FTP·FTPS·HTTP·HTTPS·SFTP·NFS·SMB
 ```
 
 ## Deployment Model
@@ -88,16 +88,14 @@ Shared storage is **not** required — replication is network-based over a dedic
 
 ## Service Startup Order
 
-Services must start in the correct dependency order or vpxd will fail to initialise:
+When all services need restarting they must be restarted in a particular order, so Broadcom recommends either rebooting the appliance from VAMI or stopping and then starting all services from the shell ([KB 344633](https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html)):
 
 ```bash
-# Manual restart in dependency order
-service-control --stop --all
-service-control --start vmware-vpostgres
-service-control --start vmware-stsd
-service-control --start vmware-sts-idmd
-service-control --start vpxd
-service-control --start --all
+# Restart all services: stop all, then start all (KB 344633)
+service-control --stop --all && service-control --start --all
+
+# Preview what --start --all would do without running it
+service-control --start --all --dry-run
 
 # Verify
 service-control --status --all
@@ -105,42 +103,13 @@ service-control --status --all
 
 
 ```text title="Expected output"
-Stopping all services...
-Stopped vpxd
-Stopped vmware-sts-idmd
-Stopped vmware-stsd
-Stopped vmware-vpostgres
-Stopped vmware-rhttpproxy
-Stopped vmware-vsan-health
-All services stopped successfully.
-
-Starting vmware-vpostgres...
-Service vmware-vpostgres started successfully
-Starting vmware-stsd...
-Service vmware-stsd started successfully
-Starting vmware-sts-idmd...
-Service vmware-sts-idmd started successfully
-Starting vpxd...
-Service vpxd started successfully
-Starting all remaining services...
-Service vmware-rhttpproxy started successfully
-Service vmware-vsan-health started successfully
-All services started successfully.
-
-Service                 Status
-vmware-vpostgres        RUNNING
-vmware-stsd             RUNNING
-vmware-sts-idmd         RUNNING
-vpxd                    RUNNING
-vmware-rhttpproxy       RUNNING
-vmware-vsan-health      RUNNING
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service list for 7.x/8.x and service-control usage).
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: vpxd failed to start. Dependency vmware-stsd is not running.` | Verify vmware-stsd started successfully with `service-control --status vmware-stsd` before starting vpxd. |
-    | `Error: Cannot connect to service-control daemon. Is vmon running?` | Restart the service control daemon with `systemctl restart vmon` or reboot the vCenter appliance. |
+    | `vmware-vpxd` does not start | Check `service-control --status vmware-stsd` and `service-control --status vmware-vpostgres`, then retry `service-control --start vmware-vpxd` (KB 344633). |
     | `Error: vmware-vpostgres failed to start: database directory not accessible` | Check disk space and permissions on `/storage/db` with `df -h` and `ls -la /storage/db`. |
 ---
 
@@ -242,7 +211,7 @@ Sizing is set at deploy time and can be changed by modifying vCPU/RAM after depl
 |---|---|
 | vpxd (core service) | `/var/log/vmware/vpxd/vpxd.log` |
 | vSphere Client | `/var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log` |
-| SSO / identity | `/var/log/vmware/sso/vmware-sts-idmd.log` |
+| SSO / identity (STS) | `/var/log/vmware/sso/vmware-identity-sts.log` |
 | SSO admin server | `/var/log/vmware/sso/ssoAdminServer.log` |
 | VAMI | `/var/log/vmware/applmgmt/applmgmt.log` |
 | Upgrade / patch | `/var/log/vmware/applmgmt/software-packages.log` |
@@ -396,9 +365,9 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
 curl -sk -H "vmware-api-session-id: $TOKEN" \
     "https://vcenter.example.local/api/vcenter/vm" | python3 -m json.tool
 
-# System health
+# Appliance system health (returns green / yellow / orange / red / gray)
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    "https://vcenter.example.local/api/vcenter/health/system"
+    "https://vcenter.example.local/api/appliance/health/system"
 
 # Delete session
 curl -sk -H "vmware-api-session-id: $TOKEN" \
@@ -407,50 +376,9 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
 
 
 ```text title="Expected output"
-[
-  {
-    "host": "host-123",
-    "name": "esx01.example.local",
-    "connection_state": "CONNECTED",
-    "power_state": "POWERED_ON"
-  },
-  {
-    "host": "host-124",
-    "name": "esx02.example.local",
-    "connection_state": "CONNECTED",
-    "power_state": "POWERED_ON"
-  }
-]
-[
-  {
-    "vm": "vm-456",
-    "name": "prod-web-01",
-    "power_state": "POWERED_ON",
-    "cpu_count": 4,
-    "memory_mb": 8192
-  },
-  {
-    "vm": "vm-457",
-    "name": "prod-db-01",
-    "power_state": "POWERED_ON",
-    "cpu_count": 8,
-    "memory_mb": 16384
-  },
-  {
-    "vm": "vm-458",
-    "name": "dev-test-01",
-    "power_state": "POWERED_OFF",
-    "cpu_count": 2,
-    "memory_mb": 4096
-  }
-]
-{
-  "status": "green",
-  "messages": [],
-  "last_check_time": "2024-01-15T14:32:18.456Z"
-}
-(no output — command completes silently)
+Output varies by environment and build; see https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/appliance/health/system/get/ (health returns a single HealthLevel string) and https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/session/post/ (session token).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |

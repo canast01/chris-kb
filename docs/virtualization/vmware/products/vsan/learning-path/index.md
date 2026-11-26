@@ -11,7 +11,7 @@ description: "Recommended reading order for vSAN. Follow these stages in order t
 <div class="kb-summary">
 Recommended reading order for vSAN. Follow these stages in order to build a complete mental model before working with it in production.
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ```d2
@@ -78,7 +78,7 @@ S4 -> S5
 
 **Read**:
 
-- [Access Control](../security/access-control/) — vSAN cluster and datastore permissions, SPBM policy administration roles, and service account requirements for Aria Operations integration
+- [Access Control](../security/access-control/) — vSAN cluster and datastore permissions, SPBM policy administration roles, and service account requirements for VCF Operations (formerly Aria Operations) integration
 - [Authentication](../security/authentication/) — vCenter SSO dependency for vSAN management operations and the impact of SSO downtime on vSAN cluster configuration changes
 - [Encryption](../security/encryption/) — Data-at-rest encryption (D@RE) with KMIP key provider, in-transit encryption between hosts, key rotation procedure, and impact on deduplication/compression
 - [Hardening](../security/hardening/) — vSAN iSCSI target hardening, CHAP authentication, audit log review for policy changes, and disabling management access from guest VMs
@@ -94,7 +94,7 @@ S4 -> S5
 **Read**:
 
 - [Common Issues](../troubleshooting/common-issues/) — component objects stuck in absent/degraded, resync not progressing, capacity alarm with sufficient free space, and witness appliance unreachable
-- [Diagnostics](../troubleshooting/diagnostics/) — `cmmds-tool find`, vSAN health service logs, `vsan.check_state` RVC command, and interpreting proactive tests output
+- [Diagnostics](../troubleshooting/diagnostics/) — `cmmds-tool find`, vSAN health service logs, `vsan.check_state` RVC command (legacy; RVC is deprecated starting with VCF 9.0), and interpreting proactive tests output
 - [Escalation](../troubleshooting/escalation/) — support bundle collection for vSAN (vc-support and per-host vm-support), CLOMD log extraction, and when to engage VMware GSS vs Dell/HPE storage teams
 
 **Why last**: Troubleshooting makes most sense once you know the normal operating state.

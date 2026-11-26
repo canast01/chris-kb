@@ -9,7 +9,7 @@ description: "Scripts reference covering Cluster Health Check (Perl), SnapMirror
 <div class="kb-summary">
 Scripts reference covering Cluster Health Check (Perl), SnapMirror Lag Monitor (Bash), Volume Capacity Reporter (Python), Ansible ONTAP Health Playbook, Aggregate Space Alert (Perl) and 7 more sections.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Scripts](../../../../../assets/storage-netapp-ontap-operations-scripts.svg)
 
@@ -94,7 +94,7 @@ if (@broken) {
 # Check 2: Aggregate capacity
 # -------------------------------------------------------------------
 print "Checking aggregate capacity...\n";
-my $agg_out = ssh_run($ssh2, 'storage aggregate show -fields aggregate,used-percent,state -type data');
+my $agg_out = ssh_run($ssh2, 'storage aggregate show -fields aggregate,used-percent,state -root false');
 for my $line (split /\n/, $agg_out) {
     next unless $line =~ /^\S/;
     next if $line =~ /aggregate\s+used-percent/;   # header
@@ -877,7 +877,7 @@ $ssh2->connect($CLUSTER, 22) or die "SSH connect failed: $!\n";
 $ssh2->auth_password($USER, $PASS) or die "Auth failed\n";
 
 my $chan = $ssh2->channel() or die "Channel failed\n";
-$chan->exec('storage aggregate show -fields aggregate,used-percent,state -type data 2>/dev/null');
+$chan->exec('storage aggregate show -fields aggregate,used-percent,state -root false 2>/dev/null');
 my $raw = '';
 while (!$chan->eof) { $chan->read(my $buf, 4096); $raw .= $buf // '' }
 $chan->close;
@@ -1319,7 +1319,7 @@ echo ""
 
 # Aggregate state and capacity
 echo "--- Aggregate Status ---"
-AGG_OUT=$(ssh_cmd "storage aggregate show -fields aggregate,state,used-percent -type data" 2>/dev/null)
+AGG_OUT=$(ssh_cmd "storage aggregate show -fields aggregate,state,used-percent -root false" 2>/dev/null)
 echo "$AGG_OUT"
 DEGRADED_AGGS=$(echo "$AGG_OUT" | grep -v 'aggregate\|entries\|^$' | awk '$2 != "online" {print $1}' | grep -c '.' || true)
 OVER_THRESHOLD=$(echo "$AGG_OUT" | grep -v 'aggregate\|entries\|^$' | awk -v t="$AGG_WARN_PCT" '$3+0 >= t {print $1}' | grep -c '.' || true)
@@ -1380,7 +1380,7 @@ cluster1-02     true
 [PASS] Cluster health OK
 
 --- Aggregate Status ---
-cluster1::*> storage aggregate show -fields aggregate,state,used-percent -type data
+cluster1::*> storage aggregate show -fields aggregate,state,used-percent -root false
 Aggregate       State  Used%
 --------------- ------ -----
 aggr_ssd_01     online 72
@@ -1464,7 +1464,7 @@ hdr "Cluster Show"
 ssh_cmd "cluster show" || true
 
 hdr "Node Status"
-ssh_cmd "system node show -fields node,health,state,uptime" || true
+ssh_cmd "system node show -fields node,health,uptime" || true
 
 hdr "System Health Alerts"
 ssh_cmd "system health alert show -fields node,monitor,alert-id,severity,description" || true
@@ -1618,7 +1618,7 @@ fi
 OFFLINE=$(ssh_cmd "volume show -state offline -fields volume" 2>/dev/null | grep -v 'volume\|entries\|^$' | grep -c '.' || true)
 [[ "$OFFLINE" -gt 0 ]] && fail "$OFFLINE offline volume(s) detected" || ok "No offline volumes"
 
-DEGRADED_AGGS=$(ssh_cmd "storage aggregate show -fields aggregate,state -type data" 2>/dev/null | \
+DEGRADED_AGGS=$(ssh_cmd "storage aggregate show -fields aggregate,state -root false" 2>/dev/null | \
   grep -v 'aggregate\|entries\|^$' | awk '$2 != "online" {print}' | grep -c '.' || true)
 [[ "$DEGRADED_AGGS" -gt 0 ]] && fail "$DEGRADED_AGGS aggregate(s) not online" || ok "All aggregates online"
 
@@ -1711,7 +1711,7 @@ fi
 OFFLINE=$(ssh_cmd "volume show -state offline -fields volume" 2>/dev/null | grep -v 'volume\|entries\|^$' | grep -c '.' || true)
 [[ "$OFFLINE" -gt 0 ]] && fail "$OFFLINE offline volume(s)" || ok "No offline volumes"
 
-DEGRADED_AGGS=$(ssh_cmd "storage aggregate show -fields aggregate,state -type data" 2>/dev/null | \
+DEGRADED_AGGS=$(ssh_cmd "storage aggregate show -fields aggregate,state -root false" 2>/dev/null | \
   grep -v 'aggregate\|entries\|^$' | awk '$2 != "online" {print}' | grep -c '.' || true)
 [[ "$DEGRADED_AGGS" -gt 0 ]] && fail "$DEGRADED_AGGS aggregate(s) not online" || ok "All aggregates online"
 

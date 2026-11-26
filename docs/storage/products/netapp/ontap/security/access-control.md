@@ -9,7 +9,7 @@ description: "Access Control reference covering RBAC Scope Model, RBAC, Custom R
 <div class="kb-summary">
 Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Login Management, Audit Logging.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Access Control](../../../../../assets/storage-netapp-ontap-security-access-control.svg)
 
@@ -77,7 +77,7 @@ security login role create -role monitor-role -cmddirname "volume show" -access 
 security login role create -role monitor-role -cmddirname "snapmirror show" -access readonly
 
 # Create a service account using the custom role
-security login create -username svc-monitor -application ssh -authmethod publickey -role monitor-role
+security login create -user-or-group-name svc-monitor -application ssh -authentication-method publickey -role monitor-role
 ```
 
 
@@ -94,7 +94,7 @@ security login create -username svc-monitor -application ssh -authmethod publick
     |---|---|
     | `Error: "monitor-role" already exists.` | Delete the existing role first with `security login role delete -role monitor-role` or use a different role name. |
     | `Error: Command directory "snapmirror show" not found.` | Verify the exact command directory name using `security login role show -role admin` and use the correct command path (e.g., `snapmirror` instead of `snapmirror show`). |
-    | `Error: User "svc-monitor" already exists.` | Remove the existing user with `security login delete -username svc-monitor -application ssh` before recreating it. |
+    | `Error: User "svc-monitor" already exists.` | Remove the existing user with `security login delete -user-or-group-name svc-monitor -application ssh` before recreating it. |
 ## User Login Management
 
 ```bash
@@ -104,14 +104,14 @@ security login show -vserver <svm>
 
 # Create a user (SSH + password auth)
 security login create \
-    -username <user> \
+    -user-or-group-name <user> \
     -application ssh \
     -authentication-method password \
     -role admin \
     -vserver <svm>
 
 # Delete a user
-security login delete -username <user> -application ssh -vserver <svm>
+security login delete -user-or-group-name <user> -application ssh -vserver <svm>
 
 # Change password
 security login password -username <user> -vserver <svm>
@@ -147,7 +147,7 @@ vsadmin                    ssh          password  vsadmin
 backup_user                ssh          password  backup
 ...
 
-cluster1::> security login create -username netops_user -application ssh -authentication-method password -role admin -vserver svm_prod
+cluster1::> security login create -user-or-group-name netops_user -application ssh -authentication-method password -role admin -vserver svm_prod
 Please enter a password for user 'netops_user':
 Please confirm the password:
 (no output — command completes silently)
@@ -177,7 +177,7 @@ cluster1::> security login unlock -username netops_user -vserver svm_prod
 ```bash
 # View recent administrative audit events
 security audit log show
-security audit log show -user admin -time-range 24h
+security audit log show -username admin
 ```
 
 
@@ -202,7 +202,7 @@ cluster1    admin     192.168.1.50    security ssl modify              success 2
     | Error | Fix |
     |---|---|
     | `Error: command not found: security audit log show` | Verify you are connected to a NetApp ONTAP cluster (not a different storage system) using `system node show`. |
-    | `Error: Access denied. Insufficient privileges to view audit logs` | Ensure your user account has admin or audit-admin role by running `security login show -user <username>`. |
+    | `Error: Access denied. Insufficient privileges to view audit logs` | Ensure your user account has admin or audit-admin role by running `security login show -user-or-group-name <username>`. |
 **File access auditing via ONTAP Audit Framework**: Captures NFS and SMB file access events to an EVTX audit log on a designated NAS volume:
 
 ```bash
@@ -220,7 +220,7 @@ vserver audit enable -vserver <svm>
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: "audit" is not a recognized command.` | Ensure you are connected to the ONTAP cluster management interface and have sufficient privileges; use `security audit` instead of `vserver audit` depending on your ONTAP version. |
+    | `Error: "audit" is not a recognized command.` | `security audit` (management-command auditing) and `vserver audit` (NAS file-access auditing) are separate command directories; use the one that matches the audit you need. |
     | `Error: destination "/audit_logs" does not exist` | Create the audit log destination directory first using `volume create -vserver <svm> -volume audit_logs -aggregate <aggr> -size 10GB` or specify an existing path. |
     | `Error: vserver <svm> does not exist or access is denied` | Verify the SVM name is correct and you have cluster administrator or SVM administrator credentials with audit permissions. |
 **FPolicy for file access control and monitoring**: FPolicy intercepts file operations and can send them to an external FPolicy server (DLP, ransomware detection, archiving):

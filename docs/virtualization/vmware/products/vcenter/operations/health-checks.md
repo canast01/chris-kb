@@ -11,7 +11,7 @@ description: "Health Checks reference covering Disk Partition Usage, SSO and Loo
 <div class="kb-summary">
 Health Checks reference covering Disk Partition Usage, SSO and Lookup Service Health, DNS and NTP Validation, PowerCLI Health Checks, Daily Checks and 2 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ## Before you begin
@@ -28,15 +28,15 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 Run these commands in sequence for a complete vCenter health snapshot. Each block can be pasted directly into an SSH session on the VCSA appliance shell.
 
 ```bash
-# 1. VCSA service health — list all services, filter out stopped ones
-service-control --status --all | grep -v STOPPED
+# 1. VCSA service health — status of all services (KB 344633)
+service-control --status --all
 
 # 2. vCenter version and build number
-vpxd --version
+# VAMI https://<vcenter>:5480 → Summary, or GET /api/appliance/system/version
 
-# 3. SSO / Lookup Service health
-service-control --status vmware-sts
-service-control --status vmware-lookupsvc
+# 3. SSO / Lookup Service health (service names per KB 344633)
+service-control --status vmware-stsd
+service-control --status lookupsvc
 
 # 4. Certificate store list — inspect VECS stores for expiring certs
 /usr/lib/vmware-vmafd/bin/vecs-cli store list
@@ -44,79 +44,37 @@ service-control --status vmware-lookupsvc
 # 5. Disk usage — key VCSA partitions: DB, logs, seat data
 df -h /storage/db /storage/log /storage/seat
 
-# 6. vCenter HA state (run only if VCHA is deployed)
-python3 /usr/lib/vmware-vcha/VcHaMgr.py state
+# 6. vCenter HA state (only if VCHA is deployed)
+# vSphere Client → vCenter → Configure → vCenter HA, or POST /api/vcenter/vcha/cluster?action=get
 
 # 7. NTP sync status — confirm clock is synchronised
 timedatectl status
 
-# 8. Connected host count via REST API
+# 8. Connected host count via REST API — create a session first (POST /api/session)
 # Replace credentials before running
-curl -sk -u 'administrator@vsphere.local:password' \
+TOKEN=$(curl -sk -u 'administrator@vsphere.local:<password>' \
+  -X POST https://localhost/api/session | tr -d '"')
+curl -sk -H "vmware-api-session-id: $TOKEN" \
   https://localhost/api/vcenter/host | python3 -m json.tool | grep -c connection_state
 
 # 9. Recent vpxd errors — last 100 lines of the main vCenter log
 tail -100 /var/log/vmware/vpxd/vpxd.log | grep -i error
 
-# 10. Backup job status — check VAMI file-based backup schedule
-# Verify via VAMI at https://<vcenter>:5480 → Backup, or inspect cron
-crontab -l 2>/dev/null | grep -i backup
+# 10. Backup schedule — file-based backups are scheduled in VAMI (https://<vcenter>:5480 → Backup)
+# (KB 318731 recommends VAMI) or with the Appliance Recovery Backup Schedules API
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+  https://localhost/api/appliance/recovery/backup/schedules
 ```
 
 
 ```text title="Expected output"
-SERVICE vmware-vpxd RUNNING
-SERVICE vmware-vsan-health RUNNING
-SERVICE vmware-eam RUNNING
-SERVICE vmware-mbcs RUNNING
-SERVICE vmware-sts RUNNING
-SERVICE vmware-lookupsvc RUNNING
-SERVICE vmware-rhttpproxy RUNNING
-SERVICE vmware-netdumper RUNNING
-SERVICE vmware-content-library RUNNING
-...
-
-VMware vCenter Server 8.0.1 build-21495797
-
-SERVICE vmware-sts RUNNING
-SERVICE vmware-lookupsvc RUNNING
-
-VECS store list:
-	APPLIANCE_SSL_CERT
-	MACHINE_SSL_CERT
-	TRUSTED_ROOTS
-	TRUSTED_ROOT_CRLS
-
-Filesystem     Size  Used Avail Use% Mounted on
-/storage/db    500G  387G  113G  78% /storage/db
-/storage/log   100G   34G   66G  34% /storage/log
-/storage/seat   50G   12G   38G  24% /storage/seat
-
-HA Enabled: true
-HA State: HEALTHY
-Node Role: ACTIVE
-Cluster Mode: ENABLED
-
-               Local time: Wed 2024-01-17 14:32:18 UTC
-           Universal time: Wed 2024-01-17 14:32:18 UTC
-                 RTC time: Wed 2024-01-17 14:32:18 UTC
-                Time zone: UTC (UTC, +0000)
-System clock synchronized: yes
-              NTP service: active
-
-5
-
-2024-01-17T14:28:43.421Z [vpxd 7654] [Originator@6876 sub=Default] [error] Connection timeout to host 192.168.1.45
-2024-01-17T14:15:12.089Z [vpxd 7654] [Originator@6876 sub=Default] [error] Failed to retrieve datastore inventory
-
-0 2 * * * /usr/lib/vmware-vami/scripts/backup.sh >> /var/log/vmware-vami/backup.log 2>&1
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/appliance/recovery/backup/schedules/get/ (backup schedules API).
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if still failing, verify curl is installed with `which curl`). |
-    | `python3: command not found` | Install Python 3 with `apt-get install python3` on Debian-based VCSA or use the full path `/usr/bin/python3`. |
     | `/var/log/vmware/vpxd/vpxd.log: No such file or directory` | Verify vpxd service is running with `service-control --status vmware-vpxd` and check log location with `find /var/log -name vpxd.log`. |
 Key partitions to monitor:
 - `/storage/log` — fills quickly during issues
@@ -128,23 +86,21 @@ Key partitions to monitor:
 ![SSO and Lookup Service Health](../../../../../assets/virtualization-vmware-vcenter-hc-sso-and-lookup-service-health.svg)
 
 ```bash
-service-control --status vmware-sts
-service-control --status vmware-lookupsvc
+service-control --status vmware-stsd
+service-control --status lookupsvc
 service-control --status vmware-eam
 ```
 
 
 ```text title="Expected output"
-vmware-sts is running
-vmware-lookupsvc is running
-vmware-eam is running
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service names and service-control usage).
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `service-control: command not found` | Ensure you are running this command on the vCenter Server appliance (VCSA) with root privileges, as `service-control` is only available in the vCenter environment. |
-    | `vmware-sts is stopped` | Restart the STS service with `service-control --start vmware-sts` and wait 30-60 seconds for dependent services to recover. |
+    | `vmware-stsd` reported as stopped | Start the Security Token Service with `service-control --start vmware-stsd` (KB 344633). |
 ## DNS and NTP Validation
 
 ![DNS and NTP Validation](../../../../../assets/virtualization-vmware-vcenter-hc-dns-and-ntp-validation.svg)
@@ -211,8 +167,9 @@ Get-VIEvent -MaxSamples 100 -Type Error | Select-Object CreatedTime, FullFormatt
 # Stale snapshots
 Get-VM | Get-Snapshot | Where-Object {$_.Created -lt (Get-Date).AddDays(-3)} | Select-Object VM, Name, Created
 
-# vCenter REST API health
-curl -sk -u 'administrator@vsphere.local' https://<vcenter>/api/vcenter/health/system
+# Appliance health via REST API (returns green / yellow / orange / red / gray)
+# Session token from POST /api/session; reference: https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/appliance/health/system/get/
+curl -sk -H "vmware-api-session-id: <session-id>" https://<vcenter>/api/appliance/health/system
 ```
 
 ## Daily Checks

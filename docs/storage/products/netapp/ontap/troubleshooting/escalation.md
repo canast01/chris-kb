@@ -11,7 +11,7 @@ description: "How to escalate NetApp ONTAP issues to NetApp support: what data t
 <div class="kb-summary">
 How to escalate NetApp ONTAP issues to NetApp support: what data to collect, how to invoke AutoSupport, step-by-step case creation on mysupport.netapp.com, and the escalation path when progress stalls.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Escalation](../../../../../assets/storage-netapp-ontap-troubleshooting-escalation.svg)
 
@@ -70,7 +70,7 @@ Run these before opening the case. Many ONTAP issues are resolvable without vend
 | SnapMirror health | `snapmirror show -fields healthy` | All relationships show `true` |
 | Network ports | `network port show -fields health-status` | All ports `healthy` |
 | NTP sync | `cluster time-service ntp status show` | All nodes synchronized |
-| AutoSupport delivery | `system node autosupport history show -node * -most-recent 5` | Recent deliveries with status `sent-successful` |
+| AutoSupport delivery | `system node autosupport history show -node *` | Recent deliveries with status `sent-successful` |
 
 ---
 
@@ -81,24 +81,15 @@ Run from the ONTAP cluster management interface (SSH as cluster admin).
 ### 1. Get the ONTAP version and node serial numbers
 
 ```bash
-# ONTAP version on all nodes — include in the case description
-system node show -fields model,ontap-version,serial-number
-
-# Example output:
-# Node         Model       ONTAP-Version  Serial-Number
-# -------      --------    -------------  -------------
-# node-01      AFF A400    9.13.1P5       8ABC123456
-# node-02      AFF A400    9.13.1P5       8ABC123457
+# ONTAP version, model and serial number of all nodes — include in the case description
+version
+system node show -fields model,serialnumber
 ```
 
 
 ```text title="Expected output"
-Node         Model       ONTAP-Version  Serial-Number
--------      --------    -------------  -------------
-node-01      AFF A400    9.13.1P5       8ABC123456
-node-02      AFF A400    9.13.1P5       8ABC123457
-node-03      AFF A400    9.13.1P5       8ABC123458
-node-04      AFF A400    9.13.1P5       8ABC123459
+system node show -fields model,serialnumber: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/system-node-show.html
 ```
 
 !!! warning "Common errors"
@@ -114,7 +105,7 @@ node-04      AFF A400    9.13.1P5       8ABC123459
 system node autosupport invoke -node * -type all -message "Production incident: [brief description]"
 
 # Verify delivery — wait 5 minutes, then check
-system node autosupport history show -node * -most-recent 5
+system node autosupport history show -node *
 # Look for "sent-successful" in the Delivery-Status column
 
 # If AutoSupport is not configured or delivery fails, collect locally:
@@ -146,7 +137,7 @@ node-02: AutoSupport notification sent successfully.
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: AutoSupport is not configured. Please configure the AutoSupport destination.` | Run `system node autosupport modify -node * -to support@netapp.com -enabled true` to enable and configure AutoSupport. |
+    | `Error: AutoSupport is not configured. Please configure the AutoSupport destination.` | Run `system node autosupport modify -node * -state enable` to enable and configure AutoSupport. |
     | `Error: Failed to send AutoSupport notification to the configured destination` | Verify network connectivity to the AutoSupport destination and check firewall rules with `network ping -vserver admin_vserver -destination support.netapp.com`. |
 ### 3. Collect the current health state
 
@@ -161,7 +152,7 @@ storage failover show
 system health alert show
 
 # EMS error events in last 24 hours
-event log show -severity error -time-range 24h
+event log show -severity error -time >24h
 
 # Failed or broken disks
 storage disk show -broken
@@ -185,7 +176,7 @@ storage failover show
 system health alert show
 There are no alerts present.
 
-event log show -severity error -time-range 24h
+event log show -severity error -time >24h
 Time                 Node      Severity  Event
 -------------------- --------- --------- ----------------------------------------
 2024-01-15 14:32:18  node-02   ERROR     RAID.disk.lifeExpectancy: Disk 1.2.3 nearing end of life
@@ -347,7 +338,7 @@ storage failover show
 system health alert show
 
 # EMS events since the incident
-event log show -severity error -time-range 24h
+event log show -severity error -time >24h
 
 # Aggregate status (if storage issue)
 storage aggregate show -fields state,status,used-percent
@@ -362,7 +353,7 @@ snapmirror show -fields state,lag-time,healthy
 snapmirror show -destination-path <vserver>:<volume> -instance
 
 # Node performance (for latency/throughput issues)
-node run -node <nodename> sysstat -c 5 -x 2
+system node run -node <nodename> -command sysstat -c 5 -x 2
 
 # Volume IOPS and latency
 qos statistics performance show
@@ -385,7 +376,7 @@ storage failover show
 system health alert show
 (no alerts)
 
-event log show -severity error -time-range 24h
+event log show -severity error -time >24h
 Time                 Node      Severity Event
 -------------------- ---------- -------- -----------------------------------------------
 2024-01-15 14:32:18  ontap-node-01 ERROR    RAID.disk.badBlockFound: Disk 1.45.3 bad block detected
@@ -414,7 +405,7 @@ Source Destination State Lag-Time Healthy
 svm1:vol_data svm2:vol_data snapmirrored 00:00:15 true
 svm1:vol_logs svm2:vol_logs snapmirrored 00:02:34 true
 
-node run -node ontap-node-01 sysstat -c 5 -x 2
+system node run -node ontap-node-01 -command sysstat -c 5 -x 2
   CPU   NFS   CIFS   HTTP   Total   Net-In  Net-Out   Disk-In Disk-Out
   ---- ----- ------ ------ ------- ------- ------- --------- ---------
   42%   1250   340    120    1710    45.2M   38.7M    125.3M   98.4M

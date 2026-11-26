@@ -11,7 +11,7 @@ description: "Common Issues reference covering Incident Triage Decision Tree, Qu
 <div class="kb-summary">
 Common Issues reference covering Incident Triage Decision Tree, Quick Reference, Volume Full / Write Errors, Aggregate Capacity Critical, SnapMirror Lag / Unhealthy Relationship and 6 more sections.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Common Issues](../../../../../assets/storage-netapp-ontap-troubleshooting-common-issues.svg)
 
@@ -112,10 +112,10 @@ diskIssue: "Check RAID state\nstorage aggregate show-status\nCheck spares availa
 volOk: "volume show -state !online\nAny offline volumes?" {shape: rectangle}
 volIssue: "Bring volume online\ncheck aggregate state" {shape: rectangle}
 protocol: "Which protocol is failing?" {shape: rectangle}
-nfsCheck: "network interface show\nnfs connected-client show\ncheck export policy" {shape: rectangle}
-smbCheck: "vserver cifs show\nvserver cifs domain info\ncheck AD connectivity" {shape: rectangle}
-iscsCheck: "iscsi session show\nlun mapping show\nmultipath on host" {shape: rectangle}
-smCheck: "snapmirror show -health false\ncheck intercluster LIF\ncheck throttle" {shape: rectangle}
+nfsCheck: "network interface show\nvserver nfs connected-clients show\ncheck export policy" {shape: rectangle}
+smbCheck: "vserver cifs show\nvserver cifs domain discovered-servers show\ncheck AD connectivity" {shape: rectangle}
+iscsCheck: "vserver iscsi session show\nlun mapping show\nmultipath on host" {shape: rectangle}
+smCheck: "snapmirror show -healthy false\ncheck intercluster LIF\ncheck throttle" {shape: rectangle}
 
 incident -> clusterOk
 clusterOk -> haCheck
@@ -136,13 +136,13 @@ protocol -> smCheck
 
 | Symptom | Likely Cause | Action |
 |---|---|---|
-| Volume full / write errors to hosts | Volume space exhausted; autogrow not configured or hit max | `volume show -fields used-percent,autosize-mode`; increase max-autosize or delete old snapshots with `snapshot delete` |
+| Volume full / write errors to hosts | Volume space exhausted; autogrow not configured or hit max | `volume show -fields used-percent,autosize-mode`; increase max-autosize or delete old snapshots with `volume snapshot delete` |
 | Aggregate nearly full (>90%) | Thin-provisioned volumes grew beyond aggregate free space | `storage aggregate show`; move volumes with `volume move start` or reduce snapshot reserves |
-| SnapMirror lag exceeding RPO | Network bandwidth contention, dedupe/SnapMirror scheduling conflict, or throttle active | `snapmirror show -fields lag-time,transfer-bytes`; adjust schedule; check `snapmirror config-replication show` |
+| SnapMirror lag exceeding RPO | Network bandwidth contention, dedupe/SnapMirror scheduling conflict, or throttle active | `snapmirror show -fields lag-time,total-transfer-bytes`; adjust schedule; check `snapmirror show -fields current-throttle` |
 | NFS mount hangs after SP takeover | Stale NFS lock; automount not recovering after LIF migration | Verify LIF on correct port: `network interface show`; unmount and remount on client; check NFS grace period |
-| iSCSI session dropped | LIF failover changed IP; host iSCSI initiator did not reconnect | `iscsi session show`; confirm LIF IP stability; rescan iSCSI on host; verify multipath (`multipath -ll` on Linux) |
+| iSCSI session dropped | LIF failover changed IP; host iSCSI initiator did not reconnect | `vserver iscsi session show`; confirm LIF IP stability; rescan iSCSI on host; verify multipath (`multipath -ll` on Linux) |
 | Node takeover not auto-triggering | Storage failover disabled or partner unreachable | `storage failover show`; check cluster interconnect with `cluster ping-cluster -node <node>`; verify `options cf.mode` |
-| SMB/CIFS shares inaccessible | CIFS server stopped or Kerberos ticket issue with Active Directory | `vserver cifs show`; `vserver cifs domain info -vserver <svm>`; verify AD connectivity and DNS resolution |
+| SMB/CIFS shares inaccessible | CIFS server stopped or Kerberos ticket issue with Active Directory | `vserver cifs show`; `vserver cifs domain discovered-servers show -vserver <svm>`; verify AD connectivity and DNS resolution |
 | Slow NFS performance | Jumbo frames not configured end-to-end, or QoS ceiling throttling workload | Check MTU on ONTAP ports (`network port show -fields mtu`) and switches; review QoS stats: `qos statistics performance show` |
 | Volume move failing mid-way | Destination aggregate too full, or a cutover window was missed | `volume move show`; check destination aggregate space; re-run `volume move start` with `-cutover-window` extended |
 | EMS callhome alerts firing | Disk failure, RAID degraded, or hardware fault | `storage disk show -broken`; `storage aggregate show -state degraded`; check `system health alert show` |
@@ -224,7 +224,7 @@ volume size -vserver <svm> -volume <vol> -new-size 500G
 volume modify -vserver <svm> -volume <vol> \
     -autosize-mode grow_shrink \
     -max-autosize 1T \
-    -grow-threshold-percent 85
+    -autosize-grow-threshold-percent 85
 
 # Option 3 — Delete old or unnecessary snapshots
 volume snapshot show -vserver <svm> -volume <vol>
@@ -245,7 +245,7 @@ volume efficiency start -vserver <svm> -volume <vol> -scan-all true
 cluster1::> volume size -vserver svm_prod -volume vol_data -new-size 500G
 Volume modify successful: volume "vol_data" size set to 500GB.
 
-cluster1::> volume modify -vserver svm_prod -volume vol_data -autosize-mode grow_shrink -max-autosize 1T -grow-threshold-percent 85
+cluster1::> volume modify -vserver svm_prod -volume vol_data -autosize-mode grow_shrink -max-autosize 1T -autosize-grow-threshold-percent 85
 Volume modify successful: volume "vol_data" autogrow enabled.
 
 cluster1::> volume snapshot show -vserver svm_prod -volume vol_data
@@ -362,8 +362,8 @@ storage disk show -container-type unassigned
 # Option 3 — Reduce snapshot reserves across volumes in the aggregate
 volume modify -vserver <svm> -volume <vol> -percent-snapshot-space 5
 
-# Option 4 — Run storage efficiency on all volumes in the aggregate
-volume efficiency start -aggregate <aggr_name>
+# Option 4 — Run storage efficiency on a volume in the aggregate
+volume efficiency start -vserver <svm> -volume <vol>
 ```
 
 
@@ -390,8 +390,8 @@ Disk       Container Type    Size      RPM   Checksum
 cluster1::> volume modify -vserver svm1 -volume vol_data01 -percent-snapshot-space 5
 Volume modify successful.
 
-cluster1::> volume efficiency start -aggregate aggr1
-Efficiency operation started on 6 volumes.
+cluster1::> volume efficiency start -vserver svm1 -volume vol_data01
+(output varies; see https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-start.html)
 ```
 
 !!! warning "Common errors"
@@ -418,13 +418,13 @@ Efficiency operation started on 6 volumes.
 snapmirror show -fields source-path,destination-path,lag-time,healthy,state,last-transfer-size
 
 # Show only unhealthy relationships
-snapmirror show -health false
+snapmirror show -healthy false
 
 # Check transfer history for failures
-snapmirror history show -destination-path <dest_svm>:<dest_vol>
+snapmirror show-history -destination-path <dest_svm>:<dest_vol>
 
 # Check for throttle limiting transfer speed
-snapmirror config-replication show
+snapmirror show -fields current-throttle
 
 # Check intercluster LIF connectivity between clusters
 network interface show -role intercluster
@@ -446,16 +446,9 @@ Source Path                Destination Path           State
 ------------------------   ------------------------   --------
 svm3:vol_archive           svm4:vol_archive_mirror    broken-off
 
-Snapshot              Bytes Transferred  Duration   Result
--------------------  -----------------  ---------  ------
-2024.01.15_0200       5.2GB              00:18:32   Success
-2024.01.14_1400       0B                 00:02:15   Failed
-2024.01.14_0600       4.8GB              00:16:47   Success
-
-Vserver              Policy              Throttle (KB/s)  RPO (minutes)
--------------------  -----------------  ---------------  ---------------
-svm1                 DPDefault           Unlimited        60
-svm3                 DPDefault           51200            60
+snapmirror show-history / snapmirror show -fields current-throttle: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/snapmirror-show-history.html
+https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html
 
 Interface Name       IP Address          Role         Status
 -------------------  ------------------  -----------  ------
@@ -541,11 +534,11 @@ network interface show -vserver <svm> -fields lif,address,curr-node,curr-port,st
 network interface show -vserver <svm> -fields lif,home-node,home-port,curr-node,curr-port
 
 # Check NFS grace period state (clients waiting for lock reclaim)
-# Grace period is typically 45 seconds after failover
-nfs show -vserver <svm> -fields grace-period
+# (NFSv4 grace period setting, in seconds)
+vserver nfs show -vserver <svm> -fields v4-grace-seconds
 
 # Check for connected NFS clients
-nfs connected-client show -vserver <svm>
+vserver nfs connected-clients show -vserver <svm>
 
 # Check export policy — did it change during failover?
 vserver export-policy show -vserver <svm>
@@ -565,17 +558,10 @@ Vserver     LIF            Home-Node       Home-Port Curr-Node       Curr-Port
 nfs_svm     nfs_lif_01     node-01         e0d       node-02         e0c
 nfs_svm     nfs_lif_02     node-02         e0d       node-02         e0d
 
-cluster1::> nfs show -vserver nfs_svm -fields grace-period
-Vserver Grace-Period
-------- ---------------
-nfs_svm 0 seconds
-
-cluster1::> nfs connected-client show -vserver nfs_svm
-Vserver Client-IP       Protocol Version State
-------- --------------- -------- ------- -------
-nfs_svm 10.50.12.88     tcp      nfs3    connected
-nfs_svm 10.50.12.89     tcp      nfs4    connected
-nfs_svm 10.50.12.90     tcp      nfs4    connected
+cluster1::> vserver nfs show -vserver nfs_svm -fields v4-grace-seconds
+cluster1::> vserver nfs connected-clients show -vserver nfs_svm
+(output varies; see https://docs.netapp.com/us-en/ontap-cli/vserver-nfs-show.html and
+https://docs.netapp.com/us-en/ontap-cli/vserver-nfs-connected-clients-show.html)
 
 cluster1::> vserver export-policy show -vserver nfs_svm
 Vserver         Policy Name
@@ -665,8 +651,8 @@ If NFSv4 state is stale, the NFS server grace period (default 45 seconds) must e
 
 ```bash
 # Check iSCSI sessions from ONTAP side
-iscsi session show -vserver <svm>
-iscsi session show -vserver <svm> -fields initiator-name,tpgroup,lif
+vserver iscsi session show -vserver <svm>
+vserver iscsi session show -vserver <svm> -fields initiator-name,tpgroup
 
 # Check iSCSI LIFs are operational
 network interface show -vserver <svm> -data-protocol iscsi
@@ -710,23 +696,23 @@ svm-prod   igroup_linux_02     iscsi     linux     iqn.1991-05.com.example:host0
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: "No iSCSI sessions found for Vserver <svm>"` | Verify the initiator is connected and the target portal group is reachable using `iscsi connection show`. |
+    | `Error: "No iSCSI sessions found for Vserver <svm>"` | Verify the initiator is connected and the target portal group is reachable using `vserver iscsi connection show`. |
     | `Error: "LUN is offline"` | Check the volume status with `volume show -vserver <svm>` and verify the aggregate is online. |
     | `Error: "Initiator IQN not found in igroup"` | Add the missing initiator IQN to the igroup using `lun igroup add -vserver <svm> -igroup <igroup_name> -initiator <iqn>`. |
 ### Resolution
 
 ```bash
 # Bring a LUN back online if it went offline
-lun online -vserver <svm> -path /vol/<vol>/<lun_name>
+lun modify -vserver <svm> -path /vol/<vol>/<lun_name> -state online
 
 # Verify iSCSI service is running on the SVM
-iscsi show -vserver <svm>
-iscsi modify -vserver <svm> -is-admin-enabled true
+vserver iscsi show -vserver <svm>
+vserver iscsi modify -vserver <svm> -status-admin up
 ```
 
 
 ```text title="Expected output"
-LUN /vol/data_vol/lun_prod_01 brought online.
+lun modify -state online: see https://docs.netapp.com/us-en/ontap-cli/lun-modify.html
 
 Vserver: svm_prod_01
 Admin Enabled: true
@@ -902,7 +888,7 @@ node-01>
 ```bash
 # Check CIFS server status and domain join health
 vserver cifs show -vserver <svm>
-vserver cifs domain info -vserver <svm>
+vserver cifs domain discovered-servers show -vserver <svm>
 
 # Check for Active Directory connectivity issues
 vserver cifs check -vserver <svm>
@@ -965,8 +951,8 @@ vserver cifs delete -vserver <svm>
 vserver cifs create -vserver <svm> -cifs-server <netbios_name> \
     -domain <domain.corp> -ou "OU=Servers,DC=domain,DC=corp"
 
-# Reset the CIFS machine account password (requires Domain Admin)
-vserver cifs password -vserver <svm>
+# Reset the CIFS machine account password (requires domain credentials)
+vserver cifs domain password reset -vserver <svm>
 
 # Verify DNS resolution from the SVM
 vserver services name-service dns check -vserver <svm>
@@ -980,7 +966,7 @@ vserver cifs options modify -vserver <svm> -smb1-enabled false
 SVM "svm_prod_01" started successfully.
 CIFS configuration deleted for SVM "svm_prod_01".
 CIFS server "NETAPP-SVM01" created successfully for domain "domain.corp".
-CIFS machine account password reset for SVM "svm_prod_01".
+vserver cifs domain password reset: see https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-domain-password-reset.html
 Vserver "svm_prod_01" DNS Check
     Vserver Name: svm_prod_01
     Nameserver: 10.20.30.40
@@ -996,7 +982,7 @@ SMB1 disabled for CIFS server "NETAPP-SVM01" on SVM "svm_prod_01".
     | Error | Fix |
     |---|---|
     | `Error: command failed: CIFS configuration already exists for SVM "svm_prod_01"` | Delete the existing CIFS configuration with `vserver cifs delete -vserver <svm>` before creating a new one. |
-    | `Error: DNS name resolution failed for domain.corp` | Verify DNS nameservers are configured on the SVM with `vserver services name-service dns modify -vserver <svm> -servers <ip1>,<ip2>` and that the domain controller is reachable. |
+    | `Error: DNS name resolution failed for domain.corp` | Verify DNS nameservers are configured on the SVM with `vserver services name-service dns modify -vserver <svm> -name-servers <ip1>,<ip2>` and that the domain controller is reachable. |
     | `Error: Failed to reset CIFS machine account password: Access Denied` | Ensure the account running the command has Domain Admin privileges and the machine account exists in Active Directory. |
 ---
 
@@ -1077,8 +1063,8 @@ Disk     Serial Number        Bay  Shelf  Node      RPM   Size
 ONTAP will automatically initiate RAID reconstruction when a spare disk is available. No manual intervention is needed for reconstruction to start.
 
 ```bash
-# Confirm reconstruction is underway
-storage disk show -raid-state reconstructing
+# Show RAID layout and disk status for the aggregate
+storage aggregate show-status -aggregate <aggr_name>
 
 # Mark a disk as failed if ONTAP has not done so automatically
 storage disk fail -disk <disk_id>
@@ -1114,10 +1100,10 @@ If no spare disks are available, RAID reconstruction cannot proceed. Escalate im
 ## Before Calling Support
 
 1. Capture current cluster state: `cluster show`, `storage failover show`, `system health alert show`
-2. Collect EMS events for the relevant timeframe: `event log show -time-range <start>..<end>`
+2. Collect EMS events for the relevant timeframe: `event log show -time "<start>".."<end>"` (MM/DD/YYYY HH:MM:SS)
 3. Generate an AutoSupport: `system node autosupport invoke -node * -type all -message "case <number>"`
-4. Note the exact ONTAP version: `system image show`
-5. Record the hardware platform and serial numbers: `system node show -fields model,serial-number`
+4. Note the exact ONTAP version: `system node image show`
+5. Record the hardware platform and serial numbers: `system node show -fields model,serialnumber`
 6. Describe the timeline of the issue — when it started, what changed (upgrade, config change, load change)
 7. Have the NetApp support site login ready: [https://mysupport.netapp.com](https://mysupport.netapp.com)
 

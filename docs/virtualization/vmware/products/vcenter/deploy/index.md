@@ -13,7 +13,7 @@ description: "End-to-end deployment guide for VMware vCenter Server Appliance (V
 <div class="kb-summary">
 End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers pre-deployment DNS/NTP checks, Stage 1 OVA deployment, Stage 2 SSO and network configuration, Active Directory integration, host inventory build, and post-deployment hardening.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ![vCenter Deploy Stages](../../../../../assets/vcenter-deploy-stages.svg)
@@ -280,7 +280,7 @@ service-control --status --all | grep -E "STOPPED|FAILED"
 # Expected: no output (all services running)
 
 # Confirm vpxd is healthy
-service-control --status vpxd
+service-control --status vmware-vpxd
 # Expected: Running
 
 # Check disk usage
@@ -295,7 +295,6 @@ curl -sk https://vcenter.example.local/ui | grep -i "vsphere"
 ```text title="Expected output"
 Connected to vcenter.example.local.
 (no output — command completes silently)
-vpxd                                    Running
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/sda1        50G   28G   19G  58% /
 /dev/sda2       100G   67G   28G  69% /storage
@@ -441,7 +440,7 @@ vSphere Client → Administration → Licensing → Licenses
 ```text
 VAMI: https://vcenter.example.local:5480
   → Backup → Configure
-    Protocol: SCP (or SFTP / HTTP)
+    Protocol: SFTP (or FTP / FTPS / HTTP / HTTPS / NFS / SMB — KB 322371; SCP was 6.5/6.7 only)
     Server: backup.example.local
     Port: 22
     Directory: /vcenter-backups
@@ -462,9 +461,9 @@ ssh root@vcenter.example.local
 /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT --text \
   | grep -E "Alias|Issuer|Not After"
 
-# If CA-signed cert required, use certificate-manager:
-/usr/lib/vmware-vmcad/certificate-manager
-# Option 1: Replace MACHINE_SSL_CERT with custom certificate
+# If CA-signed cert required, use vSphere Certificate Manager (KB 318946):
+/usr/lib/vmware-vmca/bin/certificate-manager
+# Option 1: Replace the Machine SSL certificate with a Custom CA Certificate
 # Follow prompts; provide signed cert, private key, and CA chain
 ```
 
@@ -479,15 +478,15 @@ root@vcenter [ ~ ]# /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHIN
 Alias: __MACHINE_CERT
 Issuer: CN=CA,O=Example Corp,C=US
 Not After: 2026-03-15 14:32:18 UTC
-root@vcenter [ ~ ]# /usr/lib/vmware-vmcad/certificate-manager
+root@vcenter [ ~ ]# /usr/lib/vmware-vmca/bin/certificate-manager
 ...
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `vecs-cli: command not found` | Ensure you are running the command as root and the vmafd service is running with `systemctl status vmware-vmafd`. |
-    | `certificate-manager: command not found` | Verify the vmcad package is installed with `rpm -qa | grep vmcad` and reinstall if missing. |
+    | `vecs-cli: command not found` | Run it as root with the full path `/usr/lib/vmware-vmafd/bin/vecs-cli`; check the authentication framework service with `service-control --status vmafdd` (KB 344633). |
+    | `certificate-manager: command not found` | Use the full path `/usr/lib/vmware-vmca/bin/certificate-manager` as root (KB 318946). |
 ### Configure Alarm Definitions
 
 ```text
@@ -523,8 +522,8 @@ service-control --status --all | grep -v "Running"
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `service-control: command not found` | Use the full path `/usr/lib/vmware-vmafd/bin/service-control` or source the VCSA environment setup script. |
-    | `"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local" not found` | Verify VCSA is fully initialized and the Lightweight Directory Access Service (LSASS) is running with `service-control --status --all | grep vmafdd`. |
+    | `service-control: command not found` | Run it from the VCSA Bash shell as root (SSH, then `shell`) — see KB 344633. |
+    | `"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local" not found` | Verify VCSA is fully initialized and the VMware Authentication Framework (`vmafdd`) is running with `service-control --status vmafdd`. |
 ### Configure Syslog Forwarding
 
 ```text

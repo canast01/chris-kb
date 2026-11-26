@@ -13,7 +13,7 @@ description: "Troubleshooting reference for VMware ESXi. Covers common host fail
 <div class="kb-summary">
 Troubleshooting reference for VMware ESXi. Covers common host failure patterns, diagnostic commands, log collection, and escalation procedures for engaging VMware support.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 
 <div class="kb-grid kb-grid-3">

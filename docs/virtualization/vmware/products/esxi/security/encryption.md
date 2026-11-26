@@ -11,7 +11,7 @@ description: "ESXi Encryption reference covering Encrypt a VM, vSAN Encryption, 
 <div class="kb-summary">
 ESXi Encryption reference covering Encrypt a VM, vSAN Encryption, ESXi Host Encryption — Secure Boot and TPM, ESXi SSL/TLS Certificate Management, Encrypted vMotion and 1 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi Encryption](../../../../../assets/virtualization-vmware-esxi-security-encryption.svg)
 

@@ -9,7 +9,7 @@ search:
 ---
 # NSX — Common Issues
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 ![NSX — Common Issues](../../../../../assets/virtualization-vmware-nsx-troubleshooting-common-issues.svg)
 
 ```bash
@@ -65,15 +65,13 @@ Filter: DVFILTER-FWPOLICY-prod-web-vm-04-eth0
     | `summarize-dvfilter: command not found` | Ensure you are SSH'd directly to the ESXi host (not vCenter) and running as root or with appropriate privileges. |
     | `vsipioctl: No such file or directory` | Verify the filter name matches exactly (case-sensitive) and that the DFW module is loaded on the ESXi host with `esxcli system module list | grep dfwpf`. |
 ```bash
-# From NSX Manager CLI
-nsxcli
-get tunnel status
-# Look for DOWN tunnels between specific TEP pairs
+# From an NSX Edge node CLI
+# Tunnel endpoints (TEPs) on this node
+get vteps
 
-get tunnel status <remote-tep-ip>
-
-# Identify which hosts have the affected TEPs
-get tunnel endpoints
+# Tunnel ports and BFD sessions to remote TEPs — look for DOWN sessions
+get tunnel-ports
+get bfd-sessions
 
 # From the ESXi host — verify TEP IP is assigned
 esxcli network ip interface ipv4 get | grep vmk
@@ -86,47 +84,7 @@ vmkping -I vmk<n> -d -s 1572 <remote-tep-ip>
 ```
 
 ```text title="Expected output"
-nsxcli> get tunnel status
-Tunnel Status:
-  Source TEP       Destination TEP  Status    Last Status Change
-  192.168.100.45   192.168.100.46   UP        2024-01-15 14:32:18
-  192.168.100.45   192.168.100.47   DOWN      2024-01-15 13:45:02
-  192.168.100.46   192.168.100.45   UP        2024-01-15 14:32:19
-  192.168.100.46   192.168.100.47   DOWN      2024-01-15 13:44:55
-
-nsxcli> get tunnel status 192.168.100.47
-Tunnel Status for Remote TEP 192.168.100.47:
-  Source TEP       Status    Packets Lost  Last Heartbeat
-  192.168.100.45   DOWN      1247          2024-01-15 13:45:02
-  192.168.100.46   DOWN      1089          2024-01-15 13:44:55
-
-nsxcli> get tunnel endpoints
-TEP Configuration:
-  Host Name        TEP IP           VLAN  Segment ID
-  esx-host-01.lab  192.168.100.45   0     nsx-overlay-1
-  esx-host-02.lab  192.168.100.46   0     nsx-overlay-1
-  esx-host-03.lab  192.168.100.47   0     nsx-overlay-1
-
-[esx-host-01:~] esxcli network ip interface ipv4 get | grep vmk
-vmk0                 DHCP       true      192.168.1.50      255.255.255.0
-vmk1                 DHCP       true      192.168.100.45    255.255.255.0
-vmk10                DHCP       true      192.168.101.50    255.255.255.0
-
-[esx-host-01:~] vmkping -I vmk1 192.168.100.47
-PING 192.168.100.47 (192.168.100.47): 56 data bytes
-Request timed out.
-Request timed out.
-Request timed out.
---- 192.168.100.47 statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
-
-[esx-host-01:~] vmkping -I vmk1 -d -s 1572 192.168.100.47
-PING 192.168.100.47 (192.168.100.47): 1572 data bytes
-Request timed out.
-Request timed out.
-Request timed out.
---- 192.168.100.47 statistics ---
-3 packets transmitted, 0 packets received, 100% packet loss
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
@@ -213,7 +171,6 @@ Group membership check:
 nsxcli
 get cluster status
 get managers
-get corfu-cluster status
 
 # Check services on this node
 get services
@@ -222,44 +179,7 @@ get service manager
 ```
 
 ```text title="Expected output"
-NSX CLI (build 20.0.3.1)
-Connected to 192.168.1.10
-
-cluster status:
-  Cluster ID: 550e8400-e29b-41d4-a716-446655440000
-  Status: STABLE
-  Node Count: 3
-  Leader: nsx-manager-01.corp.local (192.168.1.10)
-
-managers:
-  UUID                                   Hostname              IP Address    Status   Version
-  550e8400-e29b-41d4-a716-446655440000   nsx-manager-01       192.168.1.10   UP       20.0.3.1
-  550e8400-e29b-41d4-a716-446655440001   nsx-manager-02       192.168.1.11   UP       20.0.3.1
-  550e8400-e29b-41d4-a716-446655440002   nsx-manager-03       192.168.1.12   UP       20.0.3.1
-
-corfu-cluster status:
-  Status: HEALTHY
-  Node Count: 3
-  Quorum: ESTABLISHED
-
-services:
-  Service Name          Status    PID      Uptime
-  manager               UP        4521     45d 12h
-  http                  UP        3847     45d 12h
-  cluster               UP        4102     45d 12h
-  messaging             UP        4203     45d 12h
-
-service http:
-  Status: UP
-  Port: 443
-  Connections: 1247
-  Memory: 512 MB
-
-service manager:
-  Status: UP
-  Port: 5480
-  Memory: 2048 MB
-  Threads: 156
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
@@ -267,7 +187,7 @@ service manager:
     |---|---|
     | `nsxcli: command not found` | SSH to an NSX Manager node directly (not a vCenter or ESXi host) and ensure you have manager-level credentials. |
     | `Error: Unable to connect to cluster` | Verify network connectivity to the Manager node on port 5480 and confirm the cluster status is STABLE before retrying. |
-    | `Error: Service manager is DOWN` | Restart the manager service with `restart service manager` and check system logs via `get log-file` if the service fails to come back up. |
+    | `Error: Service manager is DOWN` | Restart the manager service with `restart service manager` and check system logs via `get log-file manager.log` if the service fails to come back up. |
 ```bash
 # Check transport node state details
 curl -sk -u 'admin:password' \
@@ -282,45 +202,11 @@ esxcli software vib list | grep -i nsx
 
 # Check IP pool has available IPs
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/pools/ip-pools/<pool-id>/ip-allocations"
+  "https://<nsx-manager>/policy/api/v1/infra/ip-pools/<pool-id>/ip-allocations"
 ```
 
 ```text title="Expected output"
-{
-  "transport_node_id": "tn-12345678-abcd-ef01-2345-6789abcdef01",
-  "state": "FAILED",
-  "status": "DOWN",
-  "failure_details": {
-    "error_code": "INSTALL_FAILED",
-    "error_message": "NSX VIB installation failed on host esxi-prod-01.lab.local",
-    "failed_step": "VIB_INSTALL",
-    "timestamp": "2024-01-15T14:32:18.123Z"
-  }
-}
-
-Name                                 Version                Install Date
-nsx-vib-esx-vsip                     3.2.1.0-20456789       2024-01-10
-nsx-vib-esx-nsx-lldp                 3.2.1.0-20456789       2024-01-10
-
-{
-  "results": [
-    {
-      "ip_address": "192.168.100.45",
-      "allocation_id": "alloc-uuid-001",
-      "status": "ALLOCATED",
-      "host_id": "esxi-prod-01"
-    },
-    {
-      "ip_address": "192.168.100.46",
-      "allocation_id": "alloc-uuid-002",
-      "status": "ALLOCATED",
-      "host_id": "esxi-prod-02"
-    }
-  ],
-  "result_count": 2,
-  "pool_size": 10,
-  "available_ips": 8
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -331,13 +217,16 @@ nsx-vib-esx-nsx-lldp                 3.2.1.0-20456789       2024-01-10
     | `"error_message": "NSX VIB installation failed"` with `"failed_step": "VIB_INSTALL"` | SSH to the ESXi host and check `/var/log/esxupdate.log` for the specific VIB installation error, then re-run host preparation from NSX Manager. |
 ```bash
 # SSH to Edge node
-get node cpu-usage
-get service dataplane stats
+get cpu-stats
+get dataplane cpu stats
 
-# Check active connections
-get load-balancer status
-get load-balancer virtual-servers
-get nat translations | wc -l
+# Load balancer status and virtual servers on this Edge
+get load-balancers status
+get load-balancer <lb-uuid> virtual-servers stats
+```
+
+```text title="Expected output"
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 ```d2

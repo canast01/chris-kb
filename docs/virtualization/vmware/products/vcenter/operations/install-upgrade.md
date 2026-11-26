@@ -11,7 +11,7 @@ description: "Install & Upgrade reference covering vCenter Upgrade Procedure (VC
 <div class="kb-summary">
 Install & Upgrade reference covering vCenter Upgrade Procedure (VCSA), vSphere Lifecycle Manager (vLCM), Interoperability Matrix, Patch Cadence, EOL Planning and 2 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Install & Upgrade](../../../../../assets/virtualization-vmware-vcenter-operations-install-upgrade.svg)
 

@@ -7,7 +7,7 @@ tags:
 ---
 # NSX — Authentication
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 ![NSX — Authentication](../../../../../assets/virtualization-vmware-nsx-security-authentication.svg)
 
 ## API Authentication Flow
@@ -27,10 +27,10 @@ NSX --> Client: 200 OK\nSet-Cookie: JSESSIONID\nX-XSRF-TOKEN: <token>
 
 note over Client: Subsequent API calls must include\nboth Cookie and X-XSRF-TOKEN header
 
-Client -> NSX: GET /api/v1/fabric/nodes\n(Cookie + X-XSRF-TOKEN)
+Client -> NSX: GET /api/v1/transport-nodes\n(Cookie + X-XSRF-TOKEN)
 NSX --> Client: 200 OK + node list
 
-Client -> NSX: DELETE /api/session/create\n(Cookie + X-XSRF-TOKEN)
+Client -> NSX: POST /api/session/destroy\n(Cookie + X-XSRF-TOKEN)
 NSX --> Client: 200 OK — session invalidated
 @enduml
 ```
@@ -50,28 +50,8 @@ curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/node/aaa/auth-policy"
 ```
 
-
 ```text title="Expected output"
-{
-  "api_failed_auth_lockout_period": 900,
-  "api_failed_auth_reset_period": 900,
-  "api_max_requests": 100,
-  "cli_failed_auth_lockout_period": 900,
-  "cli_max_auth_failures": 5,
-  "minimum_password_length": 20,
-  "resource_type": "AuthenticationPolicy",
-  "_self": {
-    "href": "/api/v1/node/aaa/auth-policy",
-    "rel": "self"
-  },
-  "_links": [
-    {
-      "href": "https://nsx-mgr-01.lab.local/api/v1/node/aaa/auth-policy",
-      "rel": "self"
-    }
-  ],
-  "_schema": "/api/v1/schema/AuthenticationPolicy"
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -83,29 +63,13 @@ curl -sk -u 'admin:password' \
 ```bash
 curl -sk -u 'admin:password' \
   -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"search_query": "nsxadmin", "cursor": "0"}' \
-  "https://<nsx-manager>/api/v1/aaa/ldap/search"
+  "https://<nsx-manager>/policy/api/v1/aaa/ldap-identity-sources/<ldap-source-id>/search?filter_value=nsxadmin"
 
 # Expected: returns the matching user object from AD
 ```
 
 ```text title="Expected output"
-{
-  "result_count": 1,
-  "results": [
-    {
-      "resource_type": "LdapUser",
-      "display_name": "nsxadmin",
-      "username": "nsxadmin",
-      "email": "nsxadmin@corp.local",
-      "full_name": "NSX Administrator",
-      "distinguished_name": "CN=nsxadmin,OU=Service Accounts,DC=corp,DC=local",
-      "object_sid": "S-1-5-21-3623811015-3361044348-30300820-1234"
-    }
-  ],
-  "cursor": "0"
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -157,7 +121,7 @@ curl -sk -u 'admin:password' \
     | Error | Fix |
     |---|---|
     | `{"httpStatus":401,"error_code":10000,"module_name":"common","error_message":"Authentication failed"}` | Verify NSX Manager credentials and ensure the admin account has API access enabled. |
-    | `{"httpStatus":400,"error_code":10001,"error_message":"Invalid identity_source_id"}` | Confirm the LDAP source ID exists by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/aaa/identity-sources` and use the correct ID. |
+    | `{"httpStatus":400,"error_code":10001,"error_message":"Invalid identity_source_id"}` | Confirm the LDAP source ID exists by running `curl -sk -u 'admin:password' https://<nsx-manager>/policy/api/v1/aaa/ldap-identity-sources` and use the correct ID. |
     | `{"httpStatus":404,"error_code":10002,"error_message":"Role 'enterprise_admin' not found"}` | Use a valid role name such as `enterprise_admin`, `security_admin`, or `auditor` instead. |
 ```bash
 curl -sk -u 'admin:Password123!' \
@@ -208,56 +172,30 @@ curl -sk -u 'admin:Password123!' \
     | `curl: (7) Failed to connect to nsx-manager.example.local port 443: Connection refused` | Verify NSX Manager is running and accessible at the hostname/IP, and check firewall rules allow HTTPS access to port 443. |
     | `{"error_code":401,"error_message":"Unauthorized"}` | Confirm the admin credentials are correct and the user account has API access permissions in NSX Manager. |
 ```bash
-# Create session (returns Set-Cookie header)
-curl -sk -u 'admin:Password123!' \
+# Create session (returns Set-Cookie and X-XSRF-TOKEN headers)
+curl -sk \
   -X POST \
-  -c /tmp/nsx-session.txt \
-  "https://nsx-manager.example.local/api/v1/aaa/session"
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d 'j_username=admin&j_password=Password123!' \
+  -c /tmp/nsx-session.txt -D /tmp/nsx-headers.txt \
+  "https://nsx-manager.example.local/api/session/create"
 
-# Use session cookie for subsequent requests
+# Use session cookie and the X-XSRF-TOKEN value for subsequent requests
 curl -sk \
   -b /tmp/nsx-session.txt \
+  -H "X-XSRF-TOKEN: <token-from-nsx-headers.txt>" \
   "https://nsx-manager.example.local/api/v1/cluster/status"
 
 # Invalidate session when done
-curl -sk -u 'admin:Password123!' \
-  -X DELETE \
+curl -sk \
+  -X POST \
   -b /tmp/nsx-session.txt \
-  "https://nsx-manager.example.local/api/v1/aaa/session"
+  -H "X-XSRF-TOKEN: <token-from-nsx-headers.txt>" \
+  "https://nsx-manager.example.local/api/session/destroy"
 ```
 
 ```text title="Expected output"
-{
-  "session_timeout": 1800,
-  "user": "admin",
-  "roles": ["enterprise_admin"],
-  "session_id": "a7f3c2e1-9b4d-47e8-b2f6-8c1d5a9e3f2b"
-}
-{
-  "cluster_status": "STABLE",
-  "node_count": 3,
-  "nodes": [
-    {
-      "uuid": "550e8400-e29b-41d4-a716-446655440001",
-      "hostname": "nsx-node-01.example.local",
-      "status": "UP",
-      "role": "MASTER"
-    },
-    {
-      "uuid": "550e8400-e29b-41d4-a716-446655440002",
-      "hostname": "nsx-node-02.example.local",
-      "status": "UP",
-      "role": "FOLLOWER"
-    },
-    {
-      "uuid": "550e8400-e29b-41d4-a716-446655440003",
-      "hostname": "nsx-node-03.example.local",
-      "status": "UP",
-      "role": "FOLLOWER"
-    }
-  ]
-}
-(no output — command completes silently)
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -294,7 +232,7 @@ curl -sk -u 'admin:Password123!' \
     "certificate_id": "<cert-id-from-above>",
     "is_protected": true
   }' \
-  "https://nsx-manager.example.local/api/v1/aaa/principal-identities"
+  "https://nsx-manager.example.local/api/v1/trust-management/principal-identities"
 
 # Use certificate for API calls (no password needed)
 curl -sk \
@@ -304,37 +242,7 @@ curl -sk \
 ```
 
 ```text title="Expected output"
-Generating RSA private key, 2048 bit long modulus (2 primes)
-.......................................................................+++++
-.......................+++++
-e is 65537 (0x010001)
-
-{
-  "resource_type": "Certificate",
-  "id": "8f4c2a91-7e3d-4b6f-9c1a-5d8e2f7b4a9c",
-  "pem_encoded": "-----BEGIN CERTIFICATE-----\nMIIDXTCCAkWgAwIBAgIJAKp7...",
-  "used_by_system": false,
-  "used_by_services": []
-}
-
-{
-  "resource_type": "PrincipalIdentity",
-  "id": "automation-account",
-  "node_id": "automation-host-01",
-  "role": "network_engineer",
-  "certificate_id": "8f4c2a91-7e3d-4b6f-9c1a-5d8e2f7b4a9c",
-  "is_protected": true,
-  "creation_time": 1704067200000
-}
-
-{
-  "resource_type": "ClusterStatus",
-  "cluster_status": "STABLE",
-  "node_count": 3,
-  "online_node_count": 3,
-  "offline_node_count": 0,
-  "degraded_node_count": 0
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -346,24 +254,19 @@ e is 65537 (0x010001)
 ```bash
 # Enable audit log export (NSX Manager CLI)
 nsxcli
-set service syslog exporter siem-01 level info protocol TLS server 10.0.0.100 port 6514
+set logging-server 10.0.0.100:6514 proto tls level info serverca <siem-ca-file>
 ```
 
 ```text title="Expected output"
-NSX CLI (build 22.1.2.0.0)
-Copyright (c) 2023 VMware, Inc. All rights reserved.
-
-nsx> set service syslog exporter siem-01 level info protocol TLS server 10.0.0.100 port 6514
-Syslog exporter 'siem-01' configured successfully.
-nsx> exit
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Syslog exporter 'siem-01' already exists` | Use a different exporter name or delete the existing one with `delete service syslog exporter siem-01` first. |
+    | Duplicate logging server entry | Check existing entries with `get logging-servers`; remove an entry by repeating its host, port, proto and level in the delete command. |
     | `Error: Unable to resolve hostname or IP address 10.0.0.100` | Verify network connectivity from NSX Manager to the SIEM server and confirm the IP address is reachable. |
-    | `Error: TLS certificate validation failed for server 10.0.0.100:6514` | Import the SIEM server's CA certificate into NSX Manager's trust store using `set service syslog exporter siem-01 ca-cert <cert-path>`. |
+    | `Error: TLS certificate validation failed for server 10.0.0.100:6514` | Copy the SIEM server's CA certificate to the node and pass it with the `serverca <filename>` option of `set logging-server`. |
 ```bash
 # View recent auth events on NSX Manager node
 tail -100 /var/log/vmware/nsx-manager/audit.log | grep -i "login\|auth\|role"

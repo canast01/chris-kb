@@ -11,7 +11,7 @@ description: "ESXi Install & Upgrade reference covering vSphere Update Manager (
 <div class="kb-summary">
 ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legacy, Host Upgrade Procedure, ESXi Patch Application (Manual / Standalone), Upgrade and Patching Readiness Checklist, Driver and Firmware Lifecycle and 1 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi Install & Upgrade](../../../../../assets/virtualization-vmware-esxi-operations-install-upgrade.svg)
 
@@ -35,6 +35,7 @@ ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legac
 
 ### Target Image or Baseline
 - Identify the target ESXi image or patch baseline
+- ESX 9.x hosts must be lifecycle-managed with vLCM images: baselines (VUM) cannot patch 9.x hosts and ISO-based upgrades are blocked from vSphere 9.0 ([Broadcom KB 379388](https://knowledge.broadcom.com/external/article/379388))
 - Confirm the image is compatible with the hardware (HCL)
 - Confirm driver and firmware compatibility for NIC, HBA, and storage adapters
 

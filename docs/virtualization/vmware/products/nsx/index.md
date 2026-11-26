@@ -12,7 +12,7 @@ description: "Technical and operational reference for VMware NSX. Covers segment
 <div class="kb-summary">
 Technical and operational reference for VMware NSX. Covers segments, gateways, distributed firewall, routing, edge nodes, and overlay networking for software-defined network and security across vSphere environments.
 
-*Applies to: NSX-T 3.x · NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 
 ![NSX Capabilities Overview](../../../../assets/nsx-capabilities-overview.svg)

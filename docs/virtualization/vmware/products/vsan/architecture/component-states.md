@@ -11,7 +11,7 @@ description: "How vSAN classifies each object component's health — from the in
 <div class="kb-summary">
 How vSAN classifies each object component's health — from the initial ABSENT state through DEGRADED and STALE to REBUILDING — and what each state means operationally for data protection and admin action.
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ---
@@ -33,30 +33,23 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 **What you should do:** If the outage is planned and short (reboot, patch), do nothing — let the timer run. If the host doesn't return within the timer window, investigate.
 
 ```bash
-# Check for absent components
-esxcli vsan debug component list | grep -i absent
-
-# Check which objects own absent components
+# Objects with absent components (components are listed per object)
 esxcli vsan debug object list | grep -i absent
+
+# Object health summary (counts per health state)
+esxcli vsan debug object health summary get
 ```
 
 
-```text title="Expected output"
-Name                                    Health Status
-vsan-health-check-vsan-cluster-health   absent
-vsan-health-check-vsan-physical-disk    absent
-vsan-health-check-vsan-object-health    absent
-
-Object UUID                              Owner Node    Status
-52e4c8f1-a2b4-4d7e-9c1f-8b3a2e5d6f9a   esx-node-02   absent
-7f9d2c1e-5a3b-4c6d-8e9f-1a2b3c4d5e6f   esx-node-04   absent
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `grep: (standard input): No such file or directory` | Verify the ESXi host is vSAN-enabled and the vSAN service is running with `systemctl status vsanvpd`. |
-    | `Error: Unknown command or namespace vsan.debug` | Ensure you are running the command on a vSAN cluster member; this command is not available on non-vSAN hosts. |
+    | `grep: (standard input): No such file or directory` | Verify the ESXi host is vSAN-enabled with `esxcli vsan cluster get`; restart any stopped vSAN daemon per [Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410). |
+    | `Error: Unknown command or namespace vsan debug` | Ensure you are running the command on a vSAN cluster member; this command is not available on non-vSAN hosts. |
 **Risk during ABSENT:** The object is running with reduced redundancy but is fully accessible. One more failure of a different component means data loss (for FTT=1 objects). For FTT=2, one absent + one degraded still leaves the object accessible.
 
 ---
@@ -108,7 +101,7 @@ Free Capacity: 1.2 TB
     |---|---|
     | `grep: (standard input): No such file or directory` | Ensure vSAN is enabled on the cluster and the ESXi host is part of a vSAN cluster; run `esxcli vsan cluster get` to verify. |
     | `Error: Unknown command or namespace` | Update ESXi to a supported version that includes the vsan debug command set, or verify vSAN license is active. |
-    | `Resync Queue Summary: (empty)` | This is normal if no objects are degraded; check actual object health with `esxcli vsan object list` to confirm cluster state. |
+    | `Resync Queue Summary: (empty)` | This is normal if no objects are degraded; check actual object health with `esxcli vsan debug object list` to confirm cluster state. |
 **Risk during DEGRADED:** The object has zero redundancy for FTT=1. Any further failure of the remaining component causes data loss and the object becomes INACCESSIBLE. Treat all DEGRADED objects as P1 until rebuild completes.
 
 ---
@@ -195,23 +188,22 @@ Object UUID                              Object Name          Bytes Remaining  P
 **Throttle rebuild during business hours:**
 
 ```bash
-# Limit rebuild to 500 IOPS (reduce VM impact)
-esxcli vsan debug resync throttle set --throttle 500
+# Limit resync traffic to 500 Mbps (range 0-512; reduces VM impact)
+esxcli vsan resync throttle set --level 500
 
-# Remove throttle during off-hours for faster completion
-esxcli vsan debug resync throttle set --throttle 0
+# Remove throttle during off-hours for faster completion (0 = no throttling)
+esxcli vsan resync throttle set --level 0
 ```
 
 
-```text title="Expected output"
-(no output — command completes silently)
-(no output — command completes silently)
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown command or namespace vsan debug resync` | Verify vSAN is licensed and enabled on the cluster; this command requires vSAN to be active on the host. |
+    | `Error: Unknown command or namespace vsan resync` | Verify vSAN is licensed and enabled on the cluster; this command requires vSAN to be active on the host. |
     | `Error: The object or item could not be found` | Ensure the ESXi host is part of a vSAN cluster; standalone hosts do not support vSAN resync throttling commands. |
 **Risk during REBUILDING:** Same as DEGRADED — the object still has only one copy until the rebuild completes. Do not perform any maintenance on other hosts during a rebuild unless it is unavoidable.
 
@@ -316,20 +308,13 @@ INACCESSIBLE is not a component state — it is an object-level state that occur
 # Identify inaccessible objects
 esxcli vsan debug object list | grep -i inaccessible
 
-# Check which components are involved
-esxcli vsan debug component list | grep -i inaccessible
+# Detail (components, hosts, disks) for one inaccessible object
+esxcli vsan debug object list -u <object-uuid>
 ```
 
 
-```text title="Expected output"
-Object UUID                              Inaccessible Components
-52a4c8f1-2b3e-4a9c-b1d2-7f8e9c0a1b2c    1
-7c9d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f    2
-9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c    3
-
-Component UUID                           Inaccessible Count
-a1b2c3d4-e5f6-7a8b-9c0d-1e2f-3a4b5c6d   1
-d4e5f6a7-b8c9-d0e1-f2a3-b4c5-d6e7f8a9   2
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"

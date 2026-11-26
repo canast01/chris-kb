@@ -9,7 +9,7 @@ description: "Integrations reference covering VMware, SnapCenter Plugin, Active 
 <div class="kb-summary">
 Integrations reference covering VMware, SnapCenter Plugin, Active Directory / CIFS Authentication, Veeam Storage Integration (VeeamON / Direct Storage Access), ONTAP REST API and 2 more sections.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Integrations](../../../../../assets/storage-netapp-ontap-architecture-integrations.svg)
 
@@ -34,7 +34,7 @@ The SnapCenter Plug-in for VMware vSphere is deployed as a separate OVA and regi
 vserver cifs create -vserver <svm> -cifs-server <netbios-name> -domain <domain.corp> -ou "OU=Servers,DC=domain,DC=corp"
 
 # Verify CIFS domain join and DC connectivity
-vserver cifs domain info -vserver <svm>
+vserver cifs domain discovered-servers show -vserver <svm>
 
 # Configure LDAP for NFS Kerberos and user mapping
 vserver services name-service ldap create -vserver <svm> -client-config <ldap-config>
@@ -45,7 +45,7 @@ vserver services name-service ldap create -vserver <svm> -client-config <ldap-co
 cluster1::> vserver cifs create -vserver svm1 -cifs-server NAS-SVM01 -domain domain.corp -ou "OU=Servers,DC=domain,DC=corp"
 (no output — command completes silently)
 
-cluster1::> vserver cifs domain info -vserver svm1
+cluster1::> vserver cifs domain discovered-servers show -vserver svm1
          Vserver: svm1
       CIFS Server: NAS-SVM01
         Domain/Workgroup: domain.corp
@@ -68,7 +68,7 @@ cluster1::> vserver services name-service ldap create -vserver svm1 -client-conf
     | Error | Fix |
     |---|---|
     | `Error: command failed: CIFS server creation failed. Reason: Failed to join domain "domain.corp". Check network connectivity to domain controllers.` | Verify network connectivity to domain controllers and ensure the ONTAP cluster can resolve the domain name via DNS. |
-    | `Error: LDAP configuration "ldap-config" does not exist.` | Create the LDAP client configuration first using `vserver services name-service ldap client-config create` before referencing it in the ldap create command. |
+    | `Error: LDAP configuration "ldap-config" does not exist.` | Create the LDAP client configuration first using `vserver services name-service ldap client create` before referencing it in the ldap create command. |
 ## Veeam Storage Integration (VeeamON / Direct Storage Access)
 
 Veeam Backup & Replication integrates with ONTAP via the Veeam Backup & Replication storage plugin, enabling:

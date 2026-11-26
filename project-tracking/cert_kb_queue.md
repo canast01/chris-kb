@@ -7039,3 +7039,102 @@ community standard). Research via WebSearch, verify, don't assume from memory.
 Gap analysis, content fill, practice questions, labs, tutorials, etc. — queued once
 Phase A is far enough along to know what's actually being targeted per section. Don't
 jump ahead of Phase A.
+
+## Phase B1 — accuracy fixes (started 2026-11-25)
+
+User decision 2026-11-25: fix accuracy before adding exam content. For each section, use
+its Phase A entry above as the defect list. Rules:
+- Wrong with a verified vendor equivalent -> replace it (cite the source in the commit or
+  a page "Sources" line).
+- Invented / wrong with NO verified replacement -> remove it; leave a one-line pointer to
+  the real vendor doc (a URL actually fetched). Nothing known-wrong stays on the page.
+- Stale versions: update "Applies to:", "current recommendation" lines, version tables and
+  release-notes.md to verified current data (keep older versions labelled as legacy).
+- Removing a bash block removes its output block too; a corrected command keeps an output
+  block that is either vendor-documented output or a short labelled "see vendor doc" note
+  (Check 55). Never invent output.
+- Accuracy only: no new exam-coverage pages yet (that is Phase B2).
+- Each class of verified-invalid command/path goes into scripts/known_invalid_commands.py
+  so site_audit Check 73 keeps it from coming back.
+Batches of ~5 sections per run (user decision); audit 100% before each commit.
+
+- [x] virtualization/vmware/products/nsx
+  - B1 (2026-11-25): accuracy fixes applied and vendor-verified; rules in scripts/known_invalid_commands.py; audit 73/73. Follow-up: illustrative sample output under already-valid commands not yet swept.
+- [x] virtualization/vmware/products/esxi
+  - B1 (2026-11-25): accuracy fixes applied and vendor-verified; rules in scripts/known_invalid_commands.py; audit 73/73. Follow-up: illustrative sample output under already-valid commands not yet swept.
+- [x] virtualization/vmware/products/vcenter
+  - B1 (2026-11-25): accuracy fixes applied and vendor-verified; rules in scripts/known_invalid_commands.py; audit 73/73. Follow-up: illustrative sample output under already-valid commands not yet swept.
+- [x] virtualization/vmware/products/vsan
+  - B1 (2026-11-25): accuracy fixes applied and vendor-verified; rules in scripts/known_invalid_commands.py; audit 73/73. Follow-up: illustrative sample output under already-valid commands not yet swept.
+- [x] storage/products/netapp/ontap
+  - B1 (2026-11-25): accuracy fixes applied and vendor-verified; rules in scripts/known_invalid_commands.py; audit 73/73. Follow-up: illustrative sample output under already-valid commands not yet swept.
+- [ ] automation/ansible
+- [ ] automation/github-actions
+- [ ] automation/powershell
+- [ ] automation/python
+- [ ] automation/terraform
+- [ ] backup/products/commvault
+- [ ] backup/products/netbackup
+- [ ] backup/products/veeam
+- [ ] cloud/aws
+- [ ] cloud/aws/evs
+- [ ] cloud/azure
+- [ ] compute/linux
+- [ ] compute/linux/mysql
+- [ ] compute/linux/postgresql
+- [ ] compute/windows-server
+- [ ] compute/windows-server/active-directory
+- [ ] compute/windows-server/sql-server
+- [ ] itsm/confluence
+- [ ] itsm/git
+- [ ] itsm/jira
+- [ ] itsm/servicenow
+- [ ] san/brocade/fabric-os
+- [ ] san/brocade/sannav
+- [ ] san/cisco/cisco-dcnm
+- [ ] san/cisco/mds
+- [ ] san/cisco/nexus-dashboard
+- [ ] security/certificates
+- [ ] security/products/cyberark
+- [ ] security/products/venafi
+- [ ] storage/products/ceph
+- [ ] storage/products/dell/apex-storage-as-a-service
+- [ ] storage/products/dell/cloudiq
+- [ ] storage/products/dell/cod
+- [ ] storage/products/dell/data-domain
+- [ ] storage/products/dell/dell-aiops
+- [ ] storage/products/dell/ecs
+- [ ] storage/products/dell/fod
+- [ ] storage/products/dell/powermax
+- [ ] storage/products/dell/powerpath
+- [ ] storage/products/dell/powerscale
+- [ ] storage/products/dell/powerstore
+- [ ] storage/products/dell/recoverpoint
+- [ ] storage/products/dell/srdf-a
+- [ ] storage/products/dell/srdf-s
+- [ ] storage/products/dell/unity
+- [ ] storage/products/dell/vplex
+- [ ] storage/products/netapp/insightiq
+- [ ] storage/products/netapp/keystone
+- [ ] storage/products/netapp/snapcenter
+- [ ] storage/products/netapp/snapmirror
+- [ ] storage/products/netapp/superna-eyeglass
+- [ ] storage/products/pure/evergreen
+- [ ] storage/products/pure/evergreen-one
+- [ ] storage/products/pure/flasharray
+- [ ] storage/products/pure/flashblade
+- [ ] storage/products/pure/pure1
+- [ ] virtualization/openshift
+- [ ] virtualization/vmware/products/aria-automation
+- [ ] virtualization/vmware/products/aria-operations
+- [ ] virtualization/vmware/products/aria-operations-for-logs
+- [ ] virtualization/vmware/products/aria-operations-for-networks
+- [ ] virtualization/vmware/products/aria-suite-lifecycle
+- [ ] virtualization/vmware/products/horizon
+- [ ] virtualization/vmware/products/powercli
+- [ ] virtualization/vmware/products/srm
+- [ ] virtualization/vmware/products/tanzu
+- [ ] virtualization/vmware/topics
+- [ ] virtualization/vmware/products/vmware-cloud-foundation
+- [ ] virtualization/vmware/products/vsphere-replication
+- [ ] virtualization/vmware/products/vxrail

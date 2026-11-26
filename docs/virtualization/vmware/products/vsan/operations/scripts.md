@@ -11,7 +11,7 @@ description: "Scripts reference covering Disk Group Capacity Report (PowerShell 
 <div class="kb-summary">
 Scripts reference covering Disk Group Capacity Report (PowerShell / PowerCLI), vSAN Object Health Check (Python / pyVmomi), Performance Baseline Check (PowerShell / PowerCLI), Ansible vSAN Health Playbook, Windows: vSAN Health Check via PowerCLI (PowerShell) and 1 more sections.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Scripts](../../../../../assets/virtualization-vmware-vsan-operations-scripts.svg)
 
@@ -832,7 +832,7 @@ foreach ($cluster in $clusters) {
         $vsanConfig = Get-VsanClusterConfiguration -Cluster $cluster
         Write-Host "  Deduplication enabled : $($vsanConfig.SpaceEfficiencyEnabled)"
         Write-Host "  Encryption enabled    : $($vsanConfig.EncryptionEnabled)"
-        Write-Host "  Default FTT policy    : $($vsanConfig.DefaultStoragePolicy)"
+        Write-Host "  Default policy        : $($vsanConfig.StoragePolicy)"
     } catch {
         Write-Host "  Configuration: could not retrieve ($($_.Exception.Message))" -ForegroundColor Yellow
     }
@@ -841,32 +841,25 @@ foreach ($cluster in $clusters) {
 
     # Run health summary
     try {
-        $healthSummary = Get-VsanClusterHealthSummary -Cluster $cluster -FetchFromCache:$false
-        Write-Host "  Health Test Results:"
-        $header = "    {0,-55} {1}"
-        Write-Host ($header -f "Test Name", "Status")
-        Write-Host ("    " + "-" * 65)
-
-        foreach ($group in $healthSummary.Groups) {
-            Write-Host "    [Group: $($group.GroupName)]" -ForegroundColor White
-            foreach ($test in $group.GroupTests) {
-                $s = switch ($test.TestHealth) {
-                    'green'  { 'PASS'     }
-                    'yellow' { 'WARNING'  }
-                    'red'    { 'CRITICAL' }
-                    default  { 'UNKNOWN'  }
-                }
-                $colour = switch ($s) {
-                    'PASS'     { 'Green'  }
-                    'WARNING'  { 'Yellow' }
-                    'CRITICAL' { 'Red'    }
-                    default    { 'White'  }
-                }
-                if ($s -eq 'CRITICAL') { $overallExit = 2 }
-                if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-                Write-Host ($header -f "      $($test.TestName)", $s) -ForegroundColor $colour
-            }
+        # Test-VsanClusterHealth returns OverallHealthStatus / OverallHealthDescription
+        $health = Test-VsanClusterHealth -Cluster $cluster
+        # Map the overall status; anything unrecognised is reported as UNKNOWN
+        $s = switch ($health.OverallHealthStatus) {
+            'green'  { 'PASS'     }
+            'yellow' { 'WARNING'  }
+            'red'    { 'CRITICAL' }
+            default  { 'UNKNOWN'  }
         }
+        $colour = switch ($s) {
+            'PASS'     { 'Green'  }
+            'WARNING'  { 'Yellow' }
+            'CRITICAL' { 'Red'    }
+            default    { 'White'  }
+        }
+        if ($s -eq 'CRITICAL') { $overallExit = 2 }
+        if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
+        Write-Host "  Overall health : $($health.OverallHealthStatus) ($s)" -ForegroundColor $colour
+        Write-Host "  Description    : $($health.OverallHealthDescription)"
     } catch {
         Write-Host "  Health check: could not retrieve ($($_.Exception.Message))" -ForegroundColor Yellow
     }
@@ -1548,14 +1541,14 @@ $deadline = (Get-Date).AddMinutes($TimeoutMinutes)
 
 Write-Host "=== vSAN Resync Monitor: $ClusterName ===" -ForegroundColor Cyan
 Write-Host "Polling every ${PollIntervalSeconds}s — timeout at $($deadline.ToString('HH:mm'))`n"
-Write-Host ("{0,-8} {1,-25} {2,-15} {3,-15}" -f "Time", "Active Components", "Bytes Remaining", "Status")
+Write-Host ("{0,-8} {1,-25} {2,-15} {3,-15}" -f "Time", "Objects To Sync", "Data Remaining", "Status")
 Write-Host ("-" * 70)
 
 while ((Get-Date) -lt $deadline) {
-    $status = Get-VsanResyncStatus -Cluster $cluster
-    $active = $status.ActiveResyncComponentCount
-    $bytes  = if ($status.BytesToSync -gt 0) {
-                  "$([Math]::Round($status.BytesToSync / 1GB, 2)) GB"
+    $status = Get-VsanResyncingOverview -Cluster $cluster
+    $active = [int64]$status.TotalObjectsToSync
+    $bytes  = if ($status.TotalDataToSyncGB -gt 0) {
+                  "$([Math]::Round($status.TotalDataToSyncGB, 2)) GB"
               } else { "0" }
 
     $color = if ($active -eq 0) { "Green" } else { "Yellow" }

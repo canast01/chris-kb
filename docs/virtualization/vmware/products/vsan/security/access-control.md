@@ -11,7 +11,7 @@ description: "vSAN access control is implemented through vCenter's Role-Based Ac
 <div class="kb-summary">
 vSAN access control is implemented through vCenter's Role-Based Access Control (RBAC) system. There is no separate vSAN permission model — all vSAN management actions require vCenter permissions on the cluster or datacenter objects.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Access Control](../../../../../assets/virtualization-vmware-vsan-security-access-control.svg)
 
@@ -28,7 +28,7 @@ vSAN access control is implemented through vCenter's Role-Based Access Control (
 
 ### vSAN Read-Only Role (Monitoring)
 
-For monitoring systems (Aria Operations, Nagios, custom scripts) that only need to read vSAN status.
+For monitoring systems (VCF Operations / Aria Operations, Nagios, custom scripts) that only need to read vSAN status.
 
 ```powershell
 $monitorPrivileges = @(

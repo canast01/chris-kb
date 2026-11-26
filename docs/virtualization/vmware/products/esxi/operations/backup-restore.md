@@ -11,7 +11,7 @@ description: "ESXi backup and restore: VM-level backup via vStorage APIs for Dat
 <div class="kb-summary">
 ESXi backup and restore: VM-level backup via vStorage APIs for Data Protection, ESXi host config backup with `vim-cmd hostsvc/firmware/backup_config`, and restore procedure.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi Backup & Restore](../../../../../assets/virtualization-vmware-esxi-operations-backup-restore.svg)
 

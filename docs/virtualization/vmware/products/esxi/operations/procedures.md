@@ -11,7 +11,7 @@ description: "Procedures reference covering Change Readiness, Maintenance Window
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Incident Triage, Networking, Storage, Security and Hardening, and Lifecycle and Patching.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 
 ## Before you begin
@@ -55,18 +55,18 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 ## Post-Change Validation
 
 - [ ] Host shows Connected and PoweredOn in vCenter
-- [ ] No hardware health alarms triggered: `esxcli hardware health get`
+- [ ] No hardware health alarms triggered (vCenter alarms; sensor readings via `esxcli hardware ipmi sdr list`)
 - [ ] All storage paths active, no dead paths: `esxcli storage core path list | grep dead`
 - [ ] All vmnic uplinks connected: `esxcli network nic list`
 - [ ] VMs running correctly on the host or successfully migrated back
-- [ ] NTP synchronized: `esxcli system ntp get` confirms `Running: true`
+- [ ] NTP synchronized: `esxcli system ntp test` reports the NTP service operational
 - [ ] No new vCenter alarms or vmkernel errors introduced by the change
 - [ ] Close change ticket with validation evidence attached
 
 ## Incident Triage
 
 - [ ] Check host connection state in vCenter — Connected, Disconnected, or Not Responding?
-- [ ] Run `esxcli hardware health get` — identify any hardware component in Warning or Error state
+- [ ] Check hardware health alarms in vCenter and sensor readings with `esxcli hardware ipmi sdr list`
 - [ ] Check storage paths: `esxcli storage core path list | grep dead`
 - [ ] Check network uplinks: `esxcli network nic list` — look for down links
 - [ ] Review vmkernel log: `tail -500 /var/log/vmkernel.log`
@@ -77,7 +77,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 | Question | Answer |
 |---|---|
 | Host connection state? | Connected / Disconnected / Not Responding |
-| Hardware health alerts? | `esxcli hardware health get` |
+| Hardware health alerts? | vCenter hardware health view; `esxcli hardware ipmi sdr list` |
 | Dead storage paths? | `esxcli storage core path list \| grep dead` |
 | vmnic uplinks down? | `esxcli network nic list` |
 | vmkernel.log at incident time? | `/var/log/vmkernel.log` — SCSI, NMP, network errors |
@@ -270,7 +270,7 @@ Unmount a datastore before decommissioning a LUN or performing storage maintenan
 3. Unmount the datastore:
 
     ```bash
-    esxcli storage filesystem unmount --uuid <datastore-uuid>
+    esxcli storage filesystem unmount --volume-uuid <datastore-uuid>
     ```
 
 **Mount an NFS datastore:**
@@ -292,7 +292,7 @@ Unmount a datastore before decommissioning a LUN or performing storage maintenan
 After a rescan the volume usually auto-mounts. If it does not:
 
 ```bash
-esxcli storage filesystem mount --uuid <datastore-uuid>
+esxcli storage filesystem mount --volume-uuid <datastore-uuid>
 ```
 
 
@@ -486,21 +486,21 @@ Use this procedure when the host has no internet access and patches are delivere
 2. Copy the patch bundle to a local datastore. From a management machine:
 
     ```bash
-    scp VMware-ESXi-7.0U3n-patch.zip root@esxi01:/vmfs/volumes/datastore1/patches/
+    scp <esxi-patch-depot>.zip root@esxi01:/vmfs/volumes/datastore1/patches/
     ```
 
-3. SSH to the host and verify the bundle:
+3. SSH to the host, verify the bundle and note the image profile name it lists:
 
     ```bash
-    esxcli software sources profile list --depot=/vmfs/volumes/datastore1/patches/VMware-ESXi-7.0U3n-patch.zip
+    esxcli software sources profile list --depot=/vmfs/volumes/datastore1/patches/<esxi-patch-depot>.zip
     ```
 
 4. Perform a dry run to check for conflicts:
 
     ```bash
     esxcli software profile update \
-      --depot=/vmfs/volumes/datastore1/patches/VMware-ESXi-7.0U3n-patch.zip \
-      --profile=ESXi-7.0U3n-20842819-standard \
+      --depot=/vmfs/volumes/datastore1/patches/<esxi-patch-depot>.zip \
+      --profile=<image-profile-name> \
       --dry-run
     ```
 
@@ -508,8 +508,8 @@ Use this procedure when the host has no internet access and patches are delivere
 
     ```bash
     esxcli software profile update \
-      --depot=/vmfs/volumes/datastore1/patches/VMware-ESXi-7.0U3n-patch.zip \
-      --profile=ESXi-7.0U3n-20842819-standard
+      --depot=/vmfs/volumes/datastore1/patches/<esxi-patch-depot>.zip \
+      --profile=<image-profile-name>
     ```
 
 6. Reboot the host for the patches to take effect:
@@ -646,8 +646,8 @@ Verify from vCenter: **Host → Configure → Time Configuration** — confirm N
 esxcli system hostname set --fqdn esxi-01.example.local
 
 # Set DNS servers
-esxcli network ip dns server add --server-address 10.0.0.10
-esxcli network ip dns server add --server-address 10.0.0.11
+esxcli network ip dns server add --server 10.0.0.10
+esxcli network ip dns server add --server 10.0.0.11
 
 # Set DNS search domain
 esxcli network ip dns search add --domain example.local
@@ -699,32 +699,8 @@ Address:	10.0.0.10#53
 
 AD join allows AD users and groups to authenticate to the ESXi host and enables LDAP-based lockdown mode.
 
-```bash
-# Join domain from ESXi shell
-esxcli system secpolicy domain join --domain EXAMPLE.LOCAL \
-    --username administrator --password '<password>'
+ESXCLI has no Active Directory join command (`esxcli system secpolicy domain` manages security-policy enforcement domains, not AD). Join the host from the vSphere Client or with Host Profiles / vSphere Authentication Proxy; see the vSphere Security guide: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-security-8-0.html
 
-# Verify domain join status
-esxcli system secpolicy domain list
-# Expect: Domain: EXAMPLE.LOCAL, Joined: true
-```
-
-
-```text title="Expected output"
-Domain join operation initiated...
-Domain join completed successfully.
-Domain: EXAMPLE.LOCAL
-Joined: true
-Trusted domains: EXAMPLE.LOCAL
-Domain controllers: dc01.example.local, dc02.example.local
-```
-
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `Error: Unable to resolve domain controller for EXAMPLE.LOCAL` | Verify DNS is configured on the ESXi host and can resolve domain controller hostnames with `esxcli network ip dns server list`. |
-    | `Error: Authentication failed for user 'administrator'` | Confirm the username and password are correct for a domain account with domain join privileges, not the local ESXi root account. |
-    | `Error: Domain join failed: Host already joined to domain` | Run `esxcli system secpolicy domain leave` first if the host is already domain-joined and you need to rejoin. |
 Assign AD group to ESXi Administrator role after joining:
 - vCenter → **Host → Configure → Authentication Services** → confirm domain status
 - vCenter → **Host → Configure → Host Users/Groups** → add the AD group
@@ -770,7 +746,7 @@ Test trap sent successfully.
     |---|---|
     | `Error: Invalid community string format. Community string cannot be empty or contain spaces.` | Wrap the community string in quotes if it contains special characters, or use a simple alphanumeric string like `public` or `monitoring`. |
     | `Error: Unable to reach trap target 192.168.100.50:161. Connection refused.` | Verify the NMS IP address is correct, the SNMP service is running on the target host, and firewall rules allow UDP 161 outbound from the ESXi host. |
-    | `Error: SNMP service failed to start. Check /var/log/snmpd.log for details.` | Restart the SNMP daemon with `esxcli system snmp restart` or check for port conflicts with `netstat -an | grep 161`. |
+    | `Error: SNMP service failed to start. Check /var/log/snmpd.log for details.` | Restart the SNMP agent with `esxcli system snmp set --enable false` then `esxcli system snmp set --enable true`, and check for port conflicts with `esxcli network ip connection list | grep 161`. |
 ---
 
 ## Configure a Coredump Target

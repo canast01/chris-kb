@@ -11,7 +11,7 @@ description: "Daily and weekly health runbook for ESXi hosts: hardware sensors, 
 <div class="kb-summary">
 Daily and weekly health runbook for ESXi hosts: hardware sensors, service status, storage paths, network uplinks, NTP sync, VIB compliance, and capacity thresholds — with a runnable command sequence and per-area deep-dive checks.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 
 ```vegalite
@@ -298,7 +298,7 @@ Predictive Failure Analysis: Not Supported
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown command or namespace 'hardware ipmi sdr'` | Verify IPMI is enabled in BIOS and the ESXi host has IPMI hardware support; if not available, use `esxcli hardware sensors list` instead. |
+    | `Error: Unknown command or namespace 'hardware ipmi sdr'` | Verify IPMI is enabled in BIOS and the ESXi host has IPMI hardware support; if IPMI is not available, check hardware health in vCenter or the server's BMC instead. |
     | `Error: Unknown device '<device-name>'` | Replace `<device-name>` with the actual device identifier (e.g., `mpx.vmhba0:C0:T0:L0`) found via `esxcli storage core device list`. |
     | `Error: SMART data is not available for this device` | Confirm the device supports S.M.A.R.T. monitoring; some enterprise SSDs or RAID controllers may not expose this data directly to ESXi. |
 | Sensor category | Alert threshold | Action |

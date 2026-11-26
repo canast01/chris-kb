@@ -4,14 +4,14 @@ tags:
   - nsx
   - nsx-4
   - vmware
-description: "Recommended reading order for NSX (NSX-T / NSX 4.x). Follow these stages in order to build a complete mental model before working with it in production."
+description: "Recommended reading order for NSX (NSX 9.x in VCF 9; NSX 4.2.x in VCF 5.x). Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # NSX — Learning Path
 
 <div class="kb-summary">
-Recommended reading order for NSX (NSX-T / NSX 4.x). Follow these stages in order to build a complete mental model before working with it in production.
+Recommended reading order for NSX (NSX 9.x in VCF 9; NSX 4.2.x in VCF 5.x). Follow these stages in order to build a complete mental model before working with it in production.
 
-*Applies to: NSX-T 3.x · NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 
 ```d2

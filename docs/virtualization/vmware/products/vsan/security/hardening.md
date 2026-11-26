@@ -11,7 +11,7 @@ description: "vSAN hardening covers the security baseline configuration applied 
 <div class="kb-summary">
 vSAN hardening covers the security baseline configuration applied to the ESXi hosts that form the vSAN cluster, the vCenter managing the cluster, and the vSAN-specific settings. References: VMware vSphere Security Configuration Guide (Broadcom), DISA STIG for vSphere ESXi.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Hardening](../../../../../assets/virtualization-vmware-vsan-security-hardening.svg)
 
@@ -251,7 +251,6 @@ NTP Synchronized: true
     |---|---|
     | `Connection refused` | Verify that NTP servers are reachable from the ESXi host and that firewall rules allow UDP port 123 outbound. |
     | `Error: Unable to set NTP servers` | Ensure you have root/administrator privileges and that the ESXi host is not in lockdown mode. |
-    | `ntpq: read: Connection refused` | Confirm that the ntpd service is running with `systemctl status ntpd` or restart it with `systemctl restart ntpd`. |
 **Via host profile:**
 Host Profiles → Security and Services → Time Configuration → NTP Configuration
 
@@ -427,9 +426,9 @@ Key CAT I findings for vSAN hosts:
 | ESXI-80-000116 | Password policy insufficient | Set minimum complexity |
 | ESXI-80-000148 | DCUI access not restricted | Limit DCUI access to console only |
 
-### vSAN Compliance with Aria Operations
+### vSAN Compliance with VCF Operations (formerly Aria Operations)
 
-Aria Operations with the vSAN management pack provides ongoing compliance dashboards:
+VCF Operations (formerly Aria Operations; named Aria Operations in 8.x) with the vSAN management pack provides ongoing compliance dashboards:
 
 - vSphere Security Configuration Guide compliance score per host.
 - vSAN encryption status per cluster.

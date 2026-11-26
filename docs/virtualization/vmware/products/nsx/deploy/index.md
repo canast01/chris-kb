@@ -13,7 +13,7 @@ description: "End-to-end deployment guide for VMware NSX network virtualisation.
 <div class="kb-summary">
 End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 establish prerequisites and the NSX Manager cluster; Phases 3–4 prepare transport zones, TEP profiles, and ESXi host transport nodes; Phases 5–6 deploy Edge nodes, configure T0/T1 gateways and overlay segments, then validate the full data path.
 
-*Applies to: NSX-T 3.x / NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 
 ![NSX Deploy Stages](../../../../../assets/nsx-deploy-stages.svg)
@@ -73,7 +73,7 @@ phase_6_logical_networking_and_valid -> validate
 | DNS forward + reverse | Resolves for all 3 Manager FQDNs + VIP | Required before OVA deploy |
 | NTP | Same source as vCenter, drift < 500 ms | `esxcli system ntp get` |
 | MTU on ToR switches | 9000 (all ports carrying TEP traffic) | Geneve encapsulation overhead |
-| vCenter version | 7.0 U2+ for NSX 4.x | Verify interop matrix |
+| vCenter version | Per the VCF BOM: vCenter 9.0 with NSX 9.0 (VCF 9.0); vCenter 8.0 U3a with NSX 4.2 (VCF 5.2) | Verify interop matrix; see [Design Standards](../architecture/design-standards.md) |
 | Host NIC firmware | On NSX HCL | Check Broadcom HCL portal |
 
 ### IP Allocation Plan
@@ -205,7 +205,7 @@ Last Heartbeat: 2 seconds ago
     | Error | Fix |
     |---|---|
     | `join management-plane: Certificate thumbprint mismatch` | Verify the thumbprint was copied correctly from node 1 and matches exactly, including colons and case. |
-    | `join management-plane: Connection refused to 10.10.0.11:443` | Ensure node 1 is reachable and the NSX management service is running with `get service nsxd status`. |
+    | `join management-plane: Connection refused to 10.10.0.11:443` | Ensure node 1 is reachable and the NSX management service is running with `get services`. |
     | `get cluster status: Cluster not yet formed` | Wait 30-60 seconds for cluster consensus to establish after the final node joins, then retry the command. |
 ### Configure the Cluster VIP
 
@@ -352,45 +352,23 @@ Monitor: Configuration column — each host progresses from "In Progress" → "S
 ```bash
 # From NSX Manager CLI
 nsxcli
-get transport-nodes
-get transport-node-status
-# All hosts: state = UP
+get transport-nodes status
+# All hosts: status UP
 
-# Verify TEP IP assignment
-get logical-switch port
+# On each ESXi host (nsxcli): status of logical switch ports on this host
+get logical-switch-port status
 ```
 
-
 ```text title="Expected output"
-NSX CLI (build 17.0.1.0.0.17964471)
-Connected to NSX Manager 192.168.1.10
-
-nsxcli> get transport-nodes
-Transport Node ID                          Host Name              IP Address       State
-tn-esx01-uuid-a1b2c3d4                     esx01.lab.local        10.0.1.51        UP
-tn-esx02-uuid-e5f6g7h8                     esx02.lab.local        10.0.1.52        UP
-tn-esx03-uuid-i9j0k1l2                     esx03.lab.local        10.0.1.53        UP
-
-nsxcli> get transport-node-status
-Transport Node ID                          State    TEP IP           Tunnel Status
-tn-esx01-uuid-a1b2c3d4                     UP       172.16.10.101    UP
-tn-esx02-uuid-e5f6g7h8                     UP       172.16.10.102    UP
-tn-esx03-uuid-i9j0k1l2                     UP       172.16.10.103    UP
-
-nsxcli> get logical-switch port
-Logical Switch                             Port ID              MAC Address          TEP IP
-ls-prod-web                                lsp-uuid-001         00:50:56:a1:2b:3c    172.16.10.101
-ls-prod-web                                lsp-uuid-002         00:50:56:a1:4d:5e    172.16.10.102
-ls-prod-db                                 lsp-uuid-003         00:50:56:a1:6f:7g    172.16.10.103
-ls-mgmt                                    lsp-uuid-004         00:50:56:a1:8h:9i    172.16.10.101
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unable to connect to NSX Manager` | Verify NSX Manager IP/hostname is reachable and nsxcli is configured with correct credentials via `set api-server` command. |
+    | `Error: Unable to connect to NSX Manager` | Verify NSX Manager IP/hostname is reachable and the credentials are correct. |
     | `Transport Node State: DOWN` | Check host connectivity to NSX Manager, verify vxlan kernel module is loaded with `vmkload_mod -l | grep vxlan`, and confirm TEP network is routable. |
-    | `No logical-switch port entries returned` | Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch. |
+    | No logical switch ports listed | Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch. |
 ### TEP-to-TEP Connectivity Test
 
 ```bash
@@ -471,28 +449,14 @@ Transport configuration:
 Repeat for edge-node-02 on a different host.
 
 ```bash
-# Verify Edge transport node status
+# Verify Edge transport node status (NSX Manager CLI)
 nsxcli
-get transport-nodes | grep edge
-# Both Edge nodes: state = UP
+get transport-nodes status
+# Both Edge nodes: status UP
 ```
 
-
 ```text title="Expected output"
-NSX CLI (Build 20.0.3.1)
-Connected to: nsx-manager-01.lab.local (192.168.1.50)
-
-transport-node-0 (edge-01.lab.local):
-  state: UP
-  status: READY
-  host-switch-mode: VDS
-  
-transport-node-1 (edge-02.lab.local):
-  state: UP
-  status: READY
-  host-switch-mode: VDS
-
-2 edge transport nodes found, all UP
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
@@ -770,7 +734,7 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
 |---|---|---|
 | NSX Manager cluster | `get cluster status` | STABLE — 3 members |
 | vCenter compute manager | System → Fabric → Compute Managers | Status: Registered |
-| All transport nodes UP | `get transport-node-status` | All hosts: UP |
+| All transport nodes UP | `get transport-nodes status` | All hosts: UP |
 | TEP connectivity | `vmkping -I vmk10 -d -s 1500 <peer-TEP>` | 0% loss |
 | Edge cluster health | `get edge-cluster status` | Active/Standby confirmed |
 | BGP sessions | `get bgp neighbor summary` (Edge CLI) | All peers: Established |

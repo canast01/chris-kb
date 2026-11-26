@@ -11,7 +11,7 @@ description: "Authentication reference covering Create a Break-Glass Local Accou
 <div class="kb-summary">
 Authentication reference covering Create a Break-Glass Local Account, Password Policy, Active Directory Integration, Authentication Hardening, Login Banner and 2 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Authentication](../../../../../assets/virtualization-vmware-esxi-security-authentication.svg)
 
@@ -72,7 +72,7 @@ uid=105 gid=105 homedir=/home/testuser shell=/bin/sh username=testuser
     | Error | Fix |
     |---|---|
     | `Error: Unknown option or malformed command` | Verify the username exists by running `esxcli system account list` first and use the exact username spelling. |
-    | `Error: Account is in use` | Stop any active sessions or services using the account before removal, or use `esxcli system account remove -i <username> -f` to force removal. |
+    | `Error: Account is in use` | Stop any active sessions or services using the account before removal, then run `esxcli system account remove -i <username>` (the command has no force option). |
 ---
 
 ## Before you begin
@@ -101,7 +101,7 @@ Configure via advanced settings:
 
 ```bash
 # View current password quality settings
-esxcli system settings advanced get -o /Security/PasswordQualityControl
+esxcli system settings advanced list -o /Security/PasswordQualityControl
 
 # Set password complexity requirements
 esxcli system settings advanced set \
@@ -115,15 +115,9 @@ esxcli system settings advanced set -o /Security/AccountUnlockTime -i 900
 
 
 ```text title="Expected output"
-Path: /Security/PasswordQualityControl
-   Type: string
-   Int Value: N/A
-   Default Value: similar=deny retry=3 min=disabled,disabled,disabled,7,7
-   Configured Value: similar=deny retry=3 min=disabled,disabled,disabled,7,7
-   Locked: false
-(no output — command completes silently)
-(no output — command completes silently)
-(no output — command completes silently)
+The set commands return no output on success. The list output shows the option's
+current and default values; exact fields vary by host and release. See
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_system.html
 ```
 
 !!! warning "Common errors"
@@ -141,36 +135,8 @@ Or via Host Profile: **Policies and Profiles → Host Profile → Security → S
 
 > **Note**: Joining ESXi directly to AD is supported but not the recommended pattern for most environments. The preferred approach is to use vCenter as the AD identity broker and maintain lockdown mode on hosts. Only join ESXi hosts to AD if there is a specific operational requirement.
 
-```bash
-# Via ESXi Shell (or ESXCLI from vCenter)
-esxcfg-auth --enablead --addomain=corp.local --addc=dc01.example.local
+There is no ESXCLI command for joining a domain. Join the host from the vSphere Client (or Host Profiles / vSphere Authentication Proxy); see the vSphere Security guide: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-security-8-0.html
 
-# Or via ESXCLI
-esxcli system module parameters set -m lsass -p "ad_domain=corp.local ad_server=dc01.example.local"
-
-# Verify join status
-esxcli system module parameters get -m lsass
-```
-
-
-```text title="Expected output"
-Joining domain corp.local...
-Domain join completed successfully.
-   Domain: corp.local
-   Domain Controller: dc01.example.local
-   Status: Joined
-
-   lsass.ad_domain = corp.local
-   lsass.ad_server = dc01.example.local
-   lsass.ad_enabled = true
-```
-
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `Domain join failed: Unable to contact domain controller dc01.example.local` | Verify network connectivity to the DC and ensure the hostname/IP is resolvable from the ESXi host. |
-    | `esxcli: error: Unknown module lsass` | The lsass module may not be loaded; use `esxcli system module list` to confirm it exists, or use `esxcfg-auth` instead which handles module dependencies automatically. |
-    | `Permission denied` | Ensure you are running commands as root or with appropriate ESXi administrative privileges via SSH or the DCUI. |
 Via vSphere Client: **Host → Configure → System → Authentication Services → Change**
 
 After joining, AD users can be assigned roles in vCenter on this host. AD group `ESX Admins` is automatically granted administrator access — rename or disable this group if it exists in AD but should not have host access.
@@ -326,16 +292,14 @@ esxcli system settings advanced set \
   -s "AUTHORISED USERS ONLY. This system is monitored. Unauthorised access is prohibited."
 
 # Verify
-esxcli system settings advanced get -o /Config/Etc/issue
+esxcli system settings advanced list -o /Config/Etc/issue
 ```
 
 
 ```text title="Expected output"
-(no output — command completes silently)
-   Path: /Config/Etc/issue
-   Type: string
-   Int Value: 0
-   Value: AUTHORISED USERS ONLY. This system is monitored. Unauthorised access is prohibited.
+The set command returns no output on success. The list output shows the option's
+current string value; exact fields vary by host and release. See
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_system.html
 ```
 
 !!! warning "Common errors"
@@ -374,25 +338,9 @@ grep "dcui\|DCUI\|login" /var/log/vobd.log | tail -20
 
 
 ```text title="Expected output"
-2024-01-15T09:23:14Z root: Authentication failure for user admin from 192.168.1.45
-2024-01-15T09:24:02Z root: Invalid password attempt for root
-2024-01-15T09:25:18Z root: Failed login attempt - user 'testuser' from 10.0.0.88
-2024-01-15T10:12:45Z root: Authentication failure for user dcui from 192.168.1.50
-2024-01-15T10:15:33Z root: Failed SSH key validation for user backup
-2024-01-15T11:02:19Z root: Invalid credentials - LDAP bind failure
-2024-01-15T11:45:22Z root: Authentication failure for user admin from 192.168.1.45
-/bin/vim-cmd vimsvc/license --show
-/bin/esxcli system settings advanced list -o /Net/GuestIPHack
-/bin/esxcli storage filesystem list
-/bin/vim-cmd hostsvc/maintenance_mode_enter
-/bin/esxcli network ip interface list
-/bin/esxcli system module list
-/bin/vim-cmd vimsvc/content/licenseManager queryLicenseSourceEdition
-2024-01-15T09:10:22Z dcui[2847]: DCUI login attempt from console
-2024-01-15T09:12:05Z dcui[2851]: DCUI session established for user root
-2024-01-15T10:33:18Z login[3124]: Login attempt on tty1 - user root
-2024-01-15T10:33:45Z dcui[3128]: DCUI logout - session duration 45 seconds
-2024-01-15T11:22:09Z login[3456]: Login attempt on tty2 - user admin
+Output varies by host (log contents). See the ESXi log file locations in the vSphere
+Monitoring and Performance / vSphere Security documentation:
+https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-security-8-0.html
 ```
 
 !!! warning "Common errors"

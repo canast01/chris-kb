@@ -12,7 +12,7 @@ description: "Catalog of known vCenter / VCSA bugs, error codes, and workarounds
 <div class="kb-summary">
 Catalog of known vCenter / VCSA bugs, error codes, and workarounds. Each entry includes the affected version range, cause, and resolution or workaround status.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Known Issues and Error Codes](../../../../../assets/virtualization-vmware-vcenter-troubleshooting-known-issues.svg)
 
@@ -59,7 +59,7 @@ disk_space -> resolution
 | `Cannot connect to vCenter — certificate expired` | vSphere 6.7–8.0 | STS signing certificate expires after 2 years | Run `fixsts.sh` script (KB 76719) or manually reissue STS cert | Requires manual intervention — not patched automatically |
 | `Error 503 — Service Unavailable` on vSphere Client login | vSphere 7.x | SSO token service down or Lookup Service unresponsive | Restart `vmware-stsd` and `vmware-rhttpproxy` via `service-control` | Varies by build |
 | `Token validation failed` after AD domain password change | vSphere 7.x / 8.x | vCenter service account password expired in AD | Update AD account password in vCenter Identity Sources | N/A |
-| PSC replication failure after network partition | External PSC deployments (6.7) | Topology split causing PSC sync lag | Run `dir-cli replication status`; force resync or converge to embedded PSC | 7.0 (embedded PSC mandatory) |
+| PSC replication failure after network partition | External PSC deployments (6.7) | Topology split causing PSC sync lag | Check partner status with `/usr/lib/vmware-vmdir/bin/vdcrepadmin -f showpartnerstatus -h localhost -u administrator` ([KB 410816](https://knowledge.broadcom.com/external/article/410816/error-cannot-see-replication-partner-whe.html)); force resync or converge to embedded PSC | 7.0 (embedded PSC mandatory) |
 
 ## Certificate Management
 

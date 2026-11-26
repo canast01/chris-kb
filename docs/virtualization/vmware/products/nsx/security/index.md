@@ -11,7 +11,7 @@ description: "Security reference for VMware NSX. Covers NSX Manager authenticati
 <div class="kb-summary">
 Security reference for VMware NSX. Covers NSX Manager authentication, role-based access control, data-in-transit encryption, certificate management, and DFW hardening baselines.
 
-*Applies to: NSX-T 3.x / NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 
 <div class="kb-grid kb-grid-3">

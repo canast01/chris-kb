@@ -11,7 +11,7 @@ description: "Design Standards reference covering BIOS / UEFI Baseline, VMkernel
 <div class="kb-summary">
 Design Standards reference covering BIOS / UEFI Baseline, VMkernel Adapter Layout, NTP Configuration, VIB Acceptance Levels, Storage Path Configuration and 3 more sections.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Design Standards](../../../../../assets/virtualization-vmware-esxi-architecture-design-standards.svg)
 
@@ -26,7 +26,7 @@ All ESXi hosts must synchronise to the same NTP sources as vCenter. Clock skew >
 ```bash
 # Check NTP status
 esxcli system time get
-esxcli network ntp get
+esxcli system ntp get
 
 # Set NTP servers
 esxcli system ntp set --server=ntp1.example.com --server=ntp2.example.com --enabled=true
@@ -34,18 +34,15 @@ esxcli system ntp set --server=ntp1.example.com --server=ntp2.example.com --enab
 
 
 ```text title="Expected output"
-2024-11-15T14:32:47.123456Z
-Enabled: true
-Servers: ntp1.example.com, ntp2.example.com
-Poll Interval: 1024
-
-(no output — command completes silently)
+Output varies by host (current time; NTP enabled state and servers). The set command
+returns no output on success. See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_system.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Unknown option --server` | Use `--servers` (plural) instead: `esxcli system ntp set --servers=ntp1.example.com,ntp2.example.com --enabled=true` |
+    | `Error: Unknown option` | The documented options are `--server` / `-s` (one or more NTP servers) and `--enabled` / `-e`; check spelling against `esxcli system ntp set --help`. |
     | `Error: Name or service not known` | Verify NTP server hostnames are resolvable by running `esxcli network ip dns server list` and confirm DNS is configured on the ESXi host. |
 ---
 

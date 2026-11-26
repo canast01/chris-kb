@@ -11,7 +11,7 @@ description: "Hardening reference covering TLS Configuration, SSO Password and L
 <div class="kb-summary">
 Hardening reference covering TLS Configuration, SSO Password and Lockout Policy, ESXi Host Lockdown Mode, Firewall Hardening, Audit Logging Configuration and 3 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter Security — Hardening](../../../../../assets/virtualization-vmware-vcenter-security-hardening.svg)
 
@@ -31,41 +31,25 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 vCenter 7.0+ enforces TLS 1.2 minimum. Verify after upgrading from older vSphere versions:
 
 ```bash
-# Check current TLS configuration
-/usr/lib/vmware-vmafd/bin/vmafd-cli get-tls-endpoint --server-name localhost
+# TLS Reconfiguration Utility (KB 313841) — not bundled with vCenter; download and install it first.
+# vCenter 7.0 / 8.0 install path:
+cd /usr/lib/vmware-TlsReconfigurator/VcTlsReconfigurator
 
-# Use tls-reconfigurator if older TLS versions are detected
-/usr/lib/vmware-tls-reconfigurator/VcTlsReconfigurator/reconfigureVc scan
-/usr/lib/vmware-tls-reconfigurator/VcTlsReconfigurator/reconfigureVc update --tlsVersion TLSv1.2
+# Back up the current configuration, then allow TLS 1.2 only
+./reconfigureVc backup
+./reconfigureVc update -p TLSv1.2
 ```
 
 
 ```text title="Expected output"
-Endpoint: localhost
-Protocol: TLSv1.2
-Cipher Suite: ECDHE-RSA-AES256-GCM-SHA384
-Certificate: CN=localhost,OU=VMware,O=VMware Inc.,C=US
-Issuer: CN=VMware Root CA,OU=VMware,O=VMware Inc.,C=US
-Valid From: 2023-11-15T08:22:14Z
-Valid Until: 2026-11-14T08:22:14Z
-
-Scanning TLS configuration on vCenter Server 7.0.3...
-Current TLS Version: TLSv1.0
-Deprecated Protocols Detected: SSLv3, TLSv1.0, TLSv1.1
-Recommendation: Update to TLSv1.2 or higher
-
-Updating TLS configuration to TLSv1.2...
-Stopping services...
-Reconfiguring endpoints...
-Starting services...
-TLS reconfiguration completed successfully.
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/313841/managing-tls-protocol-configuration-for.html (order of operations: vSphere Update Manager, vCenter Server, ESXi hosts; destroy/disable vCenter HA before running the utility).
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `vmafd-cli: command not found` | Verify vmafd service is running with `systemctl status vmware-vmafd` and check the correct binary path. |
-    | `ERROR: Failed to update TLS version: Service dependency error` | Restart all vCenter services with `/etc/init.d/vmware-vpxd restart` before retrying the TLS update. |
+    | `cd: /usr/lib/vmware-TlsReconfigurator/VcTlsReconfigurator: No such file or directory` | The utility is not shipped with vCenter — download and install it as described in KB 313841. |
+    | `ERROR: Failed to update TLS version: Service dependency error` | Stop and start all services with `service-control --stop --all && service-control --start --all` (KB 344633) before retrying. |
     | `ERROR: Certificate validation failed during reconfiguration` | Regenerate the vCenter certificate using the Certificate Manager tool before applying TLS changes. |
 Test TLS from outside the appliance:
 ```bash

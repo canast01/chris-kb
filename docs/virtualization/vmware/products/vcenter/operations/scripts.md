@@ -11,7 +11,7 @@ description: "Scripts reference covering VM Health and Inventory Report (PowerSh
 <div class="kb-summary">
 Scripts reference covering VM Health and Inventory Report (PowerShell / PowerCLI), Cluster Capacity Report (PowerShell / PowerCLI), Daily Check Script (PowerShell/PowerCLI), Change Pre-Check Script (PowerShell/PowerCLI), Incident Triage Script (PowerShell/PowerCLI).
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Scripts](../../../../../assets/virtualization-vmware-vcenter-operations-scripts.svg)
 

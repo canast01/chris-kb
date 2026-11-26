@@ -11,7 +11,7 @@ description: "Design Standards reference covering Cluster Configuration, Stretch
 <div class="kb-summary">
 Design Standards reference covering Cluster Configuration, Stretched Cluster Architecture, Storage Policy Baseline, Naming Conventions, Capacity Management.
 
-*Applies to: vSAN 7.x · 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Design Standards](../../../../../assets/virtualization-vmware-vsan-architecture-design-standards.svg)
 
@@ -273,7 +273,7 @@ prod-vsan-cluster-01   18240               24576               10250        1399
     |---|---|
     | `Could not connect to the vSAN cluster` | Verify the ESXi host is part of a vSAN cluster and network connectivity exists to cluster members. |
     | `Get-VsanSpaceUsage : The term 'Get-VsanSpaceUsage' is not recognized` | Import the VMware.VimAutomation.Vsan module using `Import-Module VMware.VimAutomation.Vsan` before running PowerCLI commands. |
-Capacity monitoring should also be configured in Aria Operations with an alert policy targeting the 70% threshold.
+Capacity monitoring should also be configured in VCF Operations (formerly Aria Operations) with an alert policy targeting the 70% threshold.
 
 ---
 

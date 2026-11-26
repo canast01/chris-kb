@@ -11,7 +11,7 @@ description: "CLI Reference (PowerCLI & DCLI) reference covering Hosts, Clusters
 <div class="kb-summary">
 CLI Reference (PowerCLI & DCLI) reference covering Hosts, Clusters, Virtual Machines, Snapshots, Datastores and 3 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — CLI Reference (PowerCLI & DCLI)](../../../../../assets/virtualization-vmware-vcenter-operations-cli-reference.svg)
 
@@ -189,10 +189,10 @@ Get-VIPermission | Where-Object { $_.Role -eq "Admin" } |
 ## vCenter Appliance (SSH)
 
 ```bash
-# Service management
-service-control --status
+# Service management (KB 344633)
+service-control --status --all
 service-control --start --all
-service-control --stop vpxd
+service-control --stop vmware-vpxd
 
 # Disk usage
 df -h
@@ -213,68 +213,16 @@ tail -f /var/log/vmware/vmdird/vmdird-syslog.log
 
 
 ```text title="Expected output"
-SERVICE STATUS
-vpxd                                    running
-vmdird                                  running
-vmafdd                                  running
-vsan-health                             running
-vsphere-ui                              running
-pschealth                               running
-
-SERVICE START
-Starting vpxd...
-Starting vmdird...
-Starting vmafdd...
-Starting vsan-health...
-Starting vsphere-ui...
-All services started successfully.
-
-STOP vpxd
-Stopping vpxd...
-vpxd stopped successfully.
-
-DISK USAGE
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/sda1       500G  287G  213G  58% /
-/dev/sda2       100G   45G   55G  45% /storage
-tmpfs            32G     0   32G   0% /dev/shm
-
-LOG DIRECTORY
-vpxd.log  vpxd-ui.log  vpxd-profiler.log  vpxd-stats.log
-
-VPXD LOG (last 10 lines)
-2024-01-15T09:42:17.123Z [vpxd 7654] [Originator@6876 sub=Default opID=52e4c8f9] [INFO] vCenter Server initialization complete
-2024-01-15T09:42:18.456Z [vpxd 7654] [Originator@6876 sub=Hostd opID=52e4c8fa] [INFO] Connected to host esx-01.lab.local
-
-VMDIRD LOG (last 5 lines)
-2024-01-15T09:41:55.789Z [vmdird] [INFO] Directory server started on port 389
-2024-01-15T09:42:01.234Z [vmdird] [INFO] Replication cycle completed
-
-DOMAIN NAME
-vsphere.local
-
-LS LOCATION
-cn=default-first-site,cn=Sites,cn=Configuration,dc=vsphere,dc=local
-
-CERTIFICATE STORES
-MACHINE_SSL_CERT
-TRUSTED_ROOTS
-TRUSTED_ROOT_CRLS
-CRL
-TRUSTED_MGMT_CA
-
-MACHINE_SSL_CERT ENTRIES
-Alias                          NotBefore           NotAfter            Issuer
-machine-ssl                    Jan 10 2023         Jan 10 2026         CN=CA,DC=vsphere,DC=local
-machine-ssl-old                Jan 10 2022         Jan 10 2025         CN=CA,DC=vsphere,DC=local
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://knowledge.broadcom.com/external/article/318946/using-vsphere-certificate-manager-to-rep.html (vmafd-cli / vecs-cli usage).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `service-control: command not found` | Verify the vCenter Server is fully installed and /usr/lib/vmware-vmafd/bin is in PATH, or use full path `/usr/lib/vmware-vmafd/bin/service-control`. |
-    | `tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory` | Ensure vpxd service is running with `service-control --start vpxd` and the log directory exists. |
-    | `Error: Cannot connect to server localhost` | Verify vmdird and vmafdd services are running with `service-control --status` and check network connectivity to localhost. |
+    | `service-control: command not found` | Run it on the VCSA as root from the Bash shell (KB 344633). |
+    | `tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory` | Ensure vpxd is running with `service-control --start vmware-vpxd` and the log directory exists. |
+    | `Error: Cannot connect to server localhost` | Verify vmdird and vmafdd services are running with `service-control --status vmdird` / `service-control --status vmafdd` and check network connectivity to localhost. |
 ---
 
 ## See also

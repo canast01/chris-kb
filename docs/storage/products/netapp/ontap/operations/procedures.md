@@ -9,7 +9,7 @@ description: "ONTAP day-2 procedures — change readiness, rolling node upgrades
 <div class="kb-summary">
 ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and LUN provisioning, SVM management, snapshot and SnapMirror operations, capacity management, and incident triage.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 ## Before you begin
@@ -63,9 +63,9 @@ volSMB -> smbShare
 - [ ] HA failover is operational on both nodes (`storage failover show` shows `true` for takeover-enabled)
 - [ ] SnapMirror lag is within RPO on all critical relationships before quiescing
 - [ ] No active volume move or aggregate rebalance jobs: `volume move show` and `storage aggregate relocation show`
-- [ ] AutoSupport is working — send a start-of-maintenance message: `autosupport invoke -node * -type all -message "Starting maintenance"`
+- [ ] AutoSupport is working — send a start-of-maintenance message: `system node autosupport invoke -node * -type all -message "Starting maintenance"`
 - [ ] No open disk rebuild operations: `storage disk show -broken` is clean
-- [ ] Snapshots taken of affected volumes before change: `snapshot create -volume <vol> -snapshot pre-change`
+- [ ] Snapshots taken of affected volumes before change: `volume snapshot create -vserver <svm> -volume <vol> -snapshot pre-change`
 
 | Item | Status | Notes |
 |---|---|---|
@@ -83,7 +83,7 @@ sequenceDiagram
     participant Node1 as Node 1 (non-epsilon)
     participant Node2 as Node 2 (HA partner)
 
-    Admin->>Admin: autosupport invoke — start maintenance
+    Admin->>Admin: system node autosupport invoke — start maintenance
     Admin->>Admin: snapmirror quiesce all relationships
     Admin->>Node2: storage failover takeover -ofnode node1
     Node2-->>Admin: takeover complete — node1 aggregates on node2
@@ -98,19 +98,19 @@ sequenceDiagram
     Node2-->>Admin: node2 back online
     Admin->>Node1: storage failover giveback -ofnode node2
     Admin->>Admin: snapmirror resume all relationships
-    Admin->>Admin: autosupport invoke — end maintenance
+    Admin->>Admin: system node autosupport invoke — end maintenance
 ```
 
 ## Maintenance Window
 
-1. Send AutoSupport start-of-maintenance: `autosupport invoke -node * -type all -message "Maintenance window starting"`
+1. Send AutoSupport start-of-maintenance: `system node autosupport invoke -node * -type all -message "Maintenance window starting"`
 2. Quiesce SnapMirror relationships on volumes involved in the change: `snapmirror quiesce -destination-path <svm:vol>`
 3. For rolling node upgrade — upgrade the non-epsilon node first; initiate takeover on the partner: `storage failover takeover -ofnode <node>`
 4. Monitor takeover completion: `storage failover show` should show `In Takeover` then the node comes back up
 5. Run `storage failover giveback -ofnode <node>` after the upgraded node is back online; confirm `Waiting for Giveback` transitions to normal
 6. Validate cluster health after each node: `cluster show`, `system health alert show`
 7. Resume SnapMirror relationships after all changes are complete: `snapmirror resume -destination-path <svm:vol>`
-8. Send AutoSupport close-of-maintenance: `autosupport invoke -node * -type all -message "Maintenance window complete"`
+8. Send AutoSupport close-of-maintenance: `system node autosupport invoke -node * -type all -message "Maintenance window complete"`
 
 ## Post-Change Validation
 
@@ -130,7 +130,7 @@ sequenceDiagram
 - [ ] Run `storage disk show -broken` — identify any disk failures driving the incident
 - [ ] Run `storage failover show` — check whether any HA takeover has occurred
 - [ ] Run `snapmirror show -fields lag-time,healthy` — check if replication is healthy or contributing to the symptom
-- [ ] Check specific protocol: `network interface show`, `iscsi session show`, or `fcp show initiator`
+- [ ] Check specific protocol: `network interface show`, `vserver iscsi session show`, or `vserver fcp initiator show`
 - [ ] Review recent EMS events for the affected node: `event log show -node <nodename> -severity error`
 
 | Question | Answer |
@@ -186,7 +186,7 @@ svm-nfs-01  data       running  up
 
 ```bash
 # Confirm all SVMs are running
-vserver show -state !running
+vserver show -operational-state !running
 
 # Check SVM root volume health
 volume show -vserver <svm_name> -volume <svm_name>_root
@@ -251,7 +251,7 @@ network interface create \
     -data-protocol nfs,cifs
 
 # Migrate a LIF to a different port
-network interface migrate -vserver <svm_name> -lif <lif_name> -dest-node <node> -dest-port <port>
+network interface migrate -vserver <svm_name> -lif <lif_name> -destination-node <node> -destination-port <port>
 ```
 
 
@@ -272,7 +272,7 @@ prod-svm         iscsi_lif_01   192.168.1.60    up       node2/e0e         node2
     | Error | Fix |
     |---|---|
     | `Error: command failed: The specified home-port "e0c" does not exist on node "node1".` | Verify the port exists on the target node using `network port show -node <node_name>`. |
-    | `Error: command failed: Cannot migrate LIF "nfs_lif_01" because it is currently hosting an active connection.` | Migrate during a maintenance window or use `network interface migrate -force-administrative-vlan true` if necessary. |
+    | `Error: command failed: Cannot migrate LIF "nfs_lif_01" because it is currently hosting an active connection.` | Migrate during a maintenance window; see the [network interface migrate reference](https://docs.netapp.com/us-en/ontap-cli/network-interface-migrate.html) for the `-force` option. |
 ### DNS Configuration per SVM
 
 ![DNS Configuration per SVM](../../../../../assets/ontap-proc-dns-configuration-per-svm.svg)
@@ -692,13 +692,13 @@ ONTAP supports NFS, SMB/CIFS, iSCSI, FCP (Fibre Channel), and NVMe over Fabrics.
 
 ```bash
 # Check NFS service status per SVM
-nfs show -vserver <svm_name>
+vserver nfs show -vserver <svm_name>
 
 # List NFS exports
-vserver nfs export-policy rule show -vserver <svm_name>
+vserver export-policy rule show -vserver <svm_name>
 
 # Show NFS clients connected
-nfs connected-client show -vserver <svm_name>
+vserver nfs connected-clients show -vserver <svm_name>
 ```
 
 
@@ -727,31 +727,28 @@ RO Rule: sys
 RW Rule: sys
 Superuser Security: none
 
-Vserver: prod-svm-01
-Client IP: 10.42.10.45
-Protocol: nfs3
-Access Time: 2024-01-15 14:32:18 +00:00
-Idle Time: 45 seconds
+vserver nfs connected-clients show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-nfs-connected-clients-show.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: "prod-svm-01" is not a valid vserver name` | Verify the SVM name exists with `vserver show` and use the exact name from the Vserver column. |
-    | `Error: command not found: nfs` | Ensure you are connected to the ONTAP cluster CLI (not the node shell); use `system node run -node <nodename> -command "nfs show"` if needed. |
+    | `Error: command not found: nfs` | Ensure you are connected to the ONTAP cluster CLI (not the node shell) and use the full path `vserver nfs show -vserver <svm_name>`. |
 ### SMB/CIFS
 
 ![SMB/CIFS](../../../../../assets/ontap-proc-smb-cifs.svg)
 
 ```bash
 # Check CIFS server status
-cifs show -vserver <svm_name>
+vserver cifs show -vserver <svm_name>
 
 # List CIFS shares
 vserver cifs share show -vserver <svm_name>
 
 # Show active CIFS sessions
-cifs session show -vserver <svm_name>
+vserver cifs session show -vserver <svm_name>
 ```
 
 
@@ -783,23 +780,23 @@ cluster-01      prod-svm-01     3               192.168.1.89    CORP\agarcia    
     |---|---|
     | `Error: "prod-svm-01" is not a valid vserver name` | Verify the SVM name with `vserver show` and ensure you have cluster admin privileges. |
     | `Error: CIFS server is not running on Vserver "prod-svm-01"` | Start the CIFS server with `vserver cifs start -vserver <svm_name>` before querying sessions. |
-    | `Error: command not found: cifs` | Use the full command path `vserver cifs show -vserver <svm_name>` instead of the shorthand `cifs show`. |
+    | `Error: command not found: cifs` | Use the full command path `vserver cifs show -vserver <svm_name>`; CIFS commands live under the `vserver cifs` directory. |
 ### iSCSI
 
 ![iSCSI](../../../../../assets/ontap-proc-iscsi.svg)
 
 ```bash
 # Check iSCSI service status
-iscsi show -vserver <svm_name>
+vserver iscsi show -vserver <svm_name>
 
 # List iSCSI LIFs
 network interface show -vserver <svm_name> -data-protocol iscsi
 
 # Show connected iSCSI initiators
-iscsi initiator show -vserver <svm_name>
+vserver iscsi initiator show -vserver <svm_name>
 
-# Show iSCSI target portal groups
-iscsi tpgroup show -vserver <svm_name>
+# Show iSCSI LIFs with their target portal groups (TPGroup column)
+vserver iscsi interface show -vserver <svm_name>
 ```
 
 
@@ -821,10 +818,8 @@ svm-prod-01  iqn.1991-05.com.example:host-db-01.local         CHAP
 svm-prod-01  iqn.1991-05.com.example:host-db-02.local         CHAP
 svm-prod-01  iqn.1991-05.com.example:host-app-03.local        none
 
-Vserver      Target Name                                       TPGT  Portals
------------  ------------------------------------------------  ----  -------
-svm-prod-01  iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr...    1     10.20.30.41:3260
-svm-prod-01  iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr...    1     10.20.30.42:3260
+vserver iscsi interface show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-iscsi-interface-show.html
 ```
 
 !!! warning "Common errors"
@@ -838,13 +833,13 @@ svm-prod-01  iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr...    1     10.20.30.42:
 
 ```bash
 # Check FCP service status
-fcp show -vserver <svm_name>
+vserver fcp show -vserver <svm_name>
 
 # List FCP LIFs (FC target ports)
 network interface show -vserver <svm_name> -data-protocol fcp
 
 # Show connected FC initiators
-fcp initiator show -vserver <svm_name>
+vserver fcp initiator show -vserver <svm_name>
 
 # Show FC target adapter status
 system node hardware unified-connect show
@@ -880,7 +875,7 @@ cluster-02      0b      2       enabled 16Gb   target
     |---|---|
     | `Error: "prod-svm" is not a valid Vserver name` | Verify the SVM name exists with `vserver show` and use the correct name in the command. |
     | `Error: FCP service is not enabled on Vserver "prod-svm"` | Enable FCP on the SVM using `vserver fcp create -vserver <svm_name>`. |
-    | `Error: No FC target adapters found` | Confirm FC adapters are installed and licensed with `system license show` and `storage port show -type FC`. |
+    | `Error: No FC target adapters found` | Confirm FC adapters are installed and licensed with `system license show` and `network fcp adapter show`. |
 ### Protocol on LIF Verification
 
 ![Protocol on LIF Verification](../../../../../assets/ontap-proc-protocol-on-lif-verification.svg)
@@ -906,7 +901,6 @@ svm-analytics data_lif_06      172.16.5.100     nfs
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: unknown field "data-protocol"` | Use `network interface show -fields protocols` instead, as `data-protocol` is not a valid ONTAP field name. |
     | `Error: command not found` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI; this command runs only in cluster or admin SVM context. |
 ### Enable/Disable a Protocol on an SVM
 
@@ -916,11 +910,11 @@ svm-analytics data_lif_06      172.16.5.100     nfs
 # Enable NFS
 vserver nfs create -vserver <svm_name> -v3 enabled -v4.1 enabled
 
-# Enable CIFS (requires AD join)
-cifs setup -vserver <svm_name>
+# Enable CIFS (creates the CIFS server and joins it to AD)
+vserver cifs create -vserver <svm_name> -cifs-server <netbios_name> -domain <ad_domain_fqdn>
 
 # Enable iSCSI
-iscsi create -vserver <svm_name>
+vserver iscsi create -vserver <svm_name>
 ```
 
 
@@ -928,20 +922,17 @@ iscsi create -vserver <svm_name>
 vserver nfs create -vserver prod_svm -v3 enabled -v4.1 enabled
 (no output — command completes silently)
 
-cifs setup -vserver prod_svm
-This command will create a CIFS server and join it to the domain.
-Enter the username to authenticate with Active Directory: admin
-Enter the password: 
-CIFS server "PROD_SVM01" created successfully and joined to domain "corp.example.com"
+vserver cifs create: prompts for AD credentials; output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-create.html
 
-iscsi create -vserver prod_svm
+vserver iscsi create -vserver prod_svm
 (no output — command completes silently)
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: command failed: CIFS setup requires Active Directory domain to be configured` | Configure DNS and domain settings on the SVM with `dns create` and `active-directory create` before running CIFS setup. |
+    | CIFS server cannot join the domain | Configure DNS on the SVM with `vserver services name-service dns create` so the AD domain resolves, then rerun `vserver cifs create`. |
     | `Error: command failed: iSCSI cannot be created on a vserver with no data aggregates` | Assign at least one data aggregate to the SVM using `vserver modify -vserver <svm_name> -aggr-list <aggr_name>`. |
 ### Protocol Common Issues
 

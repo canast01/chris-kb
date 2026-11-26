@@ -11,7 +11,7 @@ description: "Recommended reading order for vCenter Server (VCSA). Follow these 
 <div class="kb-summary">
 Recommended reading order for vCenter Server (VCSA). Follow these stages in order to build a complete mental model before working with it in production.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 
 ```d2

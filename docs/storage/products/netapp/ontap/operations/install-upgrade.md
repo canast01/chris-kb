@@ -9,7 +9,7 @@ description: "Install & Upgrade reference covering ONTAP Version Matrix, Upgrade
 <div class="kb-summary">
 Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tracking, Refresh Planning.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Install & Upgrade](../../../../../assets/storage-netapp-ontap-operations-install-upgrade.svg)
 
@@ -24,30 +24,34 @@ Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tr
 
 ## ONTAP Version Matrix
 
-| Release | GA Date | Full Support End | Limited Support End | Notes |
-|---|---|---|---|---|
-| ONTAP 9.10.1 | Dec 2021 | Dec 2023 | Dec 2025 | P4 — limited support only |
-| ONTAP 9.11.1 | Jun 2022 | Jun 2024 | Jun 2026 | P4 — limited support only |
-| ONTAP 9.12.1 | Dec 2022 | Dec 2024 | Dec 2026 | P4 — approaching end |
-| ONTAP 9.13.1 | Jun 2023 | Jun 2025 | Jun 2027 | Active — full support |
-| ONTAP 9.14.1 | Dec 2023 | Dec 2025 | Dec 2027 | Active — recommended baseline |
-| ONTAP 9.15.1 | Jun 2024 | Jun 2026 | Jun 2028 | Active — current latest |
+| Release | Released | Notes |
+|---|---|---|
+| ONTAP 9.20.1 | November 2026 | Current release |
+| ONTAP 9.19.1 | July 2026 | Latest ONTAP CLI reference release |
+| ONTAP 9.18.1 | November 2025 | |
+| ONTAP 9.17.1 | September 2025 | |
+| ONTAP 9.16.1 | January 2025 | |
+| ONTAP 9.15.1 | July 2024 | |
+| ONTAP 9.14.1 | January 2024 | |
 
-Verify exact dates on the [NetApp Product Lifecycle page](https://mysupport.netapp.com/) before planning any upgrade.
+Release dates are from NetApp's [ONTAP 9 release support](https://docs.netapp.com/us-en/ontap/release-notes/release-support-reference.html) page. Support for each release moves from Full support to Limited support and then Self-service support: per that page, P-releases and vulnerability alerts are provided in years 1–3, technical support and software downloads in years 1–5, and online documentation in years 1–8. Releases before 9.10.1 are likely on Limited or Self-Service support. Verify the support level for your release on the [NetApp Support Site](https://mysupport.netapp.com/).
 
 ## Upgrade Paths
 
-ONTAP follows a major.minor.patch versioning model. Upgrade rules:
+Per NetApp's [supported ONTAP upgrade paths](https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html) page:
 
-- **Within the same minor release**: patch upgrades are always supported (e.g., 9.14.1 → 9.14.1P4)
-- **Adjacent minor releases**: direct upgrade supported (e.g., 9.13.1 → 9.14.1)
-- **Skipping minor releases**: generally not supported; must step through intermediate versions (e.g., 9.11.1 → 9.12.1 → 9.13.1)
-- **Automated Non-Disruptive Upgrade (ANDU)**: preferred method; orchestrated by ONTAP itself, upgrades one node at a time via takeover/giveback
-- Always check the [ONTAP Upgrade Advisor in BlueXP](https://bluexp.netapp.com) for the exact recommended path and any pre-upgrade blockers before beginning
+- **Direct**: you can always upgrade directly to the next adjacent release family; for many releases a single image can also go up to four releases later (e.g., 9.17.1 → 9.18.1, or 9.15.1 → 9.19.1)
+- **Direct multi-hop**: for some ANDU upgrades to non-adjacent releases you install the intermediate and the target image; ONTAP upgrades through the intermediate release automatically
+- **Multi-stage**: when no direct path exists, upgrade to a supported intermediate release first (e.g., 9.14.1 → 9.18.1, then 9.18.1 → 9.19.1)
+- **Automated Non-Disruptive Upgrade (ANDU)**: recommended whenever possible; upgrades one node at a time via takeover/giveback
+- Best practice: upgrade to the latest patch release of the running version before a major upgrade
+- Check hardware support in the NetApp Hardware Universe and the exact path on the [upgrade paths page](https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html) before beginning
 
 ```text
-9.10.1 → 9.11.1 → 9.12.1 → 9.13.1 → 9.14.1 → 9.15.1
-         (patch updates within each minor release are always allowed)
+Examples from the vendor page:
+9.17.1 → 9.18.1                   (direct, adjacent)
+9.15.1 → 9.19.1                   (direct, up to four releases later)
+9.14.1 → 9.18.1 → 9.19.1          (multi-stage)
 ```
 
 **Pre-upgrade checks:**

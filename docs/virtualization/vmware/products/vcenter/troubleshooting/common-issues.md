@@ -13,7 +13,7 @@ description: "Common Issues reference covering Issue Summary, vCenter Services N
 <div class="kb-summary">
 Common Issues reference covering Issue Summary, vCenter Services Not Starting, Certificate Errors, ESXi Host Disconnected or Not Responding, SSO / Authentication Failures and 5 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter Troubleshooting — Common Issues](../../../../../assets/virtualization-vmware-vcenter-troubleshooting-common-issues.svg)
 
@@ -52,10 +52,10 @@ vami_inaccessible_port_5480 -> resolution
 du -sh /var/log/vmware/*/
 find /var/log/vmware -name "*.gz" -mtime +30 -delete
 
-# Restart in dependency order: DB first, then vpxd
+# Start the database, then vCenter Server (service names per KB 344633)
 service-control --start vmware-vpostgres
-service-control --start vpxd
-service-control --status vpxd
+service-control --start vmware-vpxd
+service-control --status vmware-vpxd
 
 # If vpxd still fails, attempt a full restart of all services
 service-control --stop --all
@@ -64,30 +64,14 @@ service-control --start --all
 
 
 ```text title="Expected output"
-1.2G	/var/log/vmware/vpxd
-847M	/var/log/vmware/syslog
-523M	/var/log/vmware/vsan
-312M	/var/log/vmware/hostd
-156M	/var/log/vmware/netcpa
-Service vmware-vpostgres started successfully
-Service vpxd started successfully
-SERVICE                                    RUNNING  ENABLED
-vmware-vpostgres                           true     true
-vpxd                                       true     true
-Stopping all services...
-All services stopped successfully
-Starting all services...
-Service vmware-vpostgres started successfully
-Service vpxd started successfully
-Service vmware-netdumper started successfully
-Service vmware-vsan-health started successfully
-All services started successfully
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control usage and 7.x/8.x service names).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Service vpxd failed to start: timeout waiting for service to become available` | Increase the startup timeout by running `service-control --start vpxd --timeout 300` or check database connectivity with `service-control --status vmware-vpostgres`. |
+    | `vmware-vpxd` fails to start | Check database service state with `service-control --status vmware-vpostgres` and review `/var/log/vmware/vpxd/vpxd.log`. |
     | `find: '/var/log/vmware': Permission denied` | Run the commands with `sudo` or as root user since `/var/log/vmware` requires elevated privileges. |
     | `service-control: command not found` | Ensure you are running this on a vCenter Server appliance (VCSA) and not a Windows vCenter installation; use `systemctl` instead on Linux-based systems if service-control is unavailable. |
 **Log location:** `/var/log/vmware/vpxd/vpxd.log`
@@ -181,7 +165,7 @@ Not After: 2025-01-15T10:23:45.000Z
     | Error | Fix |
     |---|---|
     | `connect: Connection refused` | Verify the vCenter FQDN is correct and port 443 is accessible from your client (check firewall rules and network connectivity). |
-    | `error in x509 lookup routine:X509_LIB` | The openssl s_client connection succeeded but returned invalid certificate data; restart the vCenter SSL service with `service-control --restart vsphere-ui` on the VCSA. |
+    | `error in x509 lookup routine:X509_LIB` | The openssl s_client connection succeeded but returned invalid certificate data; restart the vSphere Client service on the VCSA with `service-control --stop vsphere-ui && service-control --start vsphere-ui` (KB 344633). |
     | `Error: Could not connect to localhost:2012` | Run the vecs-cli command directly on the VCSA via SSH, not from a remote client; VECS is a local service only. |
 ### Resolution — Renew Machine SSL (VMCA-signed)
 
@@ -340,7 +324,7 @@ Starting hostd: [  OK  ]
 ### Symptoms
 - Login to vSphere Client fails with "incorrect credentials" despite correct password
 - AD/LDAP users cannot authenticate; local SSO accounts still work (or vice versa)
-- `vmware-sts` service stopped
+- `vmware-stsd` (Security Token Service) stopped
 - Audit log shows repeated failed login attempts
 
 ### Diagnostic Steps
@@ -348,10 +332,9 @@ Starting hostd: [  OK  ]
 ```bash
 # Check SSO/STS service on VCSA
 service-control --status vmware-stsd
-service-control --status vmware-sts-idmd
 
-# Check SSO log for auth errors
-tail -100 /var/log/vmware/sso/vmware-sts-idmd.log | grep -i "error\|fail\|bind"
+# Check SSO log for auth errors (log names per KB 310254)
+tail -100 /var/log/vmware/sso/vmware-identity-sts.log | grep -i "error\|fail\|bind"
 
 # Check if the AD identity source is reachable from VCSA
 nslookup <ad-domain> <dns-server>
@@ -360,30 +343,9 @@ ldapsearch -x -H ldap://<dc-fqdn> -b "dc=domain,dc=com" "(objectClass=*)" -D "bi
 
 
 ```text title="Expected output"
-SERVICE vmware-stsd (pid 2847) is running.
-SERVICE vmware-sts-idmd (pid 2891) is running.
-
-2024-01-15T09:23:47.123Z [ERROR] Authentication failed for user admin@vsphere.local: LDAP bind timeout after 30s
-2024-01-15T09:24:12.456Z [WARN] Retrying LDAP connection to dc01.corp.local:389
-2024-01-15T09:25:03.789Z [ERROR] Failed to bind as CN=svc-vcsa,OU=Service Accounts,DC=corp,DC=com: Invalid credentials
-
-Server:  8.8.8.8
-Address:  8.8.8.8#53
-
-Name:    ad.corp.local
-Address:  192.168.1.50
-
-Enter LDAP Password:
-version: 3
-result: 0 Success
-matchedDN:
-numResponses: 1
-dn:
-objectClass: top
-objectClass: domain
-dc: corp
-...
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://knowledge.broadcom.com/external/article/310254/enabling-debug-logging-for-sso-and-authe.html (SSO log files).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
@@ -394,31 +356,28 @@ dc: corp
 ### Resolution
 
 ```bash
-# Restart SSO services if stsd is stopped
+# Start the Security Token Service if it is stopped (KB 344633)
 service-control --start vmware-stsd
-service-control --start vmware-sts-idmd
 
-# Unlock the administrator@vsphere.local account (if locked)
-/usr/lib/vmware-vmafd/bin/dir-cli user unlock --account administrator --password <current-admin-pwd>
+# administrator@vsphere.local locked (KB 326186): unlock it from the vSphere Client as another
+# SSO administrator (Administration > Single Sign-On > Users and Groups > Users > More > Unlock).
+# If no other SSO admin exists or the password is forgotten, reset it from the Bash shell:
+/usr/lib/vmware-vmdir/bin/vdcadmintool
+# Select option 3 (Reset account password), enter the UPN, then log in with the temporary password and change it
 ```
 
 
 ```text title="Expected output"
-Operation not cancellable. Waiting for service com.vmware.vim.sso to startup.
-Service com.vmware.vim.sso started successfully
-Operation not cancellable. Waiting for service com.vmware.sts.idm to startup.
-Service com.vmware.sts.idm started successfully
-Bind DN: cn=Administrator,cn=Users,dc=vsphere,dc=local
-User account 'administrator@vsphere.local' unlocked successfully
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/326186/resetting-forgotten-or-locked-vcenter-se.html (vdcadmintool prints a menu and a generated temporary password).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `service-control: command not found` | Ensure you are running this command on the vCenter Server appliance (VCSA) as root, not on a Windows vCenter installation. |
-    | `Error: Unable to connect to directory service on localhost:389` | Verify that vmware-vmafd service is running with `service-control --status vmware-vmafd` and restart it if needed. |
-    | `Error: Invalid credentials provided` | Replace `<current-admin-pwd>` with the actual administrator@vsphere.local password in plaintext or use an interactive prompt. |
-**Log location:** `/var/log/vmware/sso/vmware-sts-idmd.log`, `/var/log/vmware/sso/ssoAdminServer.log`
+    | `Error: Unable to connect to directory service on localhost:389` | Verify the directory and authentication services with `service-control --status vmdird` and `service-control --status vmafdd` (KB 344633) and start them if needed. |
+**Log location:** `/var/log/vmware/sso/vmware-identity-sts.log`, `/var/log/vmware/sso/ssoAdminServer.log` ([KB 310254](https://knowledge.broadcom.com/external/article/310254/enabling-debug-logging-for-sso-and-authe.html))
 
 ---
 

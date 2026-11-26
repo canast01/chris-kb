@@ -9,9 +9,9 @@ description: "This guide covers the end-to-end deployment of a NetApp ONTAP clus
 # ONTAP — Deploy
 
 <div class="kb-summary">
-This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from physical rack-and-stack through cluster initialisation, network configuration, storage provisioning, data protection setup, and final validation. It follows a seven-phase sequence designed for AFF and FAS HA pairs running ONTAP 9.12 or later, and assumes a greenfield installation against a prepared data-centre environment.
+This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from physical rack-and-stack through cluster initialisation, network configuration, storage provisioning, data protection setup, and final validation. It follows a seven-phase sequence designed for AFF and FAS HA pairs running ONTAP 9.18.1–9.20.1, and assumes a greenfield installation against a prepared data-centre environment.
 
-*Applies to: ONTAP 9.12+*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 ---
@@ -90,8 +90,8 @@ Each node has a Service Processor (SP) or Baseboard Management Controller (BMC) 
 # After initial network config, reach the SP via SSH:
 ssh admin@<SP-IP>
 
-# Check SP firmware version:
-sp show-firmware
+# Check SP firmware version (from the cluster shell):
+system service-processor image show -node <node>
 
 # Update SP firmware if required:
 system service-processor image update -node <node> -package <package-url>
@@ -133,7 +133,7 @@ If installing from a downloaded ONTAP image:
 # At the boot menu prompt, boot from the network image:
 Esc+5   → Boot menu
 Select option 7 (Install new software first)
-Enter the URL of the ONTAP image package: http://<http-server>/ontap-9.12.1-image.tgz
+Enter the URL of the ONTAP image package: http://<http-server>/<ontap-image-package>.tgz
 ```
 
 Allow the node to complete the installation and reboot automatically.
@@ -246,7 +246,7 @@ AutoSupport sends diagnostic data to NetApp support and feeds the Active IQ Digi
 
 ```text
 # Enable AutoSupport on all nodes with SMTP transport:
-autosupport modify -node * \
+system node autosupport modify -node * \
   -state enable \
   -transport smtp \
   -mail-hosts smtp.corp.example.com \
@@ -255,13 +255,13 @@ autosupport modify -node * \
   -support enable
 
 # Verify AutoSupport config:
-autosupport show -node *
+system node autosupport show -node *
 
 # Send a test AutoSupport message:
-autosupport invoke -node * -type test -message "ONTAP deployment test"
+system node autosupport invoke -node * -type test -message "ONTAP deployment test"
 
 # Confirm delivery:
-autosupport history show -node * -type test
+system node autosupport history show -node *
 ```
 
 ### Active IQ Registration
@@ -270,7 +270,7 @@ Register the cluster with the NetApp Active IQ Digital Advisor portal to receive
 
 1. Navigate to <https://activeiq.netapp.com>
 2. Sign in with your NetApp Support credentials.
-3. Select **Add System** and enter the cluster serial number (found via `system node show -fields serial-number`).
+3. Select **Add System** and enter the cluster serial number (found via `system node show -fields serialnumber`).
 4. Allow 24 hours for the first AutoSupport bundle to populate the dashboard.
 
 ---
@@ -285,17 +285,14 @@ For switchless two-node clusters, verify the cluster interconnect is healthy:
 
 ```text
 # Confirm cluster ports are up:
-network port show -role cluster
+network port show -ipspace Cluster
 
-# Check cluster interconnect health:
-cluster interconnect show
+# Check cluster interconnect connectivity between nodes:
+cluster ping-cluster -node <node>
 
-Node           Link  Speed(Mbps)  IsPartial  IsPresent
--------------- ----  -----------  ---------  ---------
-node1:e0a      up    100000       false      true
-node1:e0b      up    100000       false      true
-node2:e0a      up    100000       false      true
-node2:e0b      up    100000       false      true
+# Output varies; see
+# https://docs.netapp.com/us-en/ontap-cli/network-port-show.html
+# https://docs.netapp.com/us-en/ontap-cli/cluster-ping-cluster.html
 ```
 
 ### Management LIF Configuration
@@ -459,8 +456,8 @@ vserver add-protocols -vserver svm_nfs -protocols nfs
 vserver add-protocols -vserver svm_iscsi -protocols iscsi
 
 # Start the iSCSI service:
-iscsi create -vserver svm_iscsi
-iscsi start -vserver svm_iscsi
+vserver iscsi create -vserver svm_iscsi
+vserver iscsi start -vserver svm_iscsi
 
 # Verify SVM list:
 vserver show
@@ -497,7 +494,7 @@ volume show -vserver svm_nfs
 # Create an export policy allowing the ESXi management subnet:
 vserver export-policy create -vserver svm_nfs -policyname prod_nfs_policy
 
-export-policy rule create \
+vserver export-policy rule create \
   -vserver svm_nfs \
   -policyname prod_nfs_policy \
   -clientmatch 10.10.20.0/24 \
@@ -522,7 +519,7 @@ lun create \
   -ostype linux
 
 # Create an initiator group for Linux hosts:
-igroup create \
+lun igroup create \
   -vserver svm_iscsi \
   -igroup igrp_linux_db \
   -protocol iscsi \
@@ -530,10 +527,10 @@ igroup create \
   -initiator iqn.1994-05.com.redhat:hostname01
 
 # Add additional initiators if needed:
-igroup add -vserver svm_iscsi -igroup igrp_linux_db -initiator iqn.1994-05.com.redhat:hostname02
+lun igroup add -vserver svm_iscsi -igroup igrp_linux_db -initiator iqn.1994-05.com.redhat:hostname02
 
 # Map the LUN to the initiator group:
-lun map \
+lun mapping create \
   -vserver svm_iscsi \
   -volume vol_lun_01 \
   -lun lun_db_01 \
@@ -674,10 +671,10 @@ snapmirror show -fields schedule -destination-path dr-ontap-01://svm_nfs_dr/vol_
 cluster show
 
 # Node-level hardware health:
-system node show -fields health,model,serial-number,uptime
+system node show -fields health,model,serialnumber,uptime
 
 # Check for any active EMS alerts:
-event log show -severity ERROR -time-range 1h
+event log show -severity ERROR -time >1h
 
 # Confirm no disks are in failed or unassigned state:
 storage disk show -broken
@@ -800,10 +797,10 @@ snapmirror show -fields lag-time,mirror-state,relationship-status
 
 ```text
 # Send a test AutoSupport message:
-autosupport invoke -node * -type test -message "ONTAP deployment complete — validation test"
+system node autosupport invoke -node * -type test -message "ONTAP deployment complete — validation test"
 
 # Check delivery status:
-autosupport history show -node * -type test
+system node autosupport history show -node *
 
 # Log in to https://activeiq.netapp.com and confirm:
 # - Both nodes appear in the system inventory

@@ -11,7 +11,7 @@ description: "Design Standards reference covering Naming Conventions, Cluster Co
 <div class="kb-summary">
 Design Standards reference covering Naming Conventions, Cluster Configuration Baseline, vSAN Cluster Baseline (where applicable), vCenter Configuration Checklist, VM Template Standards and 6 more sections.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Design Standards](../../../../../assets/virtualization-vmware-vcenter-architecture-design-standards.svg)
 

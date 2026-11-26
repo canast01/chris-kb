@@ -9,7 +9,7 @@ description: "ONTAP architecture reference — HA topology, WAFL filesystem engi
 <div class="kb-summary">
 ONTAP architecture reference — HA topology, WAFL filesystem engine, SVM design, cluster networking, protocol stack, and data protection built-ins.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 
 ![ONTAP — Architecture — Diagram](../../../../../assets/storage-netapp-ontap-architecture-diagram.svg)

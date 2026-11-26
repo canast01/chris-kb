@@ -11,7 +11,7 @@ description: "Design Standards reference covering Segments (Logical Switches), D
 <div class="kb-summary">
 Design Standards reference covering Segments (Logical Switches), Design Rules, Configuration Baselines, Version Compatibility Matrix, Change Control Standards.
 
-*Applies to: NSX-T 3.x · NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 ![NSX — Design Standards](../../../../../assets/virtualization-vmware-nsx-architecture-design-standards.svg)
 
@@ -172,13 +172,12 @@ Edge VMs must be on hosts that are **not** in the compute cluster — deploy on 
 
 Always verify with the [VMware Product Interoperability Matrix](https://interopmatrix.broadcom.com) before upgrades.
 
-| NSX Version | ESXi Minimum | vCenter Minimum | VCF Version |
-|---|---|---|---|
-| NSX 4.2.x | ESXi 7.0 U3 | vCenter 7.0 U3 | VCF 5.1 |
-| NSX 4.1.x | ESXi 7.0 U2 | vCenter 7.0 U2 | VCF 5.0 |
-| NSX 3.2.x | ESXi 7.0 U1 | vCenter 7.0 | VCF 4.4 |
+The rows below are the versions shipped together in the VCF Bill of Materials (BOM); for any other combination, check the interoperability matrix.
 
-**Key rule**: NSX Manager version must be equal to or greater than the ESXi host version. NSX cannot manage a higher ESXi version than itself.
+| NSX Version | ESX / ESXi (BOM) | vCenter (BOM) | VCF Version | Source |
+|---|---|---|---|---|
+| NSX 9.0.0.0 | ESX 9.0.0.0 | vCenter 9.0.0.0 | VCF 9.0 | [VCF 9.0 BOM](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/vmware-cloud-foundation-bill-of-materials.html) |
+| NSX 4.2 | ESXi 8.0 Update 3 | vCenter 8.0 Update 3a | VCF 5.2 | [VCF 5.2 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-release-notes/vmware-cloud-foundation-52-release-notes.html) |
 
 ### vDS Compatibility
 
@@ -208,21 +207,11 @@ All NSX configuration changes must be captured in the backup immediately after c
 # Trigger immediate backup via API
 curl -sk -u 'admin:password' \
   -X POST \
-  -H "Content-Type: application/json" \
-  -d '{}' \
-  "https://<nsx-manager>/api/v1/node/backups/create"
+  "https://<nsx-manager>/api/v1/cluster?action=backup_to_remote"
 ```
 
-
 ```text title="Expected output"
-{
-  "backup_id": "backup-20240115-143022",
-  "status": "RUNNING",
-  "timestamp": "2024-01-15T14:30:22.456Z",
-  "node": "nsx-manager-01.lab.local",
-  "progress_percentage": 0,
-  "estimated_time_remaining": 180
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"

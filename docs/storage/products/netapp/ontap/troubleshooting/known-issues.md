@@ -11,7 +11,7 @@ description: "Catalog of known ONTAP bugs, error codes, and workarounds covering
 <div class="kb-summary">
 Catalog of known ONTAP bugs, error codes, and workarounds covering NFS, SMB, SnapMirror, iSCSI, and cluster health.
 
-*Applies to: ONTAP 9.12–9.15*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![NetApp ONTAP — Known Issues and Error Codes](../../../../../assets/storage-netapp-ontap-troubleshooting-known-issues.svg)
 
@@ -51,13 +51,13 @@ iscsi_san -> resolution
 |---|---|---|---|---|
 | NFS client shows `Stale file handle` after SVM failover | ONTAP 9.x | Client cached old data LIF IP; NFS mount bound to specific LIF | Configure NFS clients to use DNS name (round-robin across LIFs) rather than IP | N/A |
 | `NFSERR_ACCES` on NFS export despite correct permissions | ONTAP 9.x | Export policy rule client match uses CIDR but client IP outside range | Verify export policy rule client match exactly matches client subnet | N/A |
-| NFS v4.1 delegation recall causing high latency | ONTAP 9.12 | Delegation recall storm during high-metadata workload | Disable NFSv4.1 delegations for affected SVM if workload is high-metadata: `vserver nfs modify -delegation disabled` | 9.13 |
+| NFS v4.1 delegation recall causing high latency | ONTAP 9.12 | Delegation recall storm during high-metadata workload | Disable NFSv4.1 delegations for affected SVM if workload is high-metadata: `vserver nfs modify -vserver <svm> -v4.1-read-delegation disabled -v4.1-write-delegation disabled` | 9.13 |
 
 ## SMB / CIFS
 
 | Error / Symptom | Affected Versions | Cause | Workaround / Fix | Fixed In |
 |---|---|---|---|---|
-| `Access denied` on SMB share after AD password reset for service account | ONTAP 9.x | CIFS server machine account in AD out of sync | Re-join CIFS SVM to AD domain: `vserver cifs modify -domain-workgroup` | N/A |
+| `Access denied` on SMB share after AD password reset for service account | ONTAP 9.x | CIFS server machine account in AD out of sync | Reset the CIFS machine account password: `vserver cifs domain password reset -vserver <svm>` | N/A |
 | DFS namespace broken after SVM DR failover | ONTAP 9.x | DFS referral points to old SVM data LIF | Update DFS namespace targets to new data LIF IP post-failover | N/A |
 
 ## SnapMirror / Replication

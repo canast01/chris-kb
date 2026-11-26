@@ -9,7 +9,7 @@ description: "Backup and restore in ONTAP is built around native snapshot techno
 <div class="kb-summary">
 Backup and restore in ONTAP is built around native snapshot technology. Snapshots are the on-array recovery primitive; SnapMirror and SnapVault extend recovery to remote systems and long-term retention; application-aware tools (SnapCenter, Veeam) add consistency coordination.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Backup & Restore](../../../../../assets/storage-netapp-ontap-operations-backup-restore.svg)
 
@@ -191,26 +191,8 @@ Volume "data_vol" on Vserver "svm01" has been brought online.
     | `Error: command failed: Volume "data_vol" is not offline` | Run `volume offline -vserver <svm> -volume <vol>` before attempting the restore operation. |
     | `Error: command failed: Snapshot "snap_name" does not exist` | Verify the exact snapshot name using `volume snapshot show` and ensure you are targeting the correct Vserver and volume. |
     | `Error: command failed: Volume has active CIFS/NFS connections` | Disconnect all clients accessing the volume before taking it offline with `volume offline -vserver <svm> -volume <vol> -force true`. |
-For ONTAP 9.12+ with the SnapRestore license, online restore is supported — the volume remains accessible during restore, which is useful for large volumes where downtime is unacceptable:
+`volume snapshot restore` has no `-online` parameter; see the [volume snapshot restore reference](https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-restore.html) for its parameters (`-vserver`, `-volume`, `-snapshot`, `-force`, `-preserve-lun-ids`).
 
-```bash
-volume snapshot restore -vserver <svm> -volume <vol> -snapshot <snap_name> -online true
-```
-
-
-```text title="Expected output"
-Restoring snapshot "daily.2024-01-15_0200" to volume "data_vol" on SVM "prod_svm"...
-Restore operation started. Snapshot restore job ID: 12345
-Volume "data_vol" is now online and accessible.
-Restore completed successfully in 47 seconds.
-```
-
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `Error: command not found` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not your local shell. |
-    | `Error: volume does not exist` | Verify the SVM name and volume name are correct using `volume show -vserver <svm>`. |
-    | `Error: snapshot does not exist` | List available snapshots with `volume snapshot show -vserver <svm> -volume <vol>` and use the exact snapshot name. |
 ### FlexClone for Non-Destructive Test Restore
 
 FlexClone creates an instant writable copy of a volume from a snapshot without consuming additional space. Use this to validate restore content before committing to a production restore:
@@ -225,8 +207,11 @@ volume clone create \
     -junction-path /<clone_name>
 
 # Mount and verify the data
-# After validation, delete the clone
-volume clone delete -vserver <svm> -flexclone <clone_name>
+# After validation, delete the clone (a FlexClone is deleted as a volume;
+# a volume must be offline to be deleted)
+volume unmount -vserver <svm> -volume <clone_name>
+volume offline -vserver <svm> -volume <clone_name>
+volume delete -vserver <svm> -volume <clone_name>
 ```
 
 
@@ -237,17 +222,15 @@ Clone creation completed successfully.
 Volume "prod_clone_test" created successfully with junction path "/prod_clone_test"
 Volume is online and ready for access.
 
-Volume clone delete: Command issued successfully
-FlexClone volume "prod_clone_test" has been deleted successfully.
-Deleting associated snapshot dependencies...
-Clone deletion completed.
+volume unmount / offline / delete: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/volume-delete.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: command failed: Snapshot "snap_name" does not exist on volume "source_vol"` | Verify the snapshot exists on the parent volume using `volume snapshot show -vserver <svm> -volume <source_vol>`. |
-    | `Error: command failed: Volume "clone_name" already exists` | Use a unique clone name or delete the existing clone with `volume clone delete -vserver <svm> -flexclone <clone_name>` first. |
+    | `Error: command failed: Volume "clone_name" already exists` | Use a unique clone name or delete the existing clone with `volume offline` then `volume delete -vserver <svm> -volume <clone_name>` first. |
     | `Error: command failed: Junction path "/<clone_name>" is already in use` | Specify a different junction path or remove the existing mount point before creating the clone. |
 ---
 
@@ -442,7 +425,7 @@ snapmirror create \
 snapmirror initialize -destination-path <vault_svm>:<vault_vol>
 
 # Monitor initialization progress
-snapmirror show -destination-path <vault_svm>:<vault_vol> -transfer-progress
+snapmirror show -destination-path <vault_svm>:<vault_vol> -fields status,total-progress
 ```
 
 
@@ -477,8 +460,8 @@ Last Transfer Duration: 8m15s
 # Show SnapMirror/SnapVault policies
 snapmirror policy show
 
-# Show retention rules on the default XDP policy
-snapmirror policy show-rule -policy XDPDefault
+# Show retention rules (rule names and keep values) on the default XDP policy
+snapmirror policy show -policy XDPDefault -instance
 
 # Create a custom vault policy with 90-day retention
 snapmirror policy create -vserver <vault_svm> -policy vault-90d -type vault
@@ -580,7 +563,7 @@ snapmirror restore \
     | Error | Fix |
     |---|---|
     | `Error: source-path "<vault_svm>:<vault_vol>" does not exist` | Verify the vault SVM and volume names match the SnapVault destination using `snapmirror show -destination-path`. |
-    | `Error: Snapshots with name "<snap_name>" do not exist on source` | List available snapshots on the vault volume with `snapshot show -vserver <vault_svm> -volume <vault_vol>` and use the correct snapshot name. |
+    | `Error: Snapshots with name "<snap_name>" do not exist on source` | List available snapshots on the vault volume with `volume snapshot show -vserver <vault_svm> -volume <vault_vol>` and use the correct snapshot name. |
     | `Error: SnapMirror relationship does not exist for destination-path "<src_svm>:<src_vol>"` | Confirm the SnapVault relationship is initialized and healthy using `snapmirror show -destination-path <src_svm>:<src_vol>`. |
 ---
 
@@ -645,8 +628,10 @@ volume clone create \
 
 # 4. Record the restore test result and timestamp
 
-# 5. Delete the test clone
-volume clone delete -vserver <svm> -flexclone <vol>-restore-test
+# 5. Delete the test clone (offline first; a volume must be offline to be deleted)
+volume unmount -vserver <svm> -volume <vol>-restore-test
+volume offline -vserver <svm> -volume <vol>-restore-test
+volume delete -vserver <svm> -volume <vol>-restore-test
 ```
 
 
@@ -659,14 +644,15 @@ prod-svm  prod-data              2024-01-14 22:47:09 +00:00
 
 Volume clone create: Command completed successfully.
 
-Volume clone delete: Command completed successfully.
+volume unmount / offline / delete: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/volume-delete.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: command failed: Snapshot "snapshot_name" does not exist.` | Verify the snapshot name matches exactly and exists on the parent volume using `volume snapshot show`. |
-    | `Error: command failed: FlexClone "vol-restore-test" already exists.` | Delete the existing clone with `volume clone delete -vserver <svm> -flexclone <vol>-restore-test` before creating a new one. |
+    | `Error: command failed: FlexClone "vol-restore-test" already exists.` | Delete the existing clone (`volume offline`, then `volume delete -vserver <svm> -volume <vol>-restore-test`) before creating a new one. |
     | `Error: command failed: Cannot delete FlexClone volume while it is mounted or in use.` | Unmount the clone from all NFS clients and ensure no processes are accessing it before attempting deletion. |
 ### RPO and RTO Reference
 

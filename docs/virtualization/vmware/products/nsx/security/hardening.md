@@ -7,7 +7,7 @@ tags:
 ---
 # NSX — Hardening
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 ![NSX — Hardening](../../../../../assets/virtualization-vmware-nsx-security-hardening.svg)
 
 ```bash
@@ -35,41 +35,28 @@ Rule 65535: action=DROP
     | `jq: command not found` | Use `python3 -c` with json module as shown, or install `jq` package; the example already uses Python which is more portable. |
     | `No JSON object could be decoded` | Verify NSX Manager is responding with valid JSON by testing the curl command alone without piping to Python, and confirm authentication credentials are correct. |
 ```bash
-# SSH to Edge node — list services
+# SSH to Edge node — list services and their state
 get services
 
-# Disable a specific service (example: LB if not using NSX load balancer)
-set service load-balancer stop
+# Stop a specific service that is not used (name as shown by get services)
+stop service <service-name>
 
 # Services that should always be running on production Edge:
-#   dataplane, router, manager (agent to NSX Manager)
-# Services that may be stopped if unused:
-#   load-balancer, dhcp, dns
+#   dataplane, router, and the management-plane agent
 ```
 
 ```text title="Expected output"
-service                 status          enabled
-------                  ------          -------
-dataplane               running         true
-router                  running         true
-manager                 running         true
-load-balancer           running         true
-dhcp                    running         true
-dns                     running         true
-firewall                running         true
-
-Service load-balancer stop command completed successfully.
-load-balancer           stopped         true
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `error: service load-balancer does not exist` | Verify the exact service name using `get services` and check for typos or version-specific naming differences. |
-    | `error: cannot stop service manager — required service` | Do not attempt to stop critical services; only stop optional services like load-balancer, dhcp, or dns if unused. |
+    | Service name not recognised | Use the exact service name shown by `get services`. |
 ```bash
-# SSH to Active Edge
-set edge-cluster failover
+# Put the Active Edge in maintenance mode (no CLI failover command exists)
+curl -k -u admin -X POST \
+  "https://<nsx-mgr>/policy/api/v1/infra/sites/default/enforcement-points/default/edge-transport-nodes/<edge-tn-id>/action/enter-maintenance-mode"
 # T0 gateway moves to Standby Edge — BGP reconverges
 
 # Verify BGP on new Active Edge
@@ -82,32 +69,14 @@ get route
 ```
 
 ```text title="Expected output"
-edge-cluster failover
-Failover initiated. Active edge transitioning to: edge-2.nsx.local (UUID: 550e8400-e29b-41d4-a716-446655440000)
-Standby edge transitioning to: edge-1.nsx.local (UUID: 6ba7b810-9dad-11d1-80b4-00c04fd430c8)
-BGP graceful restart in progress...
-
-get bgp neighbor summary
-Peer              Remote AS  State       Uptime
-10.50.1.1         65001      Established 0:00:18
-10.50.2.1         65002      Established 0:00:22
-10.50.3.1         65003      Established 0:00:15
-192.168.1.254     65000      Established 0:00:19
-
-vrf 0
-get route
-Flags: [*=best, +=multipath, ?=incomplete]
-*  10.0.0.0/8 via 10.50.1.1 metric 100
-*  172.16.0.0/12 via 10.50.2.1 metric 110
-*  192.168.0.0/16 via 10.50.3.1 metric 120
-*  0.0.0.0/0 via 10.50.1.1 metric 50
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `BGP neighbor 10.50.1.1 state: Connect` | Wait 30–45 seconds for graceful restart to complete; if persists, verify BGP timers match upstream router configuration. |
-    | `vrf <tier0-vrf>: VRF not found` | Replace `<tier0-vrf>` with the actual VRF ID (typically `0` for default or check `get vrf list`). |
+    | `vrf <tier0-vrf>: VRF not found` | Replace `<tier0-vrf>` with the actual VRF ID (list them with `get logical-routers`). |
 ```bash
 # Confirm BGP neighbor has password set
 curl -sk -u 'admin:password' \

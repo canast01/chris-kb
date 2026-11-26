@@ -9,9 +9,9 @@ description: "ONTAP diagnostic commands: check cluster and HA health with cluste
 # ONTAP — Diagnostics
 
 <div class="kb-summary">
-ONTAP diagnostic commands: check cluster and HA health with <code>cluster show</code> and <code>storage failover show</code>, inspect aggregate and disk state with <code>storage aggregate show-status</code> and <code>storage disk show -broken</code>, check volume state and capacity with <code>volume show -state !online</code>, diagnose NFS/CIFS/iSCSI/FC protocols with per-protocol statistics, trace SnapMirror lag with <code>snapmirror show -health false</code>, analyse EMS events with <code>event log show -severity CRITICAL</code>, and generate an AutoSupport bundle before calling NetApp support.
+ONTAP diagnostic commands: check cluster and HA health with <code>cluster show</code> and <code>storage failover show</code>, inspect aggregate and disk state with <code>storage aggregate show-status</code> and <code>storage disk show -broken</code>, check volume state and capacity with <code>volume show -state !online</code>, diagnose NFS/CIFS/iSCSI/FC protocols with per-protocol statistics, trace SnapMirror lag with <code>snapmirror show -healthy false</code>, analyse EMS events with <code>event log show -severity CRITICAL</code>, and generate an AutoSupport bundle before calling NetApp support.
 
-*Applies to: ONTAP 9.x*
+*Applies to: ONTAP 9.18.1–9.20.1*
 </div>
 ![ONTAP — Diagnostics](../../../../../assets/storage-netapp-ontap-troubleshooting-diagnostics.svg)
 
@@ -21,18 +21,18 @@ direction: right
 A: "ONTAP Issue" {shape: rectangle}
 B: "cluster show: node health\nsystem health status show\nstorage failover show: HA state" {shape: rectangle}
 C: "C" {shape: rectangle}
-D: "system node show: state and uptime\ncluster ring show: cluster services\nstorage failover interconnect show" {shape: rectangle}
-E: "aggr show -state !online\nstorage disk show -broken\ndisk show -raid-state recon" {shape: rectangle}
+D: "system node show: state and uptime\ncluster ring show: cluster services\nsystem ha interconnect status show" {shape: rectangle}
+E: "storage aggregate show -state !online\nstorage disk show -broken\nstorage aggregate show-status" {shape: rectangle}
 F: "volume show -state !online\nvolume show percent-used > 90%\nvolume efficiency show: dedup" {shape: rectangle}
-G: "net int show -status-oper down\nnet int show -is-home false\ncluster ping-cluster: ICL health" {shape: rectangle}
+G: "network interface show -status-oper down\nnetwork interface show -is-home false\ncluster ping-cluster: ICL health" {shape: rectangle}
 H: "H" {shape: rectangle}
-I: "nfs connected-client show\nvserver export-policy check-access\nstatistics start -object nfsv3" {shape: rectangle}
-J: "vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2" {shape: rectangle}
-K: "iscsi session show\nlun mapping show\nlun igroup show" {shape: rectangle}
-L: "fcp adapter show\nfcp initiator show\nfcp topology show" {shape: rectangle}
-M: "snapmirror show -health false\nsnapmirror lag show\nnet int show -role intercluster" {shape: rectangle}
-N: "statistics start -object volume\nqos statistics performance show\nsystem node run sysstat" {shape: rectangle}
-O: "autosupport invoke: all nodes\nOpen NetApp support case" {shape: rectangle}
+I: "vserver nfs connected-clients show\nvserver export-policy check-access\nstatistics start -object nfsv3" {shape: rectangle}
+J: "vserver cifs domain discovered-servers show\nvserver cifs session show\nstatistics start -object smb2" {shape: rectangle}
+K: "vserver iscsi session show\nlun mapping show\nlun igroup show" {shape: rectangle}
+L: "network fcp adapter show\nvserver fcp initiator show\nnetwork fcp topology show" {shape: rectangle}
+M: "snapmirror show -healthy false\nsnapmirror show -fields lag-time\nnetwork interface show -role intercluster" {shape: rectangle}
+N: "statistics start -object volume\nqos statistics performance show\nsystem node run -node <node> -command sysstat" {shape: rectangle}
+O: "system node autosupport invoke: all nodes\nOpen NetApp support case" {shape: rectangle}
 
 A -> B
 C -> D
@@ -119,7 +119,7 @@ network interface show -status-oper down
 
 # Recent CRITICAL and ERROR events
 event log show -severity CRITICAL
-event log show -severity ERROR -time-range 1h
+event log show -severity ERROR -time >1h
 ```
 
 
@@ -172,7 +172,7 @@ Recent ERROR Events (last 1h):
     | Error | Fix |
     |---|---|
     | `Error: command not found: cluster show` | Ensure you are logged into the ONTAP cluster CLI (via SSH to cluster management IP) rather than the local node shell. |
-    | `Error: No such file or directory` | Verify the ONTAP version supports the `system health` commands; upgrade or use `storage show status` on older releases. |
+    | `Error: No such file or directory` | Verify the ONTAP version supports the `system health` commands; see the [system health status show reference](https://docs.netapp.com/us-en/ontap-cli/system-health-status-show.html). |
     | `Error: Invalid query: state !online` | Use the correct ONTAP query syntax `state !=online` (double equals with exclamation) instead of `!online`. |
 If any of these commands return unexpected results, follow the relevant subsystem diagnostic section below.
 
@@ -187,16 +187,16 @@ cluster show
 
 # Detailed node status including uptime
 system node show
-system node show -fields node,health,state,uptime,model,serial-number
+system node show -fields node,health,uptime,model,serialnumber
 
 # Node-level hardware configuration (drops to node shell)
-system node run -node <node_name> sysconfig -a
+system node run -node <node_name> -command sysconfig -a
 
 # Node environment (temperature, fans, power)
-system node run -node <node_name> environment status
+system node run -node <node_name> -command environment status
 
 # Node-level system resource utilisation
-system node run -node <node_name> sysstat -c 5 -x 2
+system node run -node <node_name> -command sysstat -c 5 -x 2
 
 # Check the cluster ring (internal cluster services)
 cluster ring show
@@ -213,20 +213,17 @@ Node                  Health  Eligibility
 ontap-node-01         true    true
 ontap-node-02         true    true
 
-system node show -fields node,health,state,uptime,model,serial-number
-Node       Health State   Uptime            Model         Serial-Number
----------- ------ ------- ----------------- ------------- ---------------
-ontap-node-01 true   up      127 days 14:32:18 FAS2720      701911000123
-ontap-node-02 true   up      89 days 03:15:44  FAS2720      701911000456
+system node show -fields node,health,uptime,model,serialnumber
+(output varies; see https://docs.netapp.com/us-en/ontap-cli/system-node-show.html)
 
-system node run -node ontap-node-01 sysconfig -a
+system node run -node ontap-node-01 -command sysconfig -a
 NetApp Release 9.12.1: Tue Jan 10 14:22:33 UTC 2023
 System Serial Number: 701911000123
 System Model name: FAS2720
 Memory: 128GB
 ...
 
-system node run -node ontap-node-01 environment status
+system node run -node ontap-node-01 -command environment status
 System Environmental Status:
 Ambient Temperature: 22°C
 CPU0 Temp: 48°C  CPU1 Temp: 51°C
@@ -258,13 +255,10 @@ ontap-node-02 true
 storage failover show -fields node,enabled,state,partner,takeover-enabled,giveback-status
 
 # Check interconnect link status between HA partners
-storage failover interconnect show
+system ha interconnect status show -node <node_name>
 
 # Test cluster interconnect ping (HA heartbeat)
 cluster ping-cluster -node <node_name>
-
-# Show failover history (recent takeovers and givebacks)
-storage failover history show -node <node_name>
 ```
 
 
@@ -274,26 +268,18 @@ Node                  Enabled  State    Partner              Takeover-Enabled  G
 node-01               true     ready    node-02              true                  not_attempted
 node-02               true     ready    node-01              true                  not_attempted
 
-Interconnect1 Link Status: up
-Interconnect2 Link Status: up
-Node node-01 to Node node-02: latency 2ms
+system ha interconnect status show: output varies by controller model; see
+https://docs.netapp.com/us-en/ontap-cli/system-ha-interconnect-status-show.html
 
 Cluster Ping to node-01: 4 packets transmitted, 4 received, 0% packet loss, min/avg/max = 1.2/1.8/2.4 ms
 Cluster Ping to node-02: 4 packets transmitted, 4 received, 0% packet loss, min/avg/max = 1.1/1.7/2.3 ms
-
-                                    Takeover
-Node          Date/Time             Reason
-------------- --------------------- -------
-node-01       02/14 14:32:15 +00:00  user_initiated
-node-01       02/10 09:18:42 +00:00  disk_shelf_failure
-node-02       02/08 11:05:33 +00:00  user_initiated
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: cluster ping-cluster: node "<node_name>" not found` | Replace `<node_name>` with an actual node name from your cluster (e.g., `node-01`). |
-    | `Interconnect1 Link Status: down` | Check physical cabling between HA partners and verify interconnect ports are enabled with `storage failover interconnect show -detail`. |
+    | HA interconnect link reported down | Check physical cabling between HA partners and review link state with `system ha interconnect status show -node <node_name>`. |
     | `storage failover show: This command requires cluster administrative privileges` | Run the command with cluster admin credentials or use `set -privilege advanced` first. |
 HA state interpretation:
 
@@ -316,19 +302,17 @@ storage aggregate show -fields aggr-name,node,state,raid-status,percent-used
 
 # Aggregate RAID status detail
 storage aggregate show-status -aggregate <aggr_name>
-storage aggregate show-raidtree -aggregate <aggr_name>
 
 # Disk health
 storage disk show -broken -fields disk,container-type,bay,shelf,node,serial-number
 storage disk show -container-type spare        # confirm spares available for rebuild
-storage disk show -raid-state reconstructing   # active RAID reconstruction
 
 # All disks with firmware revision and location
 storage disk show -fields disk,bay,shelf,node,firmware-revision,rpm,size,disk-type
 
 # Disk shelf status
 storage shelf show
-storage shelf show -detail
+storage shelf show -instance
 ```
 
 
@@ -369,9 +353,6 @@ Disk     Container Type  Shelf  Bay  Node     Serial Number
 2.0.10   spare           0      10  node-02   S5K1N0JP
 2.0.11   spare           0      11  node-02   S5K1N0JQ
 
-cluster1::> storage disk show -raid-state reconstructing
-(no entries returned)
-
 cluster1::> storage disk show -fields disk,bay,shelf,node,firmware-revision,rpm,size,disk-type
 disk     bay shelf node    firmware-revision rpm  size   disk-type
 -------- --- ----- ------- ------------------- ---- ------ ---------
@@ -386,7 +367,7 @@ Shelf  Shelf Name  Serial Number  Status
 0      DS224C      SHF2143000123  online
 1      DS224C      SHF2143000124  online
 
-cluster1::> storage shelf show -detail
+cluster1::> storage shelf show -instance
 Shelf  Shelf Name  Serial Number  Status  Firmware Version  Module A  Module
 ```
 ### RAID reconstruction monitoring
@@ -394,8 +375,8 @@ Shelf  Shelf Name  Serial Number  Status  Firmware Version  Module A  Module
 When a disk fails and a spare is available, ONTAP automatically starts RAID reconstruction. Monitor progress:
 
 ```bash
-# Show reconstruction status
-storage disk show -raid-state reconstructing
+# Show RAID layout and disk status for the aggregate
+storage aggregate show-status -aggregate <aggr_name>
 
 # Show aggregate state during reconstruction
 storage aggregate show -aggregate <aggr_name> -fields state,raid-status
@@ -407,11 +388,8 @@ storage aggregate show-status -aggregate <aggr_name>
 
 
 ```text title="Expected output"
-Disk        Container   HA  Shelf Bay Chan   State    Rebuild Elapsed
-----------  ----------- --- ----- --- ------ -------- -------
-1.0.0       aggr0       A   0     0   A      Reconstructing  12%
-1.0.1       aggr0       A   0     1   A      Reconstructing  12%
-1.0.2       aggr1       B   0     2   B      Reconstructing   8%
+storage aggregate show-status: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-show-status.html
 
 Aggregate State       RAID Status
 --------- ----------- ----------------
@@ -512,7 +490,7 @@ vol_data01_move                  svm-prod    completed  100%
     | Error | Fix |
     |---|---|
     | `Error: command failed: No matching volumes found` | Verify the volume name exists and the SVM context is correct using `vserver context`. |
-    | `Error: Invalid field name "percent-used"` | Use the correct field name `percent-used` (with hyphen) or check ONTAP version compatibility with `system show -instance`. |
+    | `Error: Invalid field name "percent-used"` | Use the correct field name `percent-used` (with hyphen) or check ONTAP version compatibility with `version`. |
 ---
 
 ## Step 5 — Network diagnostics
@@ -654,7 +632,7 @@ PING 192.168.10.50 from 192.168.1.100 (data0): 8972 bytes of data in 4 ICMP Echo
 vserver nfs show -vserver <svm>
 
 # Connected NFS clients
-nfs connected-client show -vserver <svm>
+vserver nfs connected-clients show -vserver <svm>
 
 # NFS export policy rules
 vserver export-policy rule show -vserver <svm> -policyname <policy>
@@ -676,12 +654,8 @@ Vserver       Enabled
 ------------- -------
 svm-prod-01   true
 
-Connected Clients for Vserver "svm-prod-01":
-Vserver IP Address    Client IP      OpenFiles Protocol Version
----------- ----------- -------------- --------- -------- -------
-svm-prod-01 192.168.1.50 10.45.22.18    12        nfs      3
-svm-prod-01 192.168.1.50 10.45.22.19    8         nfs      3
-svm-prod-01 192.168.1.50 10.45.23.101   156       nfs      3
+vserver nfs connected-clients show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-nfs-connected-clients-show.html
 
 Policy Name: default
 Vserver     Policy Name Rule Index Access Protocol RW Rule Superuser
@@ -714,7 +688,6 @@ nfsv3_write_latency: 1.8ms
 ```bash
 # CIFS server and domain status
 vserver cifs show -vserver <svm>
-vserver cifs domain info -vserver <svm>
 
 # CIFS domain controller connectivity
 vserver cifs domain discovered-servers show -vserver <svm>
@@ -744,13 +717,6 @@ Domain: corp.example.com
 Workgroup: 
 Authentication Style: domain
 Encryption Required: false
-
-Vserver: svm-prod-01
-Domain Name: corp.example.com
-Domain FQDN: corp.example.com
-Fully Qualified Domain Name: ontap-svr-01.corp.example.com
-Forest FQDN: corp.example.com
-Organizational Unit: CN=Computers,DC=corp,DC=example,DC=com
 
 Vserver: svm-prod-01
 Domain: corp.example.com
@@ -790,20 +756,20 @@ smb2_session_setup_ops: 12
     | Error | Fix |
     |---|---|
     | `Error: "Vserver <svm> not found"` | Verify the SVM name is correct using `vserver show` and ensure you are connected to the correct cluster. |
-    | `Error: "Domain <domain> not reachable"` | Check network connectivity to domain controllers and verify DNS resolution with `network name-service dns show`. |
+    | `Error: "Domain <domain> not reachable"` | Check network connectivity to domain controllers and verify DNS resolution with `vserver services name-service dns check -vserver <svm>`. |
     | `Error: "Statistics object smb2 not found"` | Ensure SMB2 protocol is enabled on the SVM with `vserver cifs show -vserver <svm>` and confirm the sample-id is unique. |
 ### iSCSI diagnostics
 
 ```bash
 # iSCSI service status
-iscsi show -vserver <svm>
+vserver iscsi show -vserver <svm>
 
 # iSCSI sessions (connected initiators)
-iscsi session show -vserver <svm>
-iscsi session show -vserver <svm> -fields initiator-name,lif,tpgroup,connection-count
+vserver iscsi session show -vserver <svm>
+vserver iscsi session show -vserver <svm> -fields initiator-name,tpgroup,connection-ids
 
-# iSCSI target portal groups
-iscsi tpgroup show -vserver <svm>
+# iSCSI LIFs and their target portal groups (TPGroup column)
+vserver iscsi interface show -vserver <svm>
 
 # LUN mapping — confirm host can see LUNs
 lun show -vserver <svm>
@@ -816,21 +782,12 @@ lun igroup show -vserver <svm>
 
 
 ```text title="Expected output"
-Vserver: svm-prod-01
-  iSCSI Status: up
-  Target Alias: svm-prod-01.example.com
-  Target Name: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6
-
-Vserver: svm-prod-01
-Initiator Name: iqn.1991-05.com.emc:01.005056b34d67
-LIF: 10.20.30.45:3260
-TPGROUP: tpg_1
-Connection Count: 2
-
-Vserver: svm-prod-01
-Target Portal Group: tpg_1
-Portals: 10.20.30.45:3260, 10.20.30.46:3260
-Status: up
+vserver iscsi show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-iscsi-show.html
+vserver iscsi session show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-iscsi-session-show.html
+vserver iscsi interface show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-iscsi-interface-show.html
 
 Vserver: svm-prod-01
   LUN Path: /vol/data_vol/lun_prod_01
@@ -855,63 +812,38 @@ Vserver: svm-prod-01
     | Error | Fix |
     |---|---|
     | `Error: command failed: Vserver "svm-prod-01" does not exist.` | Verify the SVM name with `vserver show` and ensure you are connected to the correct cluster. |
-    | `Error: No iSCSI sessions found for Vserver "svm-prod-01".` | Confirm iSCSI service is running with `iscsi show -vserver <svm>` and that initiators have successfully logged in. |
+    | `Error: No iSCSI sessions found for Vserver "svm-prod-01".` | Confirm iSCSI service is running with `vserver iscsi show -vserver <svm>` and that initiators have successfully logged in. |
 ### FC / FCoE diagnostics
 
 ```bash
 # FC service status
-fcp show -vserver <svm>
+vserver fcp show -vserver <svm>
 
 # FC adapter status (physical ports)
-fcp adapter show -fields node,adapter,state,speed,fabric-established
+network fcp adapter show -fields node,adapter,status-oper,speed,fabric-established
 
 # FC initiators (logged-in hosts)
-fcp initiator show -vserver <svm>
+vserver fcp initiator show -vserver <svm>
 
 # FC interface status (FC LIFs)
-fcp interface show -vserver <svm>
+vserver fcp interface show -vserver <svm>
 
-# FC topology information
-fcp topology show
+# FC topology information (fabric-attached adapters)
+network fcp topology show
 ```
 
 
 ```text title="Expected output"
-cluster1::> fcp show -vserver svm_prod
-Vserver: svm_prod
-  FCP Admin Status: up
-  FCP Operational Status: up
-
-cluster1::> fcp adapter show -fields node,adapter,state,speed,fabric-established
-node     adapter state  speed fabric-established
--------- ------- ------ ----- ------------------
-node-1   0a      online 16Gb  true
-node-1   0b      online 16Gb  true
-node-2   0a      online 16Gb  true
-node-2   0b      online 16Gb  true
-
-cluster1::> fcp initiator show -vserver svm_prod
-Vserver     Initiator WWPN           Logged In
------------ ----------------------- ----------
-svm_prod    50:00:14:40:5a:2b:c1:01 true
-svm_prod    50:00:14:40:5a:2b:c1:02 true
-svm_prod    50:00:14:40:5a:2b:c2:01 true
-
-cluster1::> fcp interface show -vserver svm_prod
-Vserver   Interface     Status  Node   Adapter
---------- ------------- ------- ------ -------
-svm_prod  fc_lif_01     up      node-1 0a
-svm_prod  fc_lif_02     up      node-1 0b
-svm_prod  fc_lif_03     up      node-2 0a
-svm_prod  fc_lif_04     up      node-2 0b
-
-cluster1::> fcp topology show
-Node: node-1
-  Adapter 0a: WWNN 50:0a:09:80:12:34:56:78, WWPN 50:0a:09:81:12:34:56:78
-  Adapter 0b: WWNN 50:0a:09:80:12:34:56:79, WWPN 50:0a:09:81:12:34:56:79
-Node: node-2
-  Adapter 0a: WWNN 50:0a:09:80:12:34:56:7a, WWPN 50:0a:09:81:12:34:56:7a
-  Adapter 0b: WWNN 50:0a:09:80:12:34:56:7b, WWPN 50:0a:09:81:12:34:56:7b
+vserver fcp show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-fcp-show.html
+network fcp adapter show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/network-fcp-adapter-show.html
+vserver fcp initiator show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-fcp-initiator-show.html
+vserver fcp interface show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/vserver-fcp-interface-show.html
+network fcp topology show: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/network-fcp-topology-show.html
 ```
 
 !!! warning "Common errors"
@@ -929,16 +861,13 @@ Node: node-2
 snapmirror show -fields source-path,destination-path,lag-time,healthy,state,last-transfer-end-timestamp
 
 # Only unhealthy relationships
-snapmirror show -health false
+snapmirror show -healthy false
 
 # Transfer progress (active transfers)
-snapmirror show -transfer-progress
+snapmirror show -fields status,total-progress
 
-# Transfer history for a specific relationship
-snapmirror history show -destination-path <dest_svm>:<dest_vol>
-
-# Lag for all relationships (compact view)
-snapmirror lag show
+# Transfer history for a specific relationship (last 24 hours)
+snapmirror show-history -destination-path <dest_svm>:<dest_vol>
 
 # SnapMirror network statistics (bandwidth usage)
 statistics start -object snapmirror -sample-id sm-diag
@@ -963,21 +892,10 @@ Source Path                Destination Path           State      Healthy
 --------------------------- --------------------------- ---------- -------
 svm3:vol_archive           svm4:vol_archive_dr        broken-off false
 
-Source Path                Destination Path           Progress   Bytes Transferred
---------------------------- --------------------------- ---------- ------------------
-svm1:vol_data              svm2:vol_data_mirror       87%        2.4 TB
-
-Destination Path           Number of Transfers  Last Transfer Size  Last Transfer Duration
---------------------------- -------------------- -------------------- ----------------------
-svm2:vol_data_mirror       1247                 1.8 TB               00:42:15
-svm2:vol_logs_mirror       892                  542 GB               00:28:33
-
-Source Path                Destination Path           Lag Time
---------------------------- --------------------------- --------
-svm1:vol_data              svm2:vol_data_mirror       00:15:32
-svm1:vol_logs              svm2:vol_logs_mirror       02:45:18
-svm3:vol_archive           svm4:vol_archive_dr        06:22:41
-svm5:vol_temp              svm6:vol_temp_backup       00:08:09
+snapmirror show -fields status,total-progress: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html
+snapmirror show-history: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/snapmirror-show-history.html
 
 Sample-id: sm-diag
 Object: snapmirror
@@ -1029,7 +947,7 @@ qos statistics performance show
 qos statistics workload performance show
 
 # Node-level CPU and disk utilisation (node shell)
-system node run -node <node_name> sysstat -c 10 -x 2
+system node run -node <node_name> -command sysstat -c 10 -x 2
 ```
 
 
@@ -1055,7 +973,7 @@ vol_data_01                       1245      487 MB/s      4.2 ms
 vol_backup_02                     342       156 MB/s      8.7 ms
 vol_logs_03                       5621      2.1 GB/s      1.8 ms
 
-cluster1::> system node run -node node-01 sysstat -c 10 -x 2
+cluster1::> system node run -node node-01 -command sysstat -c 10 -x 2
     CPU    User    Nice  System    Idle     INTR    CTXT
      10      23       0      18      59       45      892
      10      25       1      17      57       48      921
@@ -1064,8 +982,8 @@ cluster1::> system node run -node node-01 sysstat -c 10 -x 2
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: sample-id "vol-perf" already exists` | Use a unique sample-id or delete the existing one with `statistics delete -sample-id vol-perf` before restarting. |
-    | `Error: object "volume" is not a valid statistics object` | Verify the object name is correct; use `statistics catalog` to list available objects like `volume_ops` or `vserver_ops`. |
+    | `Error: sample-id "vol-perf" already exists` | Use a unique sample-id or delete the existing one with `statistics samples delete -sample-id vol-perf` before restarting. |
+    | `Error: object "volume" is not a valid statistics object` | Verify the object name is correct; use `statistics catalog object show` to list available objects. |
     | `Error: No such file or directory` | Ensure you are in the cluster shell (not node shell) for `statistics` commands; use `exit` to return to cluster prompt if needed. |
 ### Latency interpretation
 
@@ -1095,21 +1013,21 @@ event log show -severity CRITICAL
 event log show -severity ERROR
 
 # Events in the last hour
-event log show -severity ERROR -time-range 1h
+event log show -severity ERROR -time >1h
 
 # Events from a specific node
 event log show -node <node_name> -severity ERROR
 
 # Search for a specific message name (pattern)
-event log show -messagename wafl.vol.full
-event log show -messagename raid.*
-event log show -messagename disk.*
+event log show -message-name wafl.vol.full
+event log show -message-name raid.*
+event log show -message-name disk.*
 
 # Events related to SnapMirror
-event log show -messagename snapmirror.*
+event log show -message-name snapmirror.*
 
 # Show event details including description
-event log show -messagename <message_name> -detail
+event log show -message-name <message_name> -detail
 ```
 
 
@@ -1137,7 +1055,7 @@ cluster1::> event log show -severity ERROR
  2024-01-15 14:05:22 node-01          ERROR         nfs.export.denied
  ...
 
-cluster1::> event log show -severity ERROR -time-range 1h
+cluster1::> event log show -severity ERROR -time >1h
  Time                Node             Severity      Event
  ------------------- ---------------- ------------- ---------------------------
  2024-01-15 16:52:33 node-01          ERROR         snapmirror.xfer.failed
@@ -1148,24 +1066,24 @@ cluster1::> event log show -node node-01 -severity ERROR
  2024-01-15 16:52:33 node-01          ERROR         snapmirror.xfer.failed
  2024-01-15 14:05:22 node-01          ERROR         nfs.export.denied
 
-cluster1::> event log show -messagename wafl.vol.full
+cluster1::> event log show -message-name wafl.vol.full
  Time                Node             Severity      Event
  ------------------- ---------------- ------------- ---------------------------
  2024-01-14 22:47:05 node-01          CRITICAL      wafl.vol.full
 
-cluster1::> event log show -messagename raid.*
+cluster1::> event log show -message-name raid.*
  Time                Node             Severity      Event
  ------------------- ---------------- ------------- ---------------------------
  2024-01-14 18:23:19 node-02          CRITICAL      raid.disk.failed
  2024-01-13 10:15:44 node-01          ERROR         raid.rebuild.started
 
-cluster1::> event log show -messagename disk.*
+cluster1::> event log show -message-name disk.*
  Time                Node             Severity      Event
  ------------------- ---------------- ------------- ---------------------------
  2024-01-15 15:18:47 node-02          ERROR         disk.shelf.offline
  2024-01-14 18:23:19 node-02          CRITICAL      raid.disk.failed
 
-cluster1::> event log show -messagename snapmirror.*
+cluster1::> event log show -message-name snapmirror.*
  Time                Node             Severity      Event
  ------------------- ---------------- ------------- ---------------------------
  2024-01-15 16:52:33 node-01          ERROR         snapmirror.xfer.failed
@@ -1193,14 +1111,10 @@ Common EMS messages and their meaning:
 system node coredump show
 
 # Show core dump details
-system node coredump show -node <node_name> -fields state,type,panic-string,uptime-before-crash
+system node coredump show -node <node_name> -fields state,type,panic-string,panic-time
 
 # Delete processed core dumps (after AutoSupport upload)
-system node coredump delete -node <node_name> -corefile <filename>
-
-# Check Service Processor logs for pre-panic system events
-system service-processor log show -node <node_name>
-system service-processor log show -node <node_name> -num-rows 100
+system node coredump delete -node <node_name> -corename <filename>
 ```
 
 
@@ -1221,9 +1135,8 @@ Coredump Type: Kernel
 Coredump Size: 1.8GB
 Coredump Timestamp: Fri Jan 12 14:51:22 UTC 2024
 
-Node                State  Type    Panic-String                          Uptime-Before-Crash
-cluster-node-01     Saved  Kernel  PANIC: Memory allocation failure      45d 3h 22m
-cluster-node-02     Saved  Kernel  PANIC: NVMe controller timeout        38d 18h 15m
+system node coredump show -fields state,type,panic-string,panic-time: output varies; see
+https://docs.netapp.com/us-en/ontap-cli/system-node-coredump-show.html
 
 Coredump vmcore.0 deleted successfully.
 
@@ -1255,7 +1168,7 @@ AutoSupport bundles are the primary support artifact. Generate one before callin
 system node autosupport invoke -node * -type all -message "case <SR-number> - <description>"
 
 # Verify delivery
-system node autosupport history show -node * -most-recent 5
+system node autosupport history show -node *
 # Status should show: sent-successful
 ```
 
@@ -1343,8 +1256,7 @@ Node: cluster1-02
     | Error | Fix |
     |---|---|
     | `Error: command not found: system node autosupport show` | Ensure you are connected to the ONTAP cluster CLI (ssh to cluster management IP) rather than the local shell. |
-    | `AutoSupport Connectivity Check Results: Node: cluster1-01 Status: FAILED` | Verify firewall rules allow outbound HTTPS (port 443) to support.netapp.com and check DNS resolution with `system services dns check`. |
-    | `Error: Invalid field name "proxy-url"` | Use the correct field name `proxy_url` (underscore instead of hyphen) in the `-fields` parameter. |
+    | `AutoSupport Connectivity Check Results: Node: cluster1-01 Status: FAILED` | Verify firewall rules allow outbound HTTPS (port 443) to support.netapp.com and check DNS resolution with `vserver services name-service dns check -vserver <svm>`. |
 ---
 
 ## Log locations
@@ -1357,8 +1269,7 @@ Node: cluster1-02
 | CIFS/SMB audit | SVM-level audit log configured to NAS volume via `vserver audit` |
 | Crash dumps / core files | `system node coredump show`; files at `/mroot/etc/crash/` |
 | Disk firmware log | `storage disk show -fields firmware-revision`; in AutoSupport |
-| Node syslog | `system node run -node <node> syslog` (node shell) |
-| SP / BMC logs | `system service-processor log show -node <node>` |
+| Node syslog | `system node run -node <node> -command syslog` (node shell) |
 | Core file listing | `system node coredump show -node <node>` |
 
 ---
@@ -1376,5 +1287,5 @@ Node: cluster1-02
 - `storage disk show -broken` returns no broken disks (or the same pre-existing broken disks that were there before the incident)
 - `volume show -state !online` returns no unexpectedly offline volumes
 - `network interface show -status-oper down` returns no operationally-down LIFs
-- For SnapMirror: `snapmirror show -health false` returns no unhealthy relationships
-- `event log show -severity CRITICAL -time-range 1h` shows no new critical events after the fix was applied
+- For SnapMirror: `snapmirror show -healthy false` returns no unhealthy relationships
+- `event log show -severity CRITICAL -time >1h` shows no new critical events after the fix was applied

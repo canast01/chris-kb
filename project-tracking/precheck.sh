@@ -22,7 +22,9 @@ fi
 if [ ! -f project-tracking/cert_kb_queue.md ]; then
     fail "cert_kb_queue.md is missing"
 fi
-REMAINING=$(grep -cE '^- \[ \] ' project-tracking/cert_kb_queue.md)
+# Count only the Phase A section: the daily prompt is Phase A research. Phase B1 items
+# (added below "## Phase B1") must not restart the Phase A job -- retarget it first.
+REMAINING=$(sed '/^## Phase B1/,$d' project-tracking/cert_kb_queue.md | grep -cE '^- \[ \] ')
 if [ "$REMAINING" -eq 0 ]; then
     fail "no unchecked Phase A items remain -- Phase A is complete, needs a human decision on Phase B, not another automated run"
 fi

@@ -11,7 +11,7 @@ description: "Hardening reference covering Firewall Hardening, Advanced Security
 <div class="kb-summary">
 Hardening reference covering Firewall Hardening, Advanced Security Settings, Secure Boot, Audit Logging, Host Profile Enforcement and 2 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Hardening](../../../../../assets/virtualization-vmware-esxi-security-hardening.svg)
 
@@ -125,23 +125,15 @@ esxcli system settings advanced set -o /Config/Etc/issue \
   -s "AUTHORISED USERS ONLY. Unauthorised access to this system is prohibited."
 
 # Verify
-esxcli system settings advanced get -o /Security/AccountLockFailures
-esxcli system settings advanced get -o /UserVars/ESXiShellTimeOut
+esxcli system settings advanced list -o /Security/AccountLockFailures
+esxcli system settings advanced list -o /UserVars/ESXiShellTimeOut
 ```
 
 
 ```text title="Expected output"
-(no output — command completes silently)
-(no output — command completes silently)
-(no output — command completes silently)
-(no output — command completes silently)
-(no output — command completes silently)
-   Integer Value: 5
-   Default Value: 0
-   Configured Value: 5
-   Integer Value: 600
-   Default Value: 0
-   Configured Value: 600
+The set commands return no output on success. The list output shows the option's
+current and default values; exact fields vary by host and release. See
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_system.html
 ```
 
 !!! warning "Common errors"
@@ -160,21 +152,15 @@ UEFI Secure Boot verifies the bootloader and VIBs are signed by VMware before lo
 /usr/lib/vmware/secureboot/bin/secureBoot.py -s
 # Expected: Enabled
 
-# Detailed check
-/usr/lib/vmware/secureboot/bin/secureBoot.py --status
+# Check whether Secure Boot can be enabled on this host (validation script)
+/usr/lib/vmware/secureboot/bin/secureBoot.py -c
 ```
 
 
 ```text title="Expected output"
-Secure Boot Status: Enabled
-UEFI Firmware: Version 2.4.1
-Secure Boot Mode: Strict
-Platform Key (PK): Installed
-Key Exchange Key (KEK): Installed
-Database (db): 4 signatures loaded
-Forbidden Database (dbx): 127 revoked hashes
-Last Updated: 2024-01-15 14:32:18 UTC
-Compliance: UEFI 2.8 Specification
+-s prints the Secure Boot state (for example "Enabled"). -c reports whether Secure Boot
+can be enabled on this host. See Broadcom KB 317698:
+https://knowledge.broadcom.com/external/article/317698
 ```
 
 !!! warning "Common errors"
@@ -183,9 +169,9 @@ Compliance: UEFI 2.8 Specification
     | `secureBoot.py: command not found` | Verify the ESXi version supports Secure Boot (6.7+) and the secureboot module is installed with `esxcli software vib list | grep secureboot`. |
     | `Permission denied` | Run the command with root privileges using `sudo` or ensure your user account has administrative permissions on the ESXi host. |
     | `Secure Boot Status: Disabled` | Enable Secure Boot in the ESXi host's BIOS/UEFI firmware settings, then reboot the host for changes to take effect. |
-If Secure Boot reports `Disabled`, check the server BIOS/UEFI settings. Secure Boot must be enabled before installing ESXi — it cannot be turned on retroactively on a running host without a clean installation.
+If Secure Boot reports `Disabled`, check the server BIOS/UEFI settings. On an existing host, run the validation script (`secureBoot.py -c`) first, then enable Secure Boot in the server firmware (Broadcom KB 317698: https://knowledge.broadcom.com/external/article/317698).
 
-VIB acceptance levels must be VMwareCertified or VMwareAccepted when Secure Boot is enabled — CommunitySupported and PartnerSupported VIBs are rejected:
+Secure Boot disallows installation of unsigned VIBs and disallows the `--force` flag that would otherwise bypass the host acceptance level (KB 317698). Check the host acceptance level:
 
 ```bash
 esxcli software acceptance get
@@ -348,32 +334,20 @@ Requirements:
 - vSphere Trust Authority (optional — adds attestation enforcement)
 
 ```bash
-# Check TPM status from ESXi Shell
-esxcli system settings advanced get -o /UserVars/TpmBiosDeviceEnabled
+# Trusted boot status (TPM, DRTM) from ESXi Shell
+esxcli hardware trustedboot get
 
-# View TPM details
-cat /var/run/tpm/tpminfo.json 2>/dev/null
+# Encryption mode and policy (secure ESXi configuration)
+esxcli system settings encryption get
 ```
 
 
 ```text title="Expected output"
-Value of IntOption /UserVars/TpmBiosDeviceEnabled is 1
-{
-  "tpm_version": "2.0",
-  "tpm_device": "/dev/tpm0",
-  "tpm_enabled": true,
-  "manufacturer": "IFX",
-  "firmware_version": "7.63.3144.0",
-  "pcr_banks": ["sha1", "sha256"],
-  "last_measured": "2024-01-15T09:42:17Z"
-}
+Output varies by host and TPM hardware; see the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_hardware.html
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_system.html
 ```
 
-!!! warning "Common errors"
-    | Error | Fix |
-    |---|---|
-    | `cat: /var/run/tpm/tpminfo.json: No such file or directory` | TPM is not enabled or not present on this host; verify with `esxcli system settings advanced get -o /UserVars/TpmBiosDeviceEnabled` that TPM is set to 1. |
-    | `Value of IntOption /UserVars/TpmBiosDeviceEnabled is 0` | TPM is disabled in BIOS or ESXi settings; enable it in the host's BIOS firmware setup or use `esxcli system settings advanced set -o /UserVars/TpmBiosDeviceEnabled -i 1` and reboot. |
 View in vCenter: **Host → Configure → System → TPM**
 
 If TPM attestation fails, investigate recent firmware or BIOS changes. A failed attestation indicates the host's boot chain has changed — investigate before trusting the host.

@@ -7,7 +7,7 @@ tags:
 ---
 # NSX — Backup and Restore
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 ![NSX — Backup and Restore](../../../../../assets/virtualization-vmware-nsx-operations-backup-restore.svg)
 
 ```bash
@@ -119,7 +119,7 @@ Services:
 get cluster status
 
 # Transport node connectivity (may take 5–10 min to reconnect)
-get transport-node-status
+get transport-nodes status
 
 # Verify segments are present
 nsxcli
@@ -138,63 +138,7 @@ curl -sk -u 'admin:password' \
 ```
 
 ```text title="Expected output"
-cluster status: STABLE
-  nodes: 3/3 UP
-  manager-nodes: 3/3 UP
-  controller-nodes: 3/3 UP
-
-transport-node-status:
-  tn-compute-01: CONNECTED
-  tn-compute-02: CONNECTED
-  tn-compute-03: CONNECTED
-  tn-edge-01: CONNECTING (reconnect in progress)
-  tn-edge-02: CONNECTED
-
-logical-switches:
-  ls-prod-web: UUID 550e8400-e29b-41d4-a716-446655440000
-  ls-prod-db: UUID 6ba7b810-9dad-11d1-80b4-00c04fd430c8
-  ls-mgmt: UUID 6ba7b811-9dad-11d1-80b4-00c04fd430c8
-
-logical-routers:
-  lr-prod: UUID 550e8400-e29b-41d4-a716-446655440001
-  lr-mgmt: UUID 550e8400-e29b-41d4-a716-446655440002
-
-{
-  "results": [
-    {
-      "id": "default-layer3-section",
-      "display_name": "Default Layer 3 Rules",
-      "rules": [
-        {
-          "id": "rule-001",
-          "action": "ALLOW",
-          "source_groups": ["/infra/domains/default/groups/web-tier"]
-        }
-      ]
-    }
-  ],
-  "result_count": 1
-}
-
-{
-  "results": [
-    {
-      "id": "edge-cluster-1",
-      "display_name": "prod-edge-cluster",
-      "member_node_type": "EDGE_NODE",
-      "members": [
-        {
-          "transport_node_id": "tn-edge-01",
-          "status": "UP"
-        },
-        {
-          "transport_node_id": "tn-edge-02",
-          "status": "UP"
-        }
-      ]
-    }
-  ]
-}
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
@@ -202,7 +146,7 @@ logical-routers:
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN). |
     | `401 Unauthorized` | Verify admin credentials are correct and user has API access permissions; check NSX Manager audit logs for failed authentication attempts. |
-    | `transport-node-status: tn-edge-01 DISCONNECTED` | Check Edge node VM power state, network connectivity to NSX Manager, and certificate expiration on the Edge node via `get certificate-info`. |
+    | `tn-edge-01 DISCONNECTED` in transport node status | Check Edge node VM power state, network connectivity to NSX Manager, and certificate expiration on the Edge node via `get certificate api`. |
 ```bash
 # Export full policy config as JSON (use before changes for comparison)
 curl -sk -u 'admin:password' \

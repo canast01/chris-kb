@@ -11,7 +11,7 @@ description: "How It Works reference covering API Surfaces, Transport Nodes, Gen
 <div class="kb-summary">
 How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulation, Transport Zones, Gateway Architecture — T0 and T1 and 7 more sections.
 
-*Applies to: NSX-T 3.x · NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 ![NSX — How It Works](../../../../../assets/virtualization-vmware-nsx-architecture-how-it-works.svg)
 
@@ -94,44 +94,20 @@ NSX uses Geneve (port 6081) — not VXLAN. The VNI identifies which logical segm
 Geneve carries extensible metadata (security group tags, service chain IDs) inline — not possible with VXLAN.
 
 ```bash
-# Verify tunnel health from NSX Manager CLI
-nsxcli
-get tunnel status
-get tunnel status <remote-tep-ip>
+# Verify tunnel health from an NSX Edge node CLI
+get vteps
+get tunnel-ports
+get bfd-sessions
 ```
 
-
 ```text title="Expected output"
-NSX CLI (version 3.2.1.0)
-> get tunnel status
-Tunnel Status Summary:
-  Total Tunnels: 24
-  Up: 23
-  Down: 1
-  Degraded: 0
-
-Tunnel Details:
-  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.46 | Status: UP | RTT: 2.3ms
-  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.47 | Status: UP | RTT: 2.1ms
-  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.48 | Status: DOWN | RTT: N/A
-  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.49 | Status: UP | RTT: 2.4ms
-  ...
-
-> get tunnel status 192.168.100.48
-Tunnel Status for Remote TEP 192.168.100.48:
-  Status: DOWN
-  Last State Change: 2024-01-15 14:32:18 UTC
-  Failure Reason: Network unreachable
-  Packets Sent: 1245
-  Packets Received: 0
-  Packet Loss: 100%
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `command not found: nsxcli` | Ensure you are logged into an NSX Manager appliance via SSH and that the NSX CLI is available in the PATH. |
-    | `Error: Invalid remote TEP IP format` | Verify the remote TEP IP address is valid and reachable; use `get tunnel status` without arguments first to list all tunnel endpoints. |
+    | Remote TEP missing from `get bfd-sessions` | Confirm the remote TEP exists (`get vteps` on that node) and check TEP VLAN, MTU and routing between TEPs. |
 ---
 
 ## Transport Zones
@@ -178,33 +154,21 @@ T0 gateways run on Edge nodes and peer with physical routers via BGP or static r
 ```bash
 # Check HA state from Edge node
 get edge-cluster status
-set edge-cluster failover   # Force failover from active Edge
+get high-availability status
+# There is no CLI command to force an Edge failover. To move services off the
+# active Edge node, put it in maintenance mode (Policy API):
+curl -k -u admin -X POST \
+  "https://<nsx-mgr>/policy/api/v1/infra/sites/default/enforcement-points/default/edge-transport-nodes/<edge-tn-id>/action/enter-maintenance-mode"
 ```
 
-
 ```text title="Expected output"
-Edge Cluster Status:
-  Cluster ID: edge-cluster-01
-  Active Node: esg-edge-01.lab.local (192.168.1.45)
-  Standby Node: esg-edge-02.lab.local (192.168.1.46)
-  HA Status: ACTIVE
-  Last Heartbeat: 2024-01-15 14:32:18 UTC
-  Failover Count: 2
-  Health: HEALTHY
-
-Initiating failover from esg-edge-01 to esg-edge-02...
-Failover in progress: 45%
-Failover completed successfully
-New Active Node: esg-edge-02.lab.local (192.168.1.46)
-Standby Node: esg-edge-01.lab.local (192.168.1.45)
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: edge-cluster-01 not found in inventory` | Verify the edge cluster name matches your NSX deployment with `list edge-clusters`. |
-    | `Error: Cannot failover - standby node is UNHEALTHY` | Check standby node connectivity and NSX agent status before attempting failover. |
-    | `Error: Failover already in progress` | Wait for the current failover operation to complete before issuing another failover command. |
 ### Routing Flow — VM to External
 
 ```text
@@ -324,7 +288,7 @@ segment-id: segment-web-prod
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `segment <segment-id> not found` | Verify the segment ID exists with `get logical-switch list` and use the correct identifier from the output. |
+    | `segment <segment-id> not found` | Verify the segment ID exists with `get logical-switches` and use the correct identifier from the output. |
     | `error: not authenticated` | Ensure you have logged into NSX Manager with valid credentials before running nsxcli commands. |
 ---
 
@@ -335,73 +299,15 @@ NSX includes built-in IPAM for IP pool management and a distributed DHCP server 
 ```bash
 # List IP pools
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/pools/ip-pools"
+  "https://<nsx-manager>/policy/api/v1/infra/ip-pools"
 
 # Check pool allocations
 curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/pools/ip-pools/<pool-id>/ip-allocations"
+  "https://<nsx-manager>/policy/api/v1/infra/ip-pools/<pool-id>/ip-allocations"
 ```
 
-
 ```text title="Expected output"
-{
-  "results": [
-    {
-      "id": "pool-1",
-      "display_name": "Management-Pool",
-      "subnets": [
-        {
-          "cidr": "10.20.0.0/24",
-          "allocation_ranges": [
-            {
-              "start": "10.20.0.10",
-              "end": "10.20.0.250"
-            }
-          ]
-        }
-      ],
-      "resource_type": "IpAddressPool"
-    },
-    {
-      "id": "pool-2",
-      "display_name": "Workload-Pool",
-      "subnets": [
-        {
-          "cidr": "172.16.0.0/22",
-          "allocation_ranges": [
-            {
-              "start": "172.16.0.5",
-              "end": "172.16.3.250"
-            }
-          ]
-        }
-      ],
-      "resource_type": "IpAddressPool"
-    }
-  ],
-  "result_count": 2
-}
-
-{
-  "results": [
-    {
-      "ip_address": "10.20.0.15",
-      "allocation_id": "alloc-8f2c9a1b",
-      "owner": "nsx-edge-node-01"
-    },
-    {
-      "ip_address": "10.20.0.16",
-      "allocation_id": "alloc-7d4e5f2a",
-      "owner": "nsx-edge-node-02"
-    },
-    {
-      "ip_address": "10.20.0.17",
-      "allocation_id": "alloc-6b1a3c9d",
-      "owner": "logical-router-dr-01"
-    }
-  ],
-  "result_count": 3
-}
+Output varies by environment; see the NSX 9.1 REST API reference: https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/
 ```
 
 !!! warning "Common errors"
@@ -418,49 +324,22 @@ NSX supports IPsec site-to-site VPN and L2 VPN on Edge nodes (T0 or T1 with Edge
 
 ```bash
 # Check IPsec sessions from Edge CLI
-get vpn ipsec session list
+get ipsecvpn session
+get ipsecvpn session summary
 
 # Check L2 VPN sessions
-get vpn l2vpn session list
+get l2vpn sessions
 ```
 
-
 ```text title="Expected output"
-IPsec Sessions:
-Session ID: ipsec-session-01
-Peer IP: 192.168.100.50
-Status: UP
-Encryption: AES-256
-Authentication: SHA-256
-Bytes In: 1,847,293,456
-Bytes Out: 2,156,734,821
-Uptime: 45 days 12:34:56
-
-Session ID: ipsec-session-02
-Peer IP: 10.50.20.15
-Status: DOWN
-Encryption: AES-128
-Authentication: SHA-1
-Bytes In: 0
-Bytes Out: 0
-Uptime: 0 days 00:00:00
-
-L2 VPN Sessions:
-Session ID: l2vpn-session-01
-Peer IP: 172.16.50.100
-Status: UP
-Stretched Network: vlan-100
-MTU: 1500
-Packets In: 5,234,821
-Packets Out: 4,987,654
-Uptime: 23 days 08:15:22
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `error: vpn command not found` | Verify you are connected to the NSX Edge CLI with proper administrative credentials and that VPN services are enabled on the edge device. |
-    | `error: session list unavailable - vpn service not running` | Restart the VPN service on the NSX Edge using `restart vpn` or check edge device connectivity and licensing. |
+    | `error: session list unavailable - vpn service not running` | Check the IPSec VPN service state with `get ipsecvpn service` and the session state with `get ipsecvpn session status`, and check edge connectivity and licensing. |
 | IKE Setting | Recommended Value |
 |---|---|
 | IKE Version | IKEv2 |
@@ -504,31 +383,18 @@ NSX-V migrations are critical — NSX-V receives no patches.
 **Edge node logs (SSH):**
 
 ```bash
-get log-file syslog follow   # live tail
-get log-file auth.log        # authentication events
+get log-file list               # log files available on this node
+get log-file <file-name> follow # live tail of one file from the list
 ```
 
-
 ```text title="Expected output"
-2024-01-15T14:32:18.456Z [NSX-MANAGER-01] nsx-manager: INFO: API request from 192.168.1.45 - GET /api/v1/transport-zones
-2024-01-15T14:32:19.123Z [NSX-MANAGER-01] nsx-manager: DEBUG: TLS handshake completed with edge-node-03.lab.local
-2024-01-15T14:32:20.789Z [NSX-MANAGER-01] nsx-manager: INFO: Fabric node heartbeat received from 10.0.50.12
-2024-01-15T14:32:21.456Z [NSX-MANAGER-01] nsx-manager: WARNING: Connection timeout to controller-02 (attempt 2/3)
-2024-01-15T14:32:22.234Z [NSX-MANAGER-01] nsx-manager: INFO: Logical switch ls-prod-01 status: UP
-(following syslog — press Ctrl+C to exit)
-
-Jan 15 14:32:15 nsx-manager-01 sshd[4521]: Accepted publickey for admin from 192.168.1.100 port 54321 ssh2: RSA SHA256:aBcD1234efGH5678ijKL9012mnOP3456qrST7890uv
-Jan 15 14:32:18 nsx-manager-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/opt/vmware/nsx/bin/nsxcli
-Jan 15 14:32:22 nsx-manager-01 sshd[4523]: Failed password for invalid user operator from 203.0.113.55 port 49876 ssh2
-Jan 15 14:32:25 nsx-manager-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/opt/vmware/nsx/bin/get log-file auth.log
-Jan 15 14:32:27 nsx-manager-01 sshd[4525]: Accepted publickey for root from 192.168.1.100 port 54322 ssh2: ECDSA SHA256:xYz9876aBcD5432efGH1098ijKL7654mnOP3210qrST
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `Error: log file not found or insufficient permissions` | Verify the user has admin/root privileges and the log file path exists with `ls -la /var/log/syslog`. |
-    | `Error: follow mode not supported on this platform` | Remove the `follow` keyword and use `get log-file syslog | tail -f` instead for live tailing. |
 ## See also
 
 - [NSX — Design Standards](../design-standards/)

@@ -9,7 +9,7 @@ search:
 ---
 # vSAN — Common Issues
 
-*Applies to: VMware vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 ![vSAN — Common Issues](../../../../../assets/virtualization-vmware-vsan-troubleshooting-common-issues.svg)
 
 ```bash
@@ -28,8 +28,9 @@ esxcli vsan debug resync summary get
 # 5. Disk group status
 esxcli vsan storage list
 
-# 6. Network connectivity between hosts
-esxcli vsan debug network test
+# 6. Network: unicast peers this host knows about (run the vSAN network
+#    health checks / Test-VsanNetworkPerformance in PowerCLI for a full test)
+esxcli vsan cluster unicastagent list
 ```
 
 ```text
@@ -90,30 +91,15 @@ checkCap -> escalate
 # Find degraded/absent objects
 esxcli vsan debug object list | grep -v "Healthy"
 
-# Get detail on a specific object UUID
-esxcli vsan debug object get -u <object-uuid>
+# Get detail (components, hosts, disks) on a specific object UUID
+esxcli vsan debug object list -u <object-uuid>
 
-# Check which host/disk the absent components are on
-esxcli vsan debug component list | grep -i absent
+# Objects with absent components
+esxcli vsan debug object list | grep -i absent
 ```
 
-```text title="Expected output"
-Name                                     UUID                                 Health State
-vm-123-delta.vmdk                        52a4c8f1-2b3e-4f9a-8c1d-7e9f2a3b4c5d Degraded
-vm-456-swap.vmdk                         61b5d9g2-3c4f-5g0b-9d2e-8f0g3b4c5d6e Absent
-vm-789-config.vmx                        70c6e0h3-4d5g-6h1c-0e3f-9g1h4c5d6e7f Degraded
-
-Object UUID: 52a4c8f1-2b3e-4f9a-8c1d-7e9f2a3b4c5d
-Object Name: vm-123-delta.vmdk
-Health State: Degraded
-Component Count: 3
-Absent Components: 1
-Owner: esx-host-01.lab.local
-
-Component UUID                           Host                    Disk                 Status
-a1b2c3d4-e5f6-7890-abcd-ef1234567890   esx-host-02.lab.local   naa.600508b1001c5a6b7 Absent
-b2c3d4e5-f6a7-8901-bcde-f12345678901   esx-host-03.lab.local   naa.600508b1001c5a6c Present
-c3d4e5f6-a7b8-9012-cdef-123456789012   esx-host-04.lab.local   naa.600508b1001c5a6d Present
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -121,25 +107,14 @@ c3d4e5f6-a7b8-9012-cdef-123456789012   esx-host-04.lab.local   naa.600508b1001c5
     |---|---|
     | `Error: Unknown command or namespace vsan debug object` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status. |
     | `Error: Invalid object UUID format` | Ensure the UUID is exactly 36 characters in the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` with no extra spaces. |
-```bash
-esxcli vsan debug network test
-# Loss % > 0 indicates network issues — check switch, NIC, or vDS configuration
+```powershell
+# vSAN network performance test (PowerCLI) — loss or low bandwidth indicates
+# network issues; check switch, NIC, or vDS configuration
+Test-VsanNetworkPerformance -Cluster <cluster>
 ```
 
-```text title="Expected output"
-Pinging 10.20.30.41 (esx-node-02.lab.local) ...
-Packets sent: 1000, received: 1000, loss: 0%
-Round-trip times (ms): min=0.234, avg=0.512, max=2.156
-
-Pinging 10.20.30.42 (esx-node-03.lab.local) ...
-Packets sent: 1000, received: 998, loss: 0.2%
-Round-trip times (ms): min=0.198, avg=0.489, max=1.834
-
-Pinging 10.20.30.43 (esx-node-04.lab.local) ...
-Packets sent: 1000, received: 1000, loss: 0%
-Round-trip times (ms): min=0.267, avg=0.541, max=2.412
-
-Network test completed successfully.
+```text
+Output varies; see the cmdlet help in VMware.VimAutomation.Storage: https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617
 ```
 
 !!! warning "Common errors"
@@ -155,24 +130,12 @@ esxcli vsan debug object list | grep -i "inaccessible"
 # Check host count in cluster
 esxcli vsan cluster get | grep -i "member"
 
-# Network partition test
-esxcli vsan debug network test
+# Network partition check — unicast peers known to this host
+esxcli vsan cluster unicastagent list
 ```
 
-```text title="Expected output"
-Object UUID: 52e4a1c2-1a3f-4d8e-9b2c-7f6e3d1a0c5b, State: inaccessible, Components: 3/3
-Object UUID: 8f2d9c1e-5a7b-4c6f-8e3a-2b1d9f4a6c8e, State: inaccessible, Components: 2/3
-
-Cluster Member Count: 4
-Cluster Member Count: 4
-
-Network partition test started on host esx-prod-04.lab.local
-Testing connectivity to cluster members...
-  esx-prod-01.lab.local: OK (RTT: 2.3ms)
-  esx-prod-02.lab.local: OK (RTT: 2.1ms)
-  esx-prod-03.lab.local: TIMEOUT (RTT: >5000ms)
-  esx-prod-04.lab.local: OK (RTT: 1.9ms)
-Network partition test completed. Status: DEGRADED
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -183,8 +146,8 @@ Network partition test completed. Status: DEGRADED
     | `Command timed out waiting for cluster response` | Verify all cluster hosts are powered on and accessible, then retry the command. |
 ```bash
 # Check and remove throttle (if set too low)
-esxcli vsan debug resync throttle get
-esxcli vsan debug resync throttle set --throttle 0  # unlimited
+esxcli vsan resync throttle get
+esxcli vsan resync throttle set --level 0  # 0 = no throttling
 
 # Check capacity
 esxcli vsan storage list
@@ -193,31 +156,14 @@ esxcli vsan storage list
 esxcli vsan debug object list | grep -i "stale\|absent"
 ```
 
-```text title="Expected output"
-Current resync throttle setting: 100 MB/s
-Resync throttle set to: 0 (unlimited)
-VSAN storage on host esx-node-04.lab.local:
-  UUID: 52e3d8c1-a4f2-4e1a-9b2c-7f6e3d1a0c5b
-  Capacity: 1.8 TB
-  Free: 342 GB
-  Used: 1.5 TB
-  Health: Healthy
-
-Object UUID: 4a2c8f9e-1b3d-47e2-9c5f-8d2a1e6b3f4c
-  State: stale
-  Components: 3/3 present
-  Accessibility: Inaccessible
-
-Object UUID: 6f1d3e8a-2c4b-5a9e-7b1f-3c2d8e9a1b4f
-  State: absent
-  Components: 0/3 present
-  Accessibility: Inaccessible
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: The VSAN service is not running on this host` | Run `esxcli vsan cluster get` to verify VSAN is enabled, then restart the service with `systemctl restart vsanmgmt`. |
+    | `Error: The VSAN service is not running on this host` | Run `esxcli vsan cluster get` to verify VSAN is enabled, then restart the vSAN management daemon with `/etc/init.d/vsanmgmtd restart` ([Broadcom KB 318410](https://knowledge.broadcom.com/external/article/318410)). |
     | `Error: Permission denied` | Ensure your account has VSAN administrator privileges; use `esxcli system permission list` to verify role assignments. |
 ```bash
 # Check disk group and disk status
@@ -240,7 +186,7 @@ checkNet: "checkNet" {shape: rectangle}
 fixMTU: "Fix MTU end-to-end\n(switch, vDS, vmk adapter = 9000" {shape: rectangle}
 resolved: "Latency normal" {shape: rectangle}
 checkResync: "checkResync" {shape: rectangle}
-throttle: "Throttle resync during\nbusiness hours:\nesxcli vsan debug resync\nthrottle set --throttle 500" {shape: rectangle}
+throttle: "Throttle resync during\nbusiness hours:\nesxcli vsan resync\nthrottle set --level 500" {shape: rectangle}
 checkCap: "checkCap" {shape: rectangle}
 freeCap: "Free capacity:\ndelete snapshots,\nexpand cluster" {shape: rectangle}
 checkDisk: "checkDisk" {shape: rectangle}
@@ -267,38 +213,19 @@ vMotion -> resolved
 checkCPU -> openCase
 ```
 ```bash
-# Per-disk I/O stats (IOPS, latency)
-esxcli vsan storage stats get
+# Per-disk vSAN detail (health, congestion); per-disk IOPS/latency come from
+# the vSAN performance service (vSphere Client or PowerCLI Get-VsanStat)
+esxcli vsan debug disk list
 
-# vSAN congestion indicator — should be 0
+# VMDKs on the local vSAN datastore
 esxcli vsan debug vmdk list
 
 # Check vSAN network latency
 vmkping -I vmk2 -d -s 8972 <peer_vmk_ip>
 ```
 
-```text title="Expected output"
-IOPS: 4521 Read, 3847 Write
-Latency (ms): Read 2.34, Write 1.87
-Throughput (MB/s): Read 287.5, Write 256.3
-Congestion Level: 0
-Network Overhead: 2.1%
-
-VMDK: vm-prod-db-01_1.vmdk
-  Congestion: 0
-  Outstanding I/O: 12
-VMDK: vm-web-app-02_1.vmdk
-  Congestion: 0
-  Outstanding I/O: 8
-
-PING vm-peer-esx02.lab.local (172.16.45.82): 8972 data bytes
-8980 bytes from 172.16.45.82: icmp_seq=0 time=0.892 ms
-8980 bytes from 172.16.45.82: icmp_seq=1 time=0.887 ms
-8980 bytes from 172.16.45.82: icmp_seq=2 time=0.901 ms
-8980 bytes from 172.16.45.82: icmp_seq=3 time=0.879 ms
---- 172.16.45.82 statistics ---
-4 packets transmitted, 4 packets received, 0% packet loss
-round-trip min/avg/max = 0.879/0.890/0.901 ms
+```text
+Output varies by release and cluster state; see https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
@@ -308,9 +235,6 @@ round-trip min/avg/max = 0.879/0.890/0.901 ms
     | `Unable to resolve host address <peer_vmk_ip>` | Verify the peer ESXi hostname or IP is correct and that vmk2 is bound to the vSAN network (check with `esxcli network ip interface list`). |
     | `No route to host` | Confirm vSAN VMkernel adapters are on the same subnet and vSAN network connectivity is not blocked by firewall rules or VLAN misconfiguration. |
 ```bash
-# Test network connectivity to all peers
-esxcli vsan debug network test
-
 # List vSAN VMkernel adapters
 esxcli vsan network list
 
@@ -319,7 +243,7 @@ vmkping -I vmk2 -d -s 8972 <peer_vmk_ip>
 # Failure = MTU mismatch along the path
 
 # Check unicast agent list
-esxcli vsan network ipconfig list
+esxcli vsan cluster unicastagent list
 # All cluster host vSAN vmk IPs should appear as unicast agents
 ```
 ```powershell
@@ -335,21 +259,13 @@ Get-VM | Select Name, MemoryGB | Sort-Object MemoryGB -Descending | Select -Firs
 Get-HardDisk -VM * | Where-Object { $_.StorageFormat -eq "Thick" } |
     Select Parent, Name, CapacityGB, StorageFormat
 ```
-```bash
-esxcli vsan debug network test
-# Packet loss to one or more hosts
+```powershell
+# vSAN network performance test (PowerCLI) — packet loss to one or more hosts
+Test-VsanNetworkPerformance -Cluster <cluster>
 ```
 
-```text title="Expected output"
-Testing VSAN network connectivity...
-Host: esx-01.lab.local (192.168.1.10) — OK (0% loss)
-Host: esx-02.lab.local (192.168.1.11) — OK (0% loss)
-Host: esx-03.lab.local (192.168.1.12) — DEGRADED (12% loss)
-Host: esx-04.lab.local (192.168.1.13) — OK (0% loss)
-
-Network test completed.
-Summary: 3/4 hosts healthy. 1 host experiencing packet loss.
-Recommendation: Check physical NIC on esx-03, verify VSAN network MTU (9000), inspect switch port for errors.
+```text
+Output varies; see the cmdlet help in VMware.VimAutomation.Storage: https://www.powershellgallery.com/packages/VMware.VimAutomation.Storage/13.5.2.25952617
 ```
 
 !!! warning "Common errors"

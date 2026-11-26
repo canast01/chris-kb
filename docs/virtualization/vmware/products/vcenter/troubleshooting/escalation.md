@@ -13,7 +13,7 @@ description: "How to escalate vCenter Server issues to Broadcom support: what da
 <div class="kb-summary">
 How to escalate vCenter Server issues to Broadcom support: what data to collect, how to generate the VCSA support bundle, step-by-step SR submission on the Broadcom portal, and the escalation path when progress stalls.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Escalation](../../../../../assets/virtualization-vmware-vcenter-troubleshooting-escalation.svg)
 
@@ -64,9 +64,9 @@ Run these before opening the SR. Many vCenter issues are resolvable without Broa
 | Check | Command / location | Expected result |
 |---|---|---|
 | vCenter UI accessible | Browse to `https://<vcenter-fqdn>/ui/` | Login page loads |
-| VCSA services status | SSH → `service-control --status` | All services show `Running` |
+| VCSA services status | SSH → `service-control --status --all` | All services show `Running` |
 | vpxd service | SSH → `service-control --status vmware-vpxd` | `Running` |
-| SSO service | SSH → `service-control --status vmware-sso` | `Running` |
+| SSO service (Security Token Service) | SSH → `service-control --status vmware-stsd` | `Running` |
 | Embedded DB space | SSH → `df -h /storage/db` | Under 70% used |
 | Disk space overall | SSH → `df -h` | No partition at 100% |
 | vCSHA status (if configured) | vSphere Client → vCenter HA | Active node healthy |
@@ -154,8 +154,8 @@ Upload this .tgz file to the Broadcom case. It contains all VCSA service logs, d
 ls -lh /var/log/vmware/vpxd/
 cp /var/log/vmware/vpxd/vpxd.log /tmp/vpxd-$(date +%Y%m%d).log
 
-# Also collect the SSO log if login is failing
-cp /var/log/vmware/sso/vmware-sts-idmd.log /tmp/vmware-sts-idmd-$(date +%Y%m%d).log
+# Also collect the SSO (STS) log if login is failing — log names per KB 310254
+cp /var/log/vmware/sso/vmware-identity-sts.log /tmp/vmware-identity-sts-$(date +%Y%m%d).log
 
 # For upgrade failures, collect the installer log
 ls -lh /var/log/vmware/install/
@@ -169,10 +169,6 @@ total 2.4G
 -rw-r--r-- 1 root root 256M Jan 13 22:10 vpxd.log.2
 -rw-r--r-- 1 root root 128M Jan 12 15:33 vpxd.log.3
 -rw-r--r-- 1 root root  64M Jan 11 09:15 vpxd.log.4
-total 1.8G
--rw-r--r-- 1 root root 1.2G Jan 15 10:45 vmware-sts-idmd.log
--rw-r--r-- 1 root root 512M Jan 14 19:20 vmware-sts-idmd.log.1
--rw-r--r-- 1 root root 256M Jan 13 23:05 vmware-sts-idmd.log.2
 total 3.6G
 -rw-r--r-- 1 root root 2.1G Jan 15 08:30 vmware-installer.log
 -rw-r--r-- 1 root root 1.5G Jan 14 12:15 vmware-installer.log.1
@@ -182,7 +178,7 @@ total 3.6G
     | Error | Fix |
     |---|---|
     | `cp: cannot create regular file '/tmp/vpxd-20250115.log': No space left on device` | Check available disk space with `df -h /tmp` and either clean up /tmp or redirect to a partition with sufficient space. |
-    | `cp: /var/log/vmware/sso/vmware-sts-idmd.log: No such file or directory` | Verify the SSO service is installed and running with `systemctl status vmware-sts-idmd`, or check the correct log path for your vCenter version. |
+    | `cp: /var/log/vmware/sso/vmware-identity-sts.log: No such file or directory` | List `/var/log/vmware/sso/` and check the SSO log names for your version in KB 310254; check the STS service with `service-control --status vmware-stsd`. |
     | `Permission denied` | Run the commands with `sudo` or as root, since /var/log/vmware files are typically readable only by root. |
 ### 4. Check VCSA disk space (a common cause of VCSA service failures)
 
@@ -225,13 +221,13 @@ total 2.4G
 
 ```bash
 # List all VCSA services and their state
-service-control --status
+service-control --status --all
 
 # Show recent errors in the primary service log
 grep -i "ERROR\|FATAL\|Exception" /var/log/vmware/vpxd/vpxd.log | tail -50
 
-# If SSO/login is failing
-grep -i "ERROR\|FATAL" /var/log/vmware/sso/vmware-sts-idmd.log | tail -30
+# If SSO/login is failing (STS log, KB 310254)
+grep -i "ERROR\|FATAL" /var/log/vmware/sso/vmware-identity-sts.log | tail -30
 
 # Database health check
 /usr/lib/vmware-vpostgres/bin/psql -U vc -d VCDB -c "SELECT count(*) FROM vpx_task WHERE state = 'running';"
@@ -239,27 +235,9 @@ grep -i "ERROR\|FATAL" /var/log/vmware/sso/vmware-sts-idmd.log | tail -30
 
 
 ```text title="Expected output"
-Service vmware-vpxd is running
-Service vmware-vpostgres is running
-Service vmware-sso is running
-Service vmware-rhttpproxy is running
-Service vmware-cm is running
-Service vmware-cis-license is running
-Service vmware-analytics is running
-
-2024-01-15T09:42:31.847Z ERROR [vpxd] [140234567890] [vpxd.log] Failed to connect to inventory service: Connection timeout after 30s
-2024-01-15T09:41:12.234Z FATAL [vpxd] [140234567890] [vpxd.log] Database connection pool exhausted, rejecting new connections
-2024-01-15T09:39:45.123Z ERROR [vpxd] [140234567890] [vpxd.log] Task 'task-1234' failed: NFC connection lost to host esx-prod-01.lab.local
-2024-01-15T09:38:22.456Z ERROR [vpxd] [140234567890] [vpxd.log] Unable to retrieve cluster configuration from host 192.168.1.45
-
-2024-01-15T08:15:33.567Z ERROR [sso] [140123456789] [vmware-sts-idmd.log] LDAP bind failed for user administrator@vsphere.local: Invalid credentials
-2024-01-15T08:14:12.234Z ERROR [sso] [140123456789] [vmware-sts-idmd.log] Token validation failed: Certificate expired on 2024-01-10
-
- count
--------
-     12
-(1 row)
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://knowledge.broadcom.com/external/article/310254/enabling-debug-logging-for-sso-and-authe.html (SSO log files).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
@@ -270,7 +248,7 @@ Service vmware-analytics is running
 ### 6. Write the timeline
 
 ```text
-vCenter version: 8.0 U2c build 23477823
+vCenter version: 8.0 U2c build 23504390
 VCSA hostname: vcenter-01.corp.local
 Issue first observed: 2026-06-14 14:30 UTC
 Last known good state: 2026-06-14 10:00 UTC
@@ -370,7 +348,7 @@ Paste these into case replies to show Broadcom the current state.
 
 ```bash
 # VCSA service status — paste into every case update
-service-control --status
+service-control --status --all
 
 # Most recent vpxd errors (last 50 lines of ERROR-level entries)
 grep -i "ERROR\|FATAL" /var/log/vmware/vpxd/vpxd.log | tail -50
@@ -381,8 +359,8 @@ df -h
 # NTP status
 timedatectl status
 
-# vCSHA status (if configured)
-vcha-util status 2>/dev/null || echo "vCSHA not configured"
+# vCenter HA status (if configured): vSphere Client → vCenter → Configure → vCenter HA,
+# or POST /api/vcenter/vcha/cluster?action=get (vSphere Automation API)
 
 # Recent system logs
 journalctl -n 100 --no-pager 2>/dev/null | tail -50
@@ -390,46 +368,9 @@ journalctl -n 100 --no-pager 2>/dev/null | tail -50
 
 
 ```text title="Expected output"
-SERVICE STATUS
-Service                                    Running    Enabled
-vmon                                       true       true
-vpxd                                       true       true
-vsphere-ui                                 true       true
-vsan-health                                true       true
-rhttpproxy                                 true       true
-sps                                        true       true
-psc                                        true       true
-
-2024-01-15T09:47:32.891Z ERROR vpxd[7F2A4C1E] [Originator@6876 sub=Default] Failed to connect to inventory service: connection timeout after 30s
-2024-01-15T09:48:15.442Z FATAL vpxd[7F2A4C1E] [Originator@6876 sub=Hostd] Host agent on esx-prod-04.lab.local unreachable
-2024-01-15T09:49:02.156Z ERROR vpxd[7F2A4C1E] [Originator@6876 sub=VsanMgmt] VSAN cluster health check failed: quorum lost
-2024-01-15T09:50:44.721Z ERROR vpxd[7F2A4C1E] [Originator@6876 sub=Default] License capacity exceeded: 512 VMs licensed, 518 running
-
-Filesystem                Size  Used Avail Use% Mounted on
-/dev/mapper/root_vol     100G   87G   13G  87% /
-/dev/mapper/log_vol       50G   42G    8G  84% /var/log
-/dev/mapper/db_vol       200G  156G   44G  78% /storage/db
-tmpfs                     16G  2.1G   14G  13% /dev/shm
-
-               Local time: Mon 2024-01-15 09:52:18 UTC
-           Universal time: Mon 2024-01-15 09:52:18 UTC
-                 RTC time: Mon 2024-01-15 09:52:18 UTC
-                Time zone: UTC (UTC, +0000)
-System clock synchronized: yes
-              NTP service: active
-       RTC in local TZ: no
-
-VCHA Cluster Status: HEALTHY
-Node Role: ACTIVE
-Partner Node: vcsa-02.lab.local (192.168.1.52)
-Last Heartbeat: 2024-01-15T09:52:10Z
-
-Jan 15 09:51:42 vcsa-01 systemd[1]: Started VMware vCenter Server.
-Jan 15 09:51:55 vcsa-01 vpxd[8234]: Inventory service initialized
-Jan 15 09:52:03 vcsa-01 rhttpproxy[5621]: SSL handshake completed for client 192.168.1.100
-Jan 15 09:52:10 vcsa-01 vcha-util[9876]: Heartbeat received from passive node
-Jan 15 09:52:18 vcsa-01 kernel: audit: type=1400 audit(1705318338.123:456): apparmor="DENIED" operation="capable"
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://developer.broadcom.com/xapis/vsphere-automation-api/latest/api/vcenter/vcha/cluster__action=get/post/ (vCenter HA status).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
@@ -461,7 +402,7 @@ Your support tier (Production, Premier, Mission Critical) may reduce these SLAs.
 
 - vSphere Client loads the login page and you can authenticate successfully
 - All ESXi hosts show "Connected" in the vSphere Client
-- Run `service-control --status` and confirm all services show `Running`
+- Run `service-control --status --all` and confirm all services show `Running`
 - Run `df -h` and confirm no partition is above 80%
 - Perform the action that was failing (vMotion a test VM, add a host, provision a VM) and confirm it succeeds
 - Monitor the vSphere Client Alarms view for 15 minutes and confirm no new vCenter-related alarms

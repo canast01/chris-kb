@@ -7,7 +7,7 @@ tags:
 ---
 # NSX — Scripts
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 ![NSX — Scripts](../../../../../assets/virtualization-vmware-nsx-operations-scripts.svg)
 
 ```python
@@ -318,21 +318,19 @@ try:
         state   = t0.get("failover_mode", "PREEMPTIVE")
         print(f"  [INFO ] {t0_name:<40}  ha_mode={ha_mode}  failover={state}")
 
-        # BGP neighbors via management plane API
+        # BGP neighbor status via the Policy API (per locale-service)
         try:
-            lr_list = get("/api/v1/logical-routers", params={"router_type": "TIER0"})
-            for lr in lr_list.get("results", []):
-                if lr.get("display_name") == t0_name or lr.get("id") == t0_id:
-                    lr_id = lr["id"]
-                    bgp = get(f"/api/v1/logical-routers/{lr_id}/routing/bgp/neighbors/summary")
-                    for nbr in bgp.get("results", []):
-                        for n in nbr.get("bgp_neighbors_table_entry", []):
-                            nbr_ip   = n.get("neighbor_address", "?")
-                            nbr_state = n.get("connection_state", "?")
-                            ok = nbr_state.upper() == "ESTABLISHED"
-                            if not ok:
-                                overall = max(overall, 2)
-                            print(f"       BGP [{status_mark(ok)}] {nbr_ip:<20} state={nbr_state}")
+            ls_list = get(f"/policy/api/v1/infra/tier-0s/{t0_id}/locale-services")
+            for ls in ls_list.get("results", []):
+                ls_id = ls["id"]
+                bgp = get(f"/policy/api/v1/infra/tier-0s/{t0_id}/locale-services/{ls_id}/bgp/neighbors/status")
+                for n in bgp.get("results", []):
+                    nbr_ip    = n.get("neighbor_address", "?")
+                    nbr_state = n.get("connection_state", "?")
+                    ok = nbr_state.upper() == "ESTABLISHED"
+                    if not ok:
+                        overall = max(overall, 2)
+                    print(f"       BGP [{status_mark(ok)}] {nbr_ip:<20} state={nbr_state}")
         except Exception:
             pass
 except Exception as e:
@@ -709,11 +707,11 @@ if %ERRORLEVEL% neq 0 (
 
 echo.
 echo --- Transport Nodes ---
-%PLINK% -ssh -l %SSH_USER% -batch %NSX_HOST% "get transport-nodes"
+%PLINK% -ssh -l %SSH_USER% -batch %NSX_HOST% "get transport-nodes status"
 
 echo.
 echo --- Active Alarms ---
-%PLINK% -ssh -l %SSH_USER% -batch %NSX_HOST% "get alarms"
+echo The NSX CLI has no alarms command; check GET /api/v1/alarms?status=OPEN
 
 echo.
 echo === NSX-T check complete ===

@@ -1690,6 +1690,29 @@ for _p in all_md():
             warn(issues, f'{_rel}: version table has no source links and no "Unverified version history" warning')
 
 
+# ── Check 73: verified-invalid vendor commands / API paths ───────────────────
+# Found 2026-11-25 (cert-KB Phase A): nearly every vendor section contained commands,
+# API paths and flags that do not exist in the vendor's own reference (e.g. NSX
+# `get tunnel status`, esxcli `system settings advanced get`). Phase B1 fixes them
+# section by section and registers each class in scripts/known_invalid_commands.py.
+issues = check(73, 'Verified-invalid vendor command / API path')
+try:
+    from known_invalid_commands import RULES as _rules73
+except ImportError:
+    _rules73 = []
+_compiled73 = [(r['scope'], re.compile(r['pattern']), r) for r in _rules73]
+if _compiled73:
+    for _p in all_md():
+        _rel = os.path.relpath(_p, DOCS)
+        _active = [c for c in _compiled73 if _rel.startswith(c[0])]
+        if not _active:
+            continue
+        for _n, _line in enumerate(open(_p, encoding='utf-8'), 1):
+            for _scope, _rx, _r in _active:
+                if _rx.search(_line):
+                    warn(issues, f'{_rel}:{_n}: {_r["wrong"]} -> {_r["right"]}')
+
+
 # ── Check 72: stale public TLS certificate lifetime ──────────────────────────
 # Found 2026-11-25: pages stated the 397/398-day public TLS maximum as current.
 # CA/B Forum ballot SC081: 200 days from 2026-03-15, 100 days from 2027-03-15,

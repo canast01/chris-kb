@@ -13,7 +13,7 @@ description: "vCenter Server diagnostic commands: check disk partitions and serv
 <div class="kb-summary">
 vCenter Server diagnostic commands: check disk partitions and service health with vmon-cli, tail vpxd.log and SSO logs, validate DNS and NTP, check certificate expiry with vecs-cli, diagnose SSO identity source with ldapsearch, query the vCenter REST API, run PowerCLI cluster health checks, and collect the VCSA support bundle.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: vCenter 9.x (VCF/VVF 9) · vCenter 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vCenter — Diagnostics](../../../../../assets/virtualization-vmware-vcenter-troubleshooting-diagnostics.svg)
 
@@ -21,14 +21,14 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 direction: right
 
 B: "B" {shape: rectangle}
-C: "vmon-cli -l to check service state\ndf -h for /storage/db and /storage/log" {shape: rectangle}
+C: "vmon-cli -s <service> to check service state\ndf -h for /storage/db and /storage/log" {shape: rectangle}
 D: "tail ssoAdminServer.log\nCheck NTP: chronyc tracking" {shape: rectangle}
 E: "nslookup vcenter-fqdn from ESXi\nnc -zv vcenter 443 to test port" {shape: rectangle}
 F: "vecs-cli entry list store MACHINE_SSL_CERT\nopenssl s_client -connect vcenter:443 for expiry" {shape: rectangle}
 G: "vpxd.log for task errors\nPostgres: select pg_stat_activity to check stuck\nqueries" {shape: rectangle}
 H: "curl -sk REST API session acquire\nCheck vpxd.log for API error codes" {shape: rectangle}
 I: "I" {shape: rectangle}
-J: "journalctl -u vmware-vpxd -n 100\nservice-control --start vpxd" {shape: rectangle}
+J: "journalctl -u vmware-vpxd -n 100\nservice-control --start vmware-vpxd" {shape: rectangle}
 K: "df -h /storage/db — check if >80%\nps aux to check vpxd CPU" {shape: rectangle}
 L: "L" {shape: rectangle}
 M: "chronyc makestep to force sync\nCheck timedatectl for AD time source" {shape: rectangle}
@@ -143,10 +143,11 @@ Key partitions and alert thresholds:
 | `/` | Root filesystem | 85% |
 
 ```bash
-# All vCenter service status
+# Services monitored by vmon, then health of one service (KB 415673)
 vmon-cli -l
-# Expected: all services RUNNING
-# Problem: any service STOPPED — note which service
+vmon-cli -s vpxd
+# Expected: RunState: STARTED and HealthState: HEALTHY
+# Problem: any other RunState / HealthState — note which service
 
 # Recent service events (for any stopped service)
 journalctl -u vmware-vpxd -n 100 --no-pager | grep -i "error\|fail\|crash"
@@ -162,35 +163,9 @@ find /storage/log -name "*.gz" -mtime +30 -delete
 
 
 ```text title="Expected output"
-Service                                    Running  Enabled
-applmgmt                                   true     true
-certificatemanagement                      true     true
-eam                                        true     true
-envoy                                      true     true
-imagebuilder                               true     true
-netdumper                                  true     true
-observability-client                       true     true
-perfcharts                                 true     true
-pschealth                                  true     true
-statsmonger                                true     true
-vapi-endpoint                              true     true
-vcenter-ui                                 true     true
-vmware-vpxd                                true     true
-vmware-stsd                                true     true
-vmonapi                                    true     true
-
--- Logs begin at Wed 2024-01-10 14:22:31 UTC, end at Wed 2024-01-10 15:47:09 UTC --
-Jan 10 15:31:22 vcenter-01.corp.local vpxd[4521]: [error] Failed to connect to inventory service: timeout after 30s
-Jan 10 15:32:15 vcenter-01.corp.local vpxd[4521]: [warn] Retrying database connection pool initialization
-
-Jan 10 15:33:44 vcenter-01.corp.local stsd[5892]: [error] Token validation failed for user admin@vsphere.local
-
-Service                                    Status
-applmgmt                                   RUNNING
-eam                                        STOPPED
-netdumper                                  STOPPED
----OUTPUT---
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/415673/checking-a-service-health-state-in-vcent.html (vmon-cli -l / -s output) and https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
@@ -210,7 +185,7 @@ tail -200 /var/log/vmware/vpxd/vpxd.log | grep -i "error\|fatal\|panic"
 tail -f /var/log/vmware/vpxd/vpxd.log | grep -i "error\|fatal"
 
 # SSO login failures
-tail -200 /var/log/vmware/sso/vmware-sts-idmd.log | grep -i "fail\|error\|bind"
+tail -200 /var/log/vmware/sso/vmware-identity-sts.log | grep -i "fail\|error\|bind"
 
 # SSO admin server (token issuance failures)
 tail -200 /var/log/vmware/sso/ssoAdminServer.log | grep -i "fail\|error"
@@ -224,29 +199,22 @@ tail -100 /var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log | grep -i "er
 
 
 ```text title="Expected output"
-2024-01-15T09:47:23.456Z [ERROR] vpxd[7F2A4C1E9B2D] Failed to connect to inventory service: Connection timeout after 30000ms
-2024-01-15T09:47:45.123Z [FATAL] vpxd[7F2A4C1E9B2D] Database connection pool exhausted, max connections: 100
-2024-01-15T09:48:12.789Z [ERROR] vpxd[7F2A4C1E9B2D] Task 'com.vmware.vc.vm.powerOn' failed: Host 'esx-prod-04.lab.local' is unreachable
-2024-01-15T10:02:33.456Z [ERROR] vmware-sts-idmd[5E8F2C9A1B4D] LDAP bind failed for user admin@vsphere.local: Invalid credentials
-2024-01-15T10:02:34.789Z [ERROR] ssoAdminServer[3C7E9F2A5B1D] Token issuance failed: Certificate validation error - cert expired on 2024-01-10
-2024-01-15T10:03:01.234Z [INFO] certificate-manager: Issuing certificate for CN=vcenter.lab.local, validity: 365 days
-2024-01-15T10:03:02.567Z [INFO] certificate-manager: Certificate installed successfully, thumbprint: A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D
-2024-01-15T10:15:44.890Z [ERROR] vsphere_client_virgo: Exception in com.vmware.vsphere.client.services.VmService: NullPointerException at line 342
-2024-01-15T10:15:45.123Z [ERROR] vsphere_client_virgo: Failed to retrieve datastore inventory: HTTP 503 Service Unavailable
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/310254/enabling-debug-logging-for-sso-and-authe.html (SSO log files under /var/log/vmware/sso/ for 7.0/8.0/9.0).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `[FATAL] vpxd Database connection pool exhausted, max connections: 100` | Increase the database connection pool size in /etc/vmware-vpx/vpxd.cfg by setting `maxConnections` to a higher value (e.g., 150) and restart vpxd service. |
     | `LDAP bind failed for user admin@vsphere.local: Invalid credentials` | Verify SSO admin credentials and LDAP connectivity; check that the identity source is properly configured in vCenter Administration > Single Sign-On > Configuration. |
-    | `Certificate validation error - cert expired on 2024-01-10` | Regenerate and install a new vCenter certificate using `/usr/lib/vmware-vpx/bin/certificate-manager` or request a new one from your CA and import it. |
+    | `Certificate validation error - cert expired on 2024-01-10` | Regenerate and install a new vCenter certificate using `/usr/lib/vmware-vmca/bin/certificate-manager` (KB 318946) or request a new one from your CA and import it. |
 All logs on the VCSA appliance:
 
 | Component | Primary Log Path |
 |---|---|
 | vpxd (core vCenter) | `/var/log/vmware/vpxd/vpxd.log` |
-| SSO identity daemon | `/var/log/vmware/sso/vmware-sts-idmd.log` |
+| SSO Security Token Service | `/var/log/vmware/sso/vmware-identity-sts.log` |
 | SSO admin server | `/var/log/vmware/sso/ssoAdminServer.log` |
 | vSphere Client | `/var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log` |
 | Certificate manager | `/var/log/vmware/vmcad/certificate-manager.log` |
@@ -412,7 +380,6 @@ Certificate renewals: **VAMI → `https://<vcenter>:5480` → Certificate Manage
 ```bash
 # SSO service health
 service-control --status vmware-stsd
-service-control --status vmware-sts-idmd
 
 # SSO domain info
 /usr/lib/vmware-vmafd/bin/vmafd-cli get-domain-name --server-name localhost
@@ -435,42 +402,16 @@ ldapsearch -x \
 
 
 ```text title="Expected output"
-SERVICE vmware-stsd (pid 2847) is running.
-SERVICE vmware-sts-idmd (pid 2851) is running.
-vsphere.local
-ldaps://ls.vsphere.local:636/dc=vsphere,dc=local
-Enter LDAP Password: 
-# extended LDIF
-#
-# LDAPv3
-# base <DC=corp,DC=local> with scope subtree
-# filter: (objectClass=*)
-# requesting: dn
-#
-
-dn: DC=corp,DC=local
-dn: CN=Users,DC=corp,DC=local
-dn: CN=Computers,DC=corp,DC=local
-dn: CN=svc-vcenter-ldap,CN=Users,DC=corp,DC=local
-
-# search result
-search: 2
-result: 0 Success
-
-# numResponses: 5
-# numEntries: 4
-
-cn=Administrators,cn=Builtin,dc=vsphere,dc=local
-cn=SystemConfiguration,cn=Builtin,dc=vsphere,dc=local
-cn=DCAdmins,cn=Builtin,dc=vsphere,dc=local
+Output varies by environment and build; see https://knowledge.broadcom.com/external/article/344633/stopping-starting-or-restarting-vmware-v.html (service-control) and https://knowledge.broadcom.com/external/article/318946/using-vsphere-certificate-manager-to-rep.html (vmafd-cli get-domain-name).
 ```
+
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
     | `ldapsearch: error code 81 (Server Down) - Errno 113 (No route to host)` | Verify DC01 hostname resolves and is reachable via `ping dc01.example.local` and `telnet dc01.example.local 636` from the VCSA. |
     | `ldapsearch: error code 49 (Invalid Credentials) - Bind failed` | Confirm the svc-vcenter-ldap account password is correct and the account is not locked in Active Directory. |
-    | `SERVICE vmware-stsd (pid XXXX) is stopped.` | Restart the SSO service with `service-control --start vmware-stsd` and wait 60 seconds for dependent services to initialize. |
+    | `vmware-stsd` reported as stopped | Start the Security Token Service with `service-control --start vmware-stsd` (KB 344633). |
 ---
 
 ## Step 6 — Query vCenter REST API health
@@ -480,10 +421,10 @@ cn=DCAdmins,cn=Builtin,dc=vsphere,dc=local
 TOKEN=$(curl -sk -u 'administrator@vsphere.local:<password>' \
     -X POST https://vcenter.example.local/api/session | tr -d '"')
 
-# System health
+# Appliance system health (GET /api/appliance/health/system)
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    https://vcenter.example.local/api/vcenter/health/system
-# Expected: GREEN
+    https://vcenter.example.local/api/appliance/health/system
+# Expected: "green" (other values: yellow, orange, red, gray)
 
 # List all hosts and their connection state
 curl -sk -H "vmware-api-session-id: $TOKEN" \
@@ -502,10 +443,7 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
 
 
 ```text title="Expected output"
-{
-  "status": "GREEN",
-  "messages": []
-}
+"green"
 PROBLEM: esx-prod-02.dc1.local state=DISCONNECTED
 PROBLEM: esx-backup-01.dc1.local state=NOT_RESPONDING
 (no output — command completes silently)
@@ -596,7 +534,7 @@ Evidence to collect before escalation:
 | VCSA disk usage | `df -h` output |
 | Service status | `service-control --status --all` output |
 | vpxd.log excerpt | `tail -500 /var/log/vmware/vpxd/vpxd.log` |
-| SSO log excerpt | `tail -200 /var/log/vmware/sso/vmware-sts-idmd.log` |
+| SSO log excerpt | `tail -200 /var/log/vmware/sso/vmware-identity-sts.log` |
 | Certificate expiry | VAMI → Certificate Management screenshot |
 | Recent error events | vCenter → Monitor → Events, last 24 hours |
 | Failed tasks | vCenter → Monitor → Tasks, filter by Error |
@@ -609,7 +547,7 @@ Evidence to collect before escalation:
 | Component | Path | What to look for |
 |---|---|---|
 | vpxd (core) | `/var/log/vmware/vpxd/vpxd.log` | Task failures, API errors |
-| SSO identity | `/var/log/vmware/sso/vmware-sts-idmd.log` | LDAP bind errors, auth failures |
+| SSO identity (STS) | `/var/log/vmware/sso/vmware-identity-sts.log` | LDAP bind errors, auth failures |
 | SSO admin | `/var/log/vmware/sso/ssoAdminServer.log` | Token issuance failures |
 | Certificate mgr | `/var/log/vmware/vmcad/certificate-manager.log` | Cert renewal and replacement |
 | PostgreSQL | `/var/log/vmware/vpostgres/postgresql-*.log` | DB slow query and crash events |
@@ -624,9 +562,9 @@ Evidence to collect before escalation:
 
 ## Verify resolution
 
-- `vmon-cli -l` shows all services RUNNING with no STOPPED state
+- `vmon-cli -s <service>` shows `RunState: STARTED` and `HealthState: HEALTHY` for vpxd and the other critical services (KB 415673)
 - `df -h` shows all `/storage/*` partitions below 80% used
-- `GET /api/vcenter/health/system` returns GREEN
+- `GET /api/appliance/health/system` returns `green`
 - SSO login test: log out and log back in to vSphere Client — authentication succeeds
 - `nslookup <vcenter-fqdn>` and reverse PTR match; `chronyc tracking` shows time offset < 1s
 - The triggering event or alarm no longer appears in vCenter → Monitor → Events

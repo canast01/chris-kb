@@ -11,7 +11,7 @@ description: "Integrations reference covering Network Integration, Backup Integr
 <div class="kb-summary">
 Integrations reference covering Network Integration, Backup Integration, Monitoring Integration.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Integrations](../../../../../assets/virtualization-vmware-esxi-architecture-integrations.svg)
 

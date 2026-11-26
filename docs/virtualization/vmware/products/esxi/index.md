@@ -12,7 +12,7 @@ description: "Technical and operational reference for VMware ESXi. Covers host a
 <div class="kb-summary">
 Technical and operational reference for VMware ESXi. Covers host architecture, networking, storage paths, patching, security hardening, and troubleshooting for ESXi hosts managed by vCenter.
 
-*Applies to: vSphere 7.x · 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 
 ![ESXi Capabilities Overview](../../../../assets/esxi-capabilities-overview.svg)

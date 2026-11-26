@@ -11,7 +11,7 @@ description: "ESXi Scripts reference covering Storage Path Health Check (Bash / 
 <div class="kb-summary">
 ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi Syslog and Event Collector (Python), NTP Configuration Audit (Bash), Ansible ESXi Configuration Playbook, Windows: ESXi Host Health via REST API (PowerShell) and 1 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi — Scripts](../../../../../assets/virtualization-vmware-esxi-operations-scripts.svg)
 
@@ -146,7 +146,7 @@ All paths healthy. No issues detected.
     |---|---|
     | `Permission denied (publickey,password).` | Verify SSH credentials and that root login is enabled on the ESXi host via `ssh root@192.168.1.100 'echo test'`. |
     | `bash: ~/Desktop/esxi_path_health.sh: No such file or directory` | Confirm the script exists at the correct path with `ls -la ~/Desktop/esxi_path_health.sh` before running the command. |
-    | `Connection refused` | Ensure the ESXi host is reachable and SSH is enabled by pinging the host and checking SSH service status with `esxcli system ssh status`. |
+    | `Connection refused` | Ensure the ESXi host is reachable and SSH is enabled by pinging the host and checking the SSH service status in the ESXi Host Client (Host → Manage → Services). |
 ---
 
 ## ESXi Syslog and Event Collector (Python)

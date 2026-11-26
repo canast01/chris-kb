@@ -7,7 +7,7 @@ tags:
 ---
 # NSX — Encryption
 
-*Applies to: VMware NSX-T 3.x / 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 ![NSX — Encryption](../../../../../assets/virtualization-vmware-nsx-security-encryption.svg)
 
 ```bash
@@ -184,7 +184,7 @@ curl -sk -u 'admin:password' \
     | Error | Fix |
     |---|---|
     | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store. |
-    | `{"error_code":400,"error_message":"Certificate ID not found or invalid"}` | Verify the certificate exists on the NSX Manager by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/certificates` and confirm the certificate_id value. |
+    | `{"error_code":400,"error_message":"Certificate ID not found or invalid"}` | Verify the certificate exists on the NSX Manager by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/trust-management/certificates` and confirm the certificate_id value. |
     | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Confirm the NSX Manager hostname/IP is correct and the API service is running with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/node/services/http`. |
 ```bash
 # Check expiry of all NSX-managed certificates
@@ -224,29 +224,22 @@ nsx-manager.corp.local              expires=2025-08-14  days_remaining=187
 ```bash
 # On NSX Manager node
 nsxcli
-set service syslog exporter siem-tls level info protocol TLS server 10.0.0.100 port 6514
+set logging-server 10.0.0.100:6514 proto tls level info serverca <siem-ca-file>
 
 # Verify
-get service syslog exporters
+get logging-servers
 ```
 
 ```text title="Expected output"
-NSX CLI (version 3.2.1.0.0)
-> set service syslog exporter siem-tls level info protocol TLS server 10.0.0.100 port 6514
-Syslog exporter 'siem-tls' configured successfully.
-
-> get service syslog exporters
-Exporter Name    Protocol  Server         Port  Level  Status
-siem-tls         TLS       10.0.0.100     6514  info   connected
-syslog-default   UDP       127.0.0.1      514   warn   connected
+Output varies by environment; see the NSX 9.1 CLI Guide: https://developer.broadcom.com/xapis/nsx-cli-guide/9.1.0/all_all_commands.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Error: Exporter name 'siem-tls' already exists` | Use a unique exporter name or delete the existing exporter with `delete service syslog exporter siem-tls` first. |
+    | Duplicate logging server entry | Check existing entries with `get logging-servers` and remove the old entry (same host, port, proto and level) before re-adding. |
     | `Error: Unable to connect to server 10.0.0.100:6514 - connection timeout` | Verify the SIEM server is reachable and listening on port 6514 by running `nc -zv 10.0.0.100 6514` from the NSX Manager node. |
-    | `Error: TLS certificate validation failed for server 10.0.0.100` | Import the SIEM server's CA certificate into NSX Manager using `set service syslog exporter siem-tls ca-cert <cert-path>`. |
+    | `Error: TLS certificate validation failed for server 10.0.0.100` | Copy the SIEM server's CA certificate to the node and pass it with the `serverca <filename>` option of `set logging-server`. |
 ```bash
 curl -sk -u 'admin:password' \
   -X POST \

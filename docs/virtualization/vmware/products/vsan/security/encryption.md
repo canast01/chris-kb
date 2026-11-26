@@ -11,7 +11,7 @@ description: "vSAN supports two complementary encryption modes: data-at-rest enc
 <div class="kb-summary">
 vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE) and data-in-transit encryption. Both are optional and independently configurable. This page covers architecture, KMS integration, enabling procedures, and operational considerations.
 
-*Applies to: vSAN 7.x / 8.x*
+*Applies to: vSAN 9.x (VCF/VVF 9) · vSAN 8.0 U3 (EoGS 2027-10-11)*
 </div>
 ![vSAN — Encryption](../../../../../assets/virtualization-vmware-vsan-security-encryption.svg)
 
@@ -168,23 +168,22 @@ Re-key Interval (minutes): 0
 
 ## Key Rotation
 
-Regular key rotation limits exposure if keys are compromised. Rotate KEKs (not DEKs — DEK rotation would require full disk reformat).
+Regular key rotation limits exposure if keys are compromised. Routine rotation is a shallow rekey (new KEK); a deep rekey (new DEKs) re-encrypts all disks and takes much longer.
 
 ### Rotate KEKs
 
 ```powershell
-# Trigger KEK rotation on the cluster
+# Trigger KEK rotation (shallow rekey) on the cluster
 $cluster = Get-Cluster "VSAN-LON-01"
-$vsanConfig = Get-VsanClusterConfiguration -Cluster $cluster
-Invoke-VsanClusterKeyRotation -Configuration $vsanConfig
+Start-VsanEncryptionConfiguration -Cluster $cluster -ShallowRekey
 ```
 
 **From vCenter UI:**
 Cluster → Configure → vSAN → Services → Data Services → Rekey
 
-KEK rotation is a rolling operation — each host requests a new KEK from the KMS, re-encrypts its local DEK, and updates the stored encrypted DEK. No disk reformatting occurs. No impact to running VMs.
+In a shallow rekey only the key encryption key (KEK) is changed and the data encryption keys (DEKs) are rewrapped with the new KEK; data is not re-encrypted.
 
-**Deep rekey (DEK rotation):** Deep rekey rotates the DEKs themselves, which requires a disk group reformat equivalent to initial encryption enablement. Only perform deep rekey if DEKs are suspected to be compromised. Schedule an extended maintenance window.
+**Deep rekey (DEK rotation):** `Start-VsanEncryptionConfiguration -Cluster $cluster -DeepRekey` re-encrypts all disks with new data encryption keys and takes a long time to finish. Only perform a deep rekey if DEKs are suspected to be compromised, and schedule an extended maintenance window.
 
 ---
 

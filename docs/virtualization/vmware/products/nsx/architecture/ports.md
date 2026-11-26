@@ -14,7 +14,7 @@ description: "Firewall port reference for VMware NSX-T / NSX. Covers NSX Manager
 <div class="kb-summary">
 Firewall port reference for VMware NSX-T / NSX. Covers NSX Manager API, management plane to transport nodes, Geneve overlay (TEP), BGP/BFD, IPsec, and NSX Federation. Required for any firewall boundary in the NSX control or data plane.
 
-*Applies to: NSX-T 3.x / NSX 4.x*
+*Applies to: VMware NSX 9.x (VCF 9); NSX 4.2.x is the VCF 5.x line*
 </div>
 ![NSX — Ports and Network Requirements](../../../../../assets/virtualization-vmware-nsx-architecture-ports.svg)
 

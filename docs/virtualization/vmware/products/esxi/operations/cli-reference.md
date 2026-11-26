@@ -11,7 +11,7 @@ description: "ESXi CLI Reference reference covering Network, Storage — Devices
 <div class="kb-summary">
 ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Datastores & VMDK, SAN Connectivity (iSCSI / FC), VM Management (vim-cmd) and 6 more sections.
 
-*Applies to: vSphere 7.x / 8.x*
+*Applies to: ESX 9.x (VCF 9) · ESXi 8.0 U3 (vSphere 8, EoGS 2027-10-11)*
 </div>
 ![ESXi CLI Reference](../../../../../assets/virtualization-vmware-esxi-operations-cli-reference.svg)
 
@@ -20,8 +20,8 @@ ESXi CLI Tool Map
 ```bash
 # Maintenance mode
 esxcli system maintenanceMode get
-esxcli system maintenanceMode set --enabled true
-esxcli system maintenanceMode set --enabled false
+esxcli system maintenanceMode set --enable true
+esxcli system maintenanceMode set --enable false
 
 # Via vim-cmd
 vim-cmd hostsvc/maintenance_mode_enter
@@ -30,11 +30,8 @@ vim-cmd hostsvc/maintenance_mode_exit
 
 
 ```text title="Expected output"
-false
-(no output — command completes silently)
-(no output — command completes silently)
-Entering maintenance mode. This may take a few moments...
-Exiting maintenance mode. This may take a few moments...
+Output varies by host and release. See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_system.html
 ```
 
 !!! warning "Common errors"
@@ -175,7 +172,7 @@ esxcli storage core device stats get -d <device_id>
 # Paths
 esxcli storage core path list
 esxcli storage core path list -d <device_id>
-esxcli storage core path stats get -A vmhba0
+esxcli storage core path stats get -p <path_name>
 
 # Adapters
 esxcli storage core adapter list
@@ -192,8 +189,8 @@ esxcli storage nmp psp roundrobin deviceconfig set --device <device_id> --type i
 # VMFS / filesystems
 esxcli storage vmfs extent list
 esxcli storage filesystem list
-esxcli storage filesystem mount -v <uuid>
-esxcli storage filesystem unmount -v <uuid>
+esxcli storage filesystem mount -u <uuid>
+esxcli storage filesystem unmount -u <uuid>
 esxcli storage filesystem rescan
 
 # Legacy
@@ -203,75 +200,8 @@ esxcfg-scsidevs -m
 
 
 ```text title="Expected output"
-Device t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd:
-   Display Name: Local ATA Disk (t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd)
-   Has Settable Display Name: true
-   Size: 20480
-   Device Type: Direct-Access
-   Multipath Plugin: NMP
-   Devfs Path: /vmfs/devices/disks/t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
-   Vendor: QEMU
-   Model: HARDDISK
-   Revision: 2.5+
-   SCSI Level: 5
-   Is SSD: false
-   Is Local: true
-   Is Removable: false
-   Is RDM Capable: false
-   Is Shared Clusterwide: false
-   Is SAS: false
-   Is USB: false
-   Is Boot Device: true
-
-Adapter: vmhba0
-   Driver: ahci
-   Channel: 0
-   Path State: active
-   Target: 0
-   LUN: 0
-   Adapter Identifier: vmhba0
-   Target Identifier: vmhba0:C0:T0:L0
-   Adapter Display Name: AHCI Controller
-
-vmhba0 Rescan: Adapter scan completed successfully.
-
-NMP Device: t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
-   Storage Array Type: SATA
-   Device Max Queue Depth: 32
-   Paths: vmhba0:C0:T0:L0
-   Active Paths: 1
-
-SATP Rule: SATA
-   Vendor: ATA
-   Model: QEMU
-   PSP: VMW_PSP_RR
-   Options: iops=1
-
-VMFS-6 UUID: 5a3e8c2f-9b1d-4e7a-b2c1-8f3d6a9e2b4c
-   Blocksize: 1048576
-   Capacity: 10737418240
-   Free Space: 8589934592
-   Mounted: true
-   Mount Path: /vmfs/volumes/5a3e8c2f-9b1d-4e7a-b2c1-8f3d6a9e2b4c
-
-Filesystem rescan completed successfully.
-
-Device t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
-   Display Name: Local ATA Disk (t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd)
-   Devfs Path: /vmfs/devices/disks/t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
-   Partition Table: msdos
-   Partition: 1
-   Partition Table: gpt
-   Partition: 1
-   Partition: 2
-   Partition: 3
-   Partition: 4
-   Partition: 5
-   Partition: 6
-   Partition: 7
-   Partition: 8
-   Partition: 9
-   Partition: 10
+Output varies by host and release. See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_storage.html
 ```
 ## Datastores & VMDK
 
@@ -622,13 +552,11 @@ Network Info:
 ```bash
 # Cluster status
 esxcli vsan cluster get
-esxcli vsan health cluster get
-esxcli vsan health summary get
-esxcli vsan health cluster get | grep -v "GREEN\|green"
+esxcli vsan health cluster list
+esxcli vsan health cluster list | grep -v -i "green"
 
 # Storage and disk groups
 esxcli vsan storage list
-esxcli vsan storage stats get
 esxcli vsan storage list | grep -E "Is SSD|Disk Group"
 
 # Objects and resyncing
@@ -639,8 +567,6 @@ esxcli vsan debug resync list | grep -E "Total Bytes|Remaining"
 
 # Networking
 esxcli vsan network list
-esxcli vsan network ipconfig list
-esxcli vsan debug network test
 
 # Datastore
 esxcli vsan datastore list
@@ -649,61 +575,14 @@ esxcli vsan trace get
 
 
 ```text title="Expected output"
-Cluster Information:
-UUID: 52994049-1234-5678-abcd-ef1234567890
-Enabled: true
-Current Local Time: 2024-01-15T14:32:18Z
-Node UUID: 52994049-9876-5432-dcba-1234567890ef
-
-Health Status: HEALTHY
-Cluster Status: RUNNING
-Member Count: 4
-
-Storage Summary:
-Total Capacity: 10.95 TB
-Used Capacity: 7.23 TB
-Free Capacity: 3.72 TB
-Disk Groups: 4
-Physical Disks: 16
-
-Disk Group 1:
-  UUID: 52994049-aaaa-bbbb-cccc-111111111111
-  Is SSD: true
-  Status: HEALTHY
-  Disk Count: 4
-
-Object Summary:
-Total Objects: 1247
-Healthy Objects: 1245
-Degraded Objects: 2
-Inaccessible Objects: 0
-
-Resync Status:
-Total Bytes: 524288000
-Remaining Bytes: 0
-Resync Rate: 0 B/s
-Estimated Time: 0 seconds
-
-Network Configuration:
-vmk0: 192.168.1.101/24
-vmk1: 192.168.1.102/24
-vmk2: 192.168.1.103/24
-vmk3: 192.168.1.104/24
-
-Network Test Results:
-Unicast: PASS
-Multicast: PASS
-Latency: 0.5 ms
-
-Datastore: vsanDatastore
-Capacity: 10.95 TB
-Free Space: 3.72 TB
+Output varies by host and release. See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_vsan.html
 ```
 
 !!! warning "Common errors"
     | Error | Fix |
     |---|---|
-    | `Could not connect to the host. The VSAN service may not be running.` | Restart the VSAN service with `esxcli system service restart vsanvpd` or verify VSAN is licensed and enabled on the cluster. |
+    | `Could not connect to the host. The VSAN service may not be running.` | Check the host services in the ESXi Host Client (Host → Manage → Services) and verify vSAN is licensed and enabled on the cluster. ESXCLI has no `system service` namespace. |
     | `Unknown command or namespace vsan` | Ensure you are running the command on an ESXi host with VSAN enabled; non-VSAN hosts do not have the vsan namespace available. |
     | `Permission denied` | Run the command with root privileges or ensure your user account has the required VSAN administration role assigned in vCenter. |
 | vSAN Indicator | Meaning |
@@ -735,33 +614,13 @@ vsish -e ls /net/pNics/
 # Check for dropped packets
 esxcli network nic stats get -n vmnic0 | grep -i drop
 
-# CPU ready
-esxcli sched group list
+# CPU ready: use esxtop (CPU view); ESXCLI has no 'sched group' command
 ```
 
 
 ```text title="Expected output"
-World ID   Name                                   Group                  # vCPU Mem MB    State
-    512   ubuntu-web-01                          /                         4   8192    running
-    768   windows-dc-prod                        /                         8  16384    running
-   1024   centos-app-02                          /                         2   4096    running
-
-Name                World ID   Group                  # vCPU Mem MB    State
-ubuntu-web-01       512        /                         4   8192    running
-
-Packets Received: 15847293
-Packets Transmitted: 14923847
-Dropped RX Packets: 0
-Dropped TX Packets: 0
-Collisions: 0
-
-Group Name                                   CPU Affinity
-/                                            0-15
-/system                                      0-15
-/system/host/console                         0-15
-/system/host/hostd                           0-15
-/system/host/iofilters                       0-15
-...
+Output varies by host and release. See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_network.html
 ```
 
 !!! warning "Common errors"
@@ -874,75 +733,14 @@ esxcli hardware ipmi bmc get
 esxcli hardware ipmi fru list
 esxcli hardware ipmi sel list
 
-# Sensors (temp, power, fan)
-esxcli hardware sensor list
-esxcli hardware sensor list --type Temperature
-esxcli hardware sensor list --type Fan
-esxcli hardware sensor list --type Power
+# Sensors (temp, power, fan) via IPMI sensor data records
+esxcli hardware ipmi sdr list
 ```
 
 
 ```text title="Expected output"
-Platform Info:
-      Hardware Version: Dell PowerEdge R750
-      System Serial Number: 1N23K4D
-      BIOS Version: 2.14.2
-      Vendor Name: Dell Inc.
-   Current Clock Time: 2024-01-15T14:32:47Z
-   Uptime: 45 days 3 hours
-
-CPU Package 0:
-   Vendor: GenuineIntel
-   Brand: Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz
-   Hz: 2300000000
-   Bus Hz: 100000000
-   CPU Count: 2
-   Core Count: 28
-   Thread Count: 56
-   TSC Frequency: 2299999000
-
-Memory:
-   Physical Memory: 1048576 MB
-   Usable Memory: 1046528 MB
-
-PCI Device List:
-   0000:00:00.0  Intel Corporation 82599ES 10-Gigabit SFI Contrroller
-   0000:00:01.0  Intel Corporation 82599ES 10-Gigabit SFI Contrroller
-   0000:03:00.0  Dell PERC H840 Adapter
-   0000:04:00.0  Broadcom NetXtreme BCM5720 Gigabit Ethernet
-   ...
-
-BMC Info:
-   Device ID: 0x20
-   Device Revision: 0x01
-   Firmware Revision: 1.86.45
-   IPMI Version: 2.0
-
-FRU List:
-   FRU Device Description : Builtin FRU Device (Internal Use)
-   Board Mfg. Date/Time : Fri Jan 15 14:32:47 2024
-   Board Serial : 1N23K4D
-
-SEL Records (last 5):
-   1 | 01/15/2024 | 14:30:22 | Power Supply #1 | Predictive Failure | Asserted
-   2 | 01/15/2024 | 13:45:10 | System Event | OEM Action | Asserted
-
-Temperature Sensors:
-   CPU0 Temp Sensor: 42.00 Celsius
-   CPU1 Temp Sensor: 44.00 Celsius
-   System Inlet Temp: 28.00 Celsius
-   System Exhaust Temp: 38.00 Celsius
-
-Fan Sensors:
-   Fan 1: 4200 RPM
-   Fan 2: 4150 RPM
-   Fan 3: 4180 RPM
-   Fan 4: 4220 RPM
-
-Power Sensors:
-   PS1 Input Power: 850 Watts
-   PS2 Input Power: 820 Watts
-   System Power: 1670 Watts
+Output varies by host and release. See the ESXCLI reference:
+https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_hardware.html
 ```
 
 !!! warning "Common errors"

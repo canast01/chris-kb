@@ -302,7 +302,7 @@ Expected output: no rows. Any broken disk must be replaced immediately. Open a c
 **Step 10 — Recent error events (last hour)**
 
 ```bash
-event log show -severity error -time-range "1h"
+event log show -severity error -time >1h
 ```
 
 
@@ -328,7 +328,7 @@ Expected output: no rows, or only informational entries. Review any `error`-seve
 **Step 11 — AutoSupport delivery**
 
 ```bash
-autosupport history show
+system node autosupport history show
 ```
 
 
@@ -362,7 +362,7 @@ Size: 8.1 MB
     | Error | Fix |
     |---|---|
     | `Error: command not found` | Verify you are connected to the ONTAP cluster CLI and have appropriate admin privileges. |
-    | `Error: This command is not supported on this release` | Check your ONTAP version with `version` command; autosupport history show requires ONTAP 9.6 or later. |
+    | `Error: This command is not supported on this release` | Check your ONTAP version with `version` command; system node autosupport history show requires ONTAP 9.6 or later. |
 Expected output: the most recent entry shows `sent-successful` or `ignore`. A `failed` status means AutoSupport is not reaching NetApp — check proxy configuration and network connectivity. This does not block operations but must be resolved today.
 
 ---
